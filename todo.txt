@@ -1,0 +1,11 @@
+*********************************************************** TODO *****************************************************
+•Print todo.txt in the updates div as paragraph
+•Integrate sword, scythe, spear, sniper shells, and MRFF as their own bullets, rather than being defined in their respective guns
+•Implement image generation for microtransaction tech option [dependent on the skin chosen for said option]
+•Fix Genisis (arena boss) immunity bug
+•Fix sniper gun map bug (whereby the map collisions randomly bug out if the gun is in the player's inventory)
+•HEAVILY nerf MRFF damage (bc right now, it one-taps everything [except Genisis, see above] even if target is shielded or immune)
+•Fix ace (the boss in the "ace" level, not the one in crimsonTowers or the level "ace" itself) attack bug (probably a typo)
+•Add bossbar for boundaryBoss
+
+•...and any bugs YOU guys find!
