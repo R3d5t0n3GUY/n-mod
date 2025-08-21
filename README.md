@@ -10,3 +10,4 @@ This contains features from community mods such as:<br>
 <li><a href="https://3xion.tech/n-gon-upgraded">n-gon upgraded</a> by <a href="https://github.com/3xionDev">Nolan Stone</a></li>
 <li><a href="https://coaldeficit.github.io/c-gon/">c-gon</a></li>
 </ul>
+<br>Currently, the files are stored on my own computer. I will finish up some implementations before I post them on gitHub
