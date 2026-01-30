@@ -1,11 +1,15 @@
-*********************************************************** TODO *****************************************************
-•Print todo.txt in the updates div as paragraph
-•Integrate sword, scythe, spear, sniper shells, and MRFF as their own bullets, rather than being defined in their respective guns
-•Implement image generation for microtransaction tech option [dependent on the skin chosen for said option]
-•Fix Genisis (arena boss) immunity bug
-•Fix sniper gun map bug (whereby the map collisions randomly bug out if the gun is in the player's inventory)
-•HEAVILY nerf MRFF damage (bc right now, it one-taps everything [except Genisis, see above] even if target is shielded or immune)
-•Fix ace (the boss in the "ace" level, not the one in crimsonTowers or the level "ace" itself) attack bug (probably a typo)
+**************************************************** TODO **********************************************
 •Add bossbar for boundaryBoss
+•Add more commands to chat menu
+•Fix HTML generation for warp menu background images
 
-•...and any bugs YOU guys find!
+*********************************************** WORK-IN-PROGRESS ***************************************
+•Stay up-to-date with original game of n-gon (for the most part; see NOT PLANNED section for exceptions)
+•More images in warp menu (Input needed from community)
+
+************************************************* POSTPONED ********************************************
+•Modded bullets integration (i.e. as part of b instead of ephemera)
+
+*********************************************** NOT PLANNED ********************************************
+•Fixing Genisis (arena boss) immunity
+•Add "too-punishing" update features from original n-gon (e.g. finalBoss's mob-based invulnerability)

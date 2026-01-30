@@ -1,11 +1,14 @@
 # n-mod
-<h1>n-mod: a fan-modded version of n-gon</h1>
-<img src="favicon.svg" width="250px></img><hr>
-This is my personal project that I do in a lot of my spare time.<br>
-The original game is <a href="https://landgreen.github/io/n-gon/index.html>n-gon</a> by <a href="https://github.com/landgreen">Mr. Landgreen</a>.<br>
-This contains features from community mods such as:<br>
+<h1>A fan-modded version of Mr. LandGreen's <a href="https://landgreen.githb.io/n-gon/index.html">n-gon</a>.</h1>
+<img src="img/favicon.svg" width="250px"></img><hr>
+I work on this project a lot in my spare time.
+It includes portions of the following games and mods:
 <ul>
-<li><a href="https://github.com/Whyisthisnotavalable/n-scythe">n-scythe</a> by <a href="https://github.com/Whyisthisnotavailable">Richard0820</a></li>
-<li><a href="https://c-rxxp-y.github.io/n-gon-enhanced">n-hanced</a> by <a href="https://github.com/c-rxxp-y/n-gon-enhanced">c-rxxp-y</a></li>
-<li><a href="https://3xion.tech/n-gon-upgraded">n-gon upgraded</a> by <a href="https://github.com/3xionDev">Nolan Stone</a></li>
+  <li><a href="https://github.com/landgreen/n-gon">n-gon (primary directory) by Landgreen</a></li>
+  <li>guns, field, and tech from <a href="https://github.com/Whyisthisnotavalable/n-scythe">n-scythe by WhyIsThisNotAvailable</a></li>
+  <li><a href="https://github.com/tbxyd/n-gon-enhanced">n-hanced by tbxyd</a></li>
+  <li><a href="https://github.com/3xionDev/n-gon-upgraded">n-upgraded by 3xionDev</a></li>
+  <li>maps from <a href="https://coaldeficit.github.io/c-gon">c-gon by coalDeficit</a></li>
 </ul>
+<br>
+Feel free to <a href="https://github.com/454077/n-mod/issues/new">report bugs</a> or <a href="https://github.com/454077/n-mod/discussions/new?category=ideas">share ideas!</a>
