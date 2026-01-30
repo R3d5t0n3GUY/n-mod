@@ -11,4 +11,4 @@ It includes portions of the following games and mods:
   <li>maps from <a href="https://coaldeficit.github.io/c-gon">c-gon by coalDeficit</a></li>
 </ul>
 <br>
-Feel free to <a href="https://github.com/454077/n-mod/issues/new">report bugs</a> or <a href="https://github.com/454077/n-mod/discussions/new?category=ideas">share ideas!</a>
+Feel free to <a href="https://github.com/R3d5t0n3GUY/n-mod/issues/new">report bugs</a> or <a href="https://github.com/R3d5t0n3GUY/n-mod/discussions/new?category=ideas">share ideas!</a>
