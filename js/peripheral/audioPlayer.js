@@ -6,43 +6,43 @@ const files = [
   {
     name: 'Death Prevented',
     src: 'SFX/DeathAvoid.ogg',
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Explosion',
     src: null,
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Step',
     src: null,
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'FallDamage',
     src: 'SFX/Joke/FallDamage.mp3',
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Fire in the hole',
     src: 'SFX/Joke/fire.mp3',
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Teleport',
     src: null,
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'finalBossDeath',
     src: "SFX/finalBossDeath.mp3",
-    playCDcycle: m.cycle,
+    playCDcycle: 0,
     loadAttempt: 0
   }
 ];

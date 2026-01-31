@@ -2029,6 +2029,248 @@ draw: {
     ctx.fillStyle = "rgba(0, 0, 255, 0.25)";
     ctx.fill();
     // ctx.stroke();
+  },
+  font: {
+      word: new Path2D(),
+      xPos: 0,
+      yPos: 0,
+      drawString(text, x, y) {
+          this.xPos = x
+          this.yPos = y
+          const letters = text.toLowerCase().split('')
+          letters.forEach((letter, index) => {
+              if (letter >= 'a' && letter <= 'z' && this[letter]) {
+                  this[letter]()
+                  if (index < letters.length - 1) {
+                      this.xPos += 29
+                  }
+              } else if (letter === ' ') {
+                  this.xPos += 29
+              }
+          })
+      },
+      a() {
+          this.word.moveTo(this.xPos - 1, this.yPos + 40)
+          this.word.lineTo(this.xPos + 10, this.yPos + 0)
+          this.word.lineTo(this.xPos + 21, this.yPos + 40)
+          this.word.moveTo(this.xPos + 5, this.yPos + 20)
+          this.word.lineTo(this.xPos + 15, this.yPos + 20)
+      },
+      b() {
+          this.word.moveTo(this.xPos + 1, this.yPos);
+          this.word.lineTo(this.xPos + 1, this.yPos + 40);
+          this.word.moveTo(this.xPos + 1, this.yPos);
+          this.word.bezierCurveTo(this.xPos + 22, this.yPos, this.xPos + 22, this.yPos + 20, this.xPos + 1, this.yPos + 20);
+          this.word.moveTo(this.xPos + 1, this.yPos + 20);
+          this.word.bezierCurveTo(this.xPos + 25, this.yPos + 20, this.xPos + 25, this.yPos + 40, this.xPos + 1, this.yPos + 40);
+      },
+      c() {
+          // Calculate the starting point on the ellipse to move to
+          const startAngle = 0.2 * Math.PI;
+          const startX = (this.xPos + 11) + (11 * Math.cos(startAngle));
+          const startY = (this.yPos + 20) + (20 * Math.sin(startAngle));
+          this.word.moveTo(startX, startY);
+
+          // Draws a smooth partial ellipse for the 'C'
+          this.word.ellipse(this.xPos + 11, this.yPos + 20, 11, 20, 0, startAngle, 1.8 * Math.PI);
+      },
+      d() {
+          this.word.moveTo(this.xPos + 0, this.yPos);
+          this.word.lineTo(this.xPos + 0, this.yPos + 40);
+          // this.word.moveTo(this.xPos + 3, this.yPos + 40);
+          this.word.arcTo(this.xPos + 19, this.yPos + 40, this.xPos + 19, this.yPos + 20, 20);
+          this.word.arcTo(this.xPos + 19, this.yPos, this.xPos + 1, this.yPos, 20);
+      },
+      e() {
+          this.word.moveTo(this.xPos + 19, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 20)
+          this.word.moveTo(this.xPos + 0, this.yPos + 20)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 19, this.yPos + 40)
+      },
+      f() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 19, this.yPos + 0)
+          this.word.moveTo(this.xPos + 0, this.yPos + 20)
+          this.word.lineTo(this.xPos + 16, this.yPos + 20)
+      },
+      g() {
+          // Rounded G with curved edges
+          this.word.moveTo(this.xPos + 17, this.yPos + 6);
+          this.word.bezierCurveTo(this.xPos + 17, this.yPos + 2, this.xPos + 14, this.yPos + 0, this.xPos + 8, this.yPos + 0);
+          this.word.bezierCurveTo(this.xPos + 3, this.yPos + 0, this.xPos + 0, this.yPos + 4, this.xPos + 0, this.yPos + 20);
+          this.word.bezierCurveTo(this.xPos + 0, this.yPos + 36, this.xPos + 3, this.yPos + 40, this.xPos + 8, this.yPos + 40);
+          this.word.bezierCurveTo(this.xPos + 14, this.yPos + 40, this.xPos + 17, this.yPos + 36, this.xPos + 17, this.yPos + 30);
+          this.word.lineTo(this.xPos + 17, this.yPos + 20);
+          this.word.lineTo(this.xPos + 10, this.yPos + 20);
+      },
+      // g() {
+      //     this.word.moveTo(this.xPos + 17, this.yPos + 0)
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 0)
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 40)
+      //     this.word.lineTo(this.xPos + 17, this.yPos + 40)
+      //     this.word.lineTo(this.xPos + 17, this.yPos + 20)
+      //     this.word.lineTo(this.xPos + 10, this.yPos + 20)
+      // },
+      h() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.moveTo(this.xPos + 0, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 40)
+          this.word.moveTo(this.xPos + 17, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+      },
+      i() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 19, this.yPos + 0)
+          this.word.moveTo(this.xPos + 9, this.yPos + 0)
+          this.word.lineTo(this.xPos + 9, this.yPos + 40)
+          this.word.moveTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 19, this.yPos + 40)
+      },
+      // j() {
+      //     this.word.moveTo(this.xPos + 18, this.yPos + 0);
+      //     this.word.lineTo(this.xPos + 18, this.yPos + 40);
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 40);
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 30);
+      // },
+      j() {
+          // Rounded J with curved bottom
+          this.word.moveTo(this.xPos + 18, this.yPos + 0);
+          this.word.lineTo(this.xPos + 18, this.yPos + 30);
+          this.word.bezierCurveTo(this.xPos + 18, this.yPos + 37, this.xPos + 14, this.yPos + 40, this.xPos + 8, this.yPos + 40);
+          this.word.bezierCurveTo(this.xPos + 2, this.yPos + 40, this.xPos + 0, this.yPos + 37, this.xPos + 0, this.yPos + 30);
+      },
+      k() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.moveTo(this.xPos + 0, this.yPos + 20)
+          this.word.lineTo(this.xPos + 19, this.yPos + 0)
+          this.word.moveTo(this.xPos + 4, this.yPos + 17)
+          this.word.lineTo(this.xPos + 19, this.yPos + 40)
+      },
+      l() {
+          this.word.moveTo(this.xPos + 1, this.yPos + 0)
+          this.word.lineTo(this.xPos + 1, this.yPos + 40)
+          this.word.lineTo(this.xPos + 20, this.yPos + 40)
+      },
+      m() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 9, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+          this.word.lineTo(this.xPos + 17, this.yPos + 40)
+      },
+      n() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 17, this.yPos + 40)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+      },
+      o() {
+          this.word.moveTo(this.xPos + 20, this.yPos + 20);
+          this.word.ellipse(this.xPos + 9, this.yPos + 20, 11, 20, 0, 0, 2 * Math.PI);
+      },
+      p() {
+          // Rounded P with curved top section
+          this.word.moveTo(this.xPos + 0, this.yPos + 40);
+          this.word.lineTo(this.xPos + 0, this.yPos + 0);
+          this.word.lineTo(this.xPos + 10, this.yPos + 0);
+          this.word.bezierCurveTo(this.xPos + 15, this.yPos + 0, this.xPos + 18, this.yPos + 3, this.xPos + 18, this.yPos + 10);
+          this.word.bezierCurveTo(this.xPos + 18, this.yPos + 17, this.xPos + 15, this.yPos + 20, this.xPos + 10, this.yPos + 20);
+          this.word.lineTo(this.xPos + 0, this.yPos + 20);
+      },
+      // p() {
+      //     this.word.moveTo(this.xPos + 0, this.yPos + 40)
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 0)
+      //     this.word.lineTo(this.xPos + 18, this.yPos + 0)
+      //     this.word.lineTo(this.xPos + 18, this.yPos + 20)
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 20)
+      // },
+      q() {
+          this.word.moveTo(this.xPos + 20, this.yPos + 20);
+          this.word.ellipse(this.xPos + 9, this.yPos + 20, 11, 20, 0, 0, 2 * Math.PI);
+          this.word.moveTo(this.xPos + 12, this.yPos + 28);
+          this.word.lineTo(this.xPos + 20, this.yPos + 40);
+      },
+      r() {
+          // Rounded R with curved top section
+          this.word.moveTo(this.xPos + 0, this.yPos + 40);
+          this.word.lineTo(this.xPos + 0, this.yPos + 0);
+          this.word.lineTo(this.xPos + 10, this.yPos + 0);
+          this.word.bezierCurveTo(this.xPos + 15, this.yPos + 0, this.xPos + 18, this.yPos + 3, this.xPos + 18, this.yPos + 10);
+          this.word.bezierCurveTo(this.xPos + 18, this.yPos + 17, this.xPos + 15, this.yPos + 20, this.xPos + 10, this.yPos + 20);
+          this.word.lineTo(this.xPos + 0, this.yPos + 20);
+          this.word.moveTo(this.xPos + 8, this.yPos + 20);
+          this.word.lineTo(this.xPos + 18, this.yPos + 40);
+      },
+      s() {
+          // Rounded S shape using curves
+          this.word.moveTo(this.xPos + 18, this.yPos + 6);
+          this.word.bezierCurveTo(this.xPos + 18, this.yPos + 2, this.xPos + 15, this.yPos + 0, this.xPos + 9, this.yPos + 0);
+          this.word.bezierCurveTo(this.xPos + 3, this.yPos + 0, this.xPos + 0, this.yPos + 3, this.xPos + 0, this.yPos + 8);
+          this.word.bezierCurveTo(this.xPos + 0, this.yPos + 13, this.xPos + 3, this.yPos + 16, this.xPos + 9, this.yPos + 18);
+          this.word.bezierCurveTo(this.xPos + 15, this.yPos + 20, this.xPos + 18, this.yPos + 24, this.xPos + 18, this.yPos + 32);
+          this.word.bezierCurveTo(this.xPos + 18, this.yPos + 37, this.xPos + 15, this.yPos + 40, this.xPos + 9, this.yPos + 40);
+          this.word.bezierCurveTo(this.xPos + 3, this.yPos + 40, this.xPos + 0, this.yPos + 37, this.xPos + 0, this.yPos + 34);
+      },
+      t() {
+          this.word.moveTo(this.xPos - 1, this.yPos + 0)
+          this.word.lineTo(this.xPos + 21, this.yPos + 0)
+          this.word.moveTo(this.xPos + 10, this.yPos + 0)
+          this.word.lineTo(this.xPos + 10, this.yPos + 40)
+      },
+      // u() {
+      //     this.word.moveTo(this.xPos + 0, this.yPos + 0)
+      //     this.word.lineTo(this.xPos + 0, this.yPos + 40)
+      //     this.word.lineTo(this.xPos + 17, this.yPos + 40)
+      //     this.word.lineTo(this.xPos + 17, this.yPos + 0)
+      // },
+      u() {
+          // Rounded U with curved bottom
+          this.word.moveTo(this.xPos + 0, this.yPos + 0);
+          this.word.lineTo(this.xPos + 0, this.yPos + 30);
+          this.word.bezierCurveTo(this.xPos + 0, this.yPos + 37, this.xPos + 3, this.yPos + 40, this.xPos + 8, this.yPos + 40);
+          this.word.bezierCurveTo(this.xPos + 14, this.yPos + 40, this.xPos + 17, this.yPos + 37, this.xPos + 17, this.yPos + 30);
+          this.word.lineTo(this.xPos + 17, this.yPos + 0);
+      },
+      v() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 8, this.yPos + 40)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+      },
+      w() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 8, this.yPos + 20)
+          this.word.lineTo(this.xPos + 17, this.yPos + 40)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+      },
+      x() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 19, this.yPos + 40)
+          this.word.moveTo(this.xPos + 19, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+      },
+      y() {
+          this.word.moveTo(this.xPos + -1, this.yPos + 0);
+          this.word.lineTo(this.xPos + 10, this.yPos + 20);
+          this.word.lineTo(this.xPos + 21, this.yPos + 0);
+          this.word.moveTo(this.xPos + 10, this.yPos + 20);
+          this.word.lineTo(this.xPos + 10, this.yPos + 40);
+      },
+      z() {
+          this.word.moveTo(this.xPos + 0, this.yPos + 0)
+          this.word.lineTo(this.xPos + 17, this.yPos + 0)
+          this.word.lineTo(this.xPos + 0, this.yPos + 40)
+          this.word.lineTo(this.xPos + 17, this.yPos + 40)
+      }
+      //letters are 50 tall and 40 wide
   }
 },
 checkLineIntersection(v1, v1End, v2, v2End) {

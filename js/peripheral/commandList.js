@@ -39,7 +39,7 @@ const cmdList = {
       effect(input) {
         let pos = [input.indexOf("{"), input.lastIndexOf("}")];
         let runTemp = () => {
-          eval(input.substring(pos[0] + 1, pos[1]))
+          eval(input.substring(pos[0] + 1, pos[1]));
         };
         /*
         Executing JS code from a string is an EXTREME SECURITY RISK;
@@ -58,7 +58,6 @@ const cmdList = {
     },
     help: {
       checkSyntax(input){
-        cmdConsole.params = input.split(/\s+/)
         if (cmdConsole.params.length < 2) {
           return [true, ""]
         } else {
@@ -89,7 +88,6 @@ const cmdList = {
     },
     spawn: {
       checkSyntax(input) {
-        cmdConsole.params = input.split(/\s+/)
         if (cmdConsole.params.length === 4) {
           return [true, ""]
         } else {
@@ -97,7 +95,6 @@ const cmdList = {
         }
       },
       effect(input) {
-        cmdConsole.params = input.split(/\s+/)
         let types = ["mob", "boss", "powerUp"], fullMobList = spawn.tier.flat(),
           fullBossList = spawn.bossTier.flat(), fullPowerUpList = [], what = cmdConsole.params[1],
           fullCatalog = [], reference = Object.entries(powerUps);
@@ -143,5 +140,17 @@ const cmdList = {
       },
       description: `Spawns an entity at a given position.
       <br><strong>SYNTAX:</strong> /spawn <em>&lt;type (mob|boss|powerUp)&gt; &lt;name&gt; &lt;position (x y)&gt;</em>`
+    },
+    give: {
+      /* checkSyntax(input) {
+        if ([2,3].includes(cmdConsole.params.length)) {
+          return [true, ""]
+        } else {
+          return [false, "<strong class='color-var'>give</strong> requires two or three parameters"]
+        }
+      }, */
+      effect(input) {
+
+      }
     }
   } //will expand the list
