@@ -15842,7 +15842,6 @@ const tech = {
   isLaserWire: null,
   isMycelium: null,
   isStimulatedEmission: null,
-  isStimulatedEmission: null,
   // nailGun: null,
   nailInstantFireRate: null,
   isCapacitor: null,
