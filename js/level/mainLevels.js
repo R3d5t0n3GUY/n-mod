@@ -4494,6 +4494,12 @@ const mainLevels = {
                     mob[i].springTarget2.y *= -1
                 }
             }
+            if (tech.wire && tech.wire.segments.length) {
+                for (let i = 0; i < tech.wire.segments.length; i++) {
+                    tech.wire.segments[i].y *= -1
+                    tech.wire.segments[i].oldY *= -1
+                }
+            }
         }
         buildMapOutline()
         buildNormalMap()

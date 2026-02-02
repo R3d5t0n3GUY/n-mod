@@ -4,6 +4,7 @@ setTimeout(() => {
 
 let powerUp = [];
 const powerUps = {
+  totalUsed: 0,
   choosingType: null,
   ejectGraphic(color = "68, 102, 119") {
     simulation.drawList.push({
@@ -1866,6 +1867,7 @@ const powerUps = {
     requestAnimationFrame(cycle);
   },
   onPickUp(who) {
+    powerUps.totalUsed++
     powerUps.research.currentRerollCount = 0
     if (tech.isTechDamage && who.name === "tech") m.takeDamage(0.1)
     if (tech.isMassEnergy) m.energy += 2 * level.isReducedRegen;

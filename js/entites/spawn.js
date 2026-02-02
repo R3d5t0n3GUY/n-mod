@@ -13422,6 +13422,157 @@ const spawn = {
       this.attraction();
     };
   },
+  tubeWormBoss(x, y, radius = 40) {
+    mobs.spawn(x, y, 0, radius, "rgb(167, 0, 114)");
+    let me = mob[mob.length - 1];
+    me.tier = 1
+    Matter.Body.setDensity(me, 0.06); //extra dense //normal is 0.001 //makes effective life much larger
+    me.isBoss = true;
+    me.damageReduction = 0.35
+    me.startingDamageReduction = me.damageReduction
+    me.isInvulnerable = false
+    me.nextHealthThreshold = 0.75
+    me.invulnerableCount = 0
+    me.accelMag = 0.00018
+    me.onDamage = function () {
+    if (this.health < this.nextHealthThreshold) {
+      this.health = this.nextHealthThreshold - 0.01
+      this.nextHealthThreshold = Math.floor(this.health * 4) / 4 //0.75,0.5,0.25
+      this.invulnerableCount = 240
+      this.isInvulnerable = true
+      this.damageReduction = 0
+      this.accelMag *= 3
+      // console.log(tail.segments)
+      const who = tail.segments[tail.segments.length - 1]
+      for (let i = 0; i < 4; i++) {
+        tail.segments.push({
+          x: who.x,
+          y: who.y,
+          vx: who.vx,
+          vy: who.vy
+        });
+        }
+      }
+    };
+    class Scarf {
+      constructor(length = 5, dmg = 0.15 * me.damageScale()) {
+        this.damage = dmg
+        this.segments = [];
+        this.friction = 0.4;   // 0 to 1 (lower is "thicker" air)
+        // this.gravity = 0.;     // Downward pull
+        this.stiffness = 0.05;   // How fast it snaps back
+        for (let i = 0; i < length; i++) {
+          this.segments.push({ x: me.position.x, y: me.position.y, vx: 0, vy: 0 });
+        }
+      }
+      update(anchorX, anchorY) {
+        //head
+        this.segments[0].x = anchorX;
+        this.segments[0].y = anchorY;
+        //body
+        for (let i = 1; i < this.segments.length; i++) {
+          let seg = this.segments[i];
+          let prev = this.segments[i - 1];
+          seg.vx += (prev.x - seg.x) * this.stiffness;
+          seg.vy += (prev.y - seg.y) * this.stiffness;
+          // seg.vy += this.gravity;
+          seg.vx *= this.friction;
+          seg.vy *= this.friction;
+          seg.x += seg.vx;
+          seg.y += seg.vy;
+        }
+      }
+      draw(strokeStyle) {
+        // for (let i = 0; i < this.segments.length; i++) {
+        //     ctx.beginPath();
+        //     ctx.arc(this.segments[i].x, this.segments[i].y, 30, 0, 2 * Math.PI);
+        //     ctx.fillStyle = isInvulnerable ? "#fff" : "#f00"
+        //     ctx.fill();
+        // }
+        ctx.beginPath();
+        ctx.lineWidth = 2 * radius;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.strokeStyle = strokeStyle
+
+        ctx.moveTo(this.segments[0].x, this.segments[0].y);
+        for (let i = 1; i < this.segments.length - 1; i++) {
+          const xc = (this.segments[i].x + this.segments[i + 1].x) / 2;
+          const yc = (this.segments[i].y + this.segments[i + 1].y) / 2;
+          ctx.quadraticCurveTo(this.segments[i].x, this.segments[i].y, xc, yc);
+        }
+        const last = this.segments[this.segments.length - 1];
+        ctx.lineTo(last.x, last.y);
+
+        ctx.stroke();
+      }
+      hits() {
+        if (m.immuneCycle < m.cycle) {
+          for (let i = 1; i < this.segments.length - 1; i++) {
+            if (Matter.Query.ray([player], this.segments[i], this.segments[i + 1], radius).length > 0) {
+              m.immuneCycle = m.cycle + m.collisionImmuneCycles + 60
+              m.takeDamage(this.damage);
+              simulation.drawList.push({ //add dmg to draw queue
+                  x: m.pos.x,
+                  y: m.pos.y,
+                  radius: this.damage * 1500,//30,
+                  color: color,
+                  time: 20
+              });
+
+              //reset tail length for a sec to prevent repeat damage
+              for (let i = 0; i < this.segments.length; i++) this.segments[i] = { x: me.position.x, y: me.position.y, vx: 0, vy: 0 }
+              break
+            }
+          }
+        }
+      }
+    }
+    const tail = new Scarf()
+    me.onDeath = function () {
+        simulation.ephemera.push({
+        name: `disintegratingTail#${simulation.ephemera.length}`,
+        cycle: 60,
+        do() {
+          this.cycle--
+          tail.draw(`rgba(255, 0, 98, ${0.3 * this.cycle / 100})`)
+          if (this.cycle < 1) simulation.removeEphemera(this.name);
+        },
+      })
+      powerUps.spawnBossPowerUp(this.position.x, this.position.y)
+    }
+    me.onHit = function () { };
+    me.do = function () {
+      if (this.seePlayer.recall) this.healthBar1()
+
+      tail.update(this.position.x, this.position.y);
+      tail.hits()
+
+      this.seePlayerCheck();
+      this.checkStatus();
+      this.attraction();
+      if (this.isInvulnerable) {
+        tail.draw("rgba(255, 0, 98, 0.6)");
+        this.invulnerableCount--
+        if (this.invulnerableCount < 0) {
+          this.isInvulnerable = false
+          this.accelMag /= 3
+          this.damageReduction = this.startingDamageReduction
+        }
+        //draw invulnerable
+        ctx.beginPath();
+        let vertices = this.vertices;
+        ctx.moveTo(vertices[0].x, vertices[0].y);
+        for (let j = 1; j < vertices.length; j++) ctx.lineTo(vertices[j].x, vertices[j].y);
+        ctx.lineTo(vertices[0].x, vertices[0].y);
+        ctx.lineWidth = 13 + 5 * Math.random();
+        ctx.strokeStyle = `rgba(255,255,255,${0.5 + 0.2 * Math.random()})`;
+        ctx.stroke();
+      } else {
+        tail.draw("rgba(255, 0, 98, 0.3)");
+      }
+    };
+  },
   snakeSpitBoss(x, y, radius = 50) {
     let angle = Math.PI
     const tailRadius = 300
