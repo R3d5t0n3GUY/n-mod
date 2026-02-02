@@ -77,8 +77,12 @@ const cmdList = {
           let item = cmdList[input] || cmdList.help
           if (item) {
             let helpText = (item.descriptionFunction ? item.descriptionFunction() : item.description)
-            simulation.lastLogTime = 0
-            simulation.inGameConsole(helpText, 600)
+            if (helpText) {
+              simulation.lastLogTime = 0
+              simulation.inGameConsole(helpText, 600)
+            } else {
+              throw new ReferenceError(`<strong class='color-var'>${input}</strong>.description is not defined`)
+            }
           } else {
             throw new ReferenceError(`<strong class='color-var'>${input}</strong> is not a known command`)
           }
@@ -145,14 +149,14 @@ const cmdList = {
       <br><strong>SYNTAX:</strong> /spawn <em>&lt;type (mob|boss|powerUp)&gt; &lt;name&gt; &lt;where (x &amp; y)&gt;</em>`
     },
     give: {
-      /* checkSyntax(input) {
+      checkSyntax(input) {
         cmdConsole.params = input.split(/\s+/)
-        if ([2,3].includes(cmdConsole.params.length)) {
+        if (0 < cmdConsole.params.length && cmdConsole.params.length < 4) {
           return [true, ""]
         } else {
-          return [false, "<strong class='color-var'>give</strong> requires two or three parameters"]
+          return [false, "<strong class='color-var'>give</strong> requires between one and three parameters"]
         }
-      }, */
+      },
       effect(input) {
 
       }
