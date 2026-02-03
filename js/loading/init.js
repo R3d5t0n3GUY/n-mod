@@ -14,6 +14,7 @@ const tryRunning = {
             favIcon.href = 'img/Error.png';
             document.title = "n-mod: UNCAUGHT ERROR";
             //document.body.innerHTML = text;
+            startBtn.style.cursor = "not-allowed"
             console.error(error)
             window.alert(text)
         }
@@ -29,6 +30,7 @@ const tryRunning = {
             favIcon.href = 'img/Error.png';
             document.title = "n-mod: UNCAUGHT ERROR";
             //document.body.innerHTML = text;
+            trainBtn.style.cursor = "not-allowed"
             console.error(error)
             window.alert(text)
         }
@@ -44,6 +46,7 @@ const tryRunning = {
             favIcon.href = 'img/Error.png';
             document.title = "n-mod: UNCAUGHT ERROR";
             //document.body.innerHTML = text;
+            experimentBtn.style.cursor = "not-allowed"
             console.error(error)
             window.alert(text)
         }
