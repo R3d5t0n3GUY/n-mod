@@ -140,7 +140,7 @@ fileLoads.onLoadEnd = function () {
 
             if (tech.isLaserWire) {
             this.gravity = 0
-            this.color = "rgba(255,0,0,1)"
+            this.color = tech.laserColor || "rgba(255,0,0,1)"
             }
             if (tech.isMycelium) {
             this.gravity = -0.1
@@ -231,7 +231,7 @@ fileLoads.onLoadEnd = function () {
                 b.laser(exit, {
                     x: ultimate.x + 5000 * unit.x,
                     y: ultimate.y + 5000 * unit.y
-                }, tech.laserDamage, tech.laserReflections, false, 1, "#f00");
+                }, tech.laserDamage, tech.laserReflections, false, 1, (tech.laserColor || "#f00"));
 
                 // laser(where, whereEnd, damage = tech.laserDamage, reflections = tech.laserReflections, isThickBeam = false, push = 1, laserColor = tech.laserColor) {
             }

@@ -835,7 +835,7 @@ const level = {
                         setTimeout(() => {
                             //document.getElementById("choose-grid").style.visibility = "hidden"
                             powerUps.warp.exit(); //fixing a bug with picking up powerups after entering a new level
-                        }, 1000);
+                        }, 100);
                     }
                     //draw
                     simulation.wipe();

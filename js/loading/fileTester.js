@@ -193,6 +193,7 @@ try {
               favIcon.href = 'img/Error.png'
             }, 10 * errors.length + 30);
           } else {
+            console.clear();
             fileLoads.onLoadEnd();
             level.populateLevelList();
             setTimeout(() => {
