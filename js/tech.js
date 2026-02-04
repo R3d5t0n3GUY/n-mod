@@ -4009,8 +4009,9 @@ const tech = {
         return true
       },
       requires: "",
-      damage: 1.7,
+      damage: 1,
       effect() {
+        this.damage *= 1.7
         m.damageDone *= this.damage
         tech.isHalfHeals = true;
         for (let i = 0; i < powerUp.length; i++) {
@@ -4024,6 +4025,7 @@ const tech = {
       remove() {
         if (this.count && m.alive) {
           m.damageDone /= this.damage
+          this.damage = 1
           for (let i = 0; i < powerUp.length; i++) {
             if (powerUp[i].name === "heal") {
               const scale = 1 / Math.sqrt(0.5)
@@ -4033,6 +4035,40 @@ const tech = {
           }
         }
         tech.isHalfHeals = false;
+      }
+    },
+    {
+      name: "dynamical billiards",
+      description: `<strong>0.5x</strong> <strong class='color-h'>healing</strong> from ${powerUps.orb.heal()}
+      <br><strong>0.25x recoil</strong> from collecting <strong>power-ups</strong>`,
+      maxCount: 3,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed() {
+        return tech.isHalfHeals
+      },
+      requires: "ergodicity",
+      effect() {
+        if (!tech.recoilReduction) tech.recoilReduction = 0
+        tech.recoilReduction++
+        for (let i = 0; i < powerUp.length; i++) {
+          if (powerUp[i].name === "heal") {
+            const scale = Math.sqrt(0.5)
+            powerUp[i].size *= scale
+            Matter.Body.scale(powerUp[i], scale, scale); //grow    
+          }
+        }
+      },
+      remove() {
+        tech.recoilReduction = 0
+        for (let i = 0; i < powerUp.length; i++) {
+          if (powerUp[i].name === "heal") {
+            const scale = Math.sqrt(2)
+            powerUp[i].size *= scale
+            Matter.Body.scale(powerUp[i], scale, scale); //grow    
+          }
+        }
       }
     },
     {
