@@ -4005,6 +4005,7 @@ const tech = {
       count: 0,
       frequency: 1,
       frequencyDefault: 1,
+      isHealTech: true,
       allowed() {
         return true
       },
@@ -4045,6 +4046,8 @@ const tech = {
       count: 0,
       frequency: 1,
       frequencyDefault: 1,
+      //isPacifist: true,
+      isHealTech: true,
       allowed() {
         return tech.isHalfHeals
       },
@@ -6947,6 +6950,7 @@ const tech = {
       name: "superfluidity",
       description: "<strong class='color-s'>freeze</strong> effects are applied<br>to a small <strong>area</strong> around the target",
       isGunTech: true,
+      isPacifist: true,
       maxCount: 1,
       count: 0,
       frequency: 2,
@@ -6968,6 +6972,7 @@ const tech = {
         return `<strong>+5</strong> second <strong class='color-s'>freeze</strong> duration`
       },
       isGunTech: true,
+      isPacifist: true,
       maxCount: 3,
       count: 0,
       frequency: 1,
