@@ -167,27 +167,30 @@ const cmdList = {
           } else {
             throw new ArgumentError(`<strong class='color-var'>give</strong> can have no less than two parameters for this case`)
           }
-        } else if (cmdConsole.params.length < 3) {
+        } else if (["ammo", "coupling", "research"].includes(what)) {
           qnty = Math.max(1, parseInt(eval(cmdConsole.params[1]) || 0))
-          switch (what) {
-            case "ammo":
-              let increaseTarget = (b.guns[b.activeGun].durability ? "durability" : "ammo")
-              if (b.inventory.length > 0 && b.guns[b.activeGun][increaseTarget] !== Infinity) {
-                b.guns[b.activeGun][increaseTarget] += qnty
-              }
-              break;
-            case "coupling":
-              m.couplingChange(qnty)
-              break;
-            case "research":
-              powerUps.research.changeRerolls(qnty)
-              break;
-            default:
-              throw new ReferenceError(`<strong class='color-var'>${what}</strong> is not a known object`)
-              break;
-          }
+          if (cmdConsole.params.length < 3) {
+            switch (what) {
+              case "ammo":
+                let increaseTarget = (b.guns[b.activeGun].durability ? "durability" : "ammo")
+                if (b.inventory.length > 0 && b.guns[b.activeGun][increaseTarget] !== Infinity) {
+                  b.guns[b.activeGun][increaseTarget] += qnty
+                }
+                break;
+              case "coupling":
+                m.couplingChange(qnty)
+                break;
+              case "research":
+                powerUps.research.changeRerolls(qnty)
+                break;
+              default:
+                break;
+            }
+          } else {
+            throw new ArgumentError(`<strong class='color-var'>give</strong> can have no more than two parameters for this case`)
+          } 
         } else {
-          throw new ArgumentError(`<strong class='color-var'>give</strong> can have no more than two parameters for this case`)
+          throw new ReferenceError(`<strong class='color-var'>${what}</strong> is not a known object`)
         }
       },
       description: `gives the player ammo, research, coupling, or tech
