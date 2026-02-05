@@ -49,14 +49,14 @@ const cmdConsole = {
             syntaxCheck = [false, ""]
           }
           if (syntaxCheck[0]) { //if syntax is correct
-            item.effect(string);
-          } else {
+            item.effect(string); //this executes the command.
+          } else { //try to retrieve SyntaxError message
             try {
               syntaxCheck = new SyntaxError(item.checkSyntax(string)[1])
-            } catch (e) {
-              syntaxCheck = new ReferenceError("Syntax logic is not defined")
+            } catch (e) { //Syntax logic not defined.
+              syntaxCheck = new ReferenceError(`Syntax logic${what ? " for <strong class='color-var'>" + what + "</strong>" : ""} is not defined`)
             }
-            throw syntaxCheck;
+            throw syntaxCheck; //throw the message
           }
         } catch (err) { //if an error occurs during execution
           document.getElementById('text-log').innerHTML = oldHTML //revert inGameConsole, in case logging occurred during execution

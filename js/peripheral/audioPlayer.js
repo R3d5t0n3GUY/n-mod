@@ -11,13 +11,15 @@ const files = [
   },
   {
     name: 'Explosion',
-    src: null,
+    src: ["SFX/Explosions/Explosion1.ogg", "SFX/Explosions/Explosion2.ogg", "SFX/Explosions/Explosion3.ogg",
+      "SFX/Explosions/Explosion4.ogg"],
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Step',
-    src: null,
+    src: null, /* ["SFX/Footsteps/Footstep1.mp3", "SFX/Footsteps/Footstep2.mp3", "SFX/Footsteps/Footstep3.mp3", 
+      "SFX/Footsteps/Footstep4.mp3", "SFX/Footsteps/Footstep5.mp3", "SFX/Footsteps/Footstep6.mp3"], */
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -35,13 +37,25 @@ const files = [
   },
   {
     name: 'Teleport',
-    src: null,
+    src: null, /* ['SFX/Teleports/Teleport1.mp3', 'SFX/Teleports/Teleport2.mp3'], */
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'finalBossDeath',
     src: "SFX/finalBossDeath.mp3",
+    playCDcycle: 0,
+    loadAttempt: 0
+  },
+  {
+    name: "SpearUse",
+    src: "SFX/Spear/SpearUse.ogg",
+    playCDcycle: 0,
+    loadAttempt: 0
+  },
+  {
+    name: "SpearHit",
+    src: null, /* ["SFX/Spear/SpearHit1.ogg", "SFX/Spear/SpearHit2.ogg", "SFX/Spear/SpearHit3.ogg"], */
     playCDcycle: 0,
     loadAttempt: 0
   }
@@ -79,32 +93,40 @@ const audioPlayer = {
               	simulation.inGameConsole(`<span style='color:red;'<strong>ERROR CALCULATING VOLUME:</strong>
               	<br>${err}`)
               */
-              console.error("Error calculating sound volume:", err);
+              console.warn("Error calculating sound volume:", err);
               volume = 1; // Fallback to full volume if there's an error
               listItem.playCDcycle = 0; // Reset cooldown if there's an error
             }
-            if (name === 'FallDamage' || name === 'Fire in the hole' || name === 'Step'){ 
+            if (name === 'FallDamage' || name === 'Fire in the hole' || name === 'Step') { 
               volume = 0.5; // Fixed volume for these sounds, as they play at the player's position
             }
           }
           if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01)
           {
-            if (name === 'Explosion') {
-              if (currentMonth === 3 && currentDay === 1) { //Every April 1st, play reverb fart for explosions
-                listItem.src = 'SFX/Joke/ExplosionFools.mp3'
-              } else {
-                listItem.src = `SFX/Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
+            if (currentMonth === 3 && currentDay === 1) { //Every April 1st
+              if (name === "Explosion") {
+                listItem.src = "SFX/Joke/ExplosionFools.mp3"
+              } else if (name === "Teleport") {
+                listItem.src = "SFX/Joke/Teleport3.mp3"
               }
-            } else if (name === 'Step') {
-              listItem.src = `SFX/Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
-            } else if (name === 'Teleport') {
-              listItem.src = `SFX/Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
+            } else {
+              if (name === 'Explosion') {
+                listItem.src = `SFX/Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
+              } else if (name === 'Step') {
+                listItem.src = `SFX/Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
+              } else if (name === "SpearHit") {
+                listItem.src = `SFX/Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
+              } else if (name === 'Teleport') {
+                listItem.src = `SFX/Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
+              }
             }
             try {
               //simulation.inGameConsole(listItem.src);
-              let soundFile = new Audio(listItem.src);
+              let source = listItem.src
+              if (Array.isArray(source)) source = source.flat()[Math.floor(Math.random() * source.length)] 
+              let soundFile = new Audio(source);
               soundFile.load();
-              let soundDuration = soundFile.duration * 1000;
+              //let soundDuration = soundFile.duration * 1000;
               if (soundFile.volume > 0.01) {
                 soundFile.onended = function() {
                   activeSoundCount--;
@@ -112,7 +134,7 @@ const audioPlayer = {
                   /*simulation.inGameConsole(`<strong class='color-var'>Sound Count</strong>:
                   	${activeSoundCount}`);*/
                 };
-                listItem.playCDcycle = m.cycle + 3.75; // Cooldown period of 7.5 cycles (60 cycles = 1 second)
+                listItem.playCDcycle = m.cycle + 3.75; // Cooldown period
                 activeSoundCount++;
                 /*simulation.inGameConsole(`<strong class='color-var'>Sound Count</strong>:
                 	${activeSoundCount}`);*/

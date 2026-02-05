@@ -843,7 +843,7 @@ gravity() {
     addGravity(powerUp, simulation.g);
     addGravity(body, simulation.g);
   }
-  player.force.y += player.mass * simulation.g;
+  player.force.y += (simulation.isChatMenuOpen ? 0 : player.mass * simulation.g); //freeze player
 },
 firstRun: true,
 splashReturn() {

@@ -158,7 +158,37 @@ const cmdList = {
         }
       },
       effect(input) {
-
+        cmdConsole.params = input.split(/\s+/)
+        let what = cmdConsole.params[0], qnty = 0;
+        if (what === "tech") {
+          if (cmdConsole.params.length > 1) {
+            qnty = Math.max(1, parseInt(eval(cmdConsole.params[2]) || 0))
+            for (let i = 0; i < qnty) tech.giveTech(cmdConsole.params[1])
+          } else {
+            throw new ArgumentError(`<strong class='color-var'>give</strong> can have no less than two parameters for this case`)
+          }
+        } else if (cmdConsole.params.length < 2) {
+          qnty = Math.max(1, parseInt(eval(cmdConsole.params[1]) || 0))
+          switch (what) {
+            case "ammo":
+              let increaseTarget = (b.guns[b.activeGun].durability ? "durability" : "ammo")
+              if (b.inventory.length > 0 && b.guns[b.activeGun][increaseTarget] !== Infinity) {
+                b.guns[b.activeGun][increaseTarget] += qnty
+              }
+              break;
+            case "coupling":
+              m.couplingChange(qnty)
+              break;
+            case "research":
+              powerUps.research.changeRerolls(qnty)
+              break;
+            default:
+              throw new ReferenceError(`<strong class='color-var'>${what}</strong> is not a known object`)
+              break;
+          }
+        } else {
+          throw new ArgumentError(`<strong class='color-var'>give</strong> can have no more than two parameters for this case`)
+        }
       }
     }
   } //will expand the list

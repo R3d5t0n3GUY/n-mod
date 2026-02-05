@@ -10692,21 +10692,23 @@ const b = {
         if (this.spear) {
           for (let i = 0; i < mob.length; i++) {
             if (Matter.Query.collides(this.spear, [mob[i]]).length > 0) {
+              const who = mob[i]
               const dmg = Math.sqrt((m.damageDone ? m.damageDone : m.dmgScale) * Math.sqrt(this.spear.speed)) * (tech.spearEye ? (m.health > 0.01 ? 3 : 1) : 1);
-              mob[i].damage(dmg, true);
+              who.damage(dmg, true);
               simulation.drawList.push({
-                x: mob[i].position.x,
-                y: mob[i].position.y,
-                radius: Math.abs(Math.log(dmg * this.spear.speed) * 40 * mob[i].damageReduction + 3),
+                x: who.position.x,
+                y: who.position.y,
+                radius: Math.abs(Math.log(dmg * this.spear.speed) * 40 * who.damageReduction + 3),
                 color: simulation.mobDmgColor,
                 time: simulation.drawTime
               });
               if (tech.shockSpear) {
-                mobs.statusStun(mob[i], 10);
+                mobs.statusStun(who, 10);
               }
               if (this.durability > 0) {
                 this.durability--;
               }
+              if (tech.isSounds) audioPlayer.requestSound("SpearHit", who.position)
               break
             }
           }

@@ -187,8 +187,8 @@ const m = {
     m.pos.x = player.position.x;
     m.pos.y = playerBody.position.y - m.yOff;
     if (player.scale !== 1) m.pos.y += m.yOff * (1 - player.scale)// adjusts m.pos due to the new scale for drawing and for other various m.pos.y uses 
-    m.Vx = player.velocity.x;
-    m.Vy = player.velocity.y;
+    m.Vx = (simulation.isChatMenuOpen ? 0 : player.velocity.x);
+    m.Vy = (simulation.isChatMenuOpen ? 0 : player.velocity.y);
 
     //tracks the last 10s of player information
     m.history.splice(m.cycle % 600, 1, {
@@ -731,6 +731,8 @@ const m = {
       if (m.energy < 0 || isNaN(m.energy)) { //taking deadly damage
         if (tech.isDeathAvoid && powerUps.research.count &&
           ((tech.deathsAvoidedThisLevel || 0) < (tech.isAnthropicExtended + 1 || 1))) {
+          let avoids = tech.deathsAvoidedThisLevel
+          if (!avoids || isNaN(avoids) || !isFinite(avoids) || avoids < 0) tech.deathsAvoidedThisLevel = 0 //if NaN, set to zero
           tech.deathsAvoidedThisLevel++
           powerUps.research.changeRerolls(-1)
           simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-r'>research</span><span class='color-symbol'>--</span><br>${powerUps.research.count}`)
@@ -7828,17 +7830,17 @@ const m = {
       m.lastOnGroundCycle = 0
       // playerOnGroundCheck = () => {}
       m.airControl = () => { //tank controls
-        player.force.y -= player.mass * simulation.g; //undo gravity
+        player.force.y -= (simulation.isChatMenuOpen ? 0 : player.mass * simulation.g); //undo gravity
         Matter.Body.setVelocity(player, {
-          x: drag * player.velocity.x,
-          y: drag * player.velocity.y
+          x: (simulation.isChatMenuOpen ? 0 : drag * player.velocity.x),
+          y: (simulation.isChatMenuOpen ? 0 : drag * player.velocity.y)
         });
         if (input.up) { //forward thrust
-          player.force.x += thrust * Math.cos(m.angle) * m.jumpForce
-          player.force.y += thrust * Math.sin(m.angle) * m.jumpForce
+          player.force.x += (simulation.isChatMenuOpen ? 0 : thrust * Math.cos(m.angle) * m.jumpForce)
+          player.force.y += (simulation.isChatMenuOpen ? 0 : thrust * Math.sin(m.angle) * m.jumpForce)
         } else if (input.down) {
-          player.force.x -= 0.6 * thrust * Math.cos(m.angle)
-          player.force.y -= 0.6 * thrust * Math.sin(m.angle)
+          player.force.x -= (simulation.isChatMenuOpen ? 0 : 0.6 * thrust * Math.cos(m.angle))
+          player.force.y -= (simulation.isChatMenuOpen ? 0 : 0.6 * thrust * Math.sin(m.angle))
         }
         //rotation
         Matter.Body.setAngularVelocity(player, player.angularVelocity * rotationDrag)
@@ -7850,10 +7852,6 @@ const m = {
         m.angle += m.spin
         m.angle = player.angle
       }
-
-
-
-
 
       // level.exit.drawAndCheck = () => { //fix this
       //     if (
@@ -7868,8 +7866,8 @@ const m = {
       m.move = () => {
         m.pos.x = player.position.x;
         m.pos.y = player.position.y;
-        m.Vx = player.velocity.x;
-        m.Vy = player.velocity.y;
+        m.Vx = (simulation.isChatMenuOpen ? 0 : player.velocity.x);
+        m.Vy = (simulation.isChatMenuOpen ? 0 : player.velocity.y);
 
         //tracks the last 10s of player information
         m.history.splice(m.cycle % 600, 1, {
