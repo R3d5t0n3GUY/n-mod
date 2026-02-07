@@ -1534,6 +1534,7 @@ const modLevels = {
             spawn.mapRect(5050, -1300, 100, 2250);
 
             try {
+                simulation.trails(300)
                 boundaryBoss(4150, -175)
             } catch (err) {
                 //simulation.inGameConsole(`Error spawning boundary boss: ${err}`);
