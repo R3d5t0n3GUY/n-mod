@@ -54,6 +54,7 @@
     "workbench.colorTheme": "2077",
     "editor.fontFamily": "'Minecraft Extended', 'Chakra Petch', monospace",
     "editor.fontLigatures": true,
+    "files.autoSave": "onFocusChange",
     "theme-explorer.themeStyle": "both",
     "theme-explorer.ignoreThemes": [
         "GitHub Light Colorblind (Beta)",
