@@ -2983,6 +2983,7 @@ const b = {
           } else {
             this.endCycle = 0; //bullet ends cycle after doing damage 
           }
+          if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
           if (this.isFreeze) mobs.statusSlow(who, 90)
         },
         onEnd() {
@@ -3097,6 +3098,7 @@ const b = {
         beforeDmg(who) {
           if (!who.isInvulnerable) {
             this.endCycle = 0; //bullet ends cycle after doing damage 
+            if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
             if (this.isFreeze) mobs.statusSlow(who, 90)
           }
         },
@@ -3208,6 +3210,7 @@ const b = {
               if (!who.alive) m.energy += tech.iceEnergy * 0.8 * level.isReducedRegen
             }, 10);
           }
+          if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
           mobs.statusSlow(who, tech.iceIXFreezeTime)
           this.endCycle = simulation.cycle
         }
@@ -3284,6 +3287,7 @@ const b = {
         this.cd = simulation.cycle + this.delay;
         if (!who.isInvulnerable && this.dmg !== 0) {
           this.endCycle -= 110
+          if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
           if (tech.isSporeFreeze) mobs.statusSlow(who, 90)
           if (tech.isSpawnBulletsOnDeath && who.alive && who.isDropPowerUp) {
             setTimeout(() => {
@@ -4415,6 +4419,7 @@ const b = {
           Matter.Body.setAngularVelocity(this, 0);
         }
         this.dmg += 2
+        if (tech.isSounds) audioPlayer.requestSound("Deflect")
       }
     }
     bullet[me].do = function () { };
@@ -4984,6 +4989,7 @@ const b = {
                 !mob[i].isInvulnerable
               ) {
                 const unit = Vector.normalise(Vector.sub(Vector.add(mob[i].position, Vector.mult(mob[i].velocity, Math.sqrt(dist) / 60)), this.position))
+                if (tech.isSounds) audioPlayer.requestSound("NailGun", this.position)
                 if (this.isUpgraded) {
                   const SPEED = 60
                   b.nail(this.position, Vector.mult(unit, SPEED))
@@ -6359,6 +6365,7 @@ const b = {
         this.baseFire(m.angle + (Math.random() - 0.5) * (m.crouch ? 0.05 : 0.3) / CD)
       },
       fireNeedles() {
+        if (tech.isSounds) audioPlayer.requestSound("NailGun", m.pos)
         if (m.crouch) {
           m.fireCDcycle = m.cycle + 30 * b.fireCDscale; // cool down
           b.needle()
@@ -6392,6 +6399,7 @@ const b = {
         }
       },
       fireRivets() {
+        if (tech.isSounds) audioPlayer.requestSound("NailGun", m.pos)
         m.fireCDcycle = m.cycle + Math.floor((m.crouch ? 22 : 14) * b.fireCDscale); // cool down
         const me = bullet.length;
         const size = tech.bulletSize * 8
@@ -6474,6 +6482,7 @@ const b = {
         }
       },
       fireRecoilRivets() {
+        if (tech.isSounds) audioPlayer.requestSound("NailGun", m.pos)
         // m.fireCDcycle = m.cycle + Math.floor((m.crouch ? 25 : 17) * b.fireCDscale); // cool down
         if (this.nextFireCycle + 1 < m.cycle) this.startingHoldCycle = m.cycle //reset if not constantly firing
         const CD = Math.max(25 - 0.14 * (m.cycle - this.startingHoldCycle), 5) //CD scales with cycles fire is held down
@@ -6576,6 +6585,7 @@ const b = {
         this.baseFire(m.angle + (Math.random() - 0.5) * (Math.random() - 0.5) * (m.crouch ? 1.15 : 2) / 2)
       },
       baseFire(angle, speed = 30 + 6 * Math.random()) {
+        if (tech.isSounds) audioPlayer.requestSound("NailGun", m.pos)
         b.nail({
           x: m.pos.x + 30 * Math.cos(m.angle),
           y: m.pos.y + 30 * Math.sin(m.angle)
@@ -6585,6 +6595,7 @@ const b = {
         }) //position, velocity, damage
         if (tech.isIceCrystals) {
           bullet[bullet.length - 1].beforeDmg = function (who) {
+            if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
             mobs.statusSlow(who, 60)
             if (tech.isNailRadiation) mobs.statusDoT(who, 1 * (tech.isFastRadiation ? 1.3 : 0.44), tech.isSlowRadiation ? 360 : (tech.isFastRadiation ? 60 : 180)) // one tick every 30 cycles
             if (tech.isNailCrit) {

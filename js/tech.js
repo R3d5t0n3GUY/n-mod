@@ -15717,17 +15717,14 @@ const tech = {
               mob[i].death()
 
               //spawn a random power up
-              // if (Math.random() < 1 / 5) {
-              //     powerUps.spawn(mob[i].position.x, mob[i].position.y, "research")
-              // } else 
-              if (Math.random() < 1 / 4) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "ammo")
-              } else if (Math.random() < 1 / 3) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "heal")
-              } else if (Math.random() < 1 / 2) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "boost")
-              } else if (m.coupling > 0){
+              if (Math.random() < 0.2 && m.coupling > 0) {
                 powerUps.spawn(mob[i].position.x, mob[i].position.y, "coupling")
+              } else if (Math.random() < 0.25) {
+                powerUps.spawn(mob[i].position.x, mob[i].position.y, "ammo")
+              } else if (Math.random() < 0.37) {
+                powerUps.spawn(mob[i].position.x, mob[i].position.y, "heal")
+              } else if (Math.random() < 0.5) {
+                powerUps.spawn(mob[i].position.x, mob[i].position.y, "boost")
               } else {
                 powerUps.spawn(mob[i].position.x, mob[i].position.y, "research")
               }
@@ -15762,8 +15759,10 @@ const tech = {
       frequencyDefault: 1,
       isInstant: true,
       isLore: true,
-      allowed() { return !build.isExperimentSelection },
-      requires: "NOT EXPERIMENT MODE",
+      allowed() { 
+        return (localSettings.loreCount > 0 && !build.isExperimentSelection)
+      },
+      requires: "testing mode unlocked, NOT EXPERIMENT MODE",
       effect() {
         powerUps.randomLorePowerUp();
       },

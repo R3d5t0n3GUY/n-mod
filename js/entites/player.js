@@ -263,6 +263,7 @@ const m = {
       x: player.velocity.x,
       y: Math.max(-10, Math.min(m.standingOn.velocity.y, 10)) //cap velocity contribution from blocks you are standing on to 10 in the vertical
     });
+    if (m.onGround && tech.isSounds) audioPlayer.requestSound("Jump", m.pos)
   },
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
@@ -821,7 +822,13 @@ const m = {
       simulation.fpsCap = 4 //40 - Math.min(25, 100 * dmg)
       simulation.fpsInterval = 1000 / simulation.fpsCap;
       if (tech.isHarmFreeze) {
-        for (let i = 0, len = mob.length; i < len; i++) mobs.statusSlow(mob[i], 480) //freeze all mobs
+        let foundTarget = false
+        for (let i = 0, len = mob.length; i < len; i++) {
+          let who = mob[i]
+          if (!who.isSlowed) foundTarget = true
+          mobs.statusSlow(who, 480) //freeze all mobs
+        }
+        if (tech.isSounds && foundTarget) audioPlayer.requestSound("Freeze", m.pos)
       }
     } else {
       simulation.fpsCap = simulation.fpsCapDefault

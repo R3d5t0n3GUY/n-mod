@@ -11,8 +11,8 @@ const files = [
   },
   {
     name: 'Explosion',
-    src: ["SFX/Explosions/Explosion1.ogg", "SFX/Explosions/Explosion2.ogg", "SFX/Explosions/Explosion3.ogg",
-      "SFX/Explosions/Explosion4.ogg"],
+    src: null, /* ["SFX/Explosions/Explosion1.ogg", "SFX/Explosions/Explosion2.ogg", "SFX/Explosions/Explosion3.ogg",
+      "SFX/Explosions/Explosion4.ogg"], */
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -20,6 +20,18 @@ const files = [
     name: 'Step',
     src: null, /* ["SFX/Footsteps/Footstep1.mp3", "SFX/Footsteps/Footstep2.mp3", "SFX/Footsteps/Footstep3.mp3", 
       "SFX/Footsteps/Footstep4.mp3", "SFX/Footsteps/Footstep5.mp3", "SFX/Footsteps/Footstep6.mp3"], */
+    playCDcycle: 0,
+    loadAttempt: 0
+  },
+  {
+    name: 'Jump',
+    src: null, /* ["SFX/Jumps/Jump1.mp3", "SFX/Jumps/Jump2.mp3", "SFX/Jumps/Jump3.mp3", "SFX/Jumps/Jump4.mp3"], */
+    playCDcycle: 0,
+    loadAttempt: 0
+  },
+  {
+    name: 'NailGun',
+    src: null, /* ["SFX/Nail Gun/NailGun1.ogg", "SFX/Nail Gun/NailGun2.ogg", "SFX/Nail Gun/NailGun3.ogg"], */
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -84,26 +96,19 @@ const audioPlayer = {
                 distance -= sourceRadius;
                 volume = Math.max(0, 1 - (distance / maxDistance));
               }
-              /*
-              	simulation.inGameConsole(`<span class='color-var'>Volume</span> <span class='color-symbol'>=</span> 
-              	<span class='color-symbol'>=</span> ${soundFile.volume.toFixed(5)}</span>`);
-              */
             } catch (err) {
-              /*
-              	simulation.inGameConsole(`<span style='color:red;'<strong>ERROR CALCULATING VOLUME:</strong>
-              	<br>${err}`)
-              */
               console.warn("Error calculating sound volume:", err);
               volume = 1; // Fallback to full volume if there's an error
               listItem.playCDcycle = 0; // Reset cooldown if there's an error
             }
-            if (name === 'FallDamage' || name === 'Fire in the hole' || name === 'Step') { 
+            if (name === 'FallDamage' || name === 'Fire in the hole' || name === 'Step' || name === 'Jump') { 
               volume = 0.5; // Fixed volume for these sounds, as they play at the player's position
             }
           }
           if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01)
           {
-            if (currentMonth === 3 && currentDay === 1) { //Every April 1st
+            if (currentMonth === 3 && currentDay === 1 &&
+              ["Explosion", "Teleport"].includes(name)) { //Every April 1st
               if (name === "Explosion") {
                 listItem.src = "SFX/Joke/ExplosionFools.mp3"
               } else if (name === "Teleport") {
@@ -114,8 +119,13 @@ const audioPlayer = {
                 listItem.src = `SFX/Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
               } else if (name === 'Step') {
                 listItem.src = `SFX/Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
+              } else if (name === 'Jump') {
+                listItem.src = `SFX/Jumps/Jump${Math.ceil(Math.random() * 4)}.mp3`
               } else if (name === "SpearHit") {
                 listItem.src = `SFX/Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
+              } else if (name === "nailGun") {
+                listItem.src = `SFX/Nail Gun/nailGun${Math.ceil(Math.random() * 3)}.ogg`
+                volume *= 0.5
               } else if (name === 'Teleport') {
                 listItem.src = `SFX/Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
               }
