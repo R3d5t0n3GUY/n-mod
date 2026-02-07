@@ -22,28 +22,33 @@ Math.hash = s => {
 // document.getElementById("seed").placeholder = Math.initialSeed = Math.floor(Date.now() % 100000) //random every time:  just the time in milliseconds UTC
 
 window.addEventListener('error', event => {
-  let Error = event.error, isBrowserSupport = null
+  let errorObj = event.error, isBrowserSupport = null, errName = "", errMsg = "", errorMessage = null
+  //console.clear()
+  console.warn()
   try {
     try {
-      isBrowserSupport = (Error.filename != "") //for some stupid reason, filename is a non-standard error property exclusive to FireFox
+      isBrowserSupport = (errorObj.filename != "") //for some stupid reason, filename is a non-standard error property exclusive to FireFox
     } catch (e) {
       isBrowserSupport = false
     }
-    console.warn(`Uncaught ${Error.name || "Error"} in ${isBrowserSupport ? Error.filename : 'a source file'}: ${Error.message}`)
+    try { errName = errorObj.name } catch (e) { errName = "ScriptError" }
+    try { errMsg = errorObj.message } catch (e) { errMsg = errorObj}
+    console.warn(`Uncaught ${errName} in ${isBrowserSupport ? errorObj.filename : 'a source file'}: ${errMsg}`)
     // simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${error.message}  <u>${error.filename}:${error.lineno}</u>`)
-    simulation.lastLogTime = 0 //prevent spamming by clearing console
-    let errorMsg = null
     if (isBrowserSupport) {
-      errorMsg = (Error.stack && Error.stack.replace(/\n/g, "<br>")) || (Error.message + ` <u>${Error.filename}:${Error.lineno}</u>`)
+      console.log("Your browser supports filename.")
+      errorMessage = (errorObj.stack && errorObj.stack.replace(/\n/g, "<br>")) || 
+      (errMsg + ` <u>${errorObj.filename}:${errorObj.lineno}</u>`)
     } else {
-      errorMsg = `${Error.name || "Script Error"}. <u>:${Error.message}</u>`
+      errorMessage = `${errName}. <u>:${errMsg}</u>`
       /*errorMsg = `Uncaught Error. <u>:Full error information is not available
     <br>due to browser incompatibility with</u> <a href="lib/warning.html" target="_blank">non-standard properties</a>`*/
     }
-    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errorMsg}`, 480); //show for 8 seconds
+    simulation.lastLogTime = 0 //prevent spamming by clearing console
+    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errorMessage}`, 480); //show for 8 seconds
   } catch (err) {
     console.error("Logging Error: ", err)
-  }
+  } finally { canvas.width = canvas.width }
 });
 
 document.getElementById("seed").placeholder = Math.initialSeed = String(Math.floor(Date.now() % 100000))
