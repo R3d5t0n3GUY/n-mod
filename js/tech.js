@@ -4987,7 +4987,7 @@ const tech = {
       num: 22,
       descriptionFunction() {
         return `set your <strong>top ${this.num}</strong> ${powerUps.orb.tech()} <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> to <em class='flicker'>0 frequency</em>
-        <br>spawn${powerUps.orb.tech().repeat(5)}`
+        <br>spawn ${powerUps.orb.tech().repeat(5)}`
       },
       maxCount: 1,
       count: 0,
