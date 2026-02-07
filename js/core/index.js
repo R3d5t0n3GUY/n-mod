@@ -27,7 +27,7 @@ window.addEventListener('error', error => {
   //console.error(error);
   try {
     let isBrowserSupport = (error.filename !== "") //for some stupid reason, filename is a non-standard error property exclusive to FireFox
-    console.warn(`Script Error in ${error.filename || 'a source file'}: `, error.message)
+    console.warn(`${error.name || "Error"} in ${error.filename || 'a source file'}: ${error.message}`)
     // simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${error.message}  <u>${error.filename}:${error.lineno}</u>`)
     simulation.lastLogTime = 0 //prevent spamming by clearing console
     let errorMsg = null
