@@ -34,7 +34,7 @@ window.addEventListener('error', error => {
     if (isBrowserSupport) {
       errorMsg = (error.stack && error.stack.replace(/\n/g, "<br>")) || (error.message + ` <u>${error.filename}:${error.lineno}</u>`)
     } else {
-      errorMsg = `${err.name}. <u>:${error.message}</u>`
+      errorMsg = `${error.name}. <u>:${error.message}</u>`
       /*errorMsg = `Uncaught Error. <u>:Full error information is not available
     <br>due to browser incompatibility with</u> <a href="lib/warning.html" target="_blank">non-standard properties</a>`*/
     }

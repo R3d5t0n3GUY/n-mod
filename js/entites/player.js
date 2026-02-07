@@ -527,10 +527,10 @@ const m = {
     id.style.width = Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4)) + "px";
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
-    else if (m.health < m.maxHealth) {
+    } else if (m.health < m.maxHealth) {
         id.style.borderRightColor = "rgb(51, 162, 125)"
     } else {
-      id.style.borderRightColor = "rgb(127, 63, 159)"
+      id.style.borderRightColor = "rgb(91, 223, 255)"
       // id.style.borderRightColor = "pink"
     }
     //css animation blink if health is low
