@@ -10453,7 +10453,7 @@ const tech = {
     {
       name: "dry lightning",
       descriptionFunction() {
-        return `imbue <strong>spear</strong> with <strong style="color: rgb(220, 20, 220);">energy</strong>
+        return `imbue <strong>spear</strong> with <strong class="color-f">energy</strong>
                 	<br>mobs are <strong class="color-s">stunned</strong> by <strong>spear</strong>`
       },
       isGunTech: true,

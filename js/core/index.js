@@ -24,7 +24,7 @@ Math.hash = s => {
 window.addEventListener('error', event => {
   let errorObj = event.error, isBrowserSupport = null, errName = "", errMsg = "", errorMessage = null
   //console.clear()
-  console.warn()
+  console.warn(event)
   try {
     try {
       isBrowserSupport = (errorObj.filename != "") //for some stupid reason, filename is a non-standard error property exclusive to FireFox
