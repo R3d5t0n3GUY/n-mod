@@ -12280,7 +12280,7 @@ const tech = {
       allowed() {
         return m.fieldMode === 8 && !tech.isHarmReduce && !tech.isPilotMapIgnore
       },
-      requires: "pilot wave, not degenerate matter, de Broglie–Bohm theory",
+      requires: "pilot wave, not degenerate matter, de Broglie-Bohm theory",
       effect() {
         tech.isNoPilotCost = true
         m.fieldUpgrades[8].drain = 0
@@ -12294,7 +12294,7 @@ const tech = {
       }
     },
     {
-      name: "de Broglie–Bohm theory",
+      name: "de Broglie-Bohm theory",
       description: `<strong>pilot wave</strong> can travel through <strong>anything</strong> at
         	<br><strong>2x</strong> the <strong class='color-f'>energy</strong> cost`,
       isFieldTech: true,
