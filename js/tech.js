@@ -302,11 +302,17 @@ const tech = {
       (tech.haveGunCheck("grenades") && !tech.isNeutronBomb) || tech.isExplodeSnipe ||
       tech.isFoamExplode || tech.isExplodeContact || tech.isNailCrit
   },
+  hasFreezeDamageCheck() {
+    return (tech.isIceCrystals || tech.isSporeFreeze || 
+      (m.fieldMode === 4 && simulation.molecularMode === 2) || 
+      tech.isIceShot || tech.isNeedleIce || (tech.relayIce > 0) ||
+      (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0)))
+  },
   damageAdjustments() {
     let dmg = m.damageDone * m.fieldDamage * powerUps.difficulty.damageDone
     if (tech.isLaserWire && tech.wire && tech.wire.segments.length) dmg *= 1 + 0.01 * tech.wire.segments.length
     if (level.isNoDamage && (m.cycle - 180 < level.noDamageCycle)) dmg *= 0.3
-    if (tech.isMaxHealthDamage && (m.health === m.maxHealth || (tech.isEnergyHealth && m.energy > m.maxEnergy - 0.01))) dmg *= 2
+    if (tech.isMaxHealthDamage && (m.health >= m.maxHealth || (tech.isEnergyHealth && m.energy > m.maxEnergy - 0.01))) dmg *= 2
     if (tech.isNoDeath && m.health < 0) dmg *= 2
     if (tech.noDefenseSettingDamage && m.defense() === 1) dmg *= 2.5
     if (tech.isImmunityDamage && m.immuneCycle > m.cycle) dmg *= 3
@@ -6876,7 +6882,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.isIceCrystals || tech.isSporeFreeze || (m.fieldMode === 4 && simulation.molecularMode === 2) || tech.isIceShot || tech.isNeedleIce || (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0))
+        return tech.hasFreezeDamageCheck()
       },
       requires: "a freeze effect",
       effect() {
@@ -6895,7 +6901,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.isIceCrystals || tech.isSporeFreeze || (m.fieldMode === 4 && simulation.molecularMode === 2) || tech.isIceShot || tech.isNeedleIce || (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0))
+        return tech.hasFreezeDamageCheck();
       },
       requires: "a freeze effect",
       effect() {
@@ -6914,10 +6920,8 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (tech.isIceCrystals || tech.isSporeFreeze || (m.fieldMode === 4 && simulation.molecularMode === 2) ||
-          tech.isIceShot || tech.isNeedleIce || (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0))) &&
-          !tech.sporesOnDeath && !tech.isExplodeMob && !tech.botSpawner && !tech.isMobBlockFling &&
-          !tech.nailsDeathMob && !tech.isZombieWorm
+        return tech.hasFreezeDamageCheck() && !tech.sporesOnDeath && !tech.isExplodeMob &&
+        !tech.botSpawner && !tech.isMobBlockFling && !tech.nailsDeathMob && !tech.isZombieWorm
       },
       requires: "a localized freeze effect, no other mob death tech",
       effect() {
@@ -6956,7 +6960,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.isIceCrystals || tech.isSporeFreeze || (m.fieldMode === 4 && simulation.molecularMode === 2) || tech.isNeedleIce || (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0)) || tech.iceIXOnDeath || tech.isIceShot
+        return tech.hasFreezeDamageCheck() || tech.iceIXOnDeath || tech.isIceShot
       },
       requires: "a localized freeze effect",
       effect() {
@@ -6982,7 +6986,7 @@ const tech = {
       // },
       // requires: "perfect diamagnetism",
       allowed() {
-        return (tech.isIceCrystals || tech.isSporeFreeze || (m.fieldMode === 4 && simulation.molecularMode === 2) || tech.isIceShot || tech.isNeedleIce || (m.coupling && (m.fieldMode === 2 || m.fieldMode === 0)))
+        return tech.hasFreezeDamageCheck()
       },
       requires: "a localized freeze effect",
       effect() {
