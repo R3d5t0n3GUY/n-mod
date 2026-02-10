@@ -3579,7 +3579,7 @@ const spawn = {
         for (let i = 0; i < this.techRefunds; i ++) { // give the player a chance to recover lost tech
           if (Math.random() < 0.1) { // chance to spawn warp or entanglement instead of tech
             if (warped) {
-              powerUps.spawn(this.position.x, this.position.y, "entanglement");
+              powerUps.spawn(this.position.x, this.position.y, (localSettings.entanglement ? "entanglement" : "tech"));
             } else {
               powerUps.spawn(this.position.x, this.position.y, "warp");
               warped = true // can only spawn one
@@ -3693,7 +3693,7 @@ const spawn = {
         for (let i = 0; i < this.techRefunds; i ++) { // give the player a chance to recover lost tech
           if (Math.random() < 0.25) { // chance to spawn warp or entanglement instead of tech
             if (warped) {
-              powerUps.spawn(this.position.x, this.position.y, "entanglement");
+              powerUps.spawn(this.position.x, this.position.y, (localSettings.entanglement ? "entanglement" : "tech"));
             } else {
               powerUps.spawn(this.position.x, this.position.y, "warp");
               warped = true

@@ -525,6 +525,7 @@ const m = {
     id = document.getElementById("health");
     // health display is a x^1.5 rule to make it seem like the player has lower health 
     id.style.width = Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4)) + "px";
+    document.getElementById("health-bg").style.width = `${Math.floor(300 * m.maxHealth)}px`
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
     } else if (m.health < m.maxHealth) {
