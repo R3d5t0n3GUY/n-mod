@@ -15722,7 +15722,7 @@ const tech = {
           console.warn(e)
           gameCompleted = true
         }
-        return !build.isExperimentSelection && true
+        return !build.isExperimentSelection && gameCompleted
       },
       requires: "completed the game at least once, NOT EXPERIMENT MODE",
       effect() {
