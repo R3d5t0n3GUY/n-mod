@@ -453,11 +453,14 @@ openChatMenu() {
   try {
     cmdConsole.cmdIdx = 0
     document.body.style.cursor = "auto";
-    cmdConsole.oldPlayer.pos = player.position
-    cmdConsole.oldPlayer.vel = player.velocity
+    cmdConsole.oldPlayer.pos.x = player.position.x || 0
+    cmdConsole.oldPlayer.pos.y = player.position.y || 0
+    cmdConsole.oldPlayer.vel.x = player.velocity.x || 0
+    cmdConsole.oldPlayer.vel.y = player.velocity.y || 0
     simulation.isChatMenuOpen = true //block keypresses while player is using chat
     //simulation.lastTextLog = document.getElementById("text-log").innerHTML
     //simulation.lastLogTime = Infinity //don't auto-close chat
+    Matter.Body.setVelocity(player, {x: 0, y: 0})
     document.getElementById("chat-window").style.display = "inline";
     //document.getElementById("text-log").style.display = "inline";
     function focusChatBox() {
@@ -467,7 +470,7 @@ openChatMenu() {
           window.removeEventListener("keyup", focusChatBox());
         } catch (e) {}
       }
-  }
+    }
     window.addEventListener("keyup", focusChatBox);
   } catch (err) {
     window.alert(err)
@@ -492,8 +495,14 @@ closeChatWindow() {
       x: (isNum(cmdConsole.oldPlayer.pos.x) ? cmdConsole.oldPlayer.pos.x : isNum(level.enter.x) ? level.enter.x : 0),
       y: (isNum(cmdConsole.oldPlayer.pos.y) ? cmdConsole.oldPlayer.pos.y : isNum(level.enter.y) ? level.enter.y - 20 : -20)
     }
-    Matter.Body.setPosition(player, (where.x|| 0), (where.y || 0))
-    Matter.Body.setVelocity(player, (cmdConsole.oldPlayer.vel.x || 0), (cmdConsole.oldPlayer.vel.y || 0))
+    Matter.Body.setPosition(player, {
+      x: (where.x|| 0), 
+      y: (where.y || 0)
+    })
+    Matter.Body.setVelocity(player, {
+      x: (cmdConsole.oldPlayer.vel.x || 0), 
+      y: (cmdConsole.oldPlayer.vel.y || 0)
+    })
   } catch (e) {
     window.alert(e)
   }
