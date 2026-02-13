@@ -939,6 +939,23 @@ summary {
   color: #6e9ba0;
 }
 
+.color-censored {
+  position: relative;
+  font-family: 'Mojangles';
+  display: inline-block;
+  min-height: 1em;         /* forces layout height */
+}
+
+.color-censored::before {
+  content: attr(data-fake);
+  position: absolute;
+  inset: 0;
+  color: inherit;
+  white-space: pre;
+  pointer-events: none;
+  font-family: 'Mojangles';
+}
+
 .color-s {
   color: #04f;
   letter-spacing: 1px;
