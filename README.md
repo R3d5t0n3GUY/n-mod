@@ -13,8 +13,13 @@ It includes portions of the following games and mods:
 The following libraries are used:
 <ul>
   <li><a href='https://github.com/liabru/matter-js'>Matter</a> by <a href="https://github.com/liabru">Liabru</a></li>
-  <li> <a href='https://github.com/goldfire/howler.js/blob/master/dist/howler.js'>Howler</a> by <a href="https://github.com/goldfire">James Simpson</a> <em>still trying to figure pitch shifting out, help would be appreciated</em></li>
+  <li> <a href='https://github.com/goldfire/howler.js/blob/master/dist/howler.js'>Howler</a> by <a href="https://github.com/goldfire">James Simpson</a> <em>(still trying to figure pitch shifting out, help would be appreciated)</em></li>
 </ul>
 Most of the sounds used are from <a href="https://minecraft.wiki/">Minecraft</a> and <a href="https://minecraft.wiki/w/Dungeons:Wiki">Minecraft Dungeons</a>. If it becomes an issue, I will remove them from this repo, and find something else to use.
 <br><br>
 Feel free to <a href="https://github.com/R3d5t0n3GUY/n-mod/issues/new">report bugs</a> or <a href="https://github.com/R3d5t0n3GUY/n-mod/discussions/new?category=ideas">share ideas!</a>
+
+<h2>Special thanks to these contributors:</h2>
+<ul>
+<li><a href="https://github.com/LexLeethorMain">Lex Leethor</a> for <a href="https://github.com/R3d5t0n3GUY/n-mod/pull/3">pointing out a file loading issue</a></li>
+</ul>
