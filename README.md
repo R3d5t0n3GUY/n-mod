@@ -1,5 +1,5 @@
 # n-mod
-<h1>A fan-modded version of Mr. LandGreen's <a href="https://landgreen.githb.io/n-gon/index.html">n-gon</a>.</h1>
+<h1>A fan-modded version of Mr. LandGreen's <a href="https://landgreen.github.io/n-gon/index.html">n-gon</a>.</h1>
 <img src="img/favicon.svg" width="250px"></img><hr>
 I work on this project a lot in my spare time.
 It includes portions of the following games and mods:

@@ -117,6 +117,7 @@ Press Escape to close"></textarea>
                         <input type="button" id="erase-save" value="Wipe" style="color:red;"
                             title="This cannot be undone!">
                     </div>
+                    <div id="file-status-div" style="min-height: 1.25em;"></div>
                     <div id="confirm-wipe-div" style="visibility: hidden;">
                         <strong>This action is <span style='color:red'>IRREVERSIBLE!</span></strong>
                         <br>
@@ -237,7 +238,7 @@ Press Escape to close"></textarea>
                             <option class="choice" value="https://github.com/landgreen/n-gon">Original Game Repository
                             </option>
                             <option class="choice" value="https://github.com/c-rxxp-y/n-gon-treasury/">The Lost Treasury
-                            </option class="choice" value="https://cornbread2100.com/n-gon-loader">Every
+                            <option class="choice" value="https://cornbread2100.com/n-gon-loader">Every
                             Version, One website</option>
                         </select>
                         <br><label for="links-select" title="community links">community links:</label>
@@ -320,7 +321,7 @@ Press Escape to close"></textarea>
     </svg>
     <script>
         const fileLoader = document.createElement("script")
-        fileLoader.src = "js/loading/fileTester.js"
+        fileLoader.src = "./js/loading/fileTester.js"
         setTimeout(() => {
             if (!fileLoads.isFileTesterJS) {
                 document.body.style.backgroundColor = "white";
