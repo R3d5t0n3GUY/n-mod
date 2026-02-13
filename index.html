@@ -319,7 +319,7 @@ Press Escape to close"></textarea>
     </svg>
     <script>
         const fileLoader = document.createElement("script")
-        fileLoader.src = "js/loading/fileTester.js"
+        fileLoader.src = "./js/loading/fileTester.js"
         setTimeout(() => {
             if (!fileLoads.isFileTesterJS) {
                 document.body.style.backgroundColor = "white";
@@ -333,11 +333,17 @@ Press Escape to close"></textarea>
 
         /***** Scramble color-censored here (does NOT work if loaded anywhere else) *****/
         function scramble(text) {
-          let result = "";
-          for (let i = 0; i < text.length; i++) {
-            result += String.fromCharCode(Math.floor(Math.random() * 94) + 33);
-          }
-          return result;
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                // Preserve whitespace exactly
+                if (/\s/.test(char)) {
+                    result += char;
+                } else {
+                    result += String.fromCharCode(Math.floor(Math.random() * 94) + 33);
+                }
+            }
+            return result;
         }
 
         function initColorCensored(el) {
