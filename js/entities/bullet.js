@@ -416,7 +416,7 @@ const b = {
       });
 
       //player damage
-      if (Vector.magnitude(Vector.sub(where, player.position)) < radius) {
+      if ((Vector.magnitude(Vector.sub(where, player.position)) < radius) && !tech.isSmartRadius) { //take no damage with shaped charges
         const DRAIN = (tech.isExplosionHarm ? 0.6 : 0.45) * (tech.isRadioactiveResistance ? 0.2 : 1)
         if (m.immuneCycle < m.cycle) m.energy -= DRAIN
         if (m.energy < 0) {
@@ -465,12 +465,12 @@ const b = {
           const harm = tech.isExplosionHarm ? 0.067 : 0.05
           if (tech.isImmuneExplosion && m.energy > 0.05) {
             // const mitigate = Math.min(1, Math.max(1 - m.energy * 0.5, 0))
-            m.energy -= 0.05
+            m.energy -= (tech.isSmartRadius ? 0 : 0.05)
             knock = Vector.mult(Vector.normalise(sub), -0.6 * player.mass * Math.max(0, Math.min(0.15 - 0.002 * player.speed, 0.15)));
             player.force.x = knock.x; // not +=  so crazy forces can't build up with MIRV
             player.force.y = knock.y - 0.3; //some extra vertical kick 
           } else {
-            m.takeDamage(harm * spawn.dmgToPlayerByLevelsCleared());
+            if (!tech.isSmartRadius) m.takeDamage(harm * spawn.dmgToPlayerByLevelsCleared());
             knock = Vector.mult(Vector.normalise(sub), -Math.sqrt(dmg) * player.mass * 0.013);
             player.force.x += knock.x;
             player.force.y += knock.y;
@@ -515,13 +515,13 @@ const b = {
         if (bullet[i].isFoam) {
           sub = Vector.sub(where, bullet[i].position);
           dist = Vector.magnitude(sub);
-          if (dist < radius && tech.isFoamExplode /*&& Math.random() < 0.63*/) {
-            const whore = bullet[i].position;
+          if (dist < radius && tech.isFoamExplode) { //&& Math.random() < 0.63
+            const bubblePos = bullet[i].position;
             const size = 20 + 150 * Math.pow(bullet[i].radius, 0.25);
             const onLevel = level.onLevel;
             bullet[i].endCycle = 0;
             setTimeout(() => {
-              if (onLevel === level.onLevel) b.explosion(whore, size); //makes bullet do explosive damage at end
+              if (onLevel === level.onLevel) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
             }, 250 + 300 * Math.random());
           }
         }
