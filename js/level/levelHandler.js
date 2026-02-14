@@ -2498,7 +2498,7 @@ const level = {
                     ctx.fillRect(this.min.x, this.min.y, this.width, this.height)
                     //collision with player
                     if (this.height > 0 && Matter.Query.region([player], this).length && !(m.isCloak)) {
-                        if (m.immuneCycle < m.cycle + m.collisionImmuneCycles) {
+                        if (m.immuneCycle < m.cycle) {
                             m.immuneCycle = m.cycle + m.collisionImmuneCycles;
                             damage *= spawn.dmgToPlayerByLevelsCleared()
                             m.takeDamage(damage)
@@ -2521,12 +2521,12 @@ const level = {
 
                     if (this.height > 0 && Matter.Query.region([player], this).length) {
                         if (m.immuneCycle < m.cycle) {
-                            const DRAIN = 0.004 * (tech.isRadioactiveResistance ? 0.2 : 1)
+                            const DRAIN = 0.004 * (tech.isRadioactiveResistance ? 0.2 ** (tech.radioactiveDefense || 1) : 1)
                             if (m.energy > DRAIN) {
                                 m.energy -= DRAIN
                                 if (tech.isEnergyHealth && m.energy < 0) m.death()
                             } else {
-                                m.takeDamage(damage * (tech.isRadioactiveResistance ? 0.2 : 1) * spawn.dmgToPlayerByLevelsCleared())
+                                m.takeDamage(damage * (tech.isRadioactiveResistance ? 0.2 ** (tech.radioactiveDefense || 1) : 1) * spawn.dmgToPlayerByLevelsCleared())
                             }
                         }
                         //float

@@ -417,11 +417,11 @@ const b = {
 
       //player damage
       if ((Vector.magnitude(Vector.sub(where, player.position)) < radius) && !tech.isSmartRadius) { //take no damage with shaped charges
-        const DRAIN = (tech.isExplosionHarm ? 0.6 : 0.45) * (tech.isRadioactiveResistance ? 0.2 : 1)
+        const DRAIN = (tech.isExplosionHarm ? 0.6 : 0.45) * (tech.isRadioactiveResistance ? 0.2 ** (tech.radioactiveDefense || 1) : 1)
         if (m.immuneCycle < m.cycle) m.energy -= DRAIN
         if (m.energy < 0) {
           m.energy = 0
-          m.takeDamage(tech.radioactiveDamage * 0.03 * (tech.isRadioactiveResistance ? 0.2 : 1) * spawn.dmgToPlayerByLevelsCleared());
+          m.takeDamage(tech.radioactiveDamage * 0.03 * (tech.isRadioactiveResistance ? 0.2 ** (tech.radioactiveDefense || 1) : 1) * spawn.dmgToPlayerByLevelsCleared());
         }
       }
 
@@ -1290,12 +1290,12 @@ const b = {
         } else {
           //aoe damage to player
           if (Vector.magnitude(Vector.sub(player.position, this.position)) < this.damageRadius) {
-            const DRAIN = (tech.isRadioactiveResistance ? 0.0025 * 0.2 : 0.0025)
+            const DRAIN = (tech.isRadioactiveResistance ? 0.0025 * Math.pow(0.2, (tech.radioactiveDefense || 1)) : 0.0025)
             if (m.energy > DRAIN) {
               if (m.immuneCycle < m.cycle) m.energy -= DRAIN
             } else {
               m.energy = 0;
-              m.takeDamage((tech.isRadioactiveResistance ? 0.00016 * 0.2 : 0.00016) * tech.radioactiveDamage * spawn.dmgToPlayerByLevelsCleared()) //0.00015
+              m.takeDamage((tech.isRadioactiveResistance ? 0.00016 * Math.pow(0.2, (tech.radioactiveDefense || 1)) : 0.00016) * tech.radioactiveDamage * spawn.dmgToPlayerByLevelsCleared()) //0.00015
             }
           }
           //aoe damage to mobs
@@ -3782,12 +3782,12 @@ const b = {
         this.radioRadius = this.radioRadius * 0.993 + 0.007 * this.maxRadioRadius //smooth radius towards max
         //aoe damage to player
         if (Vector.magnitude(Vector.sub(player.position, this.position)) < this.radioRadius) {
-          const DRAIN = tech.isRadioactiveResistance ? 0.001 : 0.004
+          const DRAIN = tech.isRadioactiveResistance ? 0.001 ** (tech.radioactiveDefense || 1) : 0.004
           if (m.energy > DRAIN) {
             if (m.immuneCycle < m.cycle) m.energy -= DRAIN
           } else {
             m.energy = 0;
-            m.takeDamage((tech.isRadioactiveResistance ? 0.00004 : 0.0002) * tech.radioactiveDamage * spawn.dmgToPlayerByLevelsCleared()) //0.00015
+            m.takeDamage((tech.isRadioactiveResistance ? 0.00004 ** (tech.radioactiveDefense || 1) : 0.0002) * tech.radioactiveDamage * spawn.dmgToPlayerByLevelsCleared()) //0.00015
           }
         }
         //aoe damage to mobs

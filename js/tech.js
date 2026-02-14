@@ -8017,9 +8017,15 @@ const tech = {
       requires: "neutron bomb, irradiated drones, iridium-192",
       effect() {
         tech.isRadioactiveResistance = true
+        if (!tech.radioactiveDefense) {
+          tech.radioactiveDefense = 1
+        } else {
+          tech.radioactiveDefense++
+        }
       },
       remove() {
         tech.isRadioactiveResistance = false
+        tech.radioactiveDefense = 0
       }
     },
     {
@@ -15936,6 +15942,8 @@ const tech = {
   isPhoTonicResonance: null,
   isRadioactive: null,
   radioactiveDamage: null,
+  isRadioactiveResistance: null,
+  radioactiveDefense: null,
   isRailEnergy: null,
   isMineSentry: null,
   isIncendiary: null,
