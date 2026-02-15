@@ -2136,7 +2136,8 @@ const powerUps = {
       }
     }
 
-    if (smallIndexes.length > 2 && Math.random() < 0.66) {             // console.log("no big, at least 3 small can combine")
+    if (smallIndexes.length > 2 && Math.random() < 0.66) {
+      // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {
           if (powerUp[i].name === "heal" || powerUp[i].name === "research" || powerUp[i].name === "ammo" || powerUp[i].name === "coupling" || powerUp[i].name === "boost") {
@@ -2147,15 +2148,23 @@ const powerUps = {
         }
       }
 
-      options = ["tech", "tech", "tech", "gun", "gun", "field"]
+      options = ["tech", "tech", "tech"]
+      if (b.inventory.length < b.guns.length || Math.random() < 0.1) { //if player has all the guns, 10% chance to consider spawning another
+        options.push("gun")
+        options.push("gun")
+      }
+      if (!tech.isPauseSwitchField || Math.random() < 0.1) options.push("field") //if player has UFT, 10% chance to consider spawning field
+
       powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
-    } else if (bigIndexes.length > 0 && Math.random() < 0.5) { // console.log("at least 1 big can spilt")
+    } else if (bigIndexes.length > 0 && Math.random() < 0.5) {
+      // console.log("at least 1 big can spilt")
       const index = bigIndexes[Math.floor(Math.random() * bigIndexes.length)]
       for (let i = 0; i < 3; i++) powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
 
       Matter.Composite.remove(engine.world, powerUp[index]);
       powerUp.splice(index, 1);
-    } else if (smallIndexes.length > 0) { // console.log("no big, at least 1 small will swap flavors")
+    } else if (smallIndexes.length > 0) {
+      // console.log("no big, at least 1 small will swap flavors")
       const index = Math.floor(Math.random() * powerUp.length)
       options = options.filter(e => e !== powerUp[index].name); //don't repeat the current power up type
       powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
