@@ -1070,7 +1070,7 @@ const powerUps = {
     color: "#0eb",
     size() {
       let total =  Math.sqrt(0.1 + 0.25) * 40 * (simulation.healScale ** 0.25); //(simulation.healScale ** 0.25)  gives a smaller radius as heal scale goes down
-      total *= Math.sqrt(tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1) * ((tech.recoilReduction || 0) > 0 ? 0.5 ** tech.recoilReduction : 1)); //tech effects from adiabatic healing, ergodicity and dynamical billiards
+      total *= Math.sqrt(tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1) * ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1)); //tech effects from adiabatic healing, ergodicity and dynamical billiards
       total *= (tech.isFlipFlopOn && tech.isFlipFlopHealth ? Math.sqrt(2) : 1); //tech effects from shape-memory alloy
       if ((m.coupling > 0) && (m.fieldMode === 0 || m.fieldMode === 12)) { //coupling effects from field emitter and energy condenser
         total *= Math.sqrt((1 + 0.05 * m.coupling).toFixed(3));

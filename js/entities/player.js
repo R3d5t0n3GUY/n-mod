@@ -3684,7 +3684,7 @@ const m = {
           (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
         ) {
           powerUps.onPickUp(powerUp[i]);
-          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.5 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
+          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
           Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
             x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
             y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
@@ -3716,7 +3716,7 @@ const m = {
           (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
         ) {
           powerUps.onPickUp(powerUp[i]);
-          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.5 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
+          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
           Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
             x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
             y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
