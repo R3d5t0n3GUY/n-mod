@@ -12,3 +12,4 @@
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
 •Add "too-punishing" update features from original n-gon (e.g. finalBoss's mob-based invulnerability)
+•Bringing back c-gon levels
