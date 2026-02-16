@@ -5372,9 +5372,16 @@ const tech = {
     {
       name: "options exchange",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Option_(finance)' class="link">options exchange</a>`,
-      description: `clicking <strong class='color-cancel'>cancel</strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}
-        	<br>will <strong class='color-randomize'>randomize</strong> with <strong>3x</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>,
-            <br>once a ${powerUps.orb.warp()} for each ${powerUps.orb.field()}, ${powerUps.orb.tech()}, and ${powerUps.orb.gun()}`,
+      descriptionFunction(){
+        let result = `clicking <strong class='color-cancel'>cancel</strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}`,
+          maxTimes = "once"
+        result += `<br>will <strong class='color-randomize'>randomize</strong> with <strong>3x</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>,<br>`
+        if (this.count > (simulation.isChoosing ? 0 : 1)) {
+          maxTimes = `${this.count + (simulation.isChoosing ? 1 : 0)}x`
+        }
+        result += `${maxTimes} a ${powerUps.orb.warp()} for each <strong>type</strong>`
+        return result;
+      },
       isPacifist: true,
       maxCount: 3,
       count: 0,
