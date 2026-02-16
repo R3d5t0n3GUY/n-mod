@@ -1118,6 +1118,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     build.populateGrid();
     document.getElementById("field-0").classList.add("build-field-selected");
     document.getElementById("experiment-grid").style.display = "grid"
+    setTimeout(() => { document.body.style.cursor = "auto" }, 100)
   },
   resetStorage(isForceReset = false) {
     function localStorageCheck() {
