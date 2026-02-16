@@ -263,7 +263,7 @@ const modLevels = {
         // spawn.secondaryBossChance(100, -1500)
         powerUps.addResearchToLevel() //needs to run after mobs are spawned
     },
-    descent() {
+    /*descent() {
         simulation.inGameConsole(`<strong>descent</strong> by <em>&lt;anonymized by request&gt;</em>.
         	<br>made for j-gon`);
         level.setPosToSpawn(0, -50); //normal spawn
@@ -1603,16 +1603,7 @@ const modLevels = {
                     let col = [color.map, document.body.style.backgroundColor]
                     document.body.style.backgroundColor = col[0]
                     color.map = col[1]
-                    /* if (curSection < 6) {
-                        let heal = (mHealthAtCheckpoint-m.health)/4
-                        if (heal > 0) {
-                            m.health += heal
-                            m.displayHealth();
-                            mHealthCap = m.health
-                            mHealthAtCheckpoint = m.health
-                            simulation.inGameConsole(`level<span class='color-symbol'>.</span>boundary<span class='color-symbol'>.</span>undoHarmPercent<span class='color-symbol'>(</span>0.25<span class='color-symbol'>)</span>`)
-                        } 
-                    }*/
+                    
                 }
             }
             if (activeButtons.length == 0 && curSection < sections.length) loadNextSection()
@@ -1631,19 +1622,7 @@ const modLevels = {
                         if (!mob[i].isBoundaryBossCenter) mob[i].fill = `hsla(${curColor[0]},${curColor[1]}%,${curColor[2] + 10}%,${(mob[i].health * 0.67) + 0.33})`
                     }
                 }
-                /* if (curSection < 6 && curSection > 1) {
-                    if (m.health > mHealthCap) {
-                        m.health = mHealthCap
-                        m.displayHealth();
-                    }
-                    if (m.health < mHealthCap) mHealthCap = m.health
-                    for (let i = 0; i < powerUp.length; i++) { // remove all heals before the boss
-                        if (powerUp[i].name === "heal") {
-                            Matter.Composite.remove(engine.world, powerUp[i]);
-                            powerUp.splice(i, 1)
-                        }
-                    }
-                } */
+                
                 if (curSection == 7) {
                     for (let i = 0; i < body.length; i++) {
                         Matter.Composite.remove(engine.world, body[i]);
@@ -1829,5 +1808,5 @@ const modLevels = {
             elevator0.moveOnTouch()
             elevator1.moveOnTouch()
         };
-    },
+    },*/
 }
