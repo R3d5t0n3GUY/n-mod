@@ -740,8 +740,9 @@ const m = {
           if (!avoids || isNaN(avoids) || !isFinite(avoids) || avoids < 0) tech.deathsAvoidedThisLevel = 0 //if NaN, set to zero
           tech.deathsAvoidedThisLevel++
           powerUps.research.changeRerolls(-1)
+          let maxSpawns = 22 - 3 * (tech.isAnthropicExtended || 0)
           simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-r'>research</span><span class='color-symbol'>--</span><br>${powerUps.research.count}`)
-          for (let i = 0; i < 22 - 3 * (tech.isAnthropicExtended || 0); i++) powerUps.spawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "heal", false);
+          for (let i = 0; i < Math.min(maxSpawns, 1); i++) powerUps.spawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "heal", false);
           m.energy = m.maxEnergy + 0.1
           if (m.immuneCycle < m.cycle + 300) m.immuneCycle = m.cycle + 300 //disable this.immuneCycle bonus seconds
           simulation.wipe = function () { //set wipe to have trails
@@ -772,8 +773,9 @@ const m = {
           tech.deathsAvoidedThisLevel++
           m.health = 0.05
           powerUps.research.changeRerolls(-1)
+          let maxSpawns = 16 - 3 * (tech.isAnthropicExtended || 0)
           simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-r'>research</span><span class='color-symbol'>--</span><br>${powerUps.research.count}`)
-          for (let i = 0; i < 16 - 3 * (tech.isAnthropicExtended || 0); i++) powerUps.spawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "heal", false);
+          for (let i = 0; i < Math.min(maxSpawns, 1); i++) powerUps.spawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "heal", false);
           if (m.immuneCycle < m.cycle + 300) m.immuneCycle = m.cycle + 300 //disable this.immuneCycle bonus seconds
           simulation.wipe = function () { //set wipe to have trails
             ctx.fillStyle = "rgba(255,255,255,0.03)";

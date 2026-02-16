@@ -4301,8 +4301,9 @@ const tech = {
       descriptionFunction() {
         // return `once per level, instead of <strong>dying</strong> use ${powerUps.orb.research(1)} and<br>spawn ${powerUps.orb.heal(22)}`
         return `${(tech.isAnthropicExtended) ? `${tech.isAnthropicExtended + 1} times` : `once`} per ${powerUps.orb.warp()}, if 
-            	<strong class='color-h'>health</strong> < <strong>0</strong> use ${powerUps.orb.research(1)} to survive
-            	<br>and spawn ${powerUps.orb.heal((tech.isAnthropicExtended) ? Math.max(22 - 3 * tech.isAnthropicExtended, 4) : 22)}<em style ="float: right;">(${(tech.deathsAvoidedThisLevel < (tech.isAnthropicExtended + 1 || 1) && powerUps.research.count > 0) ? "on" : "off"})</em>`
+            	<strong class='color-h'>health</strong> &lt; <strong>0</strong> use ${powerUps.orb.research(1)} to survive
+            	<br>and spawn ${powerUps.orb.heal((tech.isAnthropicExtended) ? Math.max(22 - 3 * tech.isAnthropicExtended, 4) : 22)}
+              <em style ="float: right;">(${(tech.deathsAvoidedThisLevel < (tech.isAnthropicExtended + 1 || 1) && powerUps.research.count > 0) ? "on" : "off"})</em>`
 
       },
       isPacifist: true,
@@ -16009,6 +16010,9 @@ const tech = {
   isHarmReduceNoKill: null,
   isSwitchReality: null,
   isResearchReality: null,
+  isAnthropicTech: null,
+  idAnthropicDefense: null,
+  isAnthropicExtended: null,
   isAnthropicDamage: null,
   isMetaAnalysis: null,
   isFoamAttract: null,
@@ -16058,7 +16062,6 @@ const tech = {
   harmonicEnergy: null,
   isFieldHarmReduction: null,
   isFastTime: null,
-  isAnthropicTech: null,
   isSporeWorm: null,
   isSporeFlea: null,
   isFoamShot: null,
