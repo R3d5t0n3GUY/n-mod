@@ -6388,7 +6388,8 @@ const tech = {
     {
       name: "ceramics",
       descriptionFunction() {
-        return `<strong>needles</strong> and ${b.guns[9].harpoonName()} pierce <strong>shields</strong><br>directly <strong class='color-d'>damaging</strong> shielded mobs`
+        return `<strong>needles</strong>, ${b.guns[9].harpoonName()}, and <strong>scythe</strong> pierce <strong>shields</strong>
+        <br>directly <strong class='color-d'>damaging</strong> shielded mobs`
       },
       isGunTech: true,
       maxCount: 1,
@@ -6396,9 +6397,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (!tech.isLargeHarpoon && tech.haveGunCheck("harpoon")) || tech.isNeedles || tech.isHookDefense
+        return (!tech.isLargeHarpoon && tech.haveGunCheck("harpoon")) || tech.haveGunCheck("scythe") || tech.isNeedles || tech.isHookDefense
       },
-      requires: "needle gun, harpoon, not Bessemer process",
+      requires: "needle gun, harpoon, scythe, not Bessemer process",
       effect() {
         tech.isShieldPierce = true
       },

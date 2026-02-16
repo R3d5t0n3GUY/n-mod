@@ -9889,31 +9889,40 @@ const b = {
         if (this.scythe) {
           for (let i = 0; i < mob.length; i++) {
             if (Matter.Query.collides(this.scythe, [mob[i]]).length > 0) {
+              const who = mob[i]
               if (tech.durabilityScythe) {
                 this.durability--;
               }
               const dmg = (m.damageDone ? m.damageDone : m.dmgScale) * 0.12 * 2.73 * (tech.isLongBlade ? 1.3 : 1) * (tech.scytheRange ? tech.scytheRange * 1.15 : 1) * (tech.isDoubleScythe ? 0.9 : 1) * (tech.scytheRad ? tech.scytheRad * 1.5 : 1);
-              mob[i].damage(dmg, true);
+              if (tech.isShieldPierce && who.isShielded) { //disable shields
+                who.isShielded = false
+                who.damage(dmg, true);
+                requestAnimationFrame(() => { who.isShielded = true });
+              } else {
+                who.damage(dmg);
+              }
+              
               simulation.drawList.push({
-                x: mob[i].position.x,
-                y: mob[i].position.y,
+                x: who.position.x,
+                y: who.position.y,
                 radius: Math.sqrt(dmg) * 50,
                 color: simulation.mobDmgColor,
                 time: simulation.drawTime
               });
               if (!tech.isMeleeScythe) {
-                const angle = Math.atan2(mob[i].position.y - this.scythe.position.y, mob[i].position.x - this.scythe.position.x);
+                const angle = Math.atan2(who.position.y - this.scythe.position.y,
+                  who.position.x - this.scythe.position.x);
                 this.scythe.force.x += Math.cos(angle) * 2;
                 this.scythe.force.y += Math.sin(angle) * 2;
               }
-              if (tech.isStunScythe && !mob[i].isZombie) {
-                mobs.statusStun(mob[i], 90);
+              if (tech.isStunScythe && !who.isZombie) {
+                mobs.statusStun(who, 90);
               }
               if (tech.isZombieScythe) {
-                mob[i].isSoonZombie = true;
+                who.isSoonZombie = true;
               }
               if (tech.isRadioScythe) {
-                mobs.statusDoT(mob[i], 0.15, 300);
+                mobs.statusDoT(who, 0.15, 300);
               }
               break
             }
@@ -10000,7 +10009,7 @@ const b = {
           Matter.Body.setPosition(scythe, { x, y });
 
           scythe.collisionFilter.category = cat.bullet;
-          scythe.collisionFilter.mask = cat.mobBullet | cat.mob;
+          scythe.collisionFilter.mask = cat.mob | cat.mobBullet;
 
           if ((angle > -Math.PI / 2 && angle < Math.PI / 2)) {
             Body.scale(scythe, -1, 1, { x, y });
