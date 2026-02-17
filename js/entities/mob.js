@@ -1510,5 +1510,13 @@ const mobs = {
         });
         mob[i].alertRange2 = Math.pow(mob[i].radius * 3 + 550, 2);
         Composite.add(engine.world, mob[i]); //add to world
+    },
+    alertAllMobs() {
+      mob.forEach(who => {
+        if (!who.shield && who.isDropPowerUp) {
+            who.locatePlayer();
+            who.seePlayer.yes = true;
+        }
+      })
     }
 };

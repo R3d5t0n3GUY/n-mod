@@ -11900,9 +11900,11 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return (tech.plasmaBotCount || m.fieldMode === 5) && (build.isExperimentSelection || powerUps.research.count > 0)
+        return (tech.plasmaBotCount || m.fieldMode === 5 ||
+          (tech.haveGunCheck("spear") && tech.spearRadioactive && (m.fieldMode !== 0))
+        ) && (build.isExperimentSelection || powerUps.research.count > 0)
       },
-      requires: "plasma torch",
+      requires: "plasma torch, polonium-210",
       effect() {
         tech.isPlasmaRange += 0.5;
         for (let i = 0; i < 1; i++) {
@@ -13829,12 +13831,7 @@ const tech = {
       requires: "",
       effect() {
         setInterval(() => {
-          for (let i = 0; i < mob.length; i++) {
-            if (!mob[i].shield && mob[i].isDropPowerUp) {
-              mob[i].locatePlayer()
-              mob[i].seePlayer.yes = true;
-            }
-          }
+          mobs.alertAllMobs()
         }, 1000); //every 1 seconds
       },
       remove() { }

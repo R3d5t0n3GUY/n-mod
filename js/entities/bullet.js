@@ -512,13 +512,14 @@ const b = {
 
       //chain reaction via foam bubbles
       for (let i = bullet.length - 1; i > -1; i--) {
-        if (bullet[i].isFoam) {
+        if (bullet[i].bulletType === "foam") {
           sub = Vector.sub(where, bullet[i].position);
           dist = Vector.magnitude(sub);
-          if (dist < radius && tech.isFoamExplode) { //&& Math.random() < 0.63
+          if (dist < radius && tech.isFoamExplode && !bullet[i].hasExploded) { //&& Math.random() < 0.63
             const bubblePos = bullet[i].position;
             const size = 20 + 150 * Math.pow(bullet[i].radius, 0.25);
             const onLevel = level.onLevel;
+            bullet[i].hasExploded = true //prevent re-triggering
             bullet[i].endCycle = 0;
             setTimeout(() => {
               if (onLevel === level.onLevel) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
@@ -4126,7 +4127,8 @@ const b = {
     // radius *= Math.sqrt(tech.bulletSize)
     const me = bullet.length;
     bullet[me] = Bodies.polygon(position.x, position.y, 20, radius, {
-      isFoam: true,
+      bulletType: "foam",
+      hasExploded: false, //fixes issue of foam getting stuck in a loop of perpetually spawning explosions
       density: 0.000001, //  0.001 is normal density
       inertia: Infinity,
       frictionAir: 0.003,
