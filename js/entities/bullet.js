@@ -9617,7 +9617,7 @@ const b = {
             for (let i = 0, len = b.inventory.length; i < len; ++i) {
               if (b.guns[b.inventory[i]].name === "scythe" && tech.durabilityScythe) {
                 let duraBoost = ((tech.isAmmoForGun && b.guns[b.activeGun].name === 'scythe') ? 30 : 15);
-                tech.forEach(t => {
+                tech.tech.forEach(t => {
                   if (t.name === "marginal utility") {
                     if (b.guns[t.gun].name === 'scythe') duraBoost *= Math.pow(2, t.count)
                   }
