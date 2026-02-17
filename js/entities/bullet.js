@@ -10932,14 +10932,14 @@ const b = {
       have: false,
       cycle: 0,
       lastAngle: 0,
+      drain: 0.0022,
       wasMROn: false,
       isMROn: false,
       didMRDrain: false,
       canMRFire: true,
       MR() {
-        const DRAIN = 0.0022;
-        if (m.energy > DRAIN && this.canMRFire) {
-          m.energy -= DRAIN;
+        if (m.energy > this.drain && this.canMRFire) {
+          m.energy -= this.drain;
           if (m.energy < 0) {
             m.fireCDcycle = m.cycle + 120;
             m.energy = 0;
@@ -11077,7 +11077,7 @@ const b = {
         // ctx.restore();
       },
       fire() {
-        this.MR();
+        if (m.energy > this.drain + 0.01) this.MR();
       }
     },
   ],
