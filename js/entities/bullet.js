@@ -513,18 +513,20 @@ const b = {
       //chain reaction via foam bubbles
       for (let i = bullet.length - 1; i > -1; i--) {
         if (bullet[i].bulletType === "foam") {
-          sub = Vector.sub(where, bullet[i].position);
-          dist = Vector.magnitude(sub);
-          if (dist < radius && tech.isFoamExplode && !bullet[i].hasExploded) { //&& Math.random() < 0.63
-            const bubblePos = bullet[i].position;
-            const size = 20 + 150 * Math.pow(bullet[i].radius, 0.25);
-            const onLevel = level.onLevel;
-            bullet[i].hasExploded = true //prevent re-triggering
-            bullet[i].endCycle = 0;
-            setTimeout(() => {
-              if (onLevel === level.onLevel) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
-            }, 250 + 300 * Math.random());
-          }
+          try {
+            sub = Vector.sub(where, bullet[i].position);
+            dist = Vector.magnitude(sub);
+            if (dist < radius && tech.isFoamExplode && !bullet[i].hasExploded) { //&& Math.random() < 0.63
+              const bubblePos = bullet[i].position;
+              const size = 20 + 150 * Math.pow(bullet[i].radius, 0.25);
+              const onLevel = level.onLevel;
+              bullet[i].hasExploded = true //prevent re-triggering
+              bullet[i].endCycle = 0;
+              setTimeout(() => {
+                if (onLevel === level.onLevel) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
+              }, 250 + 300 * Math.random());
+            }
+          } catch (e) {}
         }
       }
       //power up knock backs

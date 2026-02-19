@@ -2111,7 +2111,7 @@ const powerUps = {
     //put 10 power ups close together
     const len = Math.min(10, powerUp.length)
     for (let i = 0; i < len; i++) { //collide the first 10 power ups
-      const unit = Vector.rotate({ x: 1, y: 0 }, 6.28 * Math.random())
+      const unit = Vector.rotate({ x: 1, y: 0 }, 2 * Math.PI * Math.random())
       Matter.Body.setPosition(powerUp[i], Vector.add(where, Vector.mult(unit, 20 + 25 * Math.random())));
       Matter.Body.setVelocity(powerUp[i], Vector.mult(unit, 20));
     }
@@ -2127,11 +2127,14 @@ const powerUps = {
       if (!isLorePowerUp){
         if (powerUp[i].name === "tech" || powerUp[i].name === "gun" || powerUp[i].name === "field") {
           bigIndexes.push(i)
-        } else if (powerUp[i].name === "heal" && tech.isHealAttract &&
-          /* Vector.magnitudeSquared(Vector.sub(powerUp[i].position, m.pos)) < 50000 && */ Math.random() < 0.75) { //if player has accretion, chance to spawn heal as larger powerUp
-          bigIndexes.push(i)
         } else {
           smallIndexes.push(i)
+          if (powerUp[i].name === "heal" && (tech.isHealAttract || m.health >= m.maxHealth ||
+            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.75) { //if player has accretion, chance to spawn heal as larger powerUp
+            for (let i = 0; i < Math.ceil(Math.random() * 2); i++) {
+              smallIndexes.push(i)
+            }
+          }
        }
       }
     }
