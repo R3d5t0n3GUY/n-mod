@@ -605,6 +605,7 @@ const m = {
     if (tech.isInPilot && m.fieldOn && Vector.magnitude(Vector.sub(m.fieldPosition, m.pos)) < m.fieldRadius + 100) dmg *= 0.1
     // return tech.isEnergyHealth ? Math.pow(dmg, 0.7) : dmg //defense has less effect
     // dmg *= m.fieldHarmReduction
+    if (tech.isRerollDefense) dmg *= 0.95 ** (powerUps.research.count || 0)
     return dmg * m.fieldHarmReduction
   },
   rewind(steps) { // m.rewind(Math.floor(Math.min(599, 137 * m.energy)))

@@ -9897,7 +9897,7 @@ const b = {
           for (let i = 0; i < mob.length; i++) {
             if (Matter.Query.collides(this.scythe, [mob[i]]).length > 0) {
               const who = mob[i]
-              if (tech.durabilityScythe) {
+              if (tech.durabilityScythe && !who.isInvulnerable) { //don't waste durability on immune targets
                 this.durability--;
               }
               const dmg = (m.damageDone ? m.damageDone : m.dmgScale) * 0.12 * 2.73 * (tech.isLongBlade ? 1.3 : 1) * (tech.scytheRange ? tech.scytheRange * 1.15 : 1) * (tech.isDoubleScythe ? 0.9 : 1) * (tech.scytheRad ? tech.scytheRad * 1.5 : 1);
@@ -10151,35 +10151,40 @@ const b = {
           simulation.ephemera.push({
             name: "spear",
             do() {
-              if (b.guns[b.activeGun].name !== 'spear') {
-                for (let i = 0, len = b.inventory.length; i < len; ++i) {
-                  if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].spear) {
-                    b.guns[b.inventory[i]].cycle = 0;
-                    if (b.guns[b.inventory[i]].constraint1) {
-                      Composite.remove(engine.world, b.guns[b.inventory[i]].constraint1);
-                      b.guns[b.inventory[i]].constraint1 = undefined;
-                    }
-                    if (b.guns[b.inventory[i]].constraint2) {
-                      Composite.remove(engine.world, b.guns[b.inventory[i]].constraint2);
-                      b.guns[b.inventory[i]].constraint2 = undefined;
-                    }
-                    Composite.remove(engine.world, b.guns[b.inventory[i]].spear);
-                    b.guns[b.inventory[i]].spear.parts.forEach(part => {
-                      Composite.remove(engine.world, part);
-                      const index = bullet.indexOf(part);
-                      if (index !== -1) {
-                        bullet.splice(index, 1);
+              try {
+                if (b.guns[b.activeGun].name !== 'spear') {
+                  for (let i = 0, len = b.inventory.length; i < len; ++i) {
+                    if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].spear) {
+                      b.guns[b.inventory[i]].cycle = 0;
+                      if (b.guns[b.inventory[i]].constraint1) {
+                        Composite.remove(engine.world, b.guns[b.inventory[i]].constraint1);
+                        b.guns[b.inventory[i]].constraint1 = undefined;
                       }
-                    });
-                    b.guns[b.inventory[i]].spear = undefined;
-                    b.guns[b.inventory[i]].bladeTrails = [];
+                      if (b.guns[b.inventory[i]].constraint2) {
+                        Composite.remove(engine.world, b.guns[b.inventory[i]].constraint2);
+                        b.guns[b.inventory[i]].constraint2 = undefined;
+                      }
+                      Composite.remove(engine.world, b.guns[b.inventory[i]].spear);
+                      b.guns[b.inventory[i]].spear.parts.forEach(part => {
+                        Composite.remove(engine.world, part);
+                        const index = bullet.indexOf(part);
+                        if (index !== -1) {
+                          bullet.splice(index, 1);
+                        }
+                      });
+                      b.guns[b.inventory[i]].spear = undefined;
+                      b.guns[b.inventory[i]].bladeTrails = [];
+                    }
                   }
                 }
-              }
-              for (let i = 0, len = b.inventory.length; i < len; ++i) {
-                if (b.guns[b.inventory[i]].name === "spear") {
-                  document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].durability}/${b.guns[b.inventory[i]].maxDurability} <em style="font-size: 20px;">durability</em>`
+                for (let i = 0, len = b.inventory.length; i < len; ++i) {
+                  if (b.guns[b.inventory[i]].name === "spear") {
+                    document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].durability}/${b.guns[b.inventory[i]].maxDurability} <em style="font-size: 20px;">durability</em>`
+                  }
                 }
+              } catch (err) {
+                console.warn(err)
+                simulation.removeEphemera(this.name)
               }
             },
           })
@@ -10734,7 +10739,7 @@ const b = {
               if (tech.shockSpear) {
                 mobs.statusStun(who, 10);
               }
-              if (this.durability > 0) {
+              if (this.durability > 0 && !who.isInvulnerable) { //don't waste durability on immune targets
                 this.durability--;
               }
               if (tech.isSounds) audioPlayer.requestSound("SpearHit", who.position)

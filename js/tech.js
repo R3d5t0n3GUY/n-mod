@@ -4719,6 +4719,25 @@ const tech = {
       }
     },
     {
+      name: "Bayesian epistemology",
+      description: `<strong>0.95x</strong> <strong class='color-defense'>damage taken</strong> per ${powerUps.orb.research(1)} in your inventory
+      <br><em style ="float: right;">(${0.95 ** (powerUps.research.count || 0).toFixed(2)}x)</em>`,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequenctDefault: 2,
+      allowed() {
+        return powerUps.research.count > 1 || build.isExperimentSelection
+      },
+      requires: "at least 2 research",
+      effect() {
+        tech.isRerollDefense = true;
+      },
+      remove() {
+        tech.isRerollDefense = false;
+      }
+    },
+    {
       name: "ansatz",
       description: `after <strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}<br>if you have no ${powerUps.orb.research(1)} in your inventory spawn ${powerUps.orb.research(3)}`,
       isPacifist: true,
@@ -15889,6 +15908,7 @@ const tech = {
   isHarmArmor: null,
   isTurret: null,
   isRerollDamage: null,
+  isRerollDefense: null,
   isHarmFreeze: null,
   isBotArmor: null,
   isRerollHaste: null,
