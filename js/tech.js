@@ -4743,6 +4743,7 @@ const tech = {
       count: 0,
       frequency: 2,
       frequenctDefault: 2,
+      isPacifist: true,
       allowed() {
         return powerUps.research.count > 1 || build.isExperimentSelection
       },
