@@ -3806,7 +3806,8 @@ const tech = {
     {
       name: "stability",
       descriptionFunction() {
-        return `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong><br>while your $<strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> is full`
+        return `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong>
+        <br>while your <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> is full`
       },
       maxCount: 1,
       count: 0,
