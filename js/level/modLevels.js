@@ -80,9 +80,10 @@ const modLevels = {
         spawn.mapRect(-1000, -2300, 125, 400);
         spawn.mapRect(-925, -2300, 125, 25);
         spawn.mapRect(-1000, -2675, 200, 375);
-        spawn.mapRect(650, -1850, 950, 25);
+        spawn.mapRect(650, -1850, 1000, 25); //ending platform
         spawn.mapRect(625, -1850, 25, 25);
         spawn.mapRect(-500, -1425, 50, 150);
+        spawn.mapRect(1650, -1925, 25, 100); //to keep reward from falling off map
         // powerUps.spawnStartingPowerUps(1475, -1175);
         // spawn.debris(750, -2200, 3700, 16); //16 debris per level
         // spawn.bodyRect(1540, -1110, 300, 25, 0.9); 
@@ -262,5 +263,26 @@ const modLevels = {
         // if (simulation.difficulty > 1) spawn.randomLevelBoss(2200, -1300);
         // spawn.secondaryBossChance(100, -1500)
         powerUps.addResearchToLevel() //needs to run after mobs are spawned
+    },
+    congregation() {
+      simulation.inGameConsole(`<strong>congregation</strong> by <em>R3d5t0n3GUY</em>
+        <br>I'm sorry for making this`)
+        level.setPosToSpawn(0, -50); //normal spawn
+        level.exit.x = 500;
+        level.exit.y = 0;
+        simulation.fallHeight = 1500
+        spawn.mapRect(level.enter.x, level.enter.y + 20, 100, 20); //bump for level entrance
+        spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
+        level.defaultZoom = 1800
+        simulation.zoomTransition(level.defaultZoom)
+        document.body.style.backgroundColor = "#d8dadf";
+        // color.map = "#444" //custom map color
+
+        level.custom = () => {
+            level.exit.drawAndCheck();
+
+            level.enter.draw();
+        };
+        level.customTopLayer = () => { };
     }
 }
