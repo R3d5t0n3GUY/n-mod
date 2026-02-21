@@ -8311,7 +8311,9 @@ const b = {
     {
       name: "laser", //11
       descriptionFunction() {
-        return `emit a <strong>beam</strong> of collimated coherent <strong class='color-laser'>light</strong><br>reflects off map, <strong class='color-block'>blocks</strong>, and mobs <strong>${(tech.isWideLaser || tech.isPulseLaser) ? 0 : tech.laserReflections}</strong> times<br>costs <strong>${(tech.laserDrain * 6000).toFixed(1)}</strong> <strong class='color-f'>energy</strong> per second and 0 <strong>ammo</strong>`
+        return `emit a <strong>beam</strong> of collimated coherent <strong class='color-laser'>light</strong>
+        <br>reflects off map, <strong class='color-block'>blocks</strong>, and mobs <strong>${(tech.isWideLaser || tech.isPulseLaser) ? 0 : tech.laserReflections}</strong> times
+        <br>costs <strong>${(tech.laserDrain * 6000).toFixed(1)}</strong> <strong class='color-f'>energy</strong> per second and 0 <strong>ammo</strong>`
       },
       ammo: 0,
       ammoPack: Infinity,
@@ -8633,7 +8635,10 @@ const b = {
     },
     {
       name: "sword",
-      descriptionFunction() { return `swing a <b>sword</b> that <b style="color: indigo;">lifesteals</b> <strong class='color-h'>health</strong><br>drains <strong class='color-h'>health</strong> instead of ammunition<br>doesn't use <b>ammo</b>` },
+      descriptionFunction() { 
+        return `swing a <b>sword</b> that <b style="color: indigo;">lifesteals</b> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>
+        <br>drains <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> instead of ammunition
+        <br>doesn't use <b>ammo</b>` },
       ammo: Infinity,
       ammoPack: Infinity,
       defaultAmmoPack: Infinity,
