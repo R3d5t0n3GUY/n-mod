@@ -19,8 +19,7 @@ const scripts = [
     attempt: 0,
     afterLoad() {
       window.alert(`NOTICE: C-GON MAPS HAVE BEEN REMOVED BY THE REQUEST OF CoalDeficit\n
-If you want to play in them, ` + /*either use an older commit of n-mod, or, BETTER YET, */
-`check out c-gon, an awesome n-gon mod they made!`)
+If you want to play in them, check out c-gon, an awesome n-gon mod they made!`)
     },
     title: `Throws a message about c-gon's maps. Does nothing else.`
   }
