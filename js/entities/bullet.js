@@ -8901,7 +8901,7 @@ const b = {
           if (this.sword) {
             this.stabStatus = false;
             if (tech.isEnergyHealth) {
-              m.energy = 0.01;
+              //m.energy = 0.01;
               m.immuneCycle = m.cycle + 30;
             }
             this.cycle = 0;
