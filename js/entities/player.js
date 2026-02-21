@@ -464,7 +464,8 @@ const m = {
         simulation.inGameConsole("simulation.amplitude <span class='color-symbol'>=</span> null");
         tech.isImmortal = false //disable future immortality
       }, 6 * swapPeriod);
-    } else if (m.alive) { //normal death code here            
+    } else if (m.alive) { //normal death code here 
+      simulation.hasAttemptedResolve = false
       m.storeTech()
       m.alive = false;
       simulation.paused = true;
@@ -496,8 +497,8 @@ const m = {
           gunIndexes: gunList,
           techIndexes: techList,
           position: {
-            x: m.pos.x,
-            y: m.pos.y
+            x: (isNaN(m.pos.x) ? level.enter.x : m.pos.x),
+            y: (isNaN(m.pos.y) ? level.enter.y : m.pos.y)
           },
           levelName: level.levels[level.onLevel],
           isHorizontalFlipped: simulation.isHorizontalFlipped

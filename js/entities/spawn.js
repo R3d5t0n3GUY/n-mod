@@ -1126,6 +1126,7 @@ const spawn = {
       ctx.lineTo(best.x, best.y);
     }
     me.onDeath = function () {
+      let hasUnlockedLore = tech.tech.find(i => {return i.name === "undefined"}).allowed()
       if (m.health < 0) {
         m.death() //needed for quantum Zeno effect
         return
@@ -1190,7 +1191,11 @@ const spawn = {
               } else if (count === 660) {
                 simulation.inGameConsole(`simulation.analysis <span class='color-symbol'>=</span> 1 <em>//analysis complete</em>`);
               } else if (count === 780) {
-                simulation.inGameConsole(`<span class="lore-text">undefined</span> <span class='color-symbol'>=</span> ${lore.techCount}/${lore.techGoal}`)
+                  if (hasUnlockedLore && !simulation.isCheating) {
+                    simulation.inGameConsole(`<span class="lore-text">undefined</span> <span class='color-symbol'>=</span> ${lore.techCount}/${lore.techGoal}`)
+                  } else {
+                    simulation.inGameConsole(`<span class="lore-text">lore</span> <strong class='color-tech'>tech</strong> unlocked`)
+                  }
               } else if (count === 1020) {
                 simulation.inGameConsole(`Engine.clear(engine) <em>//simulation successful</em>`);
               } else if (count === 1260) {

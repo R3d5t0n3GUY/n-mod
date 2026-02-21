@@ -267,7 +267,7 @@ const modLevels = {
     congregation() {
       simulation.inGameConsole(`<strong>congregation</strong> by <em>R3d5t0n3GUY</em>
         <br>I'm sorry for making this`)
-        level.setPosToSpawn(0, -50); //normal spawn
+        level.setPosToSpawn(0, 0); //normal spawn
         level.exit.x = 500;
         level.exit.y = 0;
         simulation.fallHeight = 1500
