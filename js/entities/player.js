@@ -7368,7 +7368,7 @@ const m = {
         }
         window.addEventListener("keydown", m.fieldEvent);
 
-        m.fieldMeterColor = "#fa4" //"#0c5"
+        m.fieldMeterColor = "#ff8a00" //"#0c5"
         m.eyeFillColor = m.fieldMeterColor
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
