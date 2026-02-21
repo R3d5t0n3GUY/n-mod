@@ -14,7 +14,13 @@ const scripts = [
   },
   {
     name: 'c-gon maps',
-    url: null,
+    url: null, /* was thinking about adding a separate file that allows the user to load c-gon's cool maps,
+    but then realized that CoalDeficit was probably still mad at me for adding them without asking first,
+    so I decided that this would instead throw a message without loading anything external.
+    If you want to try the maps out, play c-gon instead.
+    And maybe follow CoalDeficit on GitHub (and anywhere else) while you're at it! :)
+      -R3d5t0ne_GUY
+    */
     loaded: false,
     attempt: 0,
     afterLoad() {

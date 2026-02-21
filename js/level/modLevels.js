@@ -265,8 +265,8 @@ const modLevels = {
         powerUps.addResearchToLevel() //needs to run after mobs are spawned
     },
     congregation() {
-      simulation.inGameConsole(`<strong>congregation</strong> by <em>R3d5t0n3GUY</em>
-        <br>I'm sorry for making this`)
+      simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
+        <br>WORK IN PROGRESS`)
         level.setPosToSpawn(0, 0); //normal spawn
         level.exit.x = 500;
         level.exit.y = 0;
