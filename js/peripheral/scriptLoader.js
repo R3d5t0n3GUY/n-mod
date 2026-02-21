@@ -6,29 +6,24 @@ setTimeout(() => {
 const scripts = [
   { 
     name: 'Minimap',
-    url: 'js/peripheral/minimap.js',
+    url: 'js/peripheral/userscripts/minimap.js',
     loaded: false,
     attempt: 0,
     afterLoad() {},
     title: `This adds a minimap to the game, showing the player's position and the layout of the level.`
-  }
-  /*{
-    name: 'Audio Player',
-    url: 'js/audioPlayer.js',
+  },
+  {
+    name: 'c-gon maps',
+    url: null,
     loaded: false,
     attempt: 0,
     afterLoad() {
-      for (let i = 0; i < tech.tech.length; i++) {
-        if (tech.tech[i].name === 'sounds') {
-          tech.tech.splice(i, 1); //remove the 'sounds' tech from the list
-          tech.isSounds = true;
-          break;
-        }
-      }
+      window.alert(`NOTICE: C-GON MAPS HAVE BEEN REMOVED BY THE REQUEST OF CoalDeficit\n
+If you want to play in them, ` + /*either use an older commit of n-mod, or, BETTER YET, */
+`check out c-gon, an awesome n-gon mod they made!`)
     },
-    title: `This adds sound effects to the game.
-It also removes the JUNK tech 'sounds', as this script replaces the need for it.`
-  }*/
+    title: `Throws a message about c-gon's maps. Does nothing else.`
+  }
   /*
   {
     name: 'Force Start Game',
@@ -120,13 +115,7 @@ scripts.forEach(script => {
   const statusIcon = document.createElement('span');
   statusIcon.style.width = '20px';
   statusIcon.style.textAlign = 'center';
-/*
-  if (script.url === 'js/audioPlayer.js') {
-    statusIcon.className = 'audio-script';
-    btn.className = 'audio-script';
-    btnContainer.className = 'audio-script';
-  }
-*/
+
   btn.onmouseover = () => btn.style.backgroundColor = '#4a4a4a';
   btn.onmouseout = () => btn.style.backgroundColor = '#3a3a4a';
 

@@ -56,7 +56,7 @@ javascript:(function() {
 		border-radius: 0.5vw;
 		font-size: 0.9vw;
 		transition-duration: 100ms;
-        font-family: 'Mojangles, Times New Roman, serif';
+        font-family: 'Chakra Petch, Times New Roman, serif';
 	}
 
 	#opacity:hover {
