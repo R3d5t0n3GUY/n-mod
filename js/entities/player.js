@@ -268,7 +268,7 @@ const m = {
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
     //check for crouch or jump
-    if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
+    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
       //translate freecam downward
       m.transY -= m.fieldUpgrades[6].freeCameraSpeed
     } else if (m.crouch) {
