@@ -268,14 +268,14 @@ const m = {
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
     //check for crouch or jump
-    if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.up) {
+    if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.up) {
       //translate freecam downward
     } else if (m.crouch) {
       if (!(input.down) && m.checkHeadClear() && m.hardLandCD < m.cycle) m.undoCrouch();
     } else if (input.down || m.hardLandCD > m.cycle) {
       m.doCrouch(); //on ground && not crouched and pressing s or down
     } else if (input.up) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.down) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.down) {
         //translate freecam upward
       } else if (m.buttonCD_jump + 20 < m.cycle) {
         m.jump()
@@ -283,7 +283,7 @@ const m = {
     }
     const moveX = player.velocity.x - m.moverX //account for mover platforms
     if (input.left) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.right) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.right) {
         //translate freecam to the left
       } else if (moveX > -2) {
         player.force.x -= m.Fx * 1.5
@@ -291,7 +291,7 @@ const m = {
         player.force.x -= m.Fx
       }
     } else if (input.right) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.left) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.left) {
         //translate freecam to the right
       } else if (moveX < 2) {
         player.force.x += m.Fx * 1.5
@@ -312,12 +312,12 @@ const m = {
   airControl() {
     //check for coyote time jump
 
-    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.up) {
+    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.up) {
       //translate freecam downward
     }
 
     if (input.up) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.down) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.down) {
         //translate freecam upward
       } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
         m.jump()
@@ -330,13 +330,13 @@ const m = {
     }
 
     if (input.left) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.right) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.right) {
         //translate freecam to the left
       } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
         player.force.x -= m.FxAir; // move player   left / a
       }
     } else if (input.right) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.left) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isHolding && !input.left) {
         //translate freecam to the right
       } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
         player.force.x += m.FxAir; //move player  right / d
