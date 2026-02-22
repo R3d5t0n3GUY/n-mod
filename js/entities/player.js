@@ -268,22 +268,32 @@ const m = {
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
     //check for crouch or jump
-    if (m.crouch) {
+    if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.up) {
+      //translate freecam downward
+    } else if (m.crouch) {
       if (!(input.down) && m.checkHeadClear() && m.hardLandCD < m.cycle) m.undoCrouch();
     } else if (input.down || m.hardLandCD > m.cycle) {
       m.doCrouch(); //on ground && not crouched and pressing s or down
-    } else if (input.up && m.buttonCD_jump + 20 < m.cycle) {
-      m.jump()
+    } else if (input.up) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.down) {
+        //translate freecam upward
+      } else if (m.buttonCD_jump + 20 < m.cycle) {
+        m.jump()
+      }
     }
     const moveX = player.velocity.x - m.moverX //account for mover platforms
     if (input.left) {
-      if (moveX > -2) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.right) {
+        //translate freecam to the left
+      } else if (moveX > -2) {
         player.force.x -= m.Fx * 1.5
       } else {
         player.force.x -= m.Fx
       }
     } else if (input.right) {
-      if (moveX < 2) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.left) {
+        //translate freecam to the right
+      } else if (moveX < 2) {
         player.force.x += m.Fx * 1.5
       } else {
         player.force.x += m.Fx
@@ -301,7 +311,18 @@ const m = {
   },
   airControl() {
     //check for coyote time jump
-    if (input.up && m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) m.jump()
+
+    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.up) {
+      //translate freecam downward
+    }
+
+    if (input.up) {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.down) {
+        //translate freecam upward
+      } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
+        m.jump()
+      }
+    }
 
     //check for short jumps   //moving up   //recently pressed jump  //but not pressing jump key now
     if (m.buttonCD_jump + 60 > m.cycle && !(input.up) && m.Vy < 0) {
@@ -309,9 +330,17 @@ const m = {
     }
 
     if (input.left) {
-      if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) player.force.x -= m.FxAir; // move player   left / a
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.right) {
+        //translate freecam to the left
+      } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
+        player.force.x -= m.FxAir; // move player   left / a
+      }
     } else if (input.right) {
-      if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) player.force.x += m.FxAir; //move player  right / d
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && !input.left) {
+        //translate freecam to the right
+      } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
+        player.force.x += m.FxAir; //move player  right / d
+      }
     }
   },
   printBlock() {
@@ -5516,7 +5545,7 @@ const m = {
                     <br><strong>12</strong> <strong class='color-f'>energy</strong> per second
                     <em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
-      isFreeCameraMode: false, //m.fieldUpgrades[6].isRewindMode
+      isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
       set() {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
@@ -5530,13 +5559,13 @@ const m = {
             if (m.energy > drain) {
               m.energy -= drain
 
-              if (m.fieldUpgrades[6].isRewindMode) {
-                m.fieldUpgrades[6].isRewindMode = false
+              if (m.fieldUpgrades[6].isFreeCameraMode) {
+                m.fieldUpgrades[6].isFreeCameraMode = false
                 window.removeEventListener("keydown", m.fieldEvent);
                 m.fieldUpgrades[6].set()
                 m.wakeCheck();
               } else {
-                m.fieldUpgrades[6].isRewindMode = true
+                m.fieldUpgrades[6].isFreeCameraMode = true
                 window.removeEventListener("keydown", m.fieldEvent);
                 m.fieldUpgrades[6].set()
                 m.wakeCheck();
