@@ -4084,7 +4084,7 @@ const m = {
       	m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span> 
         m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>y<span class='color-symbol'>, </span> 
         "settings"<span class='color-symbol'>)</span>
-        &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↓ ← → ↑↓ ← →</em>`)
+        &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↑↓ ← → ↑↓ ← →</em>`)
       } else if (m.fieldMode === 1) { //standing wave
         simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades<span class='color-symbol'>[1]</span>energyHealthRatio <span class='color-symbol'>=</span> ${m.fieldUpgrades[1].energyHealthRatio} 
       	&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←←↓→→↓</em>`);
@@ -4101,36 +4101,37 @@ const m = {
         simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 
       	&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↓→→↧</em>`);
       } else if (m.fieldMode === 6) { //time dilation
-        simulation.inGameConsole(`m<span class='color-symbol'>.</span>history<span class='color-symbol'>[(</span>m<span class='color-symbol'>.</span>cycle <span class='color-symbol'>-</span> 200 <span class='color-symbol'>)</span> <span class='color-symbol'>%</span> 600 <span class='color-symbol'>]</span> 
-      	&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #055;">//←↓→↑←↓→↑</em>`);
+        simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
+            &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #055;">←↓→↑←↓→↑</em>`);
       } else if (m.fieldMode === 7) { //metamaterial cloaking
         simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> 
       	&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
       } else if (m.fieldMode === 8) { //pilot wave
         simulation.inGameConsole(`Composite<span class='color-symbol'>.</span>add<span class='color-symbol'>(</span>engine.world<span class='color-symbol'>,</span> block<span class='color-symbol'>)</span> 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓→↓←↓↓</em>`);
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↓↓→↓←↓↓</em>`);
       } else if (m.fieldMode === 9) { //wormhole
         simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> <span class='color-var'>Math</span><span class='color-symbol'>.</span>random() <span class='color-symbol'>})</span> 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓↓↑↓</em>`);
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↓↓↓↑↓</em>`);
       } else if (m.fieldMode === 10) { //grappling hook
         simulation.inGameConsole(`Matter<span class='color-symbol'>.</span>Body<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>(</span>player<span class='color-symbol'>, {</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↑↓↓</em>`);
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↑↑↓↓</em>`);
       } else if (m.fieldMode === 11) { //tachyonic field
         simulation.inGameConsole(`<span class='color-var'>m</span>.<strong class='color-f'>energy</strong> <span class='color-symbol'>=</span> 
         <span class='color-var'>m</span>.<strong class='color-f'>maxEnergy</strong>
-        &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//←↑→↓↓</em>`)
+        &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//←↑→↓↓</em>`)
       } else if (m.fieldMode === 12) { //energy condenser
         simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> <span class='color-var'>m</span>.maxHealth 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//→↓←↓↓</em>`)
       } else if (m.fieldMode === 13) { //Einstein's shield
         simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldAngle <span class='color-symbol'>±=</span> ${Math.sqrt(4 / Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))).toFixed(3)} 
-       	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑←↓→↧</em>`)
+       	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↑←↓→↧</em>`)
       } else if (m.fieldMode === 14) { //matter displacement
-        simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> <span class='color-var'>Math</span><span class='color-symbol'>.</span>random()<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓↑↑↓</em>`)
+        simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> <span class='color-var'>Math</span>
+          <span class='color-symbol'>.</span>random()<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> 
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↓↓↑↑↓</em>`)
       } else { //all other fields
         simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldEvent <span class='color-symbol'>=</span> <strong>undefined</strong> 
-      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//not set</em>`)
+      	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//not set</em>`)
       }
     }
   },
@@ -5515,8 +5516,7 @@ const m = {
                     <br><strong>12</strong> <strong class='color-f'>energy</strong> per second
                     <em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
-      isRewindMode: false, //m.fieldUpgrades[6].isRewindMode
-      isRewinding: false,
+      isFreeCameraMode: false, //m.fieldUpgrades[6].isRewindMode
       set() {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
@@ -5542,7 +5542,7 @@ const m = {
                 m.wakeCheck();
               }
             }
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isRewindMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isRewindMode} 
+            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
             &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #fff;">←↓→↑←↓→↑</em>`);
           }
         }
@@ -5581,120 +5581,52 @@ const m = {
           simulation.cycle--; //pause all functions that depend on game cycle increasing
         }
 
-        if (m.fieldUpgrades[6].isRewindMode) {
-          this.rewindCount = 0
-          m.grabPowerUpRange2 = 600000
-          m.fieldUpgrades[6].rewindDrain = 1
+        if (m.fieldUpgrades[6].isFreeCameraMode) {
+          m.grabPowerUpRange2 = 200000
+          m.fieldFire = false;
+          m.isTimeDilated = false;
           m.hold = function () {
-            if (input.field) m.grabPowerUp();
             if (m.isHolding) {
+              m.wakeCheck();
               m.drawHold(m.holdingTarget);
               m.holding();
               m.throwBlock();
-              m.wakeCheck();
-            } else if (input.field && m.fieldCDcycle < m.cycle) { //not hold but field button is pressed
-              // const drain = 0.0015 / (1 + 0.05 * m.coupling)
-              // const DRAIN = 0.003
-              const rwDrain = m.fieldUpgrades[6].rewindDrain * 0.002 / (1 + 0.04 * m.coupling)
-              m.fieldUpgrades[6].rewindDrain *= 1.0015
-              // const drainFlat = 0.2
-              // if (m.energy > drain) m.energy -= drain
-              if (this.rewindCount === 0) m.lookForBlock();
-
-              if (!m.holdingTarget) {
-                if (m.energy > rwDrain) {
-                  timeStop();
-                } else { //holding, but field button is released
-                  m.fieldCDcycle = m.cycle + 120;
-                  m.energy = 0;
-                  m.wakeCheck();
-                  m.wakeCheck();
-                }
-
-                // if (this.rewindCount === 0) { //large upfront energy cost to enter rewind mode
-                //     if (m.energy > drainFlat + 10 * drain) {
-                //         m.energy -= drainFlat
-                //     } else {
-                //         this.rewindCount = 0;
-                //         m.resetHistory();
-                //         if (m.fireCDcycle < m.cycle + 60) m.fieldCDcycle = m.cycle + 60
-                //         m.immuneCycle = m.cycle //if you reach the end of the history disable harm immunity
-                //     }
-                // }
-                this.isRewinding = true
-                this.rewindCount += 2;
-
-                let history = m.history[(simulation.cycle - this.rewindCount) % 600]
-                if (this.rewindCount > 599 || m.energy < rwDrain) {
-                  this.rewindCount = 0;
-                  m.resetHistory();
-                  if (m.fireCDcycle < m.cycle + 60) m.fieldCDcycle = m.cycle + 60
-                  m.immuneCycle = m.cycle //if you reach the end of the history disable harm immunity
-                } else {
-                  //draw field everywhere
-                  ctx.globalCompositeOperation = "saturation"
-                  ctx.fillStyle = "#ccc";
-                  ctx.fillRect(-100000, -100000, 200000, 200000)
-                  ctx.globalCompositeOperation = "source-over"
-                  m.energy -= rwDrain
-                  if (m.immuneCycle < m.cycle + 5) m.immuneCycle = m.cycle + 5; //player is immune to damage for 5 cycles
-                  Matter.Body.setPosition(player, history.position);
-                  Matter.Body.setVelocity(player, { x: history.velocity.x, y: history.velocity.y });
-
-                  if (m.health < history.health) {
-                    m.health = history.health
-                    if (m.health > m.maxHealth) m.health = m.maxHealth
-                    m.displayHealth();
-                  }
-
-                  m.yOff = history.yOff
-                  if (m.yOff < 48) {
-                    m.doCrouch()
-                  } else {
-                    m.undoCrouch()
-                  }
-
-                  ctx.beginPath();
-                  ctx.moveTo(m.pos.x, m.pos.y)
-                  const percentLeft = this.rewindCount / 600
-                  ctx.arc(m.pos.x, m.pos.y, 30, 3 * Math.PI / 2, 2 * Math.PI * (1 - percentLeft) + 3 * Math.PI / 2);
-                  ctx.lineTo(m.pos.x, m.pos.y)
-                  ctx.fillStyle = `rgba(0,150,150,${percentLeft})`;
-                  ctx.fill()
-                  m.grabPowerUpEasy();
-                }
+            } else if (input.field && m.fieldCDcycle < m.cycle) {
+              const drain = 0.0026 / (1 + 0.03 * m.coupling)
+              if (m.energy > drain) m.energy -= drain
+              m.grabPowerUp();
+              m.lookForBlock(); //this drains energy 0.001
+              if (m.energy > drain) {
+                timeStop();
+              } else { //holding, but field button is released
+                m.fieldCDcycle = m.cycle + 120;
+                m.energy = 0;
+                m.wakeCheck();
+                m.wakeCheck();
               }
-              // m.wakeCheck();
-            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
-              m.pickUp();
-              this.rewindCount = 0;
-              m.wakeCheck();
-            } else if (tech.isTimeStop && player.speed < 1 && m.onGround && !input.fire) {
+            } else if (tech.isTimeStop && player.speed < 1 && m.onGround && m.fireCDcycle < m.cycle && !input.fire) {
               timeStop();
-              this.rewindCount = 0;
-            } else {
-              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
-              this.rewindCount = 0;
-              m.wakeCheck();
-            }
-            m.drawRegenEnergy() // this calls  m.regenEnergy(); also
-            if (!(input.field && m.fieldCDcycle < m.cycle)) {
-              if (m.fieldUpgrades[6].rewindDrain > 1) m.fieldUpgrades[6].rewindDrain /= 1.0005
-              if (this.isRewinding) {
-                this.isRewinding = false
-                m.resetHistory()
-              }
-              // for (let i = 0; i < bullet.length; i++) {
-              //     if (bullet[i].botType) {
-              //         if (Vector.magnitudeSquared(Vector.sub(bullet[i].position, player.position)) > 1000000) { //far away bots teleport to player
-              //             Matter.Body.setPosition(bullet[i], Vector.add(player.position, { x: 250 * (Math.random() - 0.5), y: 250 * (Math.random() - 0.5) }));
-              //             Matter.Body.setVelocity(bullet[i], { x: 0, y: 0 });
-              //         } else { //close bots maintain relative distance to player on teleport
-              //             Matter.Body.setPosition(bullet[i], Vector.sub(bullet[i].position, change));
-              //         }
-              //     }
+              //makes things move at 1/5 time rate, but has an annoying flicker for mob graphics, and other minor bugs
+              // if (!(m.cycle % 4)) {
+              //     // requestAnimationFrame(() => {
+              //     m.wakeCheck();
+              //     // simulation.timePlayerSkip(1)
+              //     // }); //wrapping in animation frame prevents errors, probably          
+              //     ctx.globalCompositeOperation = "saturation"
+              //     ctx.fillStyle = "#ccc";
+              //     ctx.fillRect(-100000, -100000, 200000, 200000)
+              //     ctx.globalCompositeOperation = "source-over"
+              // } else {
+              //     timeStop();
               // }
+            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
+              m.wakeCheck();
+              m.pickUp();
+            } else {
+              m.wakeCheck();
+              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
             }
+            m.drawRegenEnergy()
           }
         } else {
           m.grabPowerUpRange2 = 200000
@@ -7368,7 +7300,7 @@ const m = {
         }
         window.addEventListener("keydown", m.fieldEvent);
 
-        m.fieldMeterColor = "#ff8a00" //"#0c5"
+        m.fieldMeterColor = "#ff8a1f" //"#0c5"
         m.eyeFillColor = m.fieldMeterColor
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
@@ -7685,13 +7617,14 @@ const m = {
                 simulation.inGameConsole(`Failed to teleport.`)
               }
             } catch (err) {
-              simulation.inGameConsole(`<strong style='color:red'>ERROR:</strong> Script Error. <u>${err}</u>`)
+              simulation.inGameConsole(`<strong style='color:red'>ERROR:</strong> 
+                ${err.name || "Script Error"}. <u>${err.message || err}</u>`)
             }
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
 
-        m.fieldMeterColor = "#ff0"
+        m.fieldMeterColor = "#30f"
         m.eyeFillColor = m.fieldMeterColor
         m.hold = function () {
           if (m.isHolding) {

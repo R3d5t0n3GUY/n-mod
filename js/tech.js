@@ -5567,7 +5567,8 @@ const tech = {
       descriptionFunction() {
           // return `<span style = 'font-size:93%;'><strong>+1</strong> segment from <strong>power ups</strong>, hitting mobs removes them<br><strong>+1%</strong> chance to <strong class='color-dup'>duplicate</strong> <strong>power ups</strong> per segment</span>`
           // return `<strong>power ups</strong> give <strong>+1</strong> <strong class='color-dup'>duplication</strong> / <strong class="color-wire">wire</strong> length<br>mobs <strong>cut</strong> <strong class="color-wire">wire</strong> / <strong class='color-dup'>duplication</strong>`
-          return `<strong>power ups</strong> grow <strong class="color-wire">filament</strong> by <strong>+1</strong>, mobs <strong>cut</strong> it<br><strong>+1%</strong> <strong class='color-dup'>duplication</strong> per segment <em style ='float: right;'>(${tech.wire ? Math.min(100, tech.wire.segments.length).toFixed(0) : 10}%)</em>`
+          return `<strong>power ups</strong> grow <strong class="color-wire">filament</strong> by <strong>+1</strong>, mobs <strong>cut</strong> it
+          <br><strong>+1%</strong> <strong class='color-dup'>duplication</strong> per segment <em style ='float: right;'>(${tech.wire ? Math.min(100, tech.wire.segments.length).toFixed(0) : 10}%)</em>`
       },
       maxCount: 1,
       count: 0,
@@ -5752,7 +5753,7 @@ const tech = {
                         ctx.lineTo(this.wireArray[this.wireArray.length - 1].x, this.wireArray[this.wireArray.length - 1].y);
                         ctx.stroke();
                         //shorten the length of the array
-                        this.cycle--
+                        this.cycle -= (([0,6].includes(m.fieldMode) && m.coupling > 0) ? 1 / (1 + 0.03 * m.coupling) : 1) //time dilation coupling effects
                         if (this.cycle < 1 && (this.cycle % 2 === 0)) {
                           this.wireArray.pop()
                           if (this.wireArray.length <= 0) {
@@ -5826,7 +5827,8 @@ const tech = {
     },
     {
       name: "chitin",
-      description: `after mobs <strong>die</strong> grow <strong class="color-wire">filament</strong> by <strong>+3</strong> segments<br>if <strong class="color-wire">filament</strong> is cut, hatch a <strong class='color-p' style='letter-spacing: -0.8px;'>worm</strong> from lost segments`,
+      description: `after mobs <strong>die</strong> grow <strong class="color-wire">filament</strong> by <strong>+3</strong> segments
+      <br>if <strong class="color-wire">filament</strong> is cut, hatch a <strong class='color-p' style='letter-spacing: -0.8px;'>worm</strong> from lost segments`,
       maxCount: 1,
       count: 0,
       frequency: 3,
@@ -5890,7 +5892,8 @@ const tech = {
     },
     {
       name: "world line",
-      description: `if <strong class="color-wire">filament</strong> is cut <strong style='letter-spacing: 2px;'>stop time</strong> for a moment<br><strong>power ups</strong> grow <strong class="color-wire">filament</strong> by an additional <strong>+1</strong>`,
+      description: `if <strong class="color-wire">filament</strong> is cut <strong style='letter-spacing: 2px;'>stop time</strong> for a moment
+      <br><strong>power ups</strong> grow <strong class="color-wire">filament</strong> by an additional <strong>+1</strong>`,
       maxCount: 1,
       count: 0,
       frequency: 3,

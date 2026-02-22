@@ -1,15 +1,15 @@
 **************************************************** TODO **********************************************
 •Add more commands to chat menu
 •Fix HTML generation for warp menu background images
-•time dilation freecam fieldEvent
+•My first custom level
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon (for the most part; see NOT PLANNED section for exceptions)
-•More images in warp menu (Input needed from community)
-•My first custom level
+•time dilation freecam fieldEvent
 
 ************************************************* POSTPONED ********************************************
 •Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
+•More images in warp menu (Input needed from community)
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
