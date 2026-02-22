@@ -270,6 +270,7 @@ const m = {
     //check for crouch or jump
     if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
       //translate freecam downward
+      m.transY -= m.fieldUpgrades[6].freeCameraSpeed
     } else if (m.crouch) {
       if (!(input.down) && m.checkHeadClear() && m.hardLandCD < m.cycle) m.undoCrouch();
     } else if (input.down || m.hardLandCD > m.cycle) {
@@ -277,6 +278,7 @@ const m = {
     } else if (input.up) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.down) {
         //translate freecam upward
+        m.transY += m.fieldUpgrades[6].freeCameraSpeed
       } else if (m.buttonCD_jump + 20 < m.cycle) {
         m.jump()
       }
@@ -285,6 +287,7 @@ const m = {
     if (input.left) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.right) {
         //translate freecam to the left
+        m.transX += m.fieldUpgrades[6].freeCameraSpeed
       } else if (moveX > -2) {
         player.force.x -= m.Fx * 1.5
       } else {
@@ -293,6 +296,7 @@ const m = {
     } else if (input.right) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.left) {
         //translate freecam to the right
+       m.transX -= m.fieldUpgrades[6].freeCameraSpeed
       } else if (moveX < 2) {
         player.force.x += m.Fx * 1.5
       } else {
@@ -314,11 +318,13 @@ const m = {
 
     if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
       //translate freecam downward
+      m.transY -= m.fieldUpgrades[6].freeCameraSpeed
     }
 
     if (input.up) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.down) {
         //translate freecam upward
+        m.transY += m.fieldUpgrades[6].freeCameraSpeed
       } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
         m.jump()
       }
@@ -332,12 +338,14 @@ const m = {
     if (input.left) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.right) {
         //translate freecam to the left
+        m.transX += m.fieldUpgrades[6].freeCameraSpeed
       } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
         player.force.x -= m.FxAir; // move player   left / a
       }
     } else if (input.right) {
       if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.left) {
         //translate freecam to the right
+        m.transX -= m.fieldUpgrades[6].freeCameraSpeed
       } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
         player.force.x += m.FxAir; //move player  right / d
       }
@@ -5546,6 +5554,7 @@ const m = {
                     <em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
+      freeCameraSpeed: 50,
       set() {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
