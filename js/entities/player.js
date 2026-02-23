@@ -5570,6 +5570,9 @@ const m = {
       keyLog: [null, null, null, null, null, null, null, null],
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
       freeCameraSpeed: 50,
+      freeCamSpeedEnergyRatio(speed = m.fieldUpgrades[6].freeCameraSpeed) { //controls how fast freecam moves with different amounts of energy
+        return speed * Math.pow(Math.max(m.energy / m.maxEnergy, 0), (1 / Math.PHI))
+      },
       set() {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
