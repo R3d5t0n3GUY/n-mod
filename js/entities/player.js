@@ -3713,70 +3713,74 @@ const m = {
     ctx.stroke();
   },
   grabPowerUp() { //look for power ups to grab with field
-    if (m.fireCDcycle < m.cycle) m.fireCDcycle = m.cycle - 1
-    for (let i = 0, len = powerUp.length; i < len; ++i) {
-      if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
-      const dxP = m.pos.x - powerUp[i].position.x;
-      const dyP = m.pos.y - powerUp[i].position.y;
-      const dist2 = dxP * dxP + dyP * dyP + 10;
-      // float towards player  if looking at and in range  or  if very close to player
-      if (
-        dist2 < m.grabPowerUpRange2 &&
-        (m.lookingAt(powerUp[i]) || dist2 < 10000) &&
-        Matter.Query.ray(map, powerUp[i].position, m.pos).length === 0
-      ) {
-        if (!tech.isHealAttract || powerUp[i].name !== "heal") { //if you have accretion heals are already pulled in a different way
-          powerUp[i].force.x += 0.04 * (dxP / Math.sqrt(dist2)) * powerUp[i].mass;
-          powerUp[i].force.y += 0.04 * (dyP / Math.sqrt(dist2)) * powerUp[i].mass - powerUp[i].mass * simulation.g; //negate gravity
-          Matter.Body.setVelocity(powerUp[i], { x: powerUp[i].velocity.x * 0.11, y: powerUp[i].velocity.y * 0.11 }); //extra friction
-        }
-        if ( //use power up if it is close enough
-          dist2 < 5000 &&
-          !simulation.isChoosing &&
-          (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
+    if (!m.isUsingFreeCamera()){
+      if (m.fireCDcycle < m.cycle) m.fireCDcycle = m.cycle - 1
+      for (let i = 0, len = powerUp.length; i < len; ++i) {
+        if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
+        const dxP = m.pos.x - powerUp[i].position.x;
+        const dyP = m.pos.y - powerUp[i].position.y;
+        const dist2 = dxP * dxP + dyP * dyP + 10;
+        // float towards player  if looking at and in range  or  if very close to player
+        if (
+          dist2 < m.grabPowerUpRange2 &&
+          (m.lookingAt(powerUp[i]) || dist2 < 10000) &&
+          Matter.Query.ray(map, powerUp[i].position, m.pos).length === 0
         ) {
-          powerUps.onPickUp(powerUp[i]);
-          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
-          Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
-            x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
-            y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
-          });
-          powerUp[i].effect();
-          Matter.Composite.remove(engine.world, powerUp[i]);
-          powerUp.splice(i, 1);
-          return; //because the array order is messed up after splice
+          if (!tech.isHealAttract || powerUp[i].name !== "heal") { //if you have accretion heals are already pulled in a different way
+            powerUp[i].force.x += 0.04 * (dxP / Math.sqrt(dist2)) * powerUp[i].mass;
+            powerUp[i].force.y += 0.04 * (dyP / Math.sqrt(dist2)) * powerUp[i].mass - powerUp[i].mass * simulation.g; //negate gravity
+            Matter.Body.setVelocity(powerUp[i], { x: powerUp[i].velocity.x * 0.11, y: powerUp[i].velocity.y * 0.11 }); //extra friction
+          }
+          if ( //use power up if it is close enough
+            dist2 < 5000 &&
+            !simulation.isChoosing &&
+            (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
+          ) {
+            powerUps.onPickUp(powerUp[i]);
+            let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
+            Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
+              x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
+              y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
+            });
+            powerUp[i].effect();
+            Matter.Composite.remove(engine.world, powerUp[i]);
+            powerUp.splice(i, 1);
+            return; //because the array order is messed up after splice
+          }
         }
       }
     }
   },
   grabPowerUpEasy() { //look for power ups to grab with field
-    for (let i = 0, len = powerUp.length; i < len; ++i) {
-      if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
-      const dxP = m.pos.x - powerUp[i].position.x;
-      const dyP = m.pos.y - powerUp[i].position.y;
-      const dist2 = dxP * dxP + dyP * dyP + 10;
-      // float towards player
-      if (dist2 < m.grabPowerUpRange2 && Matter.Query.ray(map, powerUp[i].position, m.pos).length === 0) {
-        if (!tech.isHealAttract || powerUp[i].name !== "heal") { //if you have accretion heals are already pulled in a different way
-          powerUp[i].force.x += 0.05 * (dxP / Math.sqrt(dist2)) * powerUp[i].mass;
-          powerUp[i].force.y += 0.05 * (dyP / Math.sqrt(dist2)) * powerUp[i].mass - powerUp[i].mass * simulation.g; //negate gravity
-          Matter.Body.setVelocity(powerUp[i], { x: powerUp[i].velocity.x * 0.11, y: powerUp[i].velocity.y * 0.11 }); //extra friction
-        }
-        if ( //use power up if it is close enough
-          dist2 < 20000 &&
-          !simulation.isChoosing &&
-          (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
-        ) {
-          powerUps.onPickUp(powerUp[i]);
-          let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
-          Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
-            x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
-            y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
-          });
-          powerUp[i].effect();
-          Matter.Composite.remove(engine.world, powerUp[i]);
-          powerUp.splice(i, 1);
-          return; //because the array order is messed up after splice
+    if (!m.isUsingFreeCamera()){
+      for (let i = 0, len = powerUp.length; i < len; ++i) {
+        if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
+        const dxP = m.pos.x - powerUp[i].position.x;
+        const dyP = m.pos.y - powerUp[i].position.y;
+        const dist2 = dxP * dxP + dyP * dyP + 10;
+        // float towards player
+        if (dist2 < m.grabPowerUpRange2 && Matter.Query.ray(map, powerUp[i].position, m.pos).length === 0) {
+          if (!tech.isHealAttract || powerUp[i].name !== "heal") { //if you have accretion heals are already pulled in a different way
+            powerUp[i].force.x += 0.05 * (dxP / Math.sqrt(dist2)) * powerUp[i].mass;
+            powerUp[i].force.y += 0.05 * (dyP / Math.sqrt(dist2)) * powerUp[i].mass - powerUp[i].mass * simulation.g; //negate gravity
+            Matter.Body.setVelocity(powerUp[i], { x: powerUp[i].velocity.x * 0.11, y: powerUp[i].velocity.y * 0.11 }); //extra friction
+          }
+          if ( //use power up if it is close enough
+            dist2 < 20000 &&
+            !simulation.isChoosing &&
+            (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal)
+          ) {
+            powerUps.onPickUp(powerUp[i]);
+            let velMult = ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //dynamical billiards reduces powerUp pickup recoil
+            Matter.Body.setVelocity(player, { //player knock back, after grabbing power up
+              x: player.velocity.x + powerUp[i].velocity.x / player.mass * 4 * powerUp[i].mass * velMult,
+              y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
+            });
+            powerUp[i].effect();
+            Matter.Composite.remove(engine.world, powerUp[i]);
+            powerUp.splice(i, 1);
+            return; //because the array order is messed up after splice
+          }
         }
       }
     }
@@ -5630,100 +5634,51 @@ const m = {
           simulation.cycle--; //pause all functions that depend on game cycle increasing
         }
 
-        if (m.fieldUpgrades[6].isFreeCameraMode) {
-          m.grabPowerUpRange2 = 200000
-          m.fieldFire = false;
-          m.isTimeDilated = false;
-          m.hold = function () {
-            if (m.isHolding) {
-              m.wakeCheck();
-              m.drawHold(m.holdingTarget);
-              m.holding();
-              m.throwBlock();
-            } else if (input.field && m.fieldCDcycle < m.cycle) {
-              const drain = 0.0026 / (1 + 0.03 * m.coupling)
-              if (m.energy > drain) m.energy -= drain
-              m.grabPowerUp();
-              m.lookForBlock(); //this drains energy 0.001
-              if (m.energy > drain) {
-                timeStop();
-              } else { //holding, but field button is released
-                m.fieldCDcycle = m.cycle + 120;
-                m.energy = 0;
-                m.wakeCheck();
-                m.wakeCheck();
-              }
-            } else if (tech.isTimeStop && player.speed < 1 && m.onGround && m.fireCDcycle < m.cycle && !input.fire) {
+        m.grabPowerUpRange2 = (m.fieldUpgrades[6].isFreeCameraMode ? 200 : 200000)
+        m.fieldFire = !m.fieldUpgrades[6].isFreeCameraMode;
+        m.isTimeDilated = false;
+        m.hold = function () {
+          if (m.isHolding) {
+            m.wakeCheck();
+            m.drawHold(m.holdingTarget);
+            m.holding();
+            m.throwBlock();
+          } else if (input.field && m.fieldCDcycle < m.cycle) {
+            const drain = 0.0026 / (1 + 0.03 * m.coupling)
+            if (m.energy > drain) m.energy -= drain
+            if (!m.fieldUpgrades[6].isFreeCameraMode) m.grabPowerUp();
+            m.lookForBlock(); //this drains energy 0.001
+            if (m.energy > drain) {
               timeStop();
-              //makes things move at 1/5 time rate, but has an annoying flicker for mob graphics, and other minor bugs
-              // if (!(m.cycle % 4)) {
-              //     // requestAnimationFrame(() => {
-              //     m.wakeCheck();
-              //     // simulation.timePlayerSkip(1)
-              //     // }); //wrapping in animation frame prevents errors, probably          
-              //     ctx.globalCompositeOperation = "saturation"
-              //     ctx.fillStyle = "#ccc";
-              //     ctx.fillRect(-100000, -100000, 200000, 200000)
-              //     ctx.globalCompositeOperation = "source-over"
-              // } else {
-              //     timeStop();
-              // }
-            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
+            } else { //holding, but field button is released
+              m.fieldCDcycle = m.cycle + 120;
+              m.energy = 0;
               m.wakeCheck();
-              m.pickUp();
-            } else {
               m.wakeCheck();
-              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
             }
-            m.drawRegenEnergy()
+          } else if (tech.isTimeStop && player.speed < 1 && m.onGround && m.fireCDcycle < m.cycle && !input.fire) {
+            timeStop();
+            //makes things move at 1/5 time rate, but has an annoying flicker for mob graphics, and other minor bugs
+            // if (!(m.cycle % 4)) {
+            //     // requestAnimationFrame(() => {
+            //     m.wakeCheck();
+            //     // simulation.timePlayerSkip(1)
+            //     // }); //wrapping in animation frame prevents errors, probably          
+            //     ctx.globalCompositeOperation = "saturation"
+            //     ctx.fillStyle = "#ccc";
+            //     ctx.fillRect(-100000, -100000, 200000, 200000)
+            //     ctx.globalCompositeOperation = "source-over"
+            // } else {
+            //     timeStop();
+            // }
+          } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
+            m.wakeCheck();
+            m.pickUp();
+          } else {
+            m.wakeCheck();
+            m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
           }
-        } else {
-          m.grabPowerUpRange2 = 200000
-          m.fieldFire = true;
-          m.isTimeDilated = false;
-          m.hold = function () {
-            if (m.isHolding) {
-              m.wakeCheck();
-              m.drawHold(m.holdingTarget);
-              m.holding();
-              m.throwBlock();
-            } else if (input.field && m.fieldCDcycle < m.cycle) {
-              const drain = 0.0026 / (1 + 0.03 * m.coupling)
-              if (m.energy > drain) m.energy -= drain
-              m.grabPowerUp();
-              m.lookForBlock(); //this drains energy 0.001
-              if (m.energy > drain) {
-                timeStop();
-              } else { //holding, but field button is released
-                m.fieldCDcycle = m.cycle + 120;
-                m.energy = 0;
-                m.wakeCheck();
-                m.wakeCheck();
-              }
-            } else if (tech.isTimeStop && player.speed < 1 && m.onGround && m.fireCDcycle < m.cycle && !input.fire) {
-              timeStop();
-              //makes things move at 1/5 time rate, but has an annoying flicker for mob graphics, and other minor bugs
-              // if (!(m.cycle % 4)) {
-              //     // requestAnimationFrame(() => {
-              //     m.wakeCheck();
-              //     // simulation.timePlayerSkip(1)
-              //     // }); //wrapping in animation frame prevents errors, probably          
-              //     ctx.globalCompositeOperation = "saturation"
-              //     ctx.fillStyle = "#ccc";
-              //     ctx.fillRect(-100000, -100000, 200000, 200000)
-              //     ctx.globalCompositeOperation = "source-over"
-              // } else {
-              //     timeStop();
-              // }
-            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
-              m.wakeCheck();
-              m.pickUp();
-            } else {
-              m.wakeCheck();
-              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
-            }
-            m.drawRegenEnergy()
-          }
+          m.drawRegenEnergy()
         }
       },
       effect() {

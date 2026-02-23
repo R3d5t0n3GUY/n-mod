@@ -1183,10 +1183,6 @@ const simulation = {
               }
             }
 
-
-
-
-
           }
           if (isNaN(player.position.x) && !simulation.hasAttemptedResolve) { //go to start
             simulation.hasAttemptedResolve = true; //prevent multiple executions
@@ -1397,7 +1393,15 @@ const simulation = {
                 m.energy += 0.01 + 0.01 * ((bullet[i].isSpore || bullet[i].isFlea) ? 0 : 1)
               } else {
                 m.health += 0.01 + 0.01 * ((bullet[i].isSpore || bullet[i].isFlea) ? 0 : 1)
-                if (m.health > m.maxHealth) m.health = m.maxHealth;
+                if (m.health > m.maxHealth) {
+                  if (tech.isOverHeal) {
+                    let oldMaxHealth = m.maxHealth
+                    m.maxHealth = 0.5 * (m.health + m.maxHealth) //half of overhealing will increase maxHealth
+                    m.health = oldMaxHealth
+                  } else {
+                    m.health = m.maxHealth
+                  }
+                };
                 m.displayHealth();
               }
             }
