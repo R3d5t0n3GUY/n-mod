@@ -223,8 +223,8 @@ const m = {
     m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale
     m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale
 
-    m.transX += (m.transSmoothX - m.transX) * m.lookSmoothing;
-    m.transY += (m.transSmoothY - m.transY) * m.lookSmoothing;
+    m.transX += (m.transSmoothX - m.transX) * (m.isUsingFreeCamera() ? 0 : m.lookSmoothing);
+    m.transY += (m.transSmoothY - m.transY) * (m.isUsingFreeCamera() ? 0 : m.lookSmoothing);
   },
   doCrouch() {
     if (!m.crouch) {
@@ -253,6 +253,9 @@ const m = {
       return true
     }
   },
+  isUsingFreeCamera() {
+    return (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isTimeDilated)
+  },
   buttonCD_jump: 0, //cool down for player buttons
   jump() {
     m.buttonCD_jump = m.cycle; //can't jump again until 20 cycles pass
@@ -268,7 +271,11 @@ const m = {
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
     //check for crouch or jump
-    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
+    if (m.isUsingFreeCamera()) {
+      m.transSmoothX = 0
+      m.transSmoothY = 0
+    }
+    if (m.isUsingFreeCamera() && input.down && !input.up) {
       //translate freecam downward
       m.transY -= m.fieldUpgrades[6].freeCameraSpeed
     } else if (m.crouch) {
@@ -276,7 +283,7 @@ const m = {
     } else if (input.down || m.hardLandCD > m.cycle) {
       m.doCrouch(); //on ground && not crouched and pressing s or down
     } else if (input.up) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.down) {
+      if (m.isUsingFreeCamera() && !input.down) {
         //translate freecam upward
         m.transY += m.fieldUpgrades[6].freeCameraSpeed
       } else if (m.buttonCD_jump + 20 < m.cycle) {
@@ -285,7 +292,7 @@ const m = {
     }
     const moveX = player.velocity.x - m.moverX //account for mover platforms
     if (input.left) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.right) {
+      if (m.isUsingFreeCamera() && !input.right) {
         //translate freecam to the left
         m.transX += m.fieldUpgrades[6].freeCameraSpeed
       } else if (moveX > -2) {
@@ -294,7 +301,7 @@ const m = {
         player.force.x -= m.Fx
       }
     } else if (input.right) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.left) {
+      if (m.isUsingFreeCamera() && !input.left) {
         //translate freecam to the right
        m.transX -= m.fieldUpgrades[6].freeCameraSpeed
       } else if (moveX < 2) {
@@ -315,14 +322,18 @@ const m = {
   },
   airControl() {
     //check for coyote time jump
-
-    if (input.down && m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.up) {
+    if (m.isUsingFreeCamera()) {
+      m.transSmoothX = 0
+      m.transSmoothY = 0
+    }
+    
+    if (input.down && m.isUsingFreeCamera() && !input.up) {
       //translate freecam downward
       m.transY -= m.fieldUpgrades[6].freeCameraSpeed
     }
 
     if (input.up) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.down) {
+      if (m.isUsingFreeCamera() && !input.down) {
         //translate freecam upward
         m.transY += m.fieldUpgrades[6].freeCameraSpeed
       } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
@@ -336,14 +347,14 @@ const m = {
     }
 
     if (input.left) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.right) {
+      if (m.isUsingFreeCamera() && !input.right) {
         //translate freecam to the left
         m.transX += m.fieldUpgrades[6].freeCameraSpeed
       } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
         player.force.x -= m.FxAir; // move player   left / a
       }
     } else if (input.right) {
-      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && input.field && !input.left) {
+      if (m.isUsingFreeCamera() && !input.left) {
         //translate freecam to the right
         m.transX -= m.fieldUpgrades[6].freeCameraSpeed
       } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
@@ -4138,7 +4149,7 @@ const m = {
         simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 
       	&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↓→→↧</em>`);
       } else if (m.fieldMode === 6) { //time dilation
-        simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
+        simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${!m.fieldUpgrades[6].isFreeCameraMode} 
             &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #055;">←↓→↑←↓→↑</em>`);
       } else if (m.fieldMode === 7) { //metamaterial cloaking
         simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> 
