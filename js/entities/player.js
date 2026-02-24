@@ -4328,7 +4328,7 @@ const m = {
             m.setMaxEnergy()
             m.setMaxHealth()
             m.displayHealth()
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades<span class='color-symbol'>[1]</span>energyHealthRatio <span class='color-symbol'>=</span> ${m.fieldUpgrades[1].energyHealthRatio} &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #fff;">←←↓→→↓</em>`);
+            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades<span class='color-symbol'>[1]</span>energyHealthRatio <span class='color-symbol'>=</span> ${m.fieldUpgrades[1].energyHealthRatio} &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←←↓→→↓</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
@@ -4775,7 +4775,7 @@ const m = {
               //     }
               // },
             })
-            simulation.inGameConsole(`body<span class='color-symbol'>[i].</span>force <span class='color-symbol'>=</span> push &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">←↑→↑↑</em>`);
+            simulation.inGameConsole(`body<span class='color-symbol'>[i].</span>force <span class='color-symbol'>=</span> push &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↑→↑↑</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
@@ -5237,7 +5237,7 @@ const m = {
                 }
               },
             })
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #fff;">←↓→→↧</em>`);
+            simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↓→→↧</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
@@ -5629,7 +5629,7 @@ const m = {
             m.wakeCheck();
 
             simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
-            &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #fff;">←↓→↑←↓→↑</em>`);
+            &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↑↓ ← → ↑↓ ← →</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
@@ -5742,10 +5742,10 @@ const m = {
           if (arraysEqual(m.fieldUpgrades[7].keyLog, patternA) || arraysEqual(m.fieldUpgrades[7].keyLog, patternB)) {
             if (m.fieldUpgrades[7].smallFieldRadius === 130) {
               m.fieldUpgrades[7].smallFieldRadius = 70
-              simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #fff;">↑↓←↓→</em>`);
+              simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
             } else {
               m.fieldUpgrades[7].smallFieldRadius = 130
-              simulation.inGameConsole(`<strong>6</strong><span class='color-symbol'>→</span><strong>4.5x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #fff;">↑↓←↓→</em>`);
+              simulation.inGameConsole(`<strong>6</strong><span class='color-symbol'>→</span><strong>4.5x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
             }
           }
         }
@@ -5970,7 +5970,7 @@ const m = {
               isPilotWave: true,
             });
             Composite.add(engine.world, body[body.length - 1]); //add to world
-            simulation.inGameConsole(`Composite<span class='color-symbol'>.</span>add<span class='color-symbol'>(</span>engine.world<span class='color-symbol'>,</span> block<span class='color-symbol'>)</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">//↓↓→↓←↓↓</em>`);
+            simulation.inGameConsole(`Composite<span class='color-symbol'>.</span>add<span class='color-symbol'>(</span>engine.world<span class='color-symbol'>,</span> block<span class='color-symbol'>)</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓→↓←↓↓</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);
@@ -7237,7 +7237,7 @@ const m = {
             if (m.energy > m.maxEnergy * 0.9) {
               simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> 
               	<span class='color-var'>m</span>.maxHealth
-              	<em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
+              	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
               m.energy = 0.01
               m.health = m.maxHealth
               m.displayHealth();
