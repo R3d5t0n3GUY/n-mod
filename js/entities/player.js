@@ -277,7 +277,7 @@ const m = {
     }
     if (m.isUsingFreeCamera() && input.down && !input.up) {
       //translate freecam downward
-      m.transY -= m.fieldUpgrades[6].freeCameraSpeed
+      m.transY -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
     } else if (m.crouch) {
       if (!(input.down) && m.checkHeadClear() && m.hardLandCD < m.cycle) m.undoCrouch();
     } else if (input.down || m.hardLandCD > m.cycle) {
@@ -285,7 +285,7 @@ const m = {
     } else if (input.up) {
       if (m.isUsingFreeCamera() && !input.down) {
         //translate freecam upward
-        m.transY += m.fieldUpgrades[6].freeCameraSpeed
+        m.transY += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (m.buttonCD_jump + 20 < m.cycle) {
         m.jump()
       }
@@ -294,7 +294,7 @@ const m = {
     if (input.left) {
       if (m.isUsingFreeCamera() && !input.right) {
         //translate freecam to the left
-        m.transX += m.fieldUpgrades[6].freeCameraSpeed
+        m.transX += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (moveX > -2) {
         player.force.x -= m.Fx * 1.5
       } else {
@@ -303,7 +303,7 @@ const m = {
     } else if (input.right) {
       if (m.isUsingFreeCamera() && !input.left) {
         //translate freecam to the right
-       m.transX -= m.fieldUpgrades[6].freeCameraSpeed
+       m.transX -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (moveX < 2) {
         player.force.x += m.Fx * 1.5
       } else {
@@ -329,13 +329,13 @@ const m = {
     
     if (input.down && m.isUsingFreeCamera() && !input.up) {
       //translate freecam downward
-      m.transY -= m.fieldUpgrades[6].freeCameraSpeed
+      m.transY -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
     }
 
     if (input.up) {
       if (m.isUsingFreeCamera() && !input.down) {
         //translate freecam upward
-        m.transY += m.fieldUpgrades[6].freeCameraSpeed
+        m.transY += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
         m.jump()
       }
@@ -349,14 +349,14 @@ const m = {
     if (input.left) {
       if (m.isUsingFreeCamera() && !input.right) {
         //translate freecam to the left
-        m.transX += m.fieldUpgrades[6].freeCameraSpeed
+        m.transX += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
         player.force.x -= m.FxAir; // move player   left / a
       }
     } else if (input.right) {
       if (m.isUsingFreeCamera() && !input.left) {
         //translate freecam to the right
-        m.transX -= m.fieldUpgrades[6].freeCameraSpeed
+        m.transX -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
       } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
         player.force.x += m.FxAir; //move player  right / d
       }
