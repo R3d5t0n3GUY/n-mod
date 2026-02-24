@@ -274,7 +274,7 @@ const m = {
     if (m.isUsingFreeCamera()) {
       m.transSmoothX = 0
       m.transSmoothY = 0
-      Matter.Body.setVelocity(player: { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
+      Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
     }
     if (m.isUsingFreeCamera() && input.down && !input.up) {
       //translate freecam downward
@@ -326,7 +326,7 @@ const m = {
     if (m.isUsingFreeCamera()) {
       m.transSmoothX = 0
       m.transSmoothY = 0
-      Matter.Body.setVelocity(player: { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
+      Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
     }
     
     if (input.down && m.isUsingFreeCamera() && !input.up) {
