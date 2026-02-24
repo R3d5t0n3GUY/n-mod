@@ -514,6 +514,19 @@ const m = {
         simulation.inGameConsole("simulation.amplitude <span class='color-symbol'>=</span> null");
         tech.isImmortal = false //disable future immortality
       }, 6 * swapPeriod);
+    } else if (tech.isEigenstate && m.eigen.deathCount === 0) {
+      m.eigen.deathCount++
+      m.eigen.isAlive[m.eigen.state] = false
+      m.eigen.swap()
+      simulation.inGameConsole(`<em>//your other state died</em>`)
+      simulation.inGameConsole(`<span class='color-var'>m</span>.eigen.isAlive<span class='color-symbol'>[</span>m.eigen.state<span class='color-var'>]</span> <span class='color-var'>=</span> false `)
+      m.addHealth(1)
+      for (let i = 0; i < tech.tech.length; i++) {
+        if (tech.tech[i].name === "eigenstate") {
+          powerUps.ejectTech(i)
+          break
+        }
+      }
     } else if (m.alive) { //normal death code here 
       simulation.hasAttemptedResolve = false
       m.storeTech()
@@ -1870,6 +1883,450 @@ const m = {
           ctx.stroke();
           ctx.restore();
         }
+      }
+    },
+    eigenstate() {
+      m.isAltSkin = true
+      m.eigen = {
+        cycle: 0,
+        cycleLimit: 600,
+        // cooldownCycle: 0,
+        // downCount: 0,
+        // downCountMax: 60,
+        state: 0,
+        totalStates: 2, //total number of different states
+        isAlive: [],
+        deathCount: 0,
+        health: [],
+        energy: [],
+        save(state) {
+          m.eigen.health[state] = m.health
+          m.eigen.energy[state] = m.energy
+        },
+        reset() {//runs at the start of a new level, and when you get this tech the first time
+          if (m.eigen.isAlive[m.eigen.state === 0 ? 1 : 0]) {
+            m.eigen.health = []
+            m.eigen.energy = []
+            for (let i = 0; i < m.eigen.totalStates; i++) {
+                m.eigen.health.push(m.health)
+                m.eigen.energy.push(m.energy)
+            }
+            if (m.eigen.state === 1) {
+                m.eigen.draw = m.eigen.draw0
+            } else {
+                m.eigen.draw = m.eigen.draw1
+            }
+            // if (m.eigen.block && m.eigen.block.position) {
+            //     Composite.remove(engine.world, m.eigen.block)
+            //     body.splice(body.indexOf(m.eigen.block), 1)
+            //     // console.log(m.eigen.block.position)
+            // }
+
+            m.eigen.makeBlock()
+            //add block to player holding
+            //&& !(m.holdingTarget || m.holdingTarget === m.eigen.block)
+            if (m.fieldMode !== 9 && m.fieldMode !== 8) {  //not wormhole field
+              m.holdingTarget = m.eigen.block
+              m.isHolding = true;
+              m.holdingTarget.collisionFilter.category = 0;
+              m.holdingTarget.collisionFilter.mask = 0;
+              m.definePlayerMass(m.defaultMass + m.holdingTarget.mass * m.holdingMassScale)
+            }
+          }
+        },
+        block() { },
+        makeBlock() {
+          body[body.length] = Matter.Bodies.polygon(m.pos.x, m.pos.y, 0, 30, {
+            friction: 0.9,
+            frictionStatic: 1,
+            frictionAir: 0.001,
+            // density: 0.0001,
+            restitution: 0.4,
+            collisionFilter: {
+              category: cat.body,
+              mask: cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet
+            },
+            classType: "body",
+            isInvulnerable: true,
+          });
+          m.eigen.block = body[body.length - 1]
+          Composite.add(engine.world, m.eigen.block); //add to world  
+        },
+        swap() {
+          m.eigen.cycle = 0 //reset cycle so you don't rapidly switch between states, and this reset the bonus damage timer
+          // m.eigen.downCount = m.eigen.downCountMax
+
+          //record current state so you can return to it
+          m.eigen.save(m.eigen.state);
+
+          //check for the first alive state and swap to it (repeat for each state)
+          for (let i = 0; i < m.eigen.isAlive.length; i++) {
+            m.eigen.state++
+            if (m.eigen.state >= m.eigen.totalStates) m.eigen.state = 0
+            if (m.eigen.isAlive[m.eigen.state]) {
+              ctx.beginPath();
+              // Matter.Body.setPosition(player, m.eigen.block.position);// Matter.Body.setPosition(player, m.eigen.position[m.eigen.state]);
+              simulation.ephemera.push({
+                name: "eigen draw translate"
+                from: { x: m.pos.x, y: m.pos.y + 40 },
+                to: m.pos,
+                // to: { x: m.eigen.block.position.x, y: m.eigen.block.position.y },
+                count: 4, //cycles before it self removes
+                do() {
+                  this.count--
+                  if (this.count < 0) simulation.removeEphemera(this.name)
+                  ctx.moveTo(this.from.x, this.from.y);
+                  ctx.lineTo(this.to.x, this.to.y);
+                  ctx.lineWidth = 60;
+                  ctx.strokeStyle = 'rgba(160,160,160,0.3)'
+                  ctx.stroke();
+                },
+              })
+              simulation.translatePlayerAndCamera({ x: m.eigen.block.position.x, y: m.eigen.block.position.y - 30 })
+
+              Matter.Body.setVelocity(player, m.eigen.block.velocity);
+              m.health = m.eigen.health[m.eigen.state]
+              if (m.health > m.maxHealth) m.health = m.maxHealth
+              m.displayHealth();
+              m.energy = m.eigen.energy[m.eigen.state]
+              const immune = 10
+              if (m.immuneCycle < m.cycle) m.immuneCycle = m.cycle + immune; //player is immune to damage for 10 cycles
+
+              if (m.eigen.state === 1) {
+                m.eigen.draw = m.eigen.draw0
+              } else {
+                m.eigen.draw = m.eigen.draw1
+              }
+
+              if (m.eigen.block && m.eigen.block.position.x) {
+                Composite.remove(engine.world, m.eigen.block)
+                body.splice(body.indexOf(m.eigen.block), 1)
+                // console.log(m.eigen.block.position)
+              }
+
+              if (m.holdingTarget === m.eigen.block) {
+                m.eigen.makeBlock()
+                m.holdingTarget = m.eigen.block
+                m.isHolding = true;
+              } else {
+                if (m.holdingTarget) m.drop();
+                m.eigen.makeBlock()
+              }
+              break
+            } else {
+              m.eigen.state++
+              if (m.eigen.state >= m.eigen.totalStates) m.eigen.state = 0
+            }
+          }
+        },
+        drawBlock(state) {
+          if (m.eigen.isAlive[state] && m.eigen.block) {
+            ctx.fillStyle = m.fillColor;
+            ctx.save();
+            ctx.translate(m.eigen.block.position.x, m.eigen.block.position.y);
+            ctx.rotate(m.eigen.block.angle)
+            ctx.beginPath();
+            ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgb(160,160,160)'//ctx.fillStyle = m.bodyGradient
+            ctx.fill();
+            ctx.strokeStyle = `#000` //#333
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            if (m.eigen.state === 1) {
+                m.eigen.draw1eye()
+            } else {
+                m.eigen.draw0eye()
+            }
+
+            ctx.restore();
+
+            //draw energy bar
+            const range = 60
+            const yOff = m.eigen.block.position.y - 50
+            const height = 10
+            const energy = m.eigen.energy[m.eigen.state === 1 ? 0 : 1]
+            if (energy > m.maxEnergy) { //not sure why 0.05 and not this:  m.fieldRegen * level.isReducedRegen
+              const width = range * (Math.log(energy + 1 - m.maxEnergy) + m.maxEnergy)
+              const xOff = m.eigen.block.position.x - width / 2
+              ctx.fillStyle = m.fieldMeterColor;
+              ctx.fillRect(xOff, yOff, width, height);//range = 60, m.radius = 30 (1/2*60)
+            } else { //
+              const xOff = m.eigen.block.position.x - range * m.maxEnergy / 2
+              ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+              ctx.fillRect(xOff, yOff, range * m.maxEnergy, height);
+              ctx.fillStyle = m.fieldMeterColor; //background
+              ctx.fillRect(xOff, yOff, range * energy, height);
+            }
+            //health bar
+            // Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4))
+            const health = m.eigen.health[m.eigen.state === 1 ? 0 : 1]
+
+            const xOff = m.eigen.block.position.x - range * m.maxHealth / 2
+            ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+            ctx.fillRect(xOff, yOff - 15, range * m.maxHealth, height);
+            ctx.fillStyle = "rgb(9, 245, 166)"; //background
+            ctx.fillRect(xOff, yOff - 15, range * health, height);
+          }
+        },
+        draw0eye() {
+          // const ratio = (60 - m.eigen.downCount) / 60
+          // ctx.beginPath();
+          // ctx.moveTo(17 + 6 * ratio, 0);
+          // ctx.lineTo(17 - 8 * ratio, 0);
+
+          // ctx.lineWidth = 16 - 8 * ratio;
+          // ctx.strokeStyle = "#000";
+          // ctx.stroke();
+
+          // ctx.lineWidth = 13 - 8 * ratio;
+          // ctx.strokeStyle = "#fff";
+          // ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(18, 0, 7, 0, 2 * Math.PI);
+          ctx.fillStyle = '#fff'
+          ctx.fill()
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        },
+        draw1eye() {
+          // m.eigen.downCount
+          // const ratio = m.eigen.downCount / 60
+          // console.log(ratio)
+          ctx.beginPath();
+          ctx.moveTo(23, 0);
+          ctx.lineTo(9, 0);
+
+          ctx.lineWidth = 8;
+          ctx.strokeStyle = "#000";
+          ctx.stroke();
+
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = "#fff";
+          ctx.stroke();
+        },
+        draw() { },
+        draw0() {
+          m.walk_cycle += m.flipLegs * m.Vx;
+          ctx.save();
+          ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
+          ctx.translate(m.pos.x, m.pos.y);
+          m.calcLeg(Math.PI, -3);
+          ctx.fillStyle = 'rgb(160,160,160)'
+          m.eigen.drawLeg("#222");
+          m.calcLeg(0, 0);
+          m.eigen.drawLeg("#000");
+
+
+          if (m.eigen.cycle < m.eigen.cycleLimit) {
+            m.eigen.cycle++
+            const t = m.eigen.cycle * 0.0373// 0.06
+            const maxNodes = 8
+            const nodes = maxNodes - Math.floor(t / Math.PI) % maxNodes
+            const amplitude = nodes === 1 ? 0 : 5 * Math.sin(t)
+            this.drawSine(36, amplitude, nodes, `rgb(70,70,70)`);
+          }
+
+          ctx.rotate(m.angle);
+          ctx.beginPath();
+          ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+          ctx.fillStyle = 'rgb(160,160,160)'
+          ctx.fill();
+          // ctx.lineTo(15, 0);
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          m.eigen.draw0eye()
+
+          ctx.restore();
+          m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
+          powerUps.boost.draw()
+        },
+        draw1() {
+          m.walk_cycle += m.flipLegs * m.Vx;
+          ctx.save();
+          ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
+          ctx.translate(m.pos.x, m.pos.y);
+          m.calcLeg(Math.PI, -3);
+          ctx.fillStyle = 'rgb(160,160,160)'
+          m.eigen.drawLeg("#222");
+          m.calcLeg(0, 0);
+          m.eigen.drawLeg("#000");
+
+          if (m.eigen.cycle < m.eigen.cycleLimit) {
+            m.eigen.cycle++
+            const t = m.eigen.cycle * 0.0373// 0.06
+            const maxNodes = 8
+            const nodes = maxNodes - Math.floor(t / Math.PI) % maxNodes
+            const amplitude = nodes === 1 ? 0 : 5 * Math.sin(t)
+            this.drawSine(36, amplitude, nodes, `rgb(70,70,70)`);
+          }
+
+          ctx.rotate(m.angle);
+          ctx.beginPath();
+          ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+          ctx.fillStyle = 'rgb(160,160,160)'
+          ctx.fill();
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          m.eigen.draw1eye()
+
+          ctx.restore();
+          m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
+          powerUps.boost.draw()
+        },
+        drawLeg(stroke) {
+          // if (simulation.mouseInGame.x > m.pos.x) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          //toe lines
+          ctx.beginPath();
+          if (m.onGround) {
+            ctx.moveTo(m.foot.x, m.foot.y + 2);
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y + 2);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 5);
+          } else {
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
+          }
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 7, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 3.5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 3.5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 3, m.foot.y + 1);
+          ctx.arc(m.foot.x, m.foot.y + 1, 3, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.restore();
+        },
+        drawSine(radius, amplitude, cycles, color) {
+          const segments = cycles * 2; // One segment per half-cycle (peak to trough)
+          const angleStep = (Math.PI * 2) / segments;
+
+          // The "Magic Constant" for circular approximation is ~0.55228.
+          // We scale this based on the angle of our segments.
+          const tangentFactor = (4 / 3) * Math.tan(angleStep / 4);
+
+          ctx.beginPath();
+          ctx.rotate(m.cycle * 0.001)
+          for (let i = 0; i <= segments; i++) {
+            const angle = i * angleStep;
+            // Alternate between adding and subtracting amplitude
+            const currR = radius + (i % 2 === 0 ? -amplitude : amplitude);
+
+            const x = currR * Math.cos(angle);
+            const y = currR * Math.sin(angle);
+
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              // Previous point data
+              const prevAngle = (i - 1) * angleStep;
+              const prevR = radius + ((i - 1) % 2 === 0 ? -amplitude : amplitude);
+              const prevX = prevR * Math.cos(prevAngle);
+              const prevY = prevR * Math.sin(prevAngle);
+
+              // Control Point 1 (outgoing from previous anchor)
+              // We move perpendicular to the radius at the previous point
+              const cp1x = prevX - (prevR * Math.sin(prevAngle) * tangentFactor);
+              const cp1y = prevY + (prevR * Math.cos(prevAngle) * tangentFactor);
+
+              // Control Point 2 (incoming to current anchor)
+              // We move perpendicular to the radius at the current point
+              const cp2x = x + (currR * Math.sin(angle) * tangentFactor);
+              const cp2y = y - (currR * Math.cos(angle) * tangentFactor);
+
+              ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            }
+          }
+          // ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+          ctx.fillStyle = color
+          ctx.fill();
+          // ctx.strokeStyle = "#f03"
+          // ctx.lineWidth = 1
+          // ctx.stroke();
+
+          ctx.rotate(-m.cycle * 0.001)
+        },
+        keyLog: [null, null, null],
+        keyLogCycle: [0, 0, 0],
+        keyListener(event) {
+          if (event.repeat) return; //prevent holding button down
+
+          const sub = m.cycle - m.eigen.keyLogCycle[m.eigen.keyLogCycle.length - 1]
+          // console.log(sub, m.eigen.keyLogCycle)
+          if (sub < 35 || m.eigen.keyLogCycle[m.eigen.keyLogCycle.length - 1] === 0) {
+            m.eigen.keyLogCycle.shift() //remove first element
+            m.eigen.keyLogCycle.push(m.cycle) //add new key to end
+            m.eigen.keyLog.shift() //remove first element
+            m.eigen.keyLog.push(event.code) //add new key to end
+          } else {
+            m.eigen.keyLog = [null, null, event.code]
+            m.eigen.keyLogCycle = [0, 0, m.cycle]
+          }
+
+          const patternA = ["ArrowDown", "ArrowDown", "ArrowDown"]
+          const patternB = [input.key.down, input.key.down, input.key.down]
+          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+          if (arraysEqual(m.eigen.keyLog, patternA) || arraysEqual(m.eigen.keyLog, patternB)) {
+            m.eigen.keyLog = [null, null, null]
+            m.eigen.keyLogCycle = [0, 0, 0]
+            m.eigen.swap()
+          }
+        }
+      }
+
+      window.addEventListener("keydown", m.eigen.keyListener);
+
+      m.drop()
+      m.eigen.isAlive = []
+      for (let i = 0; i < m.eigen.totalStates; i++) m.eigen.isAlive.push(true)
+      m.eigen.reset();
+
+      m.draw = function () {
+        //draw next state
+        let nextState = m.eigen.state + 1
+        if (nextState >= m.eigen.totalStates) nextState = 0
+        m.eigen.drawBlock(nextState)
+
+        // //check for swaps
+        // if (input.left && input.right && m.eigen.cooldownCycle < m.cycle) { //&& m.onGround
+        //     m.eigen.downCount--
+        //     if (m.eigen.downCount < 1) {
+        //         m.eigen.cooldownCycle = m.cycle + 60
+        //         m.eigen.swap()
+        //     }
+        // } else {
+        //     m.eigen.downCount = m.eigen.downCountMax
+        // }
+        m.eigen.draw()
       }
     },
     energy() {
@@ -3505,7 +3962,7 @@ const m = {
 
         m.isHolding = false;
 
-        if (tech.isTokamak && m.throwCharge > 4) { //remove the block body and pulse  in the direction you are facing
+        if (tech.isTokamak && m.throwCharge > 4 && !m.holdingTarget.isInvulnerable) { //remove the block body and pulse  in the direction you are facing
           //m.throwCharge > 5 seems to be when the field full colors in a block you are holding
           m.throwCycle = m.cycle + 180 //used to detect if a block was thrown in the last 3 seconds
           if (m.immuneCycle < m.cycle) m.energy += 0.25 * Math.sqrt(m.holdingTarget.mass) * Math.min(5, m.throwCharge) * level.isReducedRegen

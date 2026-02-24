@@ -1534,7 +1534,7 @@ const spawn = {
       if (!(simulation.cycle % 30)) {
         //find blocks to turn into mobs
         for (let i = 0; i < body.length; i++) {
-          if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable) { // check distance for each block
+          if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable && !body[i].isInvulnerable) { // check distance for each block
             Matter.Composite.remove(engine.world, body[i]);
             this.target = null //player;
             spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0);
@@ -1722,7 +1722,7 @@ const spawn = {
         }
         //find blocks to turn into mobs
         for (let i = 0; i < body.length; i++) {
-          if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable) { // check distance for each block
+          if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable && !body[i].isInvulnerable) { // check distance for each block
             Matter.Composite.remove(engine.world, body[i]);
             this.target = null //player;
             spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0, true);

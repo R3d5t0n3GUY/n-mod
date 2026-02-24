@@ -1309,8 +1309,18 @@ const simulation = {
             let i = body.length;
             while (i--) {
               if (body[i].position.y > simulation.fallHeight) {
-                Matter.Composite.remove(engine.world, body[i]);
-                body.splice(i, 1);
+                if (body[i].isInvulnerable) {
+                  Matter.Body.setVelocity(body[i], { x: 0, y: 0 });
+                  if (level.fallMode === "position") {
+                    const posXClamped = Math.min(Math.max(level.fallModeBounds.left, body[i].position.x), level.fallModeBounds.right)
+                    Matter.Body.setPosition(body[i], { x: posXClamped, y: level.enter.y - 4000 });
+                  } else {
+                    Matter.Body.setPosition(body[i], { x: level.enter.x + 50, y: level.enter.y - 20 });
+                  }
+                } else {
+                  Matter.Composite.remove(engine.world, body[i]);
+                  body.splice(i, 1);
+                }
               }
             }
             i = powerUp.length
@@ -1481,16 +1491,18 @@ const simulation = {
           fleaCount++
         }
       }
-      const where = {
-        x: level.enter.x + 50,
-        y: level.enter.y - 60
-      }
+      
+      //const where = m.pos
       //respawn drones in animation frame
       requestAnimationFrame(() => {
         let respawnDrones = () => {
           if (droneArray.length) {
             requestAnimationFrame(respawnDrones);
             if (!simulation.paused && !simulation.isChoosing && m.alive) {
+              const where = {
+                x: level.enter.x + 50,
+                y: level.enter.y - 60
+              }
               if (tech.isDroneRadioactive) {
                 b.droneRadioactive({ x: where.x + 50 * (Math.random() - 0.5), y: where.y + 50 * (Math.random() - 0.5) }, 0)
                 if (droneArray[0].scale) bullet[bullet.length - 1].size = droneArray[0].scale
@@ -1517,6 +1529,10 @@ const simulation = {
           requestAnimationFrame(respawnSpores);
           if (!simulation.paused && !simulation.isChoosing) {
             sporeCount--
+            const where = {
+              x: level.enter.x + 50,
+              y: level.enter.y - 60
+            }
             b.spore({ 
               x: where.x + 100 * (Math.random() - 0.5), 
               y: where.y + 120 * (Math.random() - 0.5) })
@@ -1531,6 +1547,10 @@ const simulation = {
           requestAnimationFrame(respawnWorms);
           if (!simulation.paused && !simulation.isChoosing) {
             wormCount--
+            const where = {
+              x: level.enter.x + 50,
+              y: level.enter.y - 60
+            }
             b.worm({ 
               x: where.x + 100 * (Math.random() - 0.5), 
               y: where.y + 120 * (Math.random() - 0.5) })
@@ -1545,6 +1565,10 @@ const simulation = {
           requestAnimationFrame(respawnFleas);
           if (!simulation.paused && !simulation.isChoosing) {
             fleaCount--
+            const where = {
+              x: level.enter.x + 50,
+              y: level.enter.y - 60
+            }
             const speed = 6 + 3 * Math.random()
             const angle = 2 * Math.PI * Math.random()
             b.flea({ 

@@ -310,6 +310,7 @@ const tech = {
   },
   damageAdjustments() {
     let dmg = m.damageDone * m.fieldDamage * powerUps.difficulty.damageDone
+    if (tech.isEigenstate && m.eigen.cycle < m.eigen.cycleLimit) dmg *= 3
     if (tech.isLaserWire && tech.wire && tech.wire.segments.length) dmg *= 1 + 0.01 * tech.wire.segments.length
     if (level.isNoDamage && (m.cycle - 180 < level.noDamageCycle)) dmg *= 0.3
     if (tech.isMaxHealthDamage && (m.health >= m.maxHealth || (tech.isEnergyHealth && m.energy > m.maxEnergy - 0.01))) dmg *= 2
@@ -823,6 +824,33 @@ const tech = {
       },
       remove() {
         tech.isDamageCooldownTime = 240
+      }
+    },
+    {
+      name: "eigenstate",
+      descriptionFunction() {
+        return `quickly tap <strong>down</strong> <strong>3</strong> times to swap <strong>states</strong>
+        <br>and gain <strong>3x</strong> <strong class='color-d'>damage</strong> for <strong>10</strong> seconds`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isSkin: true,
+      allowed() {
+        return !m.isAltSkin
+      },
+      requires: "not skinned",
+      effect() {
+        tech.isEigenstate = true;
+        m.skin.eigenstate()
+      },
+      remove() {
+        tech.isEigenstate = false;
+        if (this.count) {
+          window.removeEventListener("keydown", m.eigen.keyListener);
+          m.resetSkin();
+        }
       }
     },
     {
@@ -15942,6 +15970,7 @@ const tech = {
   isCutTimeStop: null,
   isLaserWire: null,
   isMycelium: null,
+  isEigenstate: null,
   isStimulatedEmission: null,
   // nailGun: null,
   nailInstantFireRate: null,

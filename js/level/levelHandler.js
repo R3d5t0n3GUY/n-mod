@@ -212,6 +212,7 @@ const level = {
             tech.blockDupCount = 0
             simulation.inGameConsole(`<span class='color-var'>duplicationChance</span> <span class='color-symbol'>=</span> 0 //for anyon`);
         }
+        if (tech.isEigenstate) m.eigen.reset()
         level.newLevelOrPhase()
         if (simulation.isTraining) {
             simulation.difficultyMode = 1
@@ -2446,17 +2447,19 @@ const level = {
 
                     const hits = Matter.Query.ray(body, this.position, this.look, 25)
                     for (let i = hits.length - 1; i > -1; i--) {
+                      const what = hits[i].bodyA
+                      if (!what.isInvulnerable && !what.isNotHoldable) {
                         // console.log(what)
-                        const what = hits[i].bodyA
                         simulation.drawList.push({ x: what.position.x, y: what.position.y, radius: 11, color: "rgba(0,160,255,0.7)", time: 10 });
                         if (what === m.holdingTarget) m.drop()
                         for (let i = 0; i < body.length; i++) {
-                            if (body[i] === what) {
-                                body.splice(i, 1);
-                                break
-                            }
+                          if (body[i] === what) {
+                            body.splice(i, 1);
+                            break
+                          }
                         }
                         Matter.Composite.remove(engine.world, what);
+                      }
                     }
                     //draw
                     ctx.beginPath();
