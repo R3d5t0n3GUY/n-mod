@@ -153,16 +153,26 @@ try {
   let errors = [], dotCount = 0, text = ""
   setTimeout(() => {
     const loadText = setInterval(() => {
-      text = "loading"
-      text = text.padEnd(dotCount + 7, ".")
-      if (dotCount < 3) text += " "
-      text = text.padEnd(10, "\u00A0")
-      startBtn.innerHTML = `<text x="10" y="32" font-size="12px">${text}</text>`;
-      trainBtn.innerHTML = `<text x="10" y="32">${text}</text`;
-      experimentBtn.innerHTML = `<text stroke='none' fill='#333' stroke-width="2" font-size="15px",
-            	sans-serif" x="10" y="32">${text}</text>`;
-      document.title = `n-mod (${text})`
-      dotCount = (dotCount + 1) % 4
+      try {
+        if (hasFileTesterFailed) {
+          document.body.style.backgroundColor = "white";
+          document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
+          <hr>Please properly define this file before running n-mod`
+          favIcon.href = 'img/Error.png'
+          document.title = "n-mod: FAULTY FILES DETECTED"
+        } else {
+          text = "loading"
+          text = text.padEnd(dotCount + 7, ".")
+          if (dotCount < 3) text += " "
+          text = text.padEnd(10, "\u00A0")
+          startBtn.innerHTML = `<text x="10" y="32" font-size="12px">${text}</text>`;
+          trainBtn.innerHTML = `<text x="10" y="32">${text}</text`;
+          experimentBtn.innerHTML = `<text stroke='none' fill='#333' stroke-width="2" font-size="15px",
+                  sans-serif" x="10" y="32">${text}</text>`;
+          document.title = `n-mod (${text})`
+          dotCount = (dotCount + 1) % 4
+        }
+      } catch (e) {}
     }, 250);
     for (let i = 0; i <= jsSrcs.length; i++) {
       if (!hasFileTesterFailed) {
