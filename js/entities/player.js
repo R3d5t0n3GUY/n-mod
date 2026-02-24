@@ -5582,22 +5582,16 @@ const m = {
           const patternB = [input.key.left, input.key.down, input.key.right, input.key.up, input.key.left, input.key.down, input.key.right, input.key.up]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
           if (arraysEqual(m.fieldUpgrades[6].keyLog, patternA) || arraysEqual(m.fieldUpgrades[6].keyLog, patternB)) {
-            const drain = 0.1
-            if (m.energy > drain) {
-              m.energy -= drain
-
-              if (m.fieldUpgrades[6].isFreeCameraMode) {
-                m.fieldUpgrades[6].isFreeCameraMode = false
-                window.removeEventListener("keydown", m.fieldEvent);
-                m.fieldUpgrades[6].set()
-                m.wakeCheck();
-              } else {
-                m.fieldUpgrades[6].isFreeCameraMode = true
-                window.removeEventListener("keydown", m.fieldEvent);
-                m.fieldUpgrades[6].set()
-                m.wakeCheck();
-              }
+            m.fieldUpgrades[6].keyLog = [null, null, null, null, null, null, null, null],  
+            if (m.fieldUpgrades[6].isFreeCameraMode) {
+              m.fieldUpgrades[6].isFreeCameraMode = false
+            } else {
+              m.fieldUpgrades[6].isFreeCameraMode = true
             }
+            window.removeEventListener("keydown", m.fieldEvent);
+            m.fieldUpgrades[6].set()
+            m.wakeCheck();
+
             simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
             &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 0.9rem;color: #fff;">←↓→↑←↓→↑</em>`);
           }
