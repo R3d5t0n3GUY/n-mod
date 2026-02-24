@@ -116,4 +116,10 @@ fileLoads.onLoadEnd = function () {
     experimentBtn.onclick = function () { tryRunning.experiment() }
     splashStart.onclick = function () { tryRunning.start() }
     document.body.appendChild(container); //append script loader (created in scriptLoader.js)
+    Array.from(document.getElementsByClassName("details-collapse")).forEach(node => {
+        node.type = "button" 
+        node.style.cursor = "pointer"
+        node.value = "collapse"
+        node.addEventListener('click', () => {this.parentElement.open = false})
+    });
 };
