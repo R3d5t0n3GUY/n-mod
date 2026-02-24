@@ -1012,51 +1012,53 @@ const m = {
       powerUps.boost.draw()
     }
     m.drawLeg = function (stroke) {
-      // if (simulation.mouseInGame.x > m.pos.x) {
-      if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-        m.flipLegs = 1;
-      } else {
-        m.flipLegs = -1;
-      }
-      ctx.save();
-      ctx.scale(m.flipLegs, 1); //leg lines
-      ctx.beginPath();
-      ctx.moveTo(m.hip.x, m.hip.y);
-      ctx.lineTo(m.knee.x, m.knee.y);
-      ctx.lineTo(m.foot.x, m.foot.y);
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 5;
-      ctx.stroke();
+      if (!m.isShipMode) {
+        // if (simulation.mouseInGame.x > m.pos.x) {
+        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+          m.flipLegs = 1;
+        } else {
+          m.flipLegs = -1;
+        }
+        ctx.save();
+        ctx.scale(m.flipLegs, 1); //leg lines
+        ctx.beginPath();
+        ctx.moveTo(m.hip.x, m.hip.y);
+        ctx.lineTo(m.knee.x, m.knee.y);
+        ctx.lineTo(m.foot.x, m.foot.y);
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 5;
+        ctx.stroke();
 
-      //toe lines
-      ctx.beginPath();
-      ctx.moveTo(m.foot.x, m.foot.y);
-      if (m.onGround) {
-        ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+        //toe lines
+        ctx.beginPath();
         ctx.moveTo(m.foot.x, m.foot.y);
-        ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
-      } else {
-        ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
-        ctx.moveTo(m.foot.x, m.foot.y);
-        ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
-      }
-      ctx.lineWidth = 4;
-      ctx.stroke();
+        if (m.onGround) {
+          ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+          ctx.moveTo(m.foot.x, m.foot.y);
+          ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
+        } else {
+          ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
+          ctx.moveTo(m.foot.x, m.foot.y);
+          ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
+        }
+        ctx.lineWidth = 4;
+        ctx.stroke();
 
-      //hip joint
-      ctx.beginPath();
-      ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
-      //knee joint
-      ctx.moveTo(m.knee.x + 5, m.knee.y);
-      ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-      //foot joint
-      ctx.moveTo(m.foot.x + 4, m.foot.y + 1);
-      ctx.arc(m.foot.x, m.foot.y + 1, 4, 0, 2 * Math.PI);
-      ctx.fillStyle = m.fillColor;
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.restore();
+        //hip joint
+        ctx.beginPath();
+        ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
+        //knee joint
+        ctx.moveTo(m.knee.x + 5, m.knee.y);
+        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+        //foot joint
+        ctx.moveTo(m.foot.x + 4, m.foot.y + 1);
+        ctx.arc(m.foot.x, m.foot.y + 1, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = m.fillColor;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      }
     }
   },
   skin: {
@@ -1157,58 +1159,60 @@ const m = {
         m.yOff = m.yOff * 0.75 + m.yOffGoal * 0.25; //smoothly move leg height towards height goal
       }
       m.drawLeg = function (stroke) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          const hip = { x: m.hip.x - 5, y: m.hip.y + 5 }
+          const sub = Vector.sub(m.knee, hip)
+          const off = Vector.mult(Vector.rotate(Vector.normalise(sub), Math.PI / 2), 8)
+          const kneeBraceHigh = Vector.add(hip, off)
+          const kneeBraceLow = Vector.add(kneeBraceHigh, Vector.mult(sub, 0.9))
+          const foot = { x: m.foot.x - 10, y: m.foot.y - 15 }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(hip.x, hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(foot.x, foot.y);
+          //extra upper leg brace
+          ctx.moveTo(kneeBraceHigh.x, kneeBraceHigh.y);
+          ctx.lineTo(kneeBraceLow.x, kneeBraceLow.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          //foot
+          ctx.beginPath();
+          ctx.moveTo(foot.x, foot.y);
+          ctx.quadraticCurveTo(m.foot.x - 30, m.foot.y + 12, m.foot.x + 13, m.foot.y + 3);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y - 2, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 3, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
+          //knee brace
+          // ctx.moveTo(kneeBraceHigh.x + 4, kneeBraceHigh.y);
+          // ctx.arc(kneeBraceHigh.x, kneeBraceHigh.y, 4, 0, 2 * Math.PI);
+          ctx.moveTo(kneeBraceLow.x + 2.5, kneeBraceLow.y);
+          ctx.arc(kneeBraceLow.x, kneeBraceLow.y, 2.5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(foot.x + 2.5, foot.y);
+          ctx.arc(foot.x, foot.y, 2.5, 0, 2 * Math.PI);
+          ctx.fillStyle = "#f6f6f6"//m.fillColor;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          // ctx.strokeStyle = "#333"
+          ctx.stroke();
+          ctx.restore();
         }
-        const hip = { x: m.hip.x - 5, y: m.hip.y + 5 }
-        const sub = Vector.sub(m.knee, hip)
-        const off = Vector.mult(Vector.rotate(Vector.normalise(sub), Math.PI / 2), 8)
-        const kneeBraceHigh = Vector.add(hip, off)
-        const kneeBraceLow = Vector.add(kneeBraceHigh, Vector.mult(sub, 0.9))
-        const foot = { x: m.foot.x - 10, y: m.foot.y - 15 }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(hip.x, hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(foot.x, foot.y);
-        //extra upper leg brace
-        ctx.moveTo(kneeBraceHigh.x, kneeBraceHigh.y);
-        ctx.lineTo(kneeBraceLow.x, kneeBraceLow.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        //foot
-        ctx.beginPath();
-        ctx.moveTo(foot.x, foot.y);
-        ctx.quadraticCurveTo(m.foot.x - 30, m.foot.y + 12, m.foot.x + 13, m.foot.y + 3);
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y - 2, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 3, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
-        //knee brace
-        // ctx.moveTo(kneeBraceHigh.x + 4, kneeBraceHigh.y);
-        // ctx.arc(kneeBraceHigh.x, kneeBraceHigh.y, 4, 0, 2 * Math.PI);
-        ctx.moveTo(kneeBraceLow.x + 2.5, kneeBraceLow.y);
-        ctx.arc(kneeBraceLow.x, kneeBraceLow.y, 2.5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(foot.x + 2.5, foot.y);
-        ctx.arc(foot.x, foot.y, 2.5, 0, 2 * Math.PI);
-        ctx.fillStyle = "#f6f6f6"//m.fillColor;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        // ctx.strokeStyle = "#333"
-        ctx.stroke();
-        ctx.restore();
       }
     },
     jumper() {
@@ -1272,56 +1276,57 @@ const m = {
         m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 8.5;
+          ctx.stroke(); //leg part
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = m.fieldMeterColor;
+          ctx.lineWidth = 2.75;
+          ctx.stroke(); //leg part overlap
+
+          //toe lines
+          ctx.beginPath();
+          ctx.moveTo(m.foot.x, m.foot.y - 1);
+          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          ctx.lineTo(m.foot.x, m.foot.y - 1);
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = stroke;
+          ctx.stroke();
+
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y - 4, 12, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 6, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fieldMeterColor;
+          ctx.fill();
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = stroke
+          ctx.stroke();
+          ctx.restore();
+          m.squirrelJump = (m.energy < 2) ? (1.4 * m.energy) : 2.8
+          m.setMovement();
         }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 8.5;
-        ctx.stroke(); //leg part
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = m.fieldMeterColor;
-        ctx.lineWidth = 2.75;
-        ctx.stroke(); //leg part overlap
-
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y - 1);
-        ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
-        ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        ctx.lineTo(m.foot.x, m.foot.y - 1);
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = stroke;
-        ctx.stroke();
-
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y - 4, 12, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 6, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = m.fieldMeterColor;
-        ctx.fill();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = stroke
-        ctx.stroke();
-        ctx.restore();
-        m.squirrelJump = (m.energy < 2) ? (1.4 * m.energy) : 2.8
-        m.setMovement();
       }
     },
     mech() {
@@ -1404,62 +1409,64 @@ const m = {
         }
       }
       m.drawLeg = function (stroke) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        const hip = { x: m.hip.x - 5, y: m.hip.y + 5 }
-        const sub = Vector.sub(m.knee, hip)
-        const off = Vector.mult(Vector.rotate(Vector.normalise(sub), Math.PI / 2), 8)
-        const kneeBraceHigh = Vector.add(hip, off)
-        const kneeBraceLow = Vector.add(kneeBraceHigh, Vector.mult(sub, 0.9))
-        const foot = { x: m.foot.x - 10, y: m.foot.y - 15 }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(hip.x, hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(foot.x, foot.y);
-        //extra upper leg brace
-        ctx.moveTo(kneeBraceHigh.x, kneeBraceHigh.y);
-        ctx.lineTo(kneeBraceLow.x, kneeBraceLow.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          const hip = { x: m.hip.x - 5, y: m.hip.y + 5 }
+          const sub = Vector.sub(m.knee, hip)
+          const off = Vector.mult(Vector.rotate(Vector.normalise(sub), Math.PI / 2), 8)
+          const kneeBraceHigh = Vector.add(hip, off)
+          const kneeBraceLow = Vector.add(kneeBraceHigh, Vector.mult(sub, 0.9))
+          const foot = { x: m.foot.x - 10, y: m.foot.y - 15 }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(hip.x, hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(foot.x, foot.y);
+          //extra upper leg brace
+          ctx.moveTo(kneeBraceHigh.x, kneeBraceHigh.y);
+          ctx.lineTo(kneeBraceLow.x, kneeBraceLow.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
 
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        //foot
-        ctx.beginPath();
-        ctx.moveTo(foot.x, foot.y);
-        ctx.quadraticCurveTo(m.foot.x - 30, m.foot.y + 12, m.foot.x + 13, m.foot.y + 3);
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        if (m.coyoteCycles > 30 && !m.onGround) {
-          ctx.lineWidth = 0.2 * Math.max(0, Math.min(3 * (m.cycle - m.lastOnGroundCycle), Math.min(120, m.lastOnGroundCycle + m.coyoteCycles - m.cycle)))
-          ctx.strokeStyle = "rgba(255, 255, 0, 0.3)"
-          ctx.stroke()
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          //foot
+          ctx.beginPath();
+          ctx.moveTo(foot.x, foot.y);
+          ctx.quadraticCurveTo(m.foot.x - 30, m.foot.y + 12, m.foot.x + 13, m.foot.y + 3);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          if (m.coyoteCycles > 30 && !m.onGround) {
+            ctx.lineWidth = 0.2 * Math.max(0, Math.min(3 * (m.cycle - m.lastOnGroundCycle), Math.min(120, m.lastOnGroundCycle + m.coyoteCycles - m.cycle)))
+            ctx.strokeStyle = "rgba(255, 255, 0, 0.3)"
+            ctx.stroke()
+          }
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y - 1, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 3, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
+          //knee brace
+          // ctx.moveTo(kneeBraceHigh.x + 4, kneeBraceHigh.y);
+          // ctx.arc(kneeBraceHigh.x, kneeBraceHigh.y, 4, 0, 2 * Math.PI);
+          ctx.moveTo(kneeBraceLow.x + 2.5, kneeBraceLow.y);
+          ctx.arc(kneeBraceLow.x, kneeBraceLow.y, 2.5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(foot.x + 2.5, foot.y);
+          ctx.arc(foot.x, foot.y, 2.5, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fillColor;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          // ctx.strokeStyle = "#333"
+          ctx.stroke();
+          ctx.restore();
         }
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y - 1, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 3, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
-        //knee brace
-        // ctx.moveTo(kneeBraceHigh.x + 4, kneeBraceHigh.y);
-        // ctx.arc(kneeBraceHigh.x, kneeBraceHigh.y, 4, 0, 2 * Math.PI);
-        ctx.moveTo(kneeBraceLow.x + 2.5, kneeBraceLow.y);
-        ctx.arc(kneeBraceLow.x, kneeBraceLow.y, 2.5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(foot.x + 2.5, foot.y);
-        ctx.arc(foot.x, foot.y, 2.5, 0, 2 * Math.PI);
-        ctx.fillStyle = m.fillColor;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        // ctx.strokeStyle = "#333"
-        ctx.stroke();
-        ctx.restore();
       }
     },
     polar() {
@@ -1512,51 +1519,52 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke, circles) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 3;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 3;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 5, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = circles;
-        ctx.fill();
-        // ctx.lineWidth = 2;
-        // ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = circles;
+          ctx.fill();
+          // ctx.lineWidth = 2;
+          // ctx.stroke();
+          ctx.restore();
+        }
       }
     },
     scaleInvariance() {
@@ -1626,9 +1634,9 @@ const m = {
         ctx.scale(player.scale, player.scale)
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
         ctx.rotate(m.angle);
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, 2 * Math.PI);
@@ -1718,9 +1726,9 @@ const m = {
         ctx.scale(player.scale, player.scale)
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
         ctx.rotate(m.angle);
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, 2 * Math.PI);
@@ -1815,52 +1823,53 @@ const m = {
         m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
-        }
-        ctx.lineWidth = 4;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
+          }
+          ctx.lineWidth = 4;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 8, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 4, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 4, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 4, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = m.fillColor;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "#222"
-        ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 8, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 4, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 4, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 4, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fillColor;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "#222"
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     },
     energy() {
@@ -1923,52 +1932,53 @@ const m = {
         m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 3;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 3;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 10, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 6, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y + 1, 5, 0, 2 * Math.PI);
-        ctx.strokeStyle = "rgba(0,255,255,0.25)";
-        ctx.lineWidth = 6;
-        ctx.stroke();
-        ctx.fillStyle = m.fillColor;
-        ctx.fill();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 10, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 6, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y + 1, 5, 0, 2 * Math.PI);
+          ctx.strokeStyle = "rgba(0,255,255,0.25)";
+          ctx.lineWidth = 6;
+          ctx.stroke();
+          ctx.fillStyle = m.fillColor;
+          ctx.fill();
+          ctx.restore();
+        }
       }
     },
     tungsten() {
@@ -2038,48 +2048,48 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 4.5;
+          ctx.stroke();
+
+          //toe lines
+          ctx.beginPath();
+          ctx.moveTo(m.foot.x, m.foot.y - 1);
+          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          ctx.lineTo(m.foot.x, m.foot.y - 1);
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y - 4, 12, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 6, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fillColor;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "#000"
+          ctx.stroke();
+          ctx.restore();
         }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 4.5;
-        ctx.stroke();
-
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y - 1);
-        ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
-        ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        ctx.lineTo(m.foot.x, m.foot.y - 1);
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y - 4, 12, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 6, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 6, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = m.fillColor;
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "#000"
-        ctx.stroke();
-        ctx.restore();
       }
-
     },
     anodize() {
       m.isAltSkin = true
@@ -2145,51 +2155,52 @@ const m = {
         m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 4;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 4;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
-        ctx.fillStyle = "#222";
-        ctx.fill();
-        //knee joint
-        ctx.beginPath();
-        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-        //foot joint
-        ctx.beginPath();
-        ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
+          ctx.fillStyle = "#222";
+          ctx.fill();
+          //knee joint
+          ctx.beginPath();
+          ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+          ctx.fill();
+          //foot joint
+          ctx.beginPath();
+          ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.restore();
+        }
       }
     },
     dilate() {
@@ -2205,9 +2216,9 @@ const m = {
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         ctx.translate(m.pos.x, m.pos.y);
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#456");
+        if (!m.isShipMode) m.drawLeg("#456");
         m.calcLeg(0, 0);
-        m.drawLeg("#345");
+        if (!m.isShipMode) m.drawLeg("#345");
         ctx.rotate(m.angle);
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, 2 * Math.PI);
@@ -2313,51 +2324,52 @@ const m = {
         simulation.setZoom(1800 + 400 * amplitude)
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 6 + 2 * Math.sin(m.cycle * 0.01 + Math.PI);
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 6 + 2 * Math.sin(m.cycle * 0.01 + Math.PI);
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 4;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 4;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 7, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 7, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 6, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 6, 0, 2 * Math.PI);
-        ctx.fillStyle = "#345";
-        ctx.fill();
-        ctx.lineWidth = 3 + 3 * Math.sin(m.cycle * 0.01 + Math.PI);
-        ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 7, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 7, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 6, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 6, 0, 2 * Math.PI);
+          ctx.fillStyle = "#345";
+          ctx.fill();
+          ctx.lineWidth = 3 + 3 * Math.sin(m.cycle * 0.01 + Math.PI);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     },
     CPT() {
@@ -2396,51 +2408,52 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 3;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 3;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 5, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = "#000";
-        ctx.fill();
-        // ctx.lineWidth = 2;
-        // ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = "#000";
+          ctx.fill();
+          // ctx.lineWidth = 2;
+          // ctx.stroke();
+          ctx.restore();
+        }
       }
     },
     verlet() {
@@ -2485,46 +2498,47 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          //toe lines
+          ctx.beginPath();
+          ctx.moveTo(m.foot.x, m.foot.y);
+          const footDrop = m.onGround ? 5 : 10
+          ctx.lineTo(m.foot.x - 15, m.foot.y + footDrop);
+          ctx.moveTo(m.foot.x, m.foot.y);
+          ctx.lineTo(m.foot.x + 15, m.foot.y + footDrop);
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
+          ctx.fillStyle = "#000";
+          ctx.fill();
+          // ctx.lineWidth = 2;
+          // ctx.stroke();
+          ctx.restore();
         }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        const footDrop = m.onGround ? 5 : 10
-        ctx.lineTo(m.foot.x - 15, m.foot.y + footDrop);
-        ctx.moveTo(m.foot.x, m.foot.y);
-        ctx.lineTo(m.foot.x + 15, m.foot.y + footDrop);
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 5, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 3, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = "#000";
-        ctx.fill();
-        // ctx.lineWidth = 2;
-        // ctx.stroke();
-        ctx.restore();
       }
     },
     stubs() {
@@ -2553,22 +2567,23 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y + 5);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 6;
+          ctx.stroke();
+          ctx.restore();
         }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y + 5);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 6;
-        ctx.stroke();
-        ctx.restore();
       }
     },
     Sleipnir() {
@@ -2579,7 +2594,7 @@ const m = {
         ctx.save();
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         ctx.translate(m.pos.x, m.pos.y);
-        for (let i = 0; i < 16; i++) {
+        if (!m.isShipMode) for (let i = 0; i < 16; i++) {
           m.calcLeg(Math.PI * i / 8, -3 * i / 16)
           m.drawLeg("#444")
         }
@@ -2607,9 +2622,9 @@ const m = {
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         ctx.translate(m.pos.x, m.pos.y);
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
         ctx.rotate(m.angle - (m.fireCDcycle !== Infinity ? m.flipLegs * 0.25 * Math.pow(Math.max(m.fireCDcycle - m.cycle, 0), 0.5) : 0));
 
         ctx.beginPath();
@@ -2635,7 +2650,7 @@ const m = {
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         ctx.translate(m.pos.x, m.pos.y);
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         if (!(m.angle > -Math.PI / 2 && m.angle < Math.PI / 2)) {
           ctx.scale(1, -1);
           ctx.rotate(Math.PI);
@@ -2654,7 +2669,7 @@ const m = {
           ctx.rotate(0 - Math.PI);
         }
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
 
         ctx.rotate(m.angle);
         if (!(m.angle > -Math.PI / 2 && m.angle < Math.PI / 2)) ctx.scale(1, -1);
@@ -2702,9 +2717,9 @@ const m = {
         ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
         ctx.translate(m.pos.x, m.pos.y);
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
         ctx.rotate(m.angle);
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, 2 * Math.PI);
@@ -2848,51 +2863,52 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 5;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
-        }
-        ctx.lineWidth = 4;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 14, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 14, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 12, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 12, m.foot.y + 8);
+          }
+          ctx.lineWidth = 4;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 5, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 4, m.foot.y + 1);
-        ctx.arc(m.foot.x, m.foot.y + 1, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = m.fillColor;
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 9, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 4, m.foot.y + 1);
+          ctx.arc(m.foot.x, m.foot.y + 1, 4, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fillColor;
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     },
     flipFlop() {
@@ -2907,9 +2923,9 @@ const m = {
         ctx.translate(m.pos.x, m.pos.y);
 
         m.calcLeg(Math.PI, -3);
-        m.drawLeg("#4a4a4a");
+        if (!m.isShipMode) m.drawLeg("#4a4a4a");
         m.calcLeg(0, 0);
-        m.drawLeg("#333");
+        if (!m.isShipMode) m.drawLeg("#333");
 
         ctx.rotate(m.angle);
         ctx.beginPath();
@@ -2974,53 +2990,71 @@ const m = {
         powerUps.boost.draw()
       }
       m.drawLeg = function (stroke) {
-        // if (simulation.mouseInGame.x > m.pos.x) {
-        if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
-          m.flipLegs = 1;
-        } else {
-          m.flipLegs = -1;
-        }
-        ctx.save();
-        ctx.scale(m.flipLegs, 1); //leg lines
-        ctx.beginPath();
-        ctx.moveTo(m.hip.x, m.hip.y);
-        ctx.lineTo(m.knee.x, m.knee.y);
-        ctx.lineTo(m.foot.x, m.foot.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 6;
-        ctx.stroke();
+        if (!m.isShipMode) {
+          if (m.angle > -Math.PI / 2 && m.angle < Math.PI / 2) {
+            m.flipLegs = 1;
+          } else {
+            m.flipLegs = -1;
+          }
+          ctx.save();
+          ctx.scale(m.flipLegs, 1); //leg lines
+          ctx.beginPath();
+          ctx.moveTo(m.hip.x, m.hip.y);
+          ctx.lineTo(m.knee.x, m.knee.y);
+          ctx.lineTo(m.foot.x, m.foot.y);
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 6;
+          ctx.stroke();
 
-        //toe lines
-        ctx.beginPath();
-        ctx.moveTo(m.foot.x, m.foot.y);
-        if (m.onGround) {
-          ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+          //toe lines
+          ctx.beginPath();
           ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
-        } else {
-          ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
-          ctx.moveTo(m.foot.x, m.foot.y);
-          ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
-        }
-        ctx.lineWidth = 3;
-        ctx.stroke();
+          if (m.onGround) {
+            ctx.lineTo(m.foot.x - 15, m.foot.y + 5);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 15, m.foot.y + 5);
+          } else {
+            ctx.lineTo(m.foot.x - 13, m.foot.y + 8);
+            ctx.moveTo(m.foot.x, m.foot.y);
+            ctx.lineTo(m.foot.x + 13, m.foot.y + 8);
+          }
+          ctx.lineWidth = 3;
+          ctx.stroke();
 
-        //hip joint
-        ctx.beginPath();
-        ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
-        //knee joint
-        ctx.moveTo(m.knee.x + 5, m.knee.y);
-        ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
-        //foot joint
-        ctx.moveTo(m.foot.x + 5, m.foot.y);
-        ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = "#000";
-        ctx.fill();
-        // ctx.lineWidth = 2;
-        // ctx.stroke();
-        ctx.restore();
+          //hip joint
+          ctx.beginPath();
+          ctx.arc(m.hip.x, m.hip.y, 11, 0, 2 * Math.PI);
+          //knee joint
+          ctx.moveTo(m.knee.x + 5, m.knee.y);
+          ctx.arc(m.knee.x, m.knee.y, 5, 0, 2 * Math.PI);
+          //foot joint
+          ctx.moveTo(m.foot.x + 5, m.foot.y);
+          ctx.arc(m.foot.x, m.foot.y, 5, 0, 2 * Math.PI);
+          ctx.fillStyle = "#000";
+          ctx.fill();
+          // ctx.lineWidth = 2;
+          // ctx.stroke();
+          ctx.restore();
+        }
       }
     },
+    camera() {
+      ctx.fillStyle = m.fillColor;
+      ctx.save();
+      ctx.translate(m.pos.x, m.pos.y);
+      ctx.rotate(m.angle);
+      ctx.beginPath();
+      ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+      ctx.fillStyle = m.bodyGradient
+      ctx.fill();
+      ctx.arc(15, 0, 4, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+
+      ctx.restore();
+    }
   },
   // *********************************************
   // **************** fields *********************
