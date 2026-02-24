@@ -5629,7 +5629,7 @@ const m = {
             m.wakeCheck();
 
             simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
-            &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//↑↓ ← → ↑↓ ← →</em>`);
+            &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//←↓→↑←↓→↑</em>`);
           }
         }
         window.addEventListener("keydown", m.fieldEvent);

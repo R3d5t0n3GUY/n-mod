@@ -2035,10 +2035,18 @@ document.body.addEventListener("mouseleave", (e) => { //prevents mouse getting s
 
 document.body.addEventListener("wheel", (e) => {
   if (!simulation.paused) {
-    if (e.deltaY > 0) {
-      simulation.nextGun();
+    if (m.isUsingFreeCamera()) {
+      if (e.deltaY > 0) {
+        simulation.nextGun();
+      } else {
+        simulation.previousGun();
+      }
     } else {
-      simulation.previousGun();
+      if (e.deltaY > 0) {
+        simulation.nextGun();
+      } else {
+        simulation.previousGun();
+      }
     }
   }
 }, {

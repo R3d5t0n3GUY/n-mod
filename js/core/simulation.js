@@ -758,7 +758,7 @@ const simulation = {
     // only works if velocity is zero
     m.pos.x = player.position.x;
     m.pos.y = playerBody.position.y - m.yOff;
-    const scale = (m.isUsingFreeCamera() ? 1 : 0.8);
+    const scale = 0.8
     m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
     m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
     m.transX += (m.transSmoothX - m.transX) * (m.isUsingFreeCamera() ? 0 : 1);
@@ -770,7 +770,7 @@ const simulation = {
     const dx = simulation.mouse.x / window.innerWidth - 0.5 //x distance from mouse to window center scaled by window width
     const dy = simulation.mouse.y / window.innerHeight - 0.5 //y distance from mouse to window center scaled by window height
     const d = Math.max(dx * dx, dy * dy)
-    simulation.edgeZoomOutSmooth = (m.isUsingFreeCamera() ? 1 : ((1 + 4 * d * d) * 0.04 + simulation.edgeZoomOutSmooth * 0.96))
+    simulation.edgeZoomOutSmooth = ((1 + 4 * d * d) * 0.04 + simulation.edgeZoomOutSmooth * 0.96)
 
     ctx.save();
     ctx.translate(canvas.width2, canvas.height2); //center
