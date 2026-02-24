@@ -5582,7 +5582,7 @@ const m = {
           const patternB = [input.key.left, input.key.down, input.key.right, input.key.up, input.key.left, input.key.down, input.key.right, input.key.up]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
           if (arraysEqual(m.fieldUpgrades[6].keyLog, patternA) || arraysEqual(m.fieldUpgrades[6].keyLog, patternB)) {
-            m.fieldUpgrades[6].keyLog = [null, null, null, null, null, null, null, null],  
+            m.fieldUpgrades[6].keyLog = [null, null, null, null, null, null, null, null]
             if (m.fieldUpgrades[6].isFreeCameraMode) {
               m.fieldUpgrades[6].isFreeCameraMode = false
             } else {
