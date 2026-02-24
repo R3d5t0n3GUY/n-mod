@@ -165,68 +165,72 @@ try {
       dotCount = (dotCount + 1) % 4
     }, 250);
     for (let i = 0; i <= jsSrcs.length; i++) {
-      if (i < jsSrcs.length) { //load each .js file
-        let tag = document.createElement('script'), obj = jsSrcs[i]
-        tag.src = obj.src
-        tag.onerror = () => { //check for syntax errors
-          errors.push(obj)
-        }
-        setTimeout(() => {
-          document.body.append(tag);
-        }, 100)
-      } else {
-        setTimeout(() => {
-          let validities = Object.values(fileLoads)
-          for (let j = 0; j < validities.length - 1; j++) { //ignore the last element (fileLoads.onLoadEnd function)
-            if (!validities[j] && !errors.includes(jsSrcs[j])) { //for each file not properly defined, push its source url to error list
-              errors.push(jsSrcs[j]);
+      if (!hasFileTesterFailed) {
+        if (i < jsSrcs.length) { //load each .js file
+          let tag = document.createElement('script'), obj = jsSrcs[i]
+          tag.src = obj.src
+          tag.onerror = () => { //check for syntax errors
+            errors.push(obj)
+          }
+          setTimeout(() => {
+            if (!hasFileTesterFailed) document.body.append(tag);
+          }, 100)
+        } else {
+          setTimeout(() => {
+            let validities = Object.values(fileLoads)
+            for (let j = 0; j < validities.length - 1; j++) { //ignore the last element (fileLoads.onLoadEnd function)
+              if (!validities[j] && !errors.includes(jsSrcs[j])) { //for each file not properly defined, push its source url to error list
+                errors.push(jsSrcs[j]);
+              }
             }
-          }
-          clearInterval(loadText); //stop loading animation for buttons
-          if (errors.length > 0) { //if any files are not properly defined, overwrite document with error report
-            document.body.style.backgroundColor = "white";
-            let text = `<h1 style="color:red"><u>ERROR LOADING THE FOLLOWING FILES:</u></h1><hr><ul>`
-            errors.forEach(function (item) { //compile list of error locations
-              setTimeout(() => {
-                text += `<li><a href="${item.src}" target="_blank">${item.name}</a></li>`
-              }, 10);
-            });
-            setTimeout(() => {
-              text += `</ul><hr>Please define and/or fix the files at these source locations.`
-              document.body.innerHTML = text
-              document.title = "n-mod: FAULTY FILES DETECTED"
-              favIcon.href = 'img/Error.png'
-            }, 30 * errors.length + 30);
-          } else {
-            console.clear();
-            fileLoads.onLoadEnd();
-            level.populateLevelList();
-            setTimeout(() => {
-              Object.assign(defaultGameVars, {
-                audioPlayer: audioPlayer,
-                b: b,
-                build: build,
-                cmdConsole: cmdConsole,
-                cmdList: cmdList,
-                level: level,
-                lore: lore,
-                m: m,
-                mobs: mobs,
-                powerUps: powerUps,
-                simulation: simulation,
-                spawn: spawn,
-                tech: tech,
-                resetGame() {
-                  let targetObjs = [audioPlayer, b, build, cmdConsole, cmdList, level, lore, m, mobs, powerUps, simulation, spawn, tech];
-                  targetObjs.forEach((obj, i) => {
-                    Object.assign(obj, Object.values(defaultGameVars)[i]);
+            clearInterval(loadText); //stop loading animation for buttons
+            if (!hasFileTesterFailed) {
+              if (errors.length > 0) { //if any files are not properly defined, overwrite document with error report
+                document.body.style.backgroundColor = "white";
+                let text = `<h1 style="color:red"><u>ERROR LOADING THE FOLLOWING FILES:</u></h1><hr><ul>`
+                errors.forEach(function (item) { //compile list of error locations
+                  setTimeout(() => {
+                    text += `<li><a href="${item.src}" target="_blank">${item.name}</a></li>`
+                  }, 10);
+                });
+                setTimeout(() => {
+                  text += `</ul><hr>Please define and/or fix the files at these source locations.`
+                  document.body.innerHTML = text
+                  document.title = "n-mod: FAULTY FILES DETECTED"
+                  favIcon.href = 'img/Error.png'
+                }, 30 * errors.length + 30);
+              } else {
+                console.clear();
+                fileLoads.onLoadEnd();
+                level.populateLevelList();
+                setTimeout(() => {
+                  Object.assign(defaultGameVars, {
+                    audioPlayer: audioPlayer,
+                    b: b,
+                    build: build,
+                    cmdConsole: cmdConsole,
+                    cmdList: cmdList,
+                    level: level,
+                    lore: lore,
+                    m: m,
+                    mobs: mobs,
+                    powerUps: powerUps,
+                    simulation: simulation,
+                    spawn: spawn,
+                    tech: tech,
+                    resetGame() {
+                      let targetObjs = [audioPlayer, b, build, cmdConsole, cmdList, level, lore, m, mobs, powerUps, simulation, spawn, tech];
+                      targetObjs.forEach((obj, i) => {
+                        Object.assign(obj, Object.values(defaultGameVars)[i]);
+                      });
+                    }
                   });
-                }
-              });
-              Object.freeze(defaultGameVars);
-            }, 100);
-          }
-        }, 400 * Object.values(fileLoads).length + 100); //ensure .js files are loaded BEFORE attempting error check
+                  Object.freeze(defaultGameVars);
+                }, 100);
+              }
+            }
+          }, 400 * Object.values(fileLoads).length + 100); //ensure .js files are loaded BEFORE attempting error check
+        }
       }
     }
     fileLoads.isFileTesterJS = true

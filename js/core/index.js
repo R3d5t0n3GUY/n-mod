@@ -1530,20 +1530,20 @@ window.addEventListener("keyup", function (event) {
 });
 
 //**************** Command Console event listeners ****************//
-document.getElementById("execute-command").addEventListener('mousedown', (e) => {
+document.getElementById("execute-command").addEventListener('mousedown', () => {
   let chatInput = document.getElementById('chat-input')
   cmdConsole.requestCmd(chatInput.value);
 });
 
-document.getElementById("close-chat").addEventListener('mousedown', (e) => {
+document.getElementById("close-chat").addEventListener('mousedown', () => {
   simulation.closeChatWindow();
 });
 
-document.getElementById("history").addEventListener("focus", (e) => {
+document.getElementById("history").addEventListener("focus", () => {
   cmdConsole.isHistoryInputFocused = true
 });
 
-document.getElementById("history").addEventListener("blur", (e) => {
+document.getElementById("history").addEventListener("blur", () => {
   cmdConsole.isHistoryInputFocused = false
 });
 
@@ -1568,18 +1568,18 @@ document.getElementById("history").addEventListener("change", (event) => {
   onHistoryInputChange(event);
 });
 
-function onChatInputChange(e) {
+function onChatInputChange() {
   if (simulation.testing && simulation.isChatMenuOpen &&
     !cmdConsole.isHistoryInputFocused && cmdConsole.historyIDX === 0) {
     cmdConsole.cachedCmd = document.getElementById("chat-input").value
   }
 }
 
-document.getElementById("chat-input").addEventListener("change", (event) => {
-  onChatInputChange(event);
+document.getElementById("chat-input").addEventListener("change", () => {
+  onChatInputChange();
 });
 
-document.getElementById("jump-to").addEventListener("mousedown", (event) => {
+document.getElementById("jump-to").addEventListener("mousedown", () => {
   let num = document.getElementById("history").value
   cmdConsole.switchCmd(num, true)
 });

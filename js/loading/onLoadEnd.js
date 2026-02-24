@@ -120,6 +120,8 @@ fileLoads.onLoadEnd = function () {
         node.type = "button" 
         node.style.cursor = "pointer"
         node.value = "collapse"
-        node.addEventListener('click', () => {this.parentElement.open = false})
+        node.addEventListener('click', (event) => {
+            event.target.parentElement.open = false
+        })
     });
 };
