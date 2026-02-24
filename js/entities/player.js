@@ -1967,7 +1967,7 @@ const m = {
               ctx.beginPath();
               // Matter.Body.setPosition(player, m.eigen.block.position);// Matter.Body.setPosition(player, m.eigen.position[m.eigen.state]);
               simulation.ephemera.push({
-                name: "eigen draw translate"
+                name: "eigen draw translate",
                 from: { x: m.pos.x, y: m.pos.y + 40 },
                 to: m.pos,
                 // to: { x: m.eigen.block.position.x, y: m.eigen.block.position.y },
