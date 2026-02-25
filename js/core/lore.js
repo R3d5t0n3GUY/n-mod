@@ -92,9 +92,9 @@ const lore = {
     // document.getElementById("experiment-button").style.visibility = (localSettings.loreCount === 0) ? "hidden" : "visible"
     simulation.inGameConsole(`<span class='color-var'>lore</span>.unlockTesting()`, Infinity);
 
-    sound.portamento(50)
-    sound.portamento(83.333)
-    sound.portamento(166.666)
+    build.sound.portamento(50)
+    build.sound.portamento(83.333)
+    build.sound.portamento(166.666)
   },
   // trainer: {
   //     color: "#f20",
