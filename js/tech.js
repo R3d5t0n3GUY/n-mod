@@ -2903,9 +2903,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter) && m.fieldMode !== 8 && m.fieldMode !== 9 && !tech.isTokamak
+        return (tech.blockDamage > 0.075 || tech.isPrinter) && m.fieldMode !== 8 && m.fieldMode !== 9
       },
-      requires: "mass driver, printer, not wormhole, pilot wave, tokamak",
+      requires: "mass driver, printer, not wormhole, pilot wave",
       effect() {
         tech.isGroupThrow = true
       },
