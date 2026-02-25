@@ -1186,7 +1186,7 @@ const spawn = {
             if (!simulation.paused && !simulation.onTitlePage) {
               count++
               if (count < 660) {
-                if (count === 1 && simulation.difficultyMode < 6) simulation.inGameConsole(`<em>//enter testing mode to set level.levels.length to <strong>Infinite</strong></em>`);
+                if (count === 1 && localSettings.loreCount > 0 && !simulation.isCheating) simulation.inGameConsole(`<em>//enter testing mode to set level.levels.length to <strong>Infinite</strong></em>`);
                 if (!(count % 60)) simulation.inGameConsole(`simulation.analysis <span class='color-symbol'>=</span> ${((count / 60 - Math.random()) * 0.1).toFixed(3)}`);
               } else if (count === 660) {
                 simulation.inGameConsole(`simulation.analysis <span class='color-symbol'>=</span> 1 <em>//analysis complete</em>`);
