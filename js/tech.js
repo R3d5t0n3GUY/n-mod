@@ -3966,8 +3966,6 @@ const tech = {
       descriptionFunction() {
         return `you can only <strong>die</strong> if you <strong>end</strong> a ${powerUps.orb.warp()} with <strong class='color-h'>health</strong> < <strong>0</strong>
         <br><strong>2x</strong> <strong class='color-d'>damage</strong> while <strong class='color-h'>health</strong> < <strong>0</strong>`
-        // return `you don't <strong>die</strong> when you go below <strong>0</strong> <strong class='color-h'>health</strong>, but<br>you need <strong class='color-h'>health</strong> above <strong>0</strong> to <strong>exit</strong> the level`
-        // return `you can't <strong>die</strong> if <strong class='color-h'>health</strong> < <strong>0</strong>, but<br>you need <strong class='color-h'>health</strong> > <strong>0</strong> to <strong>exit</strong> the level`
       },
       isPacifist: true,
       maxCount: 1,
@@ -3975,9 +3973,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return !tech.isEnergyHealth
+        return !tech.isEnergyHealth && tech.isAnthropicExtended <= 0
       },
-      requires: "not mass-energy",
+      requires: "not mass-energy, extended principle",
       effect() {
         tech.isNoDeath = true;
       },
@@ -4410,9 +4408,9 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return tech.isDeathAvoid
+        return tech.isDeathAvoid && !tech.isNoDeath
       },
-      requires: "anthropic principle",
+      requires: "anthropic principle, not quantum Zeno effect",
       effect() {
         if (!tech.isAnthropicExtended) tech.isAnthropicExtended = 0;
         if (tech.isAnthropicExtended < 7) {
