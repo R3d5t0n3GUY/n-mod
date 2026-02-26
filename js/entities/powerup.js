@@ -1146,16 +1146,17 @@ const powerUps = {
         }
       }
       if (powerUps.healGiveMaxEnergy) {
-        tech.healMaxEnergyBonus += 0.15 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)
+        let total = tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1) * ((tech.recoilReduction || 0) > 0 ? 0.25 ** tech.recoilReduction : 1); //tech effects from adiabatic healing, ergodicity and dynamical billiards
+        total *= (tech.isFlipFlopOn && tech.isFlipFlopHealth ? 2 : 1); //tech effects from shape-memory alloy
+        if ((m.coupling > 0) && m.fieldMode === 0) { // coupling effect from field emitter (energy condenser is incompatible with mass-energy)
+          total *= 1 + 0.05 * m.coupling;
+        }
+        tech.healMaxEnergyBonus += 0.15 * total
         m.setMaxEnergy();
       }
     },
     spawn(x, y, size) { //used to spawn a heal with a specific size / heal amount, not normally used
-      powerUps.directSpawn(x, y, "heal", false, size)
-      if (!level.isNextLevelPowerUps && Math.random() < tech.duplicationChance()) {
-        powerUps.directSpawn(x, y, "heal", false, size)
-        powerUp[powerUp.length - 1].isDuplicated = true
-      }
+      powerUps.spawn(x, y, "heal", false, size)
     }
   },
   ammo: {
@@ -1945,7 +1946,7 @@ const powerUps = {
           powerUps.spawn(x, y, "gun")
         }
       } else {
-        if (m.health < 0.65 && !tech.isEnergyHealth) {
+        if (m.health < 0.65 && (!tech.isEnergyHealth || powerUps.healGiveMaxEnergy)) {
           powerUps.spawn(x, y, "heal");
           powerUps.spawn(x, y, "heal");
         } else {
@@ -2124,13 +2125,13 @@ const powerUps = {
     let bigIndexes = [], smallIndexes = [], ignoredIndexes = ["settings", "instructions", "warp", "difficulty", "entanglement"]
     for (let i = 0; i < powerUp.length; i++) {
       let isLorePowerUp = ignoredIndexes.includes(powerUp[i].name)
-      if (!isLorePowerUp){
+      if (!isLorePowerUp) {
         if (powerUp[i].name === "tech" || powerUp[i].name === "gun" || powerUp[i].name === "field") {
           bigIndexes.push(i)
         } else {
           smallIndexes.push(i)
           if (powerUp[i].name === "heal" && (tech.isHealAttract || m.health >= m.maxHealth ||
-            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.75) { //if player has accretion, chance to spawn heal as larger powerUp
+            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.72) { //if player has accretion, chance to spawn heal as larger powerUp
             for (let i = 0; i < Math.ceil(Math.random() * 2); i++) {
               smallIndexes.push(i)
             }
@@ -2139,7 +2140,7 @@ const powerUps = {
       }
     }
 
-    if (smallIndexes.length > 2 && Math.random() < 0.66) {
+    if (smallIndexes.length > 2 && Math.random() < (tech.isHealAttract ? 0.75 : 0.66)) { //higher likelyhood to collide heals with accretion
       // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {
@@ -2168,8 +2169,14 @@ const powerUps = {
       powerUp.splice(index, 1);
     } else if (smallIndexes.length > 0) {
       // console.log("no big, at least 1 small will swap flavors")
-      const index = Math.floor(Math.random() * powerUp.length)
-      options = options.filter(e => e !== powerUp[index].name); //don't repeat the current power up type
+      let index = Math.floor(Math.random() * powerUp.length), isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
+      while (isLorePowerUp) { //don't remove lore/info powerUps (instructions, entanglement, warp, etc.)
+        index = Math.floor(Math.random() * powerUp.length)
+        isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
+      }
+      options = options.filter(e => {
+        return (e !== powerUp[index].name && !ignoredIndexes.includes(e)
+      )}); //don't repeat the current power up type
       powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
       Matter.Composite.remove(engine.world, powerUp[index]);
       powerUp.splice(index, 1);
@@ -2201,8 +2208,10 @@ const powerUps = {
         name = 'boost'
         size = powerUps[name].size()
       }
-      powerUps.directSpawn(x, y, name, moving, size)
-      if (!level.isNextLevelPowerUps && Math.random() < tech.duplicationChance()) {
+      for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance() + 1), 1); i++) { //if player hacks a dupe chance higher than 100%
+        powerUps.directSpawn(x, y, name, moving, size)
+      }
+      if (!level.isNextLevelPowerUps && (Math.random() < (tech.duplicationChance() % 1))) {
         powerUps.directSpawn(x, y, name, moving, size, true)
         powerUp[powerUp.length - 1].isDuplicated = true
         if (tech.isDupEnergy) m.energy *= 2
@@ -2246,5 +2255,6 @@ const powerUps = {
     weights = [2,4,3,3,1];
     powerUps.spawn(m.pos.x, m.pos.y, choices.randomItem(weights)) // Array.randomItem is declared in /lib/prototypes.js
   },
-  powerUpStorage: [],//used when power ups are sent to the next level (for the constraint, level.isNextLevelPowerUps)
+  powerUpStorage: [], /* used when power ups are sent to the next level (for the constraint, level.isNextLevelPowerUps),
+  or when attempted to spawn when there are too many already active in engine.world */
 };
