@@ -11,41 +11,46 @@ const tech = {
       for (let i = 0; i < keys.length; i++) delete tech[keys[i]];
       Object.assign(tech, defaultGameVars.tech);
     } catch (e) { */
-      for (let i = 0, len = tech.tech.length; i < len; i++) {
-        let what = tech.tech[i]
-        what.isBanished = false
-        what.remove();
-        what.count = 0
-        if (what.isJunk) {
-          what.frequency = 0
-        } else if (what.frequencyDefault) {
-          what.frequency = what.frequencyDefault
-        } else {
-          what.frequency = 1
-        }
-        if (what.name === "heals" || what.name === "ammo" || what.name === "research") what.value = what.defaultValue
-        try {
-          if (localSettings.isAllowed) {
-            if (localSettings.loreCount > 5) { /*if it's a pacifist run, increase the frequency of finding tech
-              for health, defense, invulnerability, and energy*/
-              if (what.isPacifist) what.frequency *= (what.isFieldTech ? 4 : 2)
-            }
-          }
-        } catch (err) {
-          console.warn(err)
-        }
-        if (what.isCorrupted) {
-          if (what.descriptionFunction) {
-            what.descriptionFunction = () => {
-              return `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
-      <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
-            }
-          } else {
-            what.description = `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
-      <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
-          } 
-        }
+    if (tech.isJunkTechSwap) { //if player has swap meet when opening experiment menu, reset it
+      tech.giveTech("swap meet") //trigger effect to undo itself
+      tech.removeTech("swap meet") //remove it so it becomes an option again
+      //tech.removeCount-- //decrement remove counter
+    }
+    for (let i = 0, len = tech.tech.length; i < len; i++) {
+      let what = tech.tech[i]
+      what.isBanished = false
+      what.remove();
+      what.count = 0
+      if (what.isJunk) {
+        what.frequency = 0
+      } else if (what.frequencyDefault) {
+        what.frequency = what.frequencyDefault
+      } else {
+        what.frequency = 1
       }
+      if (what.name === "heals" || what.name === "ammo" || what.name === "research") what.value = what.defaultValue
+      try {
+        if (localSettings.isAllowed) {
+          if (localSettings.loreCount > 5) { /*if it's a pacifist run, increase the frequency of finding tech
+            for health, defense, invulnerability, and energy*/
+            if (what.isPacifist) what.frequency *= (what.isFieldTech ? 4 : 2)
+          }
+        }
+      } catch (err) {
+        console.warn(err)
+      }
+      if (what.isCorrupted) {
+        if (what.descriptionFunction) {
+          what.descriptionFunction = () => {
+            return `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
+    <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
+          }
+        } else {
+          what.description = `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
+    <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
+        } 
+      }
+    }
     /* } */
     m.resetSkin();
     tech.removeCount = 0;
@@ -12810,6 +12815,8 @@ const tech = {
       },
       requires: "",
       effect() {
+        if (!tech.isJunkTechSwap) tech.isJunkTechSwap = false
+        tech.isJunkTechSwap = !tech.isJunkTechSwap
         for (let i = 0, len = tech.tech.length; i < len; i++) {
           
           tech.tech[i].isJunk = !tech.tech[i].isJunk
@@ -12829,7 +12836,9 @@ const tech = {
           simulation.updateTechHUD();
         }
       },
-      remove() { }
+      remove() {
+        tech.isJunkTechSwap = false
+      }
     },
     {
       name: "random",
@@ -16256,4 +16265,5 @@ const tech = {
   isBreakHarpoonGain: null,
   isSounds: null,
   isPeriodicRealitySwitch: null,
+  isJunkTechSwap: null
 }
