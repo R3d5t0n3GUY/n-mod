@@ -710,7 +710,7 @@ const powerUps = {
           document.getElementById("choose-grid").classList.remove('choose-grid-no-images');
         }
         simulation.inGameConsole(`<span class='color-var'>powerUps</span>.endDraft()
-          <br><em class='color-text'>//powerUps.settings is not viable</em>`)
+          <br>&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//powerUps.settings is not viable</em>`)
         powerUps.endDraft("entanglement", true)
       }
     },
@@ -1310,6 +1310,7 @@ const powerUps = {
         ${m.fieldUpgrades[choose].descriptionFunction ? m.fieldUpgrades[choose].descriptionFunction() : m.fieldUpgrades[choose].description}</div></div>`
   },
   gunText(choose, click) {
+    if (choose > b.guns.length > 1) choose = Math.floor(Math.random() * b.guns.length) //reroll if invalid
     const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/gun/${b.guns[choose].name}.webp'), url('img/junk.webp');"`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}" ${style}>
             <div class="card-text">
@@ -1317,6 +1318,7 @@ const powerUps = {
             ${b.guns[choose].descriptionFunction ? b.guns[choose].descriptionFunction() : b.guns[choose].description}</div></div>`
   },
   fieldText(choose, click) {
+    if (choose > m.fieldUpgrades.length - 1) choose = Math.floor(Math.random() * (m.fieldUpgrades.length - 1)) + 1 //reroll if invalid (don't pick field emitter)
     const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/field/${m.fieldUpgrades[choose].name}.webp'), url('img/junk.webp');"`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
         <div class="card-text">
@@ -1324,6 +1326,7 @@ const powerUps = {
         ${m.fieldUpgrades[choose].descriptionFunction ? m.fieldUpgrades[choose].descriptionFunction() : m.fieldUpgrades[choose].description}</div></div>`
   },
   techText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
@@ -1332,6 +1335,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   instantTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     // <div class="circle-grid tech"></div>
@@ -1341,6 +1345,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   skinTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
@@ -1354,6 +1359,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   fieldTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
@@ -1367,6 +1373,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   gunTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
@@ -1380,6 +1387,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   junkTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     if (!localSettings.isHideImages) {
@@ -1409,6 +1417,7 @@ const powerUps = {
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
   incoherentTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     // text += `<div class="choose-grid-module" style = "background-color: #efeff5; border: 0px; opacity:0.5; font-size: 60%; line-height: 130%; margin: 1px; padding-top: 6px; padding-bottom: 6px;"><div class="grid-title">${tech.tech[choose].name} <span style = "color: #aaa;font-weight: normal;font-size:80%;">- incoherent</span></div></div>`
     const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
     return `<div class="choose-grid-module card-background" ${style}>
@@ -1667,7 +1676,8 @@ const powerUps = {
               const choose = options[Math.floor(Math.seededRandom(0, options.length))] //pick an element from the array of options
               if (tech.isBanish) {
                 tech.tech[choose].isBanished = true
-                if (i === 0) simulation.inGameConsole(`options.length = ${optionLengthNoDuplicates} <em class='color-text'>//removed from pool by decoherence</em>`)
+                if (i === 0) simulation.inGameConsole(`options.length = ${optionLengthNoDuplicates} 
+                  &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//removed from pool by decoherence</em>`)
               }
               removeOption(choose) //remove from future options pool to avoid repeats on this selection
 
@@ -1845,7 +1855,7 @@ const powerUps = {
           if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
         } else {
           simulation.inGameConsole(`<span class='color-var'>powerUps</span>.endDraft()
-          <br><em class='color-text'>//powerUps.entanglement is not viable</em>`)
+          <br>&nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//powerUps.entanglement is not viable</em>`)
           powerUps.endDraft("entanglement", true)
         }
       }
