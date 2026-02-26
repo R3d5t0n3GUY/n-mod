@@ -1360,7 +1360,7 @@ const tech = {
         if (b.guns[this.gun].name === "scythe") { // correct the ammo bug for scythe
           b.guns[this.gun].ammoPack *= ammoBoost;
         }
-        simulation.inGameConsole(`${b.guns[this.gun].ammoPack} → ${2 * b.guns[this.gun].ammoPack} average <strong class='color-ammo'>ammo</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
+        simulation.inGameConsole(`${b.guns[this.gun].ammoPack.toFixed(2)} → ${(2 * b.guns[this.gun].ammoPack).toFixed(2)} average <strong class='color-ammo'>${(b.guns[this.gun].name === "scythe" && tech.durabilityScythe) || (b.guns[this.gun].name === "spear") ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
         b.guns[this.gun].ammoPack *= 2
         // simulation.inGameConsole(`${(tech.interestRate * 100).toFixed(0)}<span class='color-symbol'>%</span> <span class='color-m'>interest</span> on <span class='color-h'>health</span> <span class='color-symbol'>=</span> ${h > 20 ? h + powerUps.orb.heal(1) : powerUps.orb.heal(h)}`)
 
