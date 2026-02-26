@@ -1474,15 +1474,19 @@ const simulation = {
     }
     if (tech.isDronesTravel && m.alive) {
       //count drones
-      let droneCount = 0
+      // let droneCount = 0
+      let droneArray = []
       let sporeCount = 0
       let wormCount = 0
       let fleaCount = 0
-      let deliveryCount = 0
+      // let zombieCount = 0
       for (let i = 0; i < bullet.length; ++i) {
-        if (bullet[i].isDrone) {
-          droneCount++
-          if (bullet[i].isImproved) deliveryCount++
+        if (bullet[i].isDrone && bullet[i].endCycle !== Infinity) {
+          droneArray.push({
+            isImproved: bullet[i].isImproved,
+            scale: bullet[i].scale,
+            endCycle: bullet[i].endCycle,
+          })
         } else if (bullet[i].isSpore) {
           sporeCount++
         } else if (bullet[i].wormSize) {
@@ -1491,18 +1495,15 @@ const simulation = {
           fleaCount++
         }
       }
-      
-      //const where = m.pos
+
+      // const where = m.pos
       //respawn drones in animation frame
       requestAnimationFrame(() => {
         let respawnDrones = () => {
           if (droneArray.length) {
             requestAnimationFrame(respawnDrones);
             if (!simulation.paused && !simulation.isChoosing && m.alive) {
-              const where = {
-                x: level.enter.x + 50,
-                y: level.enter.y - 60
-              }
+              const where = { x: level.enter.x + 50, y: level.enter.y - 60 }
               if (tech.isDroneRadioactive) {
                 b.droneRadioactive({ x: where.x + 50 * (Math.random() - 0.5), y: where.y + 50 * (Math.random() - 0.5) }, 0)
                 if (droneArray[0].scale) bullet[bullet.length - 1].size = droneArray[0].scale
@@ -1511,8 +1512,8 @@ const simulation = {
                 const who = bullet[bullet.length - 1]
                 if (droneArray[0].isImproved) who.isImproved = true;
                 if (droneArray[0].scale) {
-                    who.scale = droneArray[0].scale
-                    Matter.Body.scale(who, who.scale, who.scale);
+                  who.scale = droneArray[0].scale
+                  Matter.Body.scale(who, who.scale, who.scale);
                 }
                 who.endCycle = droneArray[0].endCycle + 300
               }
@@ -1529,13 +1530,8 @@ const simulation = {
           requestAnimationFrame(respawnSpores);
           if (!simulation.paused && !simulation.isChoosing) {
             sporeCount--
-            const where = {
-              x: level.enter.x + 50,
-              y: level.enter.y - 60
-            }
-            b.spore({ 
-              x: where.x + 100 * (Math.random() - 0.5), 
-              y: where.y + 120 * (Math.random() - 0.5) })
+            const where = { x: level.enter.x + 50, y: level.enter.y - 60 }
+            b.spore({ x: where.x + 100 * (Math.random() - 0.5), y: where.y + 120 * (Math.random() - 0.5) })
           }
         }
       }
@@ -1546,14 +1542,9 @@ const simulation = {
         if (wormCount > 0) {
           requestAnimationFrame(respawnWorms);
           if (!simulation.paused && !simulation.isChoosing) {
-            wormCount--
-            const where = {
-              x: level.enter.x + 50,
-              y: level.enter.y - 60
-            }
-            b.worm({ 
-              x: where.x + 100 * (Math.random() - 0.5), 
-              y: where.y + 120 * (Math.random() - 0.5) })
+              wormCount--
+              const where = { x: level.enter.x + 50, y: level.enter.y - 60 }
+              b.worm({ x: where.x + 100 * (Math.random() - 0.5), y: where.y + 120 * (Math.random() - 0.5) })
           }
         }
       }
@@ -1565,22 +1556,15 @@ const simulation = {
           requestAnimationFrame(respawnFleas);
           if (!simulation.paused && !simulation.isChoosing) {
             fleaCount--
-            const where = {
-              x: level.enter.x + 50,
-              y: level.enter.y - 60
-            }
             const speed = 6 + 3 * Math.random()
             const angle = 2 * Math.PI * Math.random()
-            b.flea({ 
-                x: where.x + 100 * (Math.random() - 0.5), 
-                y: where.y + 120 * (Math.random() - 0.5) 
-              }, {
-                x: speed * Math.cos(angle),
-                y: speed * Math.sin(angle) })
+            const where = { x: level.enter.x + 50, y: level.enter.y - 60 }
+            b.flea({ x: where.x + 100 * (Math.random() - 0.5), y: where.y + 120 * (Math.random() - 0.5) }, { x: speed * Math.cos(angle), y: speed * Math.sin(angle) })
           }
         }
       }
       requestAnimationFrame(respawnFleas);
+      
     }
     if (tech.isQuantumEraser && m.alive) {
       let count = 0
