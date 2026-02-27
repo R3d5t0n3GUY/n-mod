@@ -1382,9 +1382,9 @@ const input = {
           document.getElementById(id).innerHTML = cleanText(input.key[targetKeys[i]])[0]
         }
       } catch (err) {
-        console.log("")
+        /* console.log("")
         console.log(`Issue #${i};`)
-        console.warn(err)
+        console.warn(err) */
       }
     })
     /* document.getElementById("key-fire").innerHTML = cleanText(input.key.fire)
@@ -2035,11 +2035,11 @@ document.body.addEventListener("mouseleave", (e) => { //prevents mouse getting s
 
 document.body.addEventListener("wheel", (e) => {
   if (!simulation.paused) {
-    if (m.isUsingFreeCamera()) {
+    if (m.freeCamera.isActive()) {
       if (e.deltaY > 0) {
-        simulation.nextGun();
+        simulation.zoomTransition(Math.max(simulation.zoomScale / 0.9, 250))
       } else {
-        simulation.previousGun();
+        simulation.zoomTransition(Math.min(simulation.zoomScale * 0.9, 10000))
       }
     } else {
       if (e.deltaY > 0) {

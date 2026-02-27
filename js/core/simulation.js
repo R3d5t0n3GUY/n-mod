@@ -31,6 +31,7 @@ const simulation = {
       level.customTopLayer();
       simulation.draw.drawMapPath();
     } //don't draw map here first if pilot wave field is used with De Broglie–Bohm theory
+    if (m.freeCamera.isActive()) m.freeCamera.draw(); //draw the freecam at its position
     b.fire();
     b.bulletRemove();
     b.bulletDraw();
@@ -59,6 +60,7 @@ const simulation = {
     m.draw();
     m.hold();
     level.customTopLayer();
+    if (m.freeCamera.isActive()) m.freeCamera.draw(); //draw the freecam at its position
     simulation.draw.wireFrame();
     if (input.fire && m.fireCDcycle < m.cycle) {
       m.fireCDcycle = m.cycle + 15; //fire cooldown       
@@ -761,8 +763,8 @@ const simulation = {
     const scale = 0.8
     m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale;
     m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale;
-    m.transX += (m.transSmoothX - m.transX) * (m.isUsingFreeCamera() ? 0 : 1);
-    m.transY += (m.transSmoothY - m.transY) * (m.isUsingFreeCamera() ? 0 : 1);
+    m.transX += (m.transSmoothX - m.transX) * (m.freeCamera.isActive() ? 0 : 1);
+    m.transY += (m.transSmoothY - m.transY) * (m.freeCamera.isActive() ? 0 : 1);
   },
   edgeZoomOutSmooth: 1,
   camera() {
@@ -771,7 +773,7 @@ const simulation = {
     const dy = simulation.mouse.y / window.innerHeight - 0.5 //y distance from mouse to window center scaled by window height
     const d = Math.max(dx * dx, dy * dy)
     simulation.edgeZoomOutSmooth = ((1 + 4 * d * d) * 0.04 + simulation.edgeZoomOutSmooth * 0.96)
-
+    
     ctx.save();
     ctx.translate(canvas.width2, canvas.height2); //center
     ctx.scale(simulation.zoom / simulation.edgeZoomOutSmooth, simulation.zoom / simulation.edgeZoomOutSmooth); //zoom in once centered

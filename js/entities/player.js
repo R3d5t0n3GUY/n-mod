@@ -217,14 +217,23 @@ const m = {
   look() { }, //set to lookDefault()
   lookDefault() {
     //always on mouse look
-    m.angle = Math.atan2(simulation.mouseInGame.y - m.pos.y, simulation.mouseInGame.x - m.pos.x);
+    let where = {
+      x: (m.freeCamera.isActive() ? m.freeCamera.pos.x : m.pos.x),
+      y: (m.freeCamera.isActive() ? m.freeCamera.pos.y : m.pos.y)
+    }, targetAngle = Math.atan2(simulation.mouseInGame.y - where.y, simulation.mouseInGame.x - where.x);
+    if (m.freeCamera.isActive()) { //if freecam is active, rotate the camera instead of the player
+      m.freeCamera.angle = targetAngle
+    } else {
+      m.angle = targetAngle
+    }
+    
     //smoothed mouse look translations
     const scale = 0.8;
     m.transSmoothX = canvas.width2 - m.pos.x - (simulation.mouse.x - canvas.width2) * scale
     m.transSmoothY = canvas.height2 - m.pos.y - (simulation.mouse.y - canvas.height2) * scale
 
-    m.transX += (m.transSmoothX - m.transX) * (m.isUsingFreeCamera() ? 0 : m.lookSmoothing);
-    m.transY += (m.transSmoothY - m.transY) * (m.isUsingFreeCamera() ? 0 : m.lookSmoothing);
+    m.transX += (m.transSmoothX - m.transX) * (m.freeCamera.isActive() ? 0 : m.lookSmoothing);
+    m.transY += (m.transSmoothY - m.transY) * (m.freeCamera.isActive() ? 0 : m.lookSmoothing);
   },
   doCrouch() {
     if (!m.crouch) {
@@ -253,8 +262,70 @@ const m = {
       return true
     }
   },
-  isUsingFreeCamera() {
-    return (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isTimeDilated)
+  freeCamera: {
+    pos: {
+      x: 0,
+      y: 0
+    },
+    zoom: 1,
+    angle: 0,
+    speed: 50, //base speed value
+    speedEnergyRatio(speed = m.freeCamera.speed) { //controls how fast freecam moves with different amounts of energy
+      return speed * Math.pow(Math.max(m.energy / m.maxEnergy, 0), (1 / Math.PHI))
+    },
+    isActive() {
+      if (m.fieldMode === 6 && m.fieldUpgrades[6].isFreeCameraMode && m.isTimeDilated) {
+        return true
+      } else {
+        if (!m.isTimeDilated) {
+          m.freeCamera.zoom = simulation.zoomScale
+        }
+        return false
+      }
+    },
+    draw() {
+      ctx.fillStyle = m.fillColor;
+      ctx.save();
+      ctx.translate(m.freeCamera.pos.x, m.freeCamera.pos.y);
+      ctx.rotate(m.freeCamera.angle);
+      ctx.beginPath();
+      ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+      ctx.fillStyle = m.bodyGradient
+      ctx.fill();
+      ctx.arc(15, 0, 4, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 33, 0, (m.maxEnergy > 0 ? Math.max(2 * Math.PI * m.energy / m.maxEnergy, 0) : 0));
+      ctx.strokeStyle = m.fieldMeterColor || "#09f";
+      ctx.lineWidth = 5; //make it clear enough to see
+      ctx.stroke();
+      ctx.beginPath()
+      ctx.moveTo(30, 0)
+      ctx.lineTo(55, 15)
+      ctx.moveTo(30, 0)
+      ctx.lineTo(55, -15)
+      ctx.strokeStyle = "#666"
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(30, 0)
+      ctx.lineTo(50, -20)
+      ctx.moveTo(30, 0)
+      ctx.lineTo(50, 20)
+      ctx.strokeStyle = "#333"
+      ctx.lineWidth = 2.5
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(50, 20)
+      ctx.lineTo(55, 15)
+      ctx.lineTo(55, -15)
+      ctx.lineTo(50, -20)
+      ctx.lineTo(50, 20)
+      ctx.stroke()
+      
+      ctx.restore();
+    }
   },
   buttonCD_jump: 0, //cool down for player buttons
   jump() {
@@ -271,40 +342,50 @@ const m = {
   moverX: 0, //used to tell the player about moving platform x velocity
   groundControl() {
     //check for crouch or jump
-    if (m.isUsingFreeCamera()) {
+    if (m.freeCamera.isActive()) {
       m.transSmoothX = 0
       m.transSmoothY = 0
       Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
+    } else {
+      //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
+      //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
+      //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
+      m.freeCamera.pos.x = m.pos.x //works! :)
+      m.freeCamera.pos.y = m.pos.y //works! :)
     }
-    if (m.isUsingFreeCamera() && input.down && !input.up) {
+    if (m.freeCamera.isActive() && input.down && !input.up) {
       //translate freecam downward
-      m.transY -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
-    } else if (m.crouch) {
+      m.transY -= m.freeCamera.speedEnergyRatio()
+      m.freeCamera.pos.y += m.freeCamera.speedEnergyRatio()
+    } else if (m.crouch && !input.up) {
       if (!(input.down) && m.checkHeadClear() && m.hardLandCD < m.cycle) m.undoCrouch();
-    } else if (input.down || m.hardLandCD > m.cycle) {
+    } else if ((input.down || m.hardLandCD > m.cycle) && !input.up) {
       m.doCrouch(); //on ground && not crouched and pressing s or down
-    } else if (input.up) {
-      if (m.isUsingFreeCamera() && !input.down) {
+    } else if (input.up && !input.down) {
+      if (m.freeCamera.isActive()) {
         //translate freecam upward
-        m.transY += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transY += m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.y -= m.freeCamera.speedEnergyRatio()
       } else if (m.buttonCD_jump + 20 < m.cycle) {
         m.jump()
       }
     }
     const moveX = player.velocity.x - m.moverX //account for mover platforms
-    if (input.left) {
-      if (m.isUsingFreeCamera() && !input.right) {
+    if (input.left && !input.right) {
+      if (m.freeCamera.isActive()) {
         //translate freecam to the left
-        m.transX += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transX += m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.x -= m.freeCamera.speedEnergyRatio()
       } else if (moveX > -2) {
         player.force.x -= m.Fx * 1.5
       } else {
         player.force.x -= m.Fx
       }
-    } else if (input.right) {
-      if (m.isUsingFreeCamera() && !input.left) {
+    } else if (input.right && !input.left) {
+      if (m.freeCamera.isActive()) {
         //translate freecam to the right
-       m.transX -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transX -= m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.x += m.freeCamera.speedEnergyRatio()
       } else if (moveX < 2) {
         player.force.x += m.Fx * 1.5
       } else {
@@ -323,21 +404,29 @@ const m = {
   },
   airControl() {
     //check for coyote time jump
-    if (m.isUsingFreeCamera()) {
+    if (m.freeCamera.isActive()) {
       m.transSmoothX = 0
       m.transSmoothY = 0
       Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
+    } else {
+      //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
+      //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
+      //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
+      m.freeCamera.pos.x = m.pos.x //works! :)
+      m.freeCamera.pos.y = m.pos.y //works! :)
     }
     
-    if (input.down && m.isUsingFreeCamera() && !input.up) {
+    if (input.down && m.freeCamera.isActive() && !input.up) {
       //translate freecam downward
-      m.transY -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+      m.transY -= m.freeCamera.speedEnergyRatio()
+      m.freeCamera.pos.y += m.freeCamera.speedEnergyRatio()
     }
 
-    if (input.up) {
-      if (m.isUsingFreeCamera() && !input.down) {
+    if (input.up && !input.down) {
+      if (m.freeCamera.isActive() && !input.down) {
         //translate freecam upward
-        m.transY += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transY += m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.y -= m.freeCamera.speedEnergyRatio()
       } else if (m.buttonCD_jump + 20 < m.cycle && m.lastOnGroundCycle + m.coyoteCycles > m.cycle) {
         m.jump()
       }
@@ -348,17 +437,19 @@ const m = {
       Matter.Body.setVelocity(player, { x: player.velocity.x, y: player.velocity.y * 0.94 }); //reduce player y-velocity every cycle
     }
 
-    if (input.left) {
-      if (m.isUsingFreeCamera() && !input.right) {
+    if (input.left && !input.right) {
+      if (m.freeCamera.isActive()) {
         //translate freecam to the left
-        m.transX += m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transX += m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.x -= m.freeCamera.speedEnergyRatio()
       } else if (player.velocity.x > -m.airSpeedLimit / player.mass / player.mass) {
         player.force.x -= m.FxAir; // move player   left / a
       }
-    } else if (input.right) {
-      if (m.isUsingFreeCamera() && !input.left) {
+    } else if (input.right && !input.left) {
+      if (m.freeCamera.isActive()) {
         //translate freecam to the right
-        m.transX -= m.fieldUpgrades[6].freeCamSpeedEnergyRatio()
+        m.transX -= m.freeCamera.speedEnergyRatio()
+        m.freeCamera.pos.x += m.freeCamera.speedEnergyRatio()
       } else if (player.velocity.x < m.airSpeedLimit / player.mass / player.mass) {
         player.force.x += m.FxAir; //move player  right / d
       }
@@ -3495,23 +3586,6 @@ const m = {
         }
       }
     },
-    camera() {
-      ctx.fillStyle = m.fillColor;
-      ctx.save();
-      ctx.translate(m.pos.x, m.pos.y);
-      ctx.rotate(m.angle);
-      ctx.beginPath();
-      ctx.arc(0, 0, 30, 0, 2 * Math.PI);
-      ctx.fillStyle = m.bodyGradient
-      ctx.fill();
-      ctx.arc(15, 0, 4, 0, 2 * Math.PI);
-      ctx.strokeStyle = "#333";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-
-      ctx.restore();
-    }
   },
   // *********************************************
   // **************** fields *********************
@@ -4206,7 +4280,7 @@ const m = {
     ctx.stroke();
   },
   grabPowerUp() { //look for power ups to grab with field
-    if (!m.isUsingFreeCamera()){
+    if (!m.freeCamera.isActive()){
       if (m.fireCDcycle < m.cycle) m.fireCDcycle = m.cycle - 1
       for (let i = 0, len = powerUp.length; i < len; ++i) {
         if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
@@ -4245,7 +4319,7 @@ const m = {
     }
   },
   grabPowerUpEasy() { //look for power ups to grab with field
-    if (!m.isUsingFreeCamera()){
+    if (!m.freeCamera.isActive()){
       for (let i = 0, len = powerUp.length; i < len; ++i) {
         if (tech.isEnergyNoAmmo && powerUp[i].name === "ammo") continue
         const dxP = m.pos.x - powerUp[i].position.x;
@@ -4483,8 +4557,14 @@ const m = {
   },
   wakeCheck() {
     if (m.isTimeDilated) {
+      if (m.freeCamera.isActive) {
+        //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
+        //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
+        //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
+        m.freeCamera.pos.x = m.pos.x //works! :)
+        m.freeCamera.pos.y = m.pos.y //works! :)
+      }
       m.isTimeDilated = false;
-
       function wake(who) {
         for (let i = 0, len = who.length; i < len; ++i) {
           Matter.Sleeping.set(who[i], false)
@@ -6062,10 +6142,6 @@ const m = {
                     <em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
-      freeCameraSpeed: 50,
-      freeCamSpeedEnergyRatio(speed = m.fieldUpgrades[6].freeCameraSpeed) { //controls how fast freecam moves with different amounts of energy
-        return speed * Math.pow(Math.max(m.energy / m.maxEnergy, 0), (1 / Math.PHI))
-      },
       set() {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
@@ -6100,6 +6176,7 @@ const m = {
         m.setMovement();
         b.setFireCD()
         const timeStop = () => {
+          //if (m.fieldUpgrades[6].isFreeCameraMode && !m.freeCamera.isActive()) console.log("initializing freeCamera...")
           m.immuneCycle = m.cycle + 10; //invulnerable to harm while time is stopped,  this also disables regen
           //draw field everywhere
           ctx.globalCompositeOperation = "saturation"
