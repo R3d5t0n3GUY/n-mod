@@ -10022,9 +10022,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.isStabSword
+        return tech.haveGunCheck("sword") && !tech.isStabSword && !tech.isHeavenlyArray
       },
-      requires: "sword",
+      requires: "sword, not silicon carbide, dirac sea",
       effect() {
         tech.sizeIllusion = true;
       },
@@ -10044,9 +10044,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.sizeIllusion && !tech.infinityEdge
+        return tech.haveGunCheck("sword") && !tech.sizeIllusion && !tech.infinityEdge && !tech.isHeavenlyArray
       },
-      requires: "sword, not cantors theorem, size-weight illusion",
+      requires: "sword, not cantors theorem, size-weight illusion, dirac sea",
       effect() {
         tech.isStabSword = true;
       },
@@ -10066,9 +10066,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.isStabSword && !tech.greatSword && !tech.longSword
+        return tech.haveGunCheck("sword") && !tech.isStabSword && !tech.greatSword && !tech.longSword && !tech.isHeavenlyArray
       },
-      requires: "sword, not silicon carbide",
+      requires: "sword, not silicon carbide, dirac sea",
       effect() {
         tech.infinityEdge = true;
       },
@@ -10079,7 +10079,8 @@ const tech = {
     {
       name: "plasmon",
       descriptionFunction() {
-        return `increase sword range by <strong>3x</strong><br><em>plasmon is beyond visible perception</em>`
+        return `increase sword range by <strong>3x</strong>
+        <br><em>plasmon is beyond visible perception</em>`
       },
       isGunTech: true,
       isNScytheTech: true,
@@ -10088,9 +10089,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.greatSword && !tech.longSword
+        return tech.haveGunCheck("sword") && !tech.greatSword && !tech.longSword && !tech.isHeavenlyArray
       },
-      requires: "sword, not greatsword, longsword",
+      requires: "sword, not greatsword, longsword, dirac sea",
       effect() {
         tech.soundSword = true;
       },
@@ -10110,9 +10111,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword
+        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword && !tech.isHeavenlyArray
       },
-      requires: "sword, not plasmon, canton's theorem",
+      requires: "sword, not plasmon, canton's theorem, dirac sea",
       effect() {
         tech.greatSword = true;
       },
@@ -10138,9 +10139,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.greatSword
+        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.greatSword && !tech.isHeavenlyArray
       },
-      requires: "sword, not plasmon, canton's theorem",
+      requires: "sword, not plasmon, canton's theorem, dirac sea",
       effect() {
         tech.longSword = true;
       },
@@ -10148,6 +10149,27 @@ const tech = {
         tech.longSword = false;
       }
     },
+    {
+			name: "dirac sea",
+			descriptionFunction() {
+				return `sword <b>orbits</b> you while <b>crouching</b> and using sword<br>drains <b class="color-f">energy</b>`
+			},
+			isGunTech: true,
+			maxCount: 1,
+			count: 0,
+			frequency: 2,
+			frequencyDefault: 2,
+			allowed() { 
+				return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword && !tech.isStabSword
+			},
+			requires: "sword, not plasmon, canton's theorem, longsword, silicon carbide",
+			effect() {
+				tech.isHeavenlyArray = true;
+			},
+			remove() {
+				tech.isHeavenlyArray = false;
+			}
+		},
 
     {
       name: "drawn out",
