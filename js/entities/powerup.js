@@ -1815,7 +1815,7 @@ const powerUps = {
               if (b.inventory[j] === choose) alreadyHasGun = true
             }
             // text += `<div class="choose-grid-module" onclick="powerUps.choose('gun',${gun})"><div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${b.guns[gun].name}</div> ${b.guns[gun].description}</div>`
-            if (!alreadyHasGun) text += powerUps.gunText(choose, `powerUps.choose('gun',${choose})`)
+            if (!alreadyHasGun && b.guns[choose]) text += powerUps.gunText(choose, `powerUps.choose('gun',${choose})`)
           }
           for (let i = 0; i < localSettings.entanglement.techIndexes.length; i++) { //add tech
             let found = false;
@@ -1947,15 +1947,15 @@ const powerUps = {
       // powerUps.spawn(x, y, "tech")
     }
     function powerUpChance() {
-      powerUps.randomPowerUpCounter++
+      /* powerUps.randomPowerUpCounter++
       if (powerUps.randomPowerUpCounter > Math.max(level.levelsCleared, 9) * 0.1 * Math.random()) {
-        powerUps.randomPowerUpCounter = 0; //reset odds
+        powerUps.randomPowerUpCounter = 0; //reset odds */
         if (Math.random() < 0.97) {
           powerUps.spawn(x, y, "tech")
         } else {
           powerUps.spawn(x, y, "gun")
         }
-      } else {
+      /* } else {
         if (m.health < 0.65 && (!tech.isEnergyHealth || powerUps.healGiveMaxEnergy)) {
           powerUps.spawn(x, y, "heal");
           powerUps.spawn(x, y, "heal");
@@ -1963,7 +1963,7 @@ const powerUps = {
           powerUps.spawn(x, y, "ammo");
           powerUps.spawn(x, y, "ammo");
         }
-      }
+      } */
     }
     powerUps.spawn(x + 25, y - 25, "ammo", false);
     if (simulation.difficultyMode > 5) powerUps.spawn(x - 25, y - 50, "ammo", false);

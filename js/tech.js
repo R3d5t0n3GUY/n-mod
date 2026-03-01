@@ -2902,15 +2902,18 @@ const tech = {
     },
     {
       name: "Halbach array",
-      description: "throwing a <strong class='color-block'>block</strong> will<br>also throw other nearby <strong class='color-block'>blocks</strong>",
+      descriptionFunction() {
+        return `throwing a <strong class='color-block'>block</strong> will
+        <br>${tech.isTokamak ? "<strong class='color-e'>explode</strong>" : "throw"} other nearby <strong class='color-block'>blocks</strong>`
+      },
       maxCount: 1,
       count: 0,
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter) && m.fieldMode !== 8 && m.fieldMode !== 9
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isTokamak) && m.fieldMode !== 8 && m.fieldMode !== 9
       },
-      requires: "mass driver, printer, not wormhole, pilot wave",
+      requires: "mass driver, printer, tokamak, not wormhole, pilot wave",
       effect() {
         tech.isGroupThrow = true
       },
@@ -10130,7 +10133,8 @@ const tech = {
     {
       name: "longsword",
       descriptionFunction() {
-        return `<strong>1.7x</strong> sword <em>length</em> and <strong class="color-d">damage</strong><br><strong>0.6x</strong> swing <strong class="color-speed">speed</strong>`
+        return `<strong>1.7x</strong> sword <em>length</em> and <strong class="color-d">damage</strong>
+        <br><strong>0.6x</strong> swing <strong class="color-speed">speed</strong>`
       },
       isGunTech: true,
       isNScytheTech: true,
@@ -10152,7 +10156,8 @@ const tech = {
     {
 			name: "dirac sea",
 			descriptionFunction() {
-				return `sword <b>orbits</b> you while <b>crouching</b> and using sword<br>drains <b class="color-f">energy</b>`
+				return `sword <strong>orbits</strong> you while <strong>crouching</strong> and using sword
+        <br>drains <strong class="color-f">energy</strong>`
 			},
 			isGunTech: true,
 			maxCount: 1,
@@ -10170,7 +10175,28 @@ const tech = {
 				tech.isHeavenlyArray = false;
 			}
 		},
-
+    {
+			name: "hartman effect",
+			descriptionFunction() {
+				return `use <strong class="color-f">energy</strong> to split <strong>nearby mobs</strong>
+        <br><strong class="color-d">damage</strong> scales with number of <strong>mobs</strong><em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">↓↓← →</em>`
+			},
+			isGunTech: true,
+			maxCount: 1,
+			count: 0,
+			frequency: 2,
+			frequencyDefault: 2,
+			allowed() { 
+				return tech.haveGunCheck("sword")
+			},
+			requires: "sword",
+			effect() {
+				tech.hartmanEffect = true;
+			},
+			remove() {
+				tech.hartmanEffect = false;
+			}
+		},
     {
       name: "drawn out",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Forging' class="link">drawn out</a>`,

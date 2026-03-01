@@ -713,7 +713,7 @@ const m = {
       m.maxHealth *= 0.5
     }
     document.getElementById("health-bg").style.width = `${Math.floor(300 * m.maxHealth)}px`
-    document.getElementById("defense-bar").style.width = Math.floor(300 * m.maxHealth * (1 - m.defense())) + "px";
+    document.getElementById("defense-bar").style.width = Math.max(Math.floor(300 * m.maxHealth * (1 - m.defense()))) + "px";
 
     if (isMessage) simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-h'>maxHealth</span> <span class='color-symbol'>=</span> ${m.maxHealth.toFixed(2)}`)
     if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -956,6 +956,9 @@ const m = {
           m.health = 0;
           m.displayHealth();
           m.death();
+          requestAnimationFrame(() => {
+            if (m.alive) m.death() //needed for quantum Zeno effect
+          })
           return;
         }
       }
@@ -2066,6 +2069,7 @@ const m = {
                 do() {
                   this.count--
                   if (this.count < 0) simulation.removeEphemera(this.name)
+                  ctx.beginPath();
                   ctx.moveTo(this.from.x, this.from.y);
                   ctx.lineTo(this.to.x, this.to.y);
                   ctx.lineWidth = 60;
@@ -2418,6 +2422,17 @@ const m = {
         //     m.eigen.downCount = m.eigen.downCountMax
         // }
         m.eigen.draw()
+        if (b.inventory.length && (b.activeGun !== null && b.activeGun !== undefined)) {
+          if (input.fire && m.fireCDcycle < m.cycle && (!input.field || m.fieldFire)) {
+            if (b.guns[b.activeGun].ammo > 0) {
+              b.fireWithAmmo()
+            } else {
+              b.outOfAmmo()
+            }
+            if (m.holdingTarget) m.drop();
+          }
+          b.guns[b.activeGun].do();
+        }
       }
     },
     energy() {
@@ -3963,7 +3978,29 @@ const m = {
                 }
                 if (isDrain) m.energy -= 0.0017;
               }
+            }
+            if (tech.isGroupThrow) {
+              const range = 810000
 
+              for (let i = 0; i < body.length; i++) {
+                const sub = Vector.sub(m.pos, body[i].position)
+                const dist2 = Vector.magnitudeSquared(sub)
+                if (dist2 < range) {
+                  body[i].force.y -= body[i].mass * (simulation.g * 1.01); //remove a bit more then standard gravity
+                  if (dist2 > 40000) {
+                    const f = Vector.mult(Vector.normalise(sub), 0.0008 * body[i].mass)
+                    body[i].force.x += f.x
+                    body[i].force.y += f.y
+                    Matter.Body.setVelocity(body[i], { x: 0.96 * body[i].velocity.x, y: 0.96 * body[i].velocity.y });
+                  }
+                }
+              }
+              ctx.beginPath();
+              ctx.arc(m.pos.x, m.pos.y, Math.sqrt(range), 0, 2 * Math.PI);
+              ctx.fillStyle = "rgba(245,245,255,0.15)";
+              ctx.fill();
+              // ctx.globalCompositeOperation = "difference";
+              // ctx.globalCompositeOperation = "source-over";
             }
           } else {
             if (tech.isGroupThrow) {
@@ -4056,6 +4093,21 @@ const m = {
             if (powerUps.healGiveMaxEnergy) massScale = powerUps["heal"].size()
             powerUps.spawn(m.pos.x, m.pos.y, "heal", true, massScale * (simulation.healScale ** 0.25) * Math.sqrt(tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)))  //    spawn(x, y, target, moving = true, mode = null, size = powerUps[target].size()) {
           }
+          if (tech.isGroupThrow) {
+            const range = 810000
+            for (let i = body.length - 1; i > 0; i--) {
+              if (body[i] && body[i] !== m.holdingTarget) {
+                const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
+                if (dist2 < range && !body[i].isInvulnerable) {
+                    const where = { x: body[i].position.x, y: body[i].position.y }
+                    Matter.Composite.remove(engine.world, body[i]);
+                    body.splice(i, 1);
+                    b.pulse(60 * Math.pow(m.holdingTarget.mass, 0.25), m.angle, where) //    pulse(charge, angle = m.angle, where = m.pos) {
+
+                }
+              }
+            }
+          }
         } else { //normal throw
           //bullet-like collisions
           m.holdingTarget.collisionFilter.category = cat.bullet
@@ -4113,9 +4165,9 @@ const m = {
           if (tech.isGroupThrow) {
             const range = 810000
             for (let i = 0; i < body.length; i++) {
-              if (body[i] !== m.holdingTarget) {
+              if (body[i] && body[i] !== m.holdingTarget) {
                 const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
-                if (dist2 < range) {
+                if (dist2 < range && !body[i].isInvulnerable) {
                   const blockSpeed = 90 * charge * Math.min(0.85, 0.8 / Math.pow(body[i].mass, 0.25)) * Math.pow((range - dist2) / range, 0.2)
                   Matter.Body.setVelocity(body[i], {
                     x: body[i].velocity.x * 0.5 + Math.cos(m.angle) * blockSpeed,
@@ -6552,7 +6604,7 @@ const m = {
 
           }
           if (isOn) {
-            if (tech.isPilotMapIgnore && !simulation.testing) {
+            if (tech.isPilotMapIgnore && !simulation.testing && m.fieldOn) {
               level.customTopLayer();
               simulation.draw.drawMapPath();
             } //draw map before drawing field if player has de Broglie–Bohm theory

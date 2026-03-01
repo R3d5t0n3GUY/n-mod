@@ -1129,6 +1129,9 @@ const spawn = {
       let hasUnlockedLore = tech.tech.find(i => {return i.name === "undefined"}).allowed()
       if (m.health < 0) {
         m.death() //needed for quantum Zeno effect
+        requestAnimationFrame(() => {
+          if (m.alive) m.death() //needed for quantum Zeno effect
+        })
         return
       }
       if (!this.hasRunDeathScript) {
@@ -7788,6 +7791,17 @@ const spawn = {
       ctx.lineWidth = this.radius * 2;
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
+      simulation.ephemera.push({
+        name: "snakeBossTailFix",
+        cycle: 30,
+        do() {
+          this.cycle--
+          if (this.cycle < 1) simulation.removeEphemera(this.name);
+          for (let i = 0, len = me.history.length; i < len; i++) {
+            me.history[i] = { x: me.position.x, y: me.position.y }
+          }
+        },
+      })
     };
   },
   kingSnakeBoss(x, y) {
@@ -8014,6 +8028,17 @@ const spawn = {
       ctx.lineWidth = this.radius * 2;
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
+      simulation.ephemera.push({
+        name: "kingSnakeBossTailFix",
+        cycle: 30,
+        do() {
+          this.cycle--
+          if (this.cycle < 1) simulation.removeEphemera(this.name);
+          for (let i = 0, len = me.history.length; i < len; i++) {
+            me.history[i] = { x: me.position.x, y: me.position.y }
+          }
+        },
+      })
     };
   },
   pulsarBoss(x, y, radius = 90, isNonCollide = false) {
