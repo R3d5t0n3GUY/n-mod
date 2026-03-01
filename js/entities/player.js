@@ -4096,7 +4096,7 @@ const m = {
           if (tech.isGroupThrow) {
             const range = 810000
             for (let i = body.length - 1; i > 0; i--) {
-              if (body[i] && body[i] !== m.holdingTarget) {
+              if (body[i] && body[i] !== m.holdingTarget && !body[i].isNotHoldable) {
                 const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
                 if (dist2 < range && !body[i].isInvulnerable) {
                     const where = { x: body[i].position.x, y: body[i].position.y }
@@ -4165,7 +4165,7 @@ const m = {
           if (tech.isGroupThrow) {
             const range = 810000
             for (let i = 0; i < body.length; i++) {
-              if (body[i] && body[i] !== m.holdingTarget) {
+              if (body[i] && body[i] !== m.holdingTarget && !body[i].isNotHoldable) {
                 const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
                 if (dist2 < range && !body[i].isInvulnerable) {
                   const blockSpeed = 90 * charge * Math.min(0.85, 0.8 / Math.pow(body[i].mass, 0.25)) * Math.pow((range - dist2) / range, 0.2)
