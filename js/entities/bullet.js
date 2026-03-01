@@ -10052,7 +10052,14 @@ const b = {
             const dy = m2.position.y - py;
             return dx*dx + dy*dy <= radius*radius;
           });
-          if (targets.length < 2) return;
+          if (targets.length < 2){
+            if (this.technique.active){
+              this.technique.active = false;
+              this.technique.phase = "idle";
+              this.shouldSlow = false;
+            }
+            return;
+          }
           targets.sort((a,b)=>{
             const aa = Math.atan2(a.position.y-py, a.position.x-px);
             const bb = Math.atan2(b.position.y-py, b.position.x-px);
