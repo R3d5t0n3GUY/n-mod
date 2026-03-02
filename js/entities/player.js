@@ -301,20 +301,23 @@ const m = {
       ctx.strokeStyle = m.fieldMeterColor || "#09f";
       ctx.lineWidth = 5; //make it clear enough to see
       ctx.stroke();
+      let oldCompositeOperation = ctx.globalCompositeOperation
+      ctx.globalCompositeOperation = "exclusion"
       ctx.beginPath()
       ctx.moveTo(30, 0)
       ctx.lineTo(55, 15)
       ctx.moveTo(30, 0)
       ctx.lineTo(55, -15)
-      ctx.strokeStyle = "#666"
+      ctx.lineWidth = 1
+      ctx.strokeStyle = "#999"
       ctx.stroke();
       ctx.beginPath();
       ctx.moveTo(30, 0)
       ctx.lineTo(50, -20)
       ctx.moveTo(30, 0)
       ctx.lineTo(50, 20)
-      ctx.strokeStyle = "#333"
-      ctx.lineWidth = 2.5
+      ctx.strokeStyle = "#ccc"
+      ctx.lineWidth = 3
       ctx.stroke()
       ctx.beginPath()
       ctx.moveTo(50, 20)
@@ -323,6 +326,7 @@ const m = {
       ctx.lineTo(50, -20)
       ctx.lineTo(50, 20)
       ctx.stroke()
+      ctx.globalCompositeOperation = oldCompositeOperation
       
       ctx.restore();
     }
