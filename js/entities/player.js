@@ -267,7 +267,7 @@ const m = {
       x: 0,
       y: 0
     },
-    zoom: 1,
+    zoom: 1, //stores simulation.zoomScale upon entering freeCam, and reverts it upon leaving
     angle: 0,
     speed: 50, //base speed value
     speedEnergyRatio(speed = m.freeCamera.speed) { //controls how fast freecam moves with different amounts of energy
@@ -4619,6 +4619,7 @@ const m = {
         //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
         m.freeCamera.pos.x = m.pos.x //works! :)
         m.freeCamera.pos.y = m.pos.y //works! :)
+        simulation.setZoom(m.freeCamera.zoom)
       }
       m.isTimeDilated = false;
       function wake(who) {

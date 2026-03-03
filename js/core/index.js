@@ -2037,9 +2037,9 @@ document.body.addEventListener("wheel", (e) => {
   if (!simulation.paused) {
     if (m.freeCamera.isActive()) {
       if (e.deltaY > 0) {
-        simulation.zoomTransition(Math.max(simulation.zoomScale / 0.9, 250))
+        simulation.setZoom(Math.max(simulation.zoomScale / 0.9, 250))
       } else {
-        simulation.zoomTransition(Math.min(simulation.zoomScale * 0.9, 10000))
+        simulation.setZoom(Math.min(simulation.zoomScale * 0.9, 10000))
       }
     } else {
       if (e.deltaY > 0) {

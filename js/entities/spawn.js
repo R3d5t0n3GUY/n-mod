@@ -3582,7 +3582,7 @@ const spawn = {
         this.isDropPowerUp = false;
         spawn.powerUpBossBaby(this.position.x, this.position.y, vertices - 1, undefined, this.techRefunds)
         Matter.Body.setVelocity(mob[mob.length - 1], { x: this.velocity.x, y: this.velocity.y })
-      } else {
+      } else if (!tech.isClearingMobs) { //if removed by collecting loreTech, don't spawn more powerUps
         let warped = false
         for (let i = 0; i < this.techRefunds; i ++) { // give the player a chance to recover lost tech
           if (Math.random() < 0.1) { // chance to spawn warp or entanglement instead of tech
@@ -3696,7 +3696,7 @@ const spawn = {
         this.isDropPowerUp = false;
         spawn.powerUpBoss(this.position.x, this.position.y, vertices - 1, undefined, this.techRefunds)
         Matter.Body.setVelocity(mob[mob.length - 1], { x: this.velocity.x, y: this.velocity.y })
-      } else {
+      } else if (!tech.isClearingMobs) { //if removed by collecting loreTech, don't spawn more powerUps
         let warped = false
         for (let i = 0; i < this.techRefunds; i ++) { // give the player a chance to recover lost tech
           if (Math.random() < 0.25) { // chance to spawn warp or entanglement instead of tech

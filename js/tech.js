@@ -4594,7 +4594,7 @@ const tech = {
       count: 0,
       frequency: 1,
       frequencyDefault: 1,
-      isInstant: true,
+      //isInstant: true,
       allowed() { return true },
       requires: "",
       effect() {
@@ -4602,7 +4602,11 @@ const tech = {
           if (tech.tech[i].name === "counterfactual") tech.tech[i].frequency = 40
         }
       },
-      remove() { }
+      remove() {
+        for (let i = 0, len = tech.tech.length; i < len; i++) {
+          if (tech.tech[i].name === "counterfactual") tech.tech[i].frequency = 0
+        }
+      }
     },
     {
       name: "counterfactual",
@@ -4617,10 +4621,8 @@ const tech = {
       requires: "not experiment mode",
       effect() {
         if (Math.random() < 0.1) { //chance to remove this
-          this.frequency = 0
-          for (let i = 0, len = tech.tech.length; i < len; i++) {
-            if (tech.tech[i].name === "counterfactual conditional") tech.tech[i].count = 0
-          }
+          this.count = 0
+          tech.removeTech("counterfactual conditional")
           powerUps.spawnDelay("tech", 1);
           simulation.inGameConsole(`<span class='color-var'>this</span>.frequency = 0  <em>//counterfactual removed</em>`, 360)
         } else {
@@ -4635,12 +4637,7 @@ const tech = {
         }
       },
       remove() {
-        for (let i = 0, len = tech.tech.length; i < len; i++) {
-          if (tech.tech[i].name === "counterfactual conditional") tech.tech[i].count = 0
-        }
-        requestAnimationFrame(() => { //need a 2 cycle wait because of -> search for this:   tech.tech.unshift(item); // Add the element to the front of the array
-          this.frequency = 0
-        })
+        tech.removeTech("counterfactual conditional")
       }
     },
     {
@@ -15827,7 +15824,16 @@ const tech = {
     //************************************************** 
     {
       name: `undefined`,
-      description: `<strong class="lore-text">this</strong><br> &nbsp;`,
+      descriptionFunction() {
+        if (this.count === 0) {
+          return `<strong class="lore-text">this</strong><br> &nbsp;`
+        } else if (this.count < Math.max(lore.techGoal || 0, 1)) {
+          return `<em>uncaught error:</em><br><strong>${Math.max(0, lore.techGoal - lore.techCount)}</strong> more required 
+          for access to <strong class="lore-text">null</strong>`
+        } else {
+          return `<strong class="lore-text">null</strong> is open at level.final() <br> &nbsp;`
+        }
+      },
       maxCount: 1,
       count: 0,
       frequency: 2,
@@ -15852,12 +15858,21 @@ const tech = {
       requires: "completed the game at least once, NOT EXPERIMENT MODE",
       effect() {
         if (localSettings.loreCount > lore.conversation.length - 1) { //reward for people done with lore chapters (or on the final chapter)
+          tech.isClearingMobs = true
           for (let i = mob.length - 1; i > -1; i--) { //replace mobs with starters
-            if (!mob[i].isBoss && mob[i].isDropPowerUp && mob[i].alive) {
-              spawn.starter(mob[i].position.x, mob[i].position.y)
-              mob[i].leaveBody = false
-              mob[i].isDropPowerUp = false
-              mob[i].death()
+            if (mob[i].isDropPowerUp && mob[i].alive && !mob[i].isFinalBoss) {
+              if (mob[i].isBoss) {
+                spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
+              } else {
+                spawn.starter(mob[i].position.x, mob[i].position.y)
+              }
+              let deathCycle = () => {
+                mob[i].leaveBody = false
+                mob[i].isDropPowerUp = false
+                mob[i].death()
+                if (mob[i].alive) requestAnimationFrame(deathCycle) //in case of bosses with phases
+              }
+              deathCycle()
 
               //spawn a random power up
               if (Math.random() < 0.2 && m.coupling > 0) {
@@ -15873,6 +15888,7 @@ const tech = {
               }
             }
           }
+          tech.isClearingMobs = false
         }
 
         setTimeout(() => { //a short delay, I can't remember why
@@ -15880,17 +15896,17 @@ const tech = {
           if (lore.techCount >= lore.techGoal) {
             // tech.removeLoreTechFromPool();
             this.frequency = 0;
-            this.description = `<strong class="lore-text">null</strong> is open at level.final() <br> &nbsp;`
+            //this.description = `<strong class="lore-text">null</strong> is open at level.final() <br> &nbsp;`
           } else {
             this.frequency += lore.techGoal * 2
-            this.description = `<em>uncaught error:</em><br><strong>${Math.max(0, lore.techGoal - lore.techCount)}</strong> more required for access to <strong class="lore-text">null</strong>`
+            //this.description = `<em>uncaught error:</em><br><strong>${Math.max(0, lore.techGoal - lore.techCount)}</strong> more required for access to <strong class="lore-text">null</strong>`
           }
         }, 1);
       },
       remove() {
         lore.techCount = 0;
         this.maxCount = lore.techGoal;
-        this.description = `<strong class="lore-text">this</strong> <br> &nbsp;`
+        //this.description = `<strong class="lore-text">this</strong> <br> &nbsp;`
       }
     },
     {
