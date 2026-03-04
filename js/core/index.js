@@ -22,32 +22,42 @@ Math.hash = s => {
 // document.getElementById("seed").placeholder = Math.initialSeed = Math.floor(Date.now() % 100000) //random every time:  just the time in milliseconds UTC
 
 window.addEventListener('error', event => {
-  let errorObj = event.error, isBrowserSupport = null, errName = "", errMsg = "", errorMessage = null
-  //console.clear()
-  console.warn(event)
   try {
-    try {
-      isBrowserSupport = (errorObj.filename != "") //for some stupid reason, filename is a non-standard error property exclusive to FireFox
-    } catch (e) {
-      isBrowserSupport = false
-    }
-    try { errName = errorObj.name } catch (e) { errName = "ScriptError" }
-    try { errMsg = errorObj.message } catch (e) { errMsg = errorObj}
-    console.warn(`Uncaught ${errName} in ${isBrowserSupport ? errorObj.filename : 'a source file'}: ${errMsg}`)
-    // simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${error.message}  <u>${error.filename}:${error.lineno}</u>`)
-    if (isBrowserSupport) {
-      console.log("Your browser supports filename.")
-      errorMessage = (errorObj.stack && errorObj.stack.replace(/\n/g, "<br>")) || 
-      (errMsg + ` <u>${errorObj.filename}:${errorObj.lineno}</u>`)
+    //event.preventDefault()
+    //console.warn(event)
+    let errName = "Error";
+    let errMsg = "Unknown error";
+    let filename = event.filename
+    let lineno = event.lineno || 0;
+    let colno = event.colno || 0;
+
+    // Chrome file:// often sets event.error to null
+    if (event.error instanceof Error) {
+      errName = event.error.name || errName;
+      errMsg  = event.error.message || errMsg;
     } else {
-      errorMessage = `${errName}. <u>:${errMsg == null ? "Check the browser console for info." : errMsg}</u>`
-      /*errorMsg = `Uncaught Error. <u>:Full error information is not available
-    <br>due to browser incompatibility with</u> <a href="lib/warning.html" target="_blank">non-standard properties</a>`*/
+      // Fallback for Chrome local file security restriction
+      errMsg = event.message || errMsg;
     }
+
+    console.warn(
+      `Uncaught ${errName + (filename ? ` in ${filename}` : "")}:${lineno ? lineno + ":" : ""}${colno ? colno + ": -" : ""} ${errMsg}`
+    );
+
+    let errorMessage;
+
+    if (event.error && event.error.stack) {
+      errorMessage = event.error.stack.replace(/\n/g, "<br>");
+    } else {
+      errorMessage = `${errName + (filename ? ` in ${filename}` : "")}:<u>${lineno ? lineno + ":" : ""}${colno ? colno + ": -" : ""}</u><br>${errMsg}`;
+    }
+
+    console.log(errorMessage);
     simulation.lastLogTime = 0 //prevent spamming by clearing console
-    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errorMessage}`, 480); //show for 8 seconds
+    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
   } catch (err) {
     console.error("Logging Error: ", err)
+    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> LoggingError. <u>${err.message || err}</u>`, 480); //show for 8 seconds
   } //finally { canvas.width = canvas.width }
 });
 
