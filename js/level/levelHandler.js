@@ -126,7 +126,19 @@ const level = {
         } else {
             spawn.setSpawnList(); //picks a couple mobs types for a themed random mob spawns
             // spawn.pickList = ["focuser", "focuser"]
-            level.fullLevelList[level.levels[level.onLevel]](); //picks the current map from the the levels array
+            let newLevelName = level.levels[level.onLevel]
+            try {
+                if (level.fullLevelList[newLevelName]) {
+                    level.fullLevelList[newLevelName](); //picks the current map from the the levels array
+                } else {
+                    throw "Unknown level"
+                }
+            } catch (err) {
+                level.fullLevelList.testing()
+                requestAnimationFrame(() => {
+                    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ReferenceError. <u>:level.fullLevelList.<strong class='color-var'>${newLevelName}</strong> is not defined`, 480) 
+                })
+            }
             if (!simulation.isCheating && !build.isExperimentRun && !simulation.isTraining) {
                 localSettings.runCount += level.levelsCleared //track the number of total runs locally
                 localSettings.levelsClearedLastGame = level.levelsCleared
