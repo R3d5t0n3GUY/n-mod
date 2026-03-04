@@ -253,8 +253,7 @@ const b = {
       if (bullet[i].endCycle < simulation.cycle) {
         bullet[i].onEnd(i); //some bullets do stuff on end
         if (bullet[i]) {
-          Matter.Composite.remove(engine.world, bullet[i]);
-          bullet.splice(i, 1);
+          queueRemoval("bullet", i)
         } else {
           break; //if bullet[i] doesn't exist don't complete the for loop, because the game probably reset
         }
@@ -496,8 +495,7 @@ const b = {
               const size = 20 + 300 * Math.pow(body[i].mass, 0.25)
               const where = body[i].position
               const onLevel = level.onLevel //prevent explosions in the next level
-              Matter.Composite.remove(engine.world, body[i]);
-              body.splice(i, 1);
+              queueRemoval('body', i)
               setTimeout(() => {
                 if (onLevel === level.onLevel) b.explosion(where, size); //makes bullet do explosive damage at end
               }, 250 + 300 * Math.random());
@@ -921,7 +919,7 @@ const b = {
 
         Matter.Body.setVelocity(this, { x: 0, y: 0 }); //keep bomb in place
         //draw suck
-        const radius = 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / this.suckCycles
+        const radius = Math.max(1, 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / this.suckCycles)
         ctx.fillStyle = "rgba(0,0,0,0.1)";
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, radius, 0, 2 * Math.PI);
@@ -2009,6 +2007,11 @@ const b = {
         } else {
           this.dropCaughtPowerUp()
         }
+        //refund ammo
+        if (isReturnAmmo) {
+            b.guns[9].ammo++;
+            simulation.updateGunHUD();
+        }
       },
       drawDamageAura() {
         ctx.beginPath();
@@ -2056,17 +2059,6 @@ const b = {
           const momentum = Vector.mult(Vector.sub(this.velocity, player.velocity), (m.crouch ? 0.0001 : 0.0002))
           player.force.x += momentum.x
           player.force.y += momentum.y
-          // refund ammo
-          if (isReturnAmmo) {
-            b.guns[9].ammo++;
-            if (level.is2xAmmo) b.guns[9].ammo++;
-            simulation.updateGunHUD();
-            // for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
-            //     if (b.guns[i].name === "harpoon") {
-            //         break;
-            //     }
-            // }
-          }
         } else {
           const sub = Vector.sub(this.position, m.pos)
           const rangeScale = 1 + 0.000001 * Vector.magnitude(sub) * Vector.magnitude(sub) //return faster when far from player
@@ -2601,8 +2593,7 @@ const b = {
                       m.energy += 0.8
                       powerUps.onPickUp(powerUp[i]);
                       powerUp[i].effect();
-                      Matter.Composite.remove(engine.world, powerUp[i]);
-                      powerUp.splice(i, 1);
+                      queueRemoval('powerUp', i)
                       return;
                   }
               }
@@ -3558,8 +3549,7 @@ const b = {
         //pick up nearby power ups
         powerUps.onPickUp(powerUp[i]);
         powerUp[i].effect();
-        Matter.Composite.remove(engine.world, powerUp[i]);
-        powerUp.splice(i, 1);
+        queueRemoval('powerUp', i)
         if (tech.isDroneGrab) {
           this.isImproved = true;
           const SCALE = 2.25
@@ -3871,8 +3861,7 @@ const b = {
                     //pick up nearby power ups
                     powerUps.onPickUp(powerUp[i]);
                     powerUp[i].effect();
-                    Matter.Composite.remove(engine.world, powerUp[i]);
-                    powerUp.splice(i, 1);
+                    queueRemoval('powerUp', i)
                     if (tech.isDroneGrab) {
                       this.isImproved = true;
                       const SCALE = 2.25
@@ -3904,8 +3893,7 @@ const b = {
                       //pick up nearby power ups
                       powerUps.onPickUp(powerUp[i]);
                       powerUp[i].effect();
-                      Matter.Composite.remove(engine.world, powerUp[i]);
-                      powerUp.splice(i, 1);
+                      queueRemoval('powerUp', i)
                       if (tech.isDroneGrab) {
                         this.isImproved = true;
                         const SCALE = 2.25

@@ -132,29 +132,20 @@ const mainLevels = {
         wires.lineTo(2355, -690)
         wires.lineTo(2600, -690)
 
-        let isSpawnedWarp = false
+        //let isSpawnedWarp = false
         level.custom = () => {
-            if (!isSpawnedWarp && simulation.testing) {
+            /* if (!isSpawnedWarp && simulation.testing) {
                 isSpawnedWarp = true
                 powerUps.directSpawn(m.pos.x, -900, "warp")
                 // powerUps.directSpawn(2100, -1200, "warp")
-            }
-            //working on a message using text
-            // ctx.font = "50px Arial";
-            // ctx.fillStyle = "rgba(0,0,0,0.3)"
-            // for (let i = 0; i < 5; i++) {
-            //     const wiggle = 2
-            //     ctx.fillText("move", 500 + wiggle * Math.random(), -500 + wiggle * Math.random());
-            //     ctx.fillText("move", 500, -400);
-            // }
+            } */
 
             //push around power ups stuck in the tube wall
             if (!(simulation.cycle % 30) && level.onLevel === 0) {
                 for (let i = 0, len = powerUp.length; i < len; i++) {
                     if (powerUp[i].name === "instructions") {
                         if (simulation.isCheating) {
-                            Matter.Composite.remove(engine.world, powerUp[i]);
-                            powerUp.splice(i, 1);
+                            queueRemoval('powerUp', i)
                             break
                         }
                     } else if (powerUp[i].position.y < -1000) {
@@ -349,8 +340,7 @@ const mainLevels = {
                 level.exit.x = 5500;
             }
             level.exit.y = -330;
-            Matter.Composite.remove(engine.world, map[map.length - 1]);
-            map.splice(map.length - 1, 1);
+            queueRemoval('body', map.length - 1);
             simulation.draw.setPaths(); //redraw map draw path
             level.levels.push("unknown")
         }
@@ -498,8 +488,7 @@ const mainLevels = {
                 //remove any powerUp that is too far from player
                 for (let i = 0; i < powerUp.length; ++i) {
                     if (Vector.magnitudeSquared(Vector.sub(player.position, powerUp[i].position)) > 9000000) { //remove any powerUp farther then 3000 pixels from player
-                        Matter.Composite.remove(engine.world, powerUp[i]);
-                        powerUp.splice(i--, 1)
+                        queueRemoval('powerUp', i)
                     }
                 }
                 //remove any mob that is too far from player
@@ -508,9 +497,8 @@ const mainLevels = {
                         mob[i].removeConsBB()
                         mob[i].removeCons()
                         mob[i].leaveBody = false
-                        mob[i].alive = false
-                        Matter.Composite.remove(engine.world, mob[i]);
-                        mob.splice(i--, 1)
+                        //mob[i].alive = false
+                        queueRemoval('mob', i)
                     }
                 }
             }
@@ -2465,8 +2453,7 @@ const mainLevels = {
                                         who.leaveBody = false;
                                         who.isDropPowerUp = false
                                         //remove block
-                                        Matter.Composite.remove(engine.world, body[i]);
-                                        body.splice(i, 1);
+                                        queueRemoval('body', i)
                                         break
                                     }
                                 }
@@ -2968,8 +2955,7 @@ const mainLevels = {
                                     setTimeout(() => { //remove block
                                         for (let i = 0; i < body.length; i++) {
                                             if (body[i] === bodyBullet) {
-                                                Matter.Composite.remove(engine.world, body[i]);
-                                                body.splice(i, 1);
+                                                queueRemoval('body', i)
                                             }
                                         }
                                     }, 1000);
@@ -3019,8 +3005,7 @@ const mainLevels = {
                                     setTimeout(() => { //remove block
                                         for (let i = 0; i < body.length; i++) {
                                             if (body[i] === bodyBullet) {
-                                                Matter.Composite.remove(engine.world, body[i]);
-                                                body.splice(i, 1);
+                                                queueRemoval('body', i)
                                             }
                                         }
                                     }, 1000);

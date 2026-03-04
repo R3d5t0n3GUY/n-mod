@@ -9506,8 +9506,7 @@ const tech = {
         for (let i = powerUp.length - 1; i > -1; i--) {
           if (powerUp[i].name === "ammo") {
             powerUps.spawn(powerUp[i].position.x + 50 * (Math.random() - 0.5), powerUp[i].position.y + 50 * (Math.random() - 0.5), "boost");
-            Matter.Composite.remove(engine.world, powerUp[i]);
-            powerUp.splice(i, 1);
+            queueRemoval('powerUp', i)
           }
         }
 
@@ -13059,10 +13058,9 @@ const tech = {
         setInterval(() => {
           for (let i = body.length - 1; i > -1; i--) {
             if (!body[i].isNotHoldable) {
-              Matter.Composite.remove(engine.world, body[i]);
               spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0);
               if (!body[i].isAboutToBeRemoved) mob[mob.length - 1].isDropPowerUp = true
-              body.splice(i, 1);
+              queueRemoval('body', i)
             }
           }
         }, 6000);
@@ -13094,8 +13092,7 @@ const tech = {
             setTimeout(() => { //remove block
               for (let i = 0; i < body.length; i++) {
                 if (body[i] === bodyBullet) {
-                  Matter.Composite.remove(engine.world, body[i]);
-                  body.splice(i, 1);
+                  queueRemoval('body', i)
                 }
               }
             }, 4000 + Math.floor(9000 * Math.random()));

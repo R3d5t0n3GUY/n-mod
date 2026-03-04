@@ -228,8 +228,7 @@ const trainingLevels = {
             //check if blocks are in the exit zone and destroy them
             for (let i = 0; i < body.length; i++) {
                 if (body[i].position.x > 1675) {
-                    Matter.Composite.remove(engine.world, body[i]);
-                    body.splice(i, 1);
+                    queueRemoval('body', i)
                     break
                 }
             }
@@ -329,8 +328,7 @@ const trainingLevels = {
             //check if blocks are in the exit zone and destroy them
             for (let i = 0; i < body.length; i++) {
                 if (body[i].position.x > 1675 && body[i].position.y > -350) {
-                    Matter.Composite.remove(engine.world, body[i]);
-                    body.splice(i, 1);
+                    queueRemoval('body', i)
                     break
                 }
             }
@@ -402,8 +400,7 @@ const trainingLevels = {
             //check if blocks are in the exit zone and destroy them
             for (let i = 0; i < body.length; i++) {
                 if (body[i].position.x > 1675 && body[i].position.y > -350) {
-                    Matter.Composite.remove(engine.world, body[i]);
-                    body.splice(i, 1);
+                    queueRemoval('body', i)
                     break
                 }
             }
@@ -1823,8 +1820,7 @@ const trainingLevels = {
                             if (body[i].isInPortal === this) body[i].isInPortal = null
                         } else if (body[i].isInPortal !== this) { //touching this portal, but for the first time
                             if (isRemoveBlocks) {
-                                Matter.Composite.remove(engine.world, body[i]);
-                                body.splice(i, 1);
+                                queueRemoval('body', i)
                                 break
                             }
                             body[i].isInPortal = this.portalPair
@@ -1846,36 +1842,6 @@ const trainingLevels = {
                         }
                     }
                 }
-                // }
-
-                //remove block if touching
-                // if (body.length) {
-                //   touching = Matter.Query.collides(this, body)
-                //   for (let i = 0; i < touching.length; i++) {
-                //     if (touching[i].bodyB !== m.holdingTarget) {
-                //       for (let j = 0, len = body.length; j < len; j++) {
-                //         if (body[j] === touching[i].bodyB) {
-                //           body.splice(j, 1);
-                //           len--
-                //           Matter.Composite.remove(engine.world, touching[i].bodyB);
-                //           break;
-                //         }
-                //       }
-                //     }
-                //   }
-                // }
-
-                // if (touching.length !== 0 && touching[0].bodyB !== m.holdingTarget) {
-                //   if (body.length) {
-                //     for (let i = 0; i < body.length; i++) {
-                //       if (body[i] === touching[0].bodyB) {
-                //         body.splice(i, 1);
-                //         break;
-                //       }
-                //     }
-                //   }
-                //   Matter.Composite.remove(engine.world, touching[0].bodyB);
-                // }
             }
 
             const portalA = composite[composite.length] = Bodies.rectangle(centerA.x, centerA.y, width, height, {

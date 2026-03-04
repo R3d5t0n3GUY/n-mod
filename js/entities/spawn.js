@@ -1538,10 +1538,9 @@ const spawn = {
         //find blocks to turn into mobs
         for (let i = 0; i < body.length; i++) {
           if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable && !body[i].isInvulnerable) { // check distance for each block
-            Matter.Composite.remove(engine.world, body[i]);
             this.target = null //player;
             spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0);
-            body.splice(i, 1);
+            queueRemoval('body', i)
             activeBeams.push([beamTotalDuration, mob[mob.length - 1]]);
           }
         }
@@ -1726,10 +1725,9 @@ const spawn = {
         //find blocks to turn into mobs
         for (let i = 0; i < body.length; i++) {
           if (Vector.magnitude(Vector.sub(this.position, body[i].position)) < 700 && !body[i].isNotHoldable && !body[i].isInvulnerable) { // check distance for each block
-            Matter.Composite.remove(engine.world, body[i]);
             this.target = null //player;
             spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0, true);
-            body.splice(i, 1);
+            queueRemoval('body', i)
             activeBeams.push([beamTotalDuration, mob[mob.length - 1]]);
           }
         }

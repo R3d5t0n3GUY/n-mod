@@ -2066,8 +2066,7 @@ const communityLevels = {
                         y: slowY * body[i].velocity.y
                     });
                     if (body[i].mass < 0.05) {
-                        Matter.Composite.remove(engine.world, body[i])
-                        body.splice(i, 1)
+                        queueRemoval('body', i)
                         break
                     }
                 }
@@ -4035,8 +4034,7 @@ const communityLevels = {
             relocateWIMPs(0, -10030);
             for (let i = 0; i < powerUp.length; i++) {
                 while (powerUp[i] && powerUp[i].name === "research") {
-                    Matter.Composite.remove(engine.world, powerUp[i]);
-                    powerUp.splice(i, 1);
+                    queueRemoval('powerUp', i)
                 }
             }
             level.exit.x = 1500;
@@ -7207,8 +7205,7 @@ const communityLevels = {
                 // section of roof is deleted
                 for (var i = 0; i < map.length; i++) {
                     if (map[i].fallsOff) {
-                        Matter.Composite.remove(engine.world, map[i]);
-                        map.splice(i, 1);
+                        queueRemoval('map', i)
                     }
                 }
 
@@ -7246,8 +7243,7 @@ const communityLevels = {
 
                 for (var i = 0; i < map.length; i++) {
                     if (map[i].fallsOff2) {
-                        Matter.Composite.remove(engine.world, map[i]);
-                        map.splice(i, 1);
+                        queueRemoval('map', i)
                     }
                 }
 
@@ -7649,8 +7645,7 @@ const communityLevels = {
                 // remove old elements
                 for (var i = 0; i < map.length; i++) {
                     if (map[i].isRemove) {
-                        Matter.Composite.remove(engine.world, map[i]);
-                        map.splice(i, 1);
+                        queueRemoval('map', i)
                     }
                 }
 
@@ -7661,8 +7656,7 @@ const communityLevels = {
             } else if (Math.sin(simulation.cycle / 50) * 0.3 >= 0 && lastBlock) {
                 for (var i = 0; i < map.length; i++) {
                     if (map[i].isRemove) {
-                        Matter.Composite.remove(engine.world, map[i]);
-                        map.splice(i, 1);
+                        queueRemoval('map', i)
                     }
                 }
 

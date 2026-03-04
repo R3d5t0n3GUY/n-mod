@@ -632,8 +632,7 @@ const level = {
                 //remove all current power ups
                 for (let i = powerUp.length - 1; i > -1; i--) {
                     powerUps.powerUpStorage.push({ name: powerUp[i].name, size: powerUp[i].size })
-                    Matter.Composite.remove(engine.world, powerUp[i]);
-                    powerUp.splice(i, 1)
+                    queueRemoval('powerUp', i)
                 }
             },
             remove() {
@@ -2221,8 +2220,7 @@ const level = {
                         if (body[i].isInPortal === this) body[i].isInPortal = null
                     } else if (body[i].isInPortal !== this) { //touching this portal, but for the first time
                         if (isRemoveBlocks) {
-                            Matter.Composite.remove(engine.world, body[i]);
-                            body.splice(i, 1);
+                            queueRemoval('body', i)
                             break
                         }
                         body[i].isInPortal = this.portalPair
