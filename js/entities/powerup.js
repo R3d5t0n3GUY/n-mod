@@ -2174,7 +2174,6 @@ const powerUps = {
       for (let i = 0; i < 3; i++) powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
 
       queueRemoval('powerUp', index)
-      powerUp.splice(index, 1);
     } else if (smallIndexes.length > 0) {
       // console.log("no big, at least 1 small will swap flavors")
       let index = Math.floor(Math.random() * powerUp.length), isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
