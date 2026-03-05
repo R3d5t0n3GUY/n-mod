@@ -15857,20 +15857,19 @@ const tech = {
         if (localSettings.loreCount > lore.conversation.length - 1) { //reward for people done with lore chapters (or on the final chapter)
           tech.isClearingMobs = true
           for (let i = mob.length - 1; i > -1; i--) { //replace mobs with starters
-            let deathCycle = () => {
-              mob[i].leaveBody = false
-              mob[i].isDropPowerUp = false
-              mob[i].death()
-              if (mob[i].alive) requestAnimationFrame(deathCycle) //in case of bosses with phases
+            let deathCycle = (idx) => {
+              mob[idx].leaveBody = false
+              mob[idx].isDropPowerUp = false
+              mob[idx].death()
+              if (mob[idx].alive) requestAnimationFrame(() => { deathCycle(idx) }) //in case of bosses with phases
             }
             if (mob[i].isDropPowerUp && mob[i].alive && !mob[i].isFinalBoss) {
               if (mob[i].isBoss) {
-                spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
-                requestAnimationFrame(deathCycle)
+                //spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
               } else {
                 spawn.starter(mob[i].position.x, mob[i].position.y)
               }
-              deathCycle()
+              deathCycle(i)
 
               //spawn a random power up
               if (Math.random() < 0.2 && m.coupling > 0) {
