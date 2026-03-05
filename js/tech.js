@@ -3276,7 +3276,8 @@ const tech = {
       name: "dark matter",
       //a MAssive Compact Halo Object follows you<br>
       descriptionFunction() {
-        return `<strong class='color-dark-matter'>dark matter</strong> slowly gravitates <strong>towards</strong> you<br><strong>0.4x</strong> <strong class='color-defense'>damage taken</strong> <strong>${tech.isNotDarkMatter ? "outside" : "inside"}</strong> <strong class='color-dark-matter'>dark matter</strong>`
+        return `<strong class='color-dark-matter'>dark matter</strong> slowly gravitates <strong>towards</strong> you
+        <br><strong>0.25x</strong> <strong class='color-defense'>damage taken</strong> <strong>${tech.isNotDarkMatter ? "outside" : "inside"}</strong> <strong class='color-dark-matter'>dark matter</strong>`
       },
       isPacifist: true,
       maxCount: 1,
@@ -3323,7 +3324,8 @@ const tech = {
     {
       name: "dark energy",
       descriptionFunction() {
-        return `while <strong>${tech.isNotDarkMatter ? "outside" : "inside"}</strong> <strong class='color-dark-matter'>dark matter</strong><br>generate <strong>10</strong> <strong class='color-f'>energy</strong> per second`
+        return `while <strong>${tech.isNotDarkMatter ? "outside" : "inside"}</strong> <strong class='color-dark-matter'>dark matter</strong>
+        <br>generate <strong>15</strong> <strong class='color-f'>energy</strong> per second`
       },
       maxCount: 1,
       count: 0,
@@ -3342,7 +3344,8 @@ const tech = {
     },
     {
       name: "MACHO",
-      description: "<span style = 'font-size:93%;'><strong class='color-dark-matter'>dark matter's</strong> effects are only active <strong>outside</strong> it's range<br><strong>1.6x</strong> to all <strong class='color-dark-matter'>dark matter</strong> effects</span>",
+      description: `<span style = 'font-size:93%;'><strong class='color-dark-matter'>dark matter's</strong> effects are only active <strong>outside</strong> it's range
+      <br><strong>1.6x</strong> to all <strong class='color-dark-matter'>dark matter</strong> effects</span>`,
       maxCount: 1,
       count: 0,
       frequency: 2,
@@ -3378,7 +3381,8 @@ const tech = {
     },
     {
       name: "dark star",
-      description: `mobs <strong>inside</strong> <strong class='color-dark-matter'>dark matter</strong> are <strong class='color-d'>damaged</strong><br><strong>1.3x</strong> <strong class='color-dark-matter'>dark matter</strong> radius`,
+      description: `mobs <strong>inside</strong> <strong class='color-dark-matter'>dark matter</strong> are <strong class='color-d'>damaged</strong>
+      <br><strong>1.4x</strong> <strong class='color-dark-matter'>dark matter</strong> radius`,
       maxCount: 1,
       count: 0,
       frequency: 2,
@@ -15858,30 +15862,33 @@ const tech = {
           tech.isClearingMobs = true
           for (let i = mob.length - 1; i > -1; i--) { //replace mobs with starters
             let deathCycle = (idx) => {
+              mob[idx].isShielded = false
               mob[idx].leaveBody = false
               mob[idx].isDropPowerUp = false
               mob[idx].death()
               if (mob[idx].alive) requestAnimationFrame(() => { deathCycle(idx) }) //in case of bosses with phases
             }
             if (mob[i].isDropPowerUp && mob[i].alive && !mob[i].isFinalBoss) {
-              if (mob[i].isBoss) {
-                //spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
-              } else {
-                spawn.starter(mob[i].position.x, mob[i].position.y)
-              }
               deathCycle(i)
+              if (!mob[i].isMobBullet && !mob[i].isBadTarget) {
+                if (mob[i].isBoss) {
+                  spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
+                } else {
+                  spawn.starter(mob[i].position.x, mob[i].position.y)
+                }
 
-              //spawn a random power up
-              if (Math.random() < 0.2 && m.coupling > 0) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "coupling")
-              } else if (Math.random() < 0.25) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "ammo")
-              } else if (Math.random() < 0.37) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "heal")
-              } else if (Math.random() < 0.5) {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "boost")
-              } else {
-                powerUps.spawn(mob[i].position.x, mob[i].position.y, "research")
+                //spawn a random power up
+                if (Math.random() < 0.2 && m.coupling > 0) {
+                  powerUps.spawn(mob[i].position.x, mob[i].position.y, "coupling")
+                } else if (Math.random() < 0.25) {
+                  powerUps.spawn(mob[i].position.x, mob[i].position.y, "ammo")
+                } else if (Math.random() < 0.37) {
+                  powerUps.spawn(mob[i].position.x, mob[i].position.y, "heal")
+                } else if (Math.random() < 0.5) {
+                  powerUps.spawn(mob[i].position.x, mob[i].position.y, "boost")
+                } else {
+                  powerUps.spawn(mob[i].position.x, mob[i].position.y, "research")
+                }
               }
             }
           }

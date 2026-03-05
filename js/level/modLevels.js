@@ -267,8 +267,8 @@ const modLevels = {
     congregation() {
       simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
         <br>WORK IN PROGRESS`)
-        level.setPosToSpawn(0, 0); //normal spawn
-        level.exit.x = 500;
+        level.setPosToSpawn(0, -100); //normal spawn
+        level.exit.x = 1500;
         level.exit.y = 0;
         simulation.fallHeight = 1500
         spawn.mapRect(level.enter.x, level.enter.y + 20, 100, 20); //bump for level entrance
@@ -284,5 +284,23 @@ const modLevels = {
             level.enter.draw();
         };
         level.customTopLayer = () => { };
+        spawn.mapRect(733.75, -42.5, 5, 10)
+        spawn.mapRect(733.75, -232.5, 5, 10)
+        spawn.mapRect(725, -32.5, 10, 5)
+        spawn.mapRect(333.75, -32.5, 10, 5)
+        spawn.mapVertex(337, -37.25, "0 0 10 -5 0 -5")
+        spawn.mapVertex(727, -231.5, "0 0 10 -5 0 -5")
+        spawn.bodyVertex(600, -100, "0 0 -400 200 0 200",
+          { //prevent rotation, but allow other physics
+            restitution: 1,
+            isNotHoldable: true,
+            isInvulnerable: true,
+            inertia: Infinity,
+            isStatic: false,
+            frictionAir: 1,
+            friction: 0,
+            frictionStatic: 1,
+            density: 0.1
+        })
     }
 }

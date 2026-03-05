@@ -37,92 +37,9 @@ const level = {
     levels: [],
     start() {
         if (level.levelsCleared === 0) { //this code only runs on the first level
-            // simulation.enableConstructMode() //tech.giveTech('motion sickness')  //used to build maps in testing mode
-            // simulation.difficultyMode = 1
-            // build.isExperimentRun = true
-
-            // simulation.isHorizontalFlipped = true
-            // level.levelsCleared = 9
-            // level.updateDifficulty()
-            // tech.giveTech("performance")
-            // m.maxHealth = m.health = 1//10000000
-            // m.displayHealth();
-
-            // m.maxEnergy = m.energy = 10000000
-            // tech.isRerollDamage = true
-            // powerUps.research.changeRerolls(99999)
-            // m.immuneCycle = Infinity //you can't take damage
-            // tech.tech[297].frequency = 100
-            // tech.addJunkTechToPool(0.5)
-            // m.couplingChange(10)
-            // m.setField(7) //1 standing wave  2 perfect diamagnetism  3 negative mass  4 molecular assembler  5 plasma torch  6 time dilation  7 metamaterial cloaking  8 pilot wave  9 wormhole 10 grappling hook
-            // m.energy = 0
-
-            // m.energy = 0
-            // powerUps.research.count = 3
-            // tech.isHookWire = true
-            // m.energy = 0
-            // simulation.molecularMode = 2
-            // m.takeDamage(0.1);
-            // b.giveGuns("nail gun") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
-            // b.giveGuns("harpoon") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
-            // b.giveGuns("laser") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
-            // b.guns[9].ammo = 100000000
-            // tech.laserColor = "#fff"
-            // tech.laserColorAlpha = "rgba(255, 255, 255, 0.5)"
-
-            // requestAnimationFrame(() => { tech.giveTech("rebar") });
-            // tech.giveTech("missile guidance")
-            // tech.addJunkTechToPool(0.5)
-            // for (let i = 0; i < 1; ++i) tech.giveTech("quantum Zeno effect")
-            // for (let i = 0; i < 1; ++i) tech.giveTech("irradiated drones")
-            // m.skin.egg();
-            // for (let i = 0; i < 1; ++i) tech.giveTech("anthropic principle")
-            // requestAnimationFrame(() => { for (let i = 0; i < 1; i++) tech.giveTech("surfing") });
-            // requestAnimationFrame(() => { for (let i = 0; i < 1; i++) tech.giveTech("spalling") });
-            // for (let i = 0; i < 1; i++) tech.giveTech("wear")
-            // m.lastKillCycle = m.cycle
-            // for (let i = 0; i < 7; i++) powerUps.directSpawn(450, -50, "field");
-            // for (let i = 0; i < 7; i++) powerUps.directSpawn(m.pos.x + 200, m.pos.y - 250, "research", false);
-            // spawn.bodyRect(575, -700, 150, 150);  //block mob line of site on testing
-            // level.interferometer()
-            // level.testing()
             
             level.fullLevelList[simulation.isTraining ? "walk" : "initial"]() //normal starting level **************************************************
 
-            // for (let i = 0; i < 1; i++) spawn.finalBoss(1100 + 100 * i, -100)
-            // for (let i = 0; i < 1; i++) spawn.slasher2(1100 + 100 * i, -200, 50)
-            // for (let i = 0; i < 3; i++) spawn.freezer(1100 + 100 * i, -300)
-            // for (let i = 0; i < 1; i++) spawn.slasher4(1100 + 100 * i, -500, 50)
-            // for (let i = 0; i < 1; i++) spawn.laserLayer(1100 + 100 * i, -400, 50)
-            // for (let i = 0; i < 1; i++) spawn.slasher4(1100 + 100 * i, -500, 25)
-            // for (let i = 0; i < 1; i++) spawn.hopsploder(1100 + 100 * i, -500)
-            // for (let i = 0; i < 1; ++i) spawn.spiderBoss(1900, -500)
-            // for (let i = 0; i < 1; ++i) powerUps.directSpawn(m.pos.x + 50 * Math.random(), m.pos.y + 50 * Math.random(), "entanglement");
-            // for (let i = 0; i < 2; ++i) powerUps.directSpawn(m.pos.x + 450, m.pos.y + 50 * Math.random(), "gun");
-            // for (let i = 0; i < 20; ++i) powerUps.directSpawn(m.pos.x + 500 * Math.random(), m.pos.y + 500 * Math.random(), "coupling");
-            // for (let i = 0; i < 2; i++) powerUps.spawn(player.position.x + Math.random() * 50, player.position.y - Math.random() * 50, "field", false);
-            //lore testing
-            // localSettings.isTrainingNotAttempted = true
-            // simulation.isCheating = false //true;
-            // for (let i = 0; i < 5; i++) tech.giveTech("undefined")
-            // lore.techCount = 1
-            // level.levelsCleared = 10
-            // localSettings.loreCount = 1 //this sets what conversation is heard
-            // localSettings.levelsClearedLastGame = 10
-            // if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-            // level.onLevel = -1 //this sets level.levels[level.onLevel] = undefined which is required to run the conversation
-            // level.null()
-            // localSettings.isHuman = true
-            // tech.isNoDraftPause = false //disable pause
-            // mobs.mobDeaths = 200 //to prevent pacifist mode
-            // for (let i = 0; i < 13; i++) level.nextLevel(); //jump to final boss
-            // lore.unlockTesting();
-            // tech.giveTech("tinker"); //show junk tech in experiment mode
-            // m.storeTech()
-            // powerUps.spawn(m.pos.x, m.pos.y, "entanglement", false);
-            // for (let i = 0; i < 4; i++) localSettings.difficultyCompleted[i] = true
-            // localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
         } else {
             spawn.setSpawnList(); //picks a couple mobs types for a themed random mob spawns
             // spawn.pickList = ["focuser", "focuser"]
@@ -134,6 +51,7 @@ const level = {
                     throw "Unknown level"
                 }
             } catch (err) {
+                simulation.clearNow = true
                 level.fullLevelList.testing()
                 requestAnimationFrame(() => {
                     simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ReferenceError. <u>:level.fullLevelList.<strong class='color-var'>${newLevelName}</strong> is not defined`, 480) 
@@ -775,7 +693,7 @@ const level = {
                 if (level.onLevel > level.levels.length - 1) { //if all training levels are completed
                     level.disableExit = true
                   try {
-                    powerUps.difficulty.effect()
+                    powerUps.difficulty.effect() //select difficulty for next normal run
                   } catch (error) {
                     document.getElementById("health").style.display = "none"
                     document.getElementById("health-bg").style.display = "none"
