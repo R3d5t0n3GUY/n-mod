@@ -340,7 +340,7 @@ const mainLevels = {
                 level.exit.x = 5500;
             }
             level.exit.y = -330;
-            queueRemoval('body', map.length - 1);
+            queueRemoval('map', map.length - 1);
             simulation.draw.setPaths(); //redraw map draw path
             level.levels.push("unknown")
         }
