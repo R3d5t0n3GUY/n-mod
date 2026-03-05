@@ -919,10 +919,10 @@ const b = {
 
         Matter.Body.setVelocity(this, { x: 0, y: 0 }); //keep bomb in place
         //draw suck
-        const radius = Math.max(1, 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / this.suckCycles)
+        const radius = 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / this.suckCycles
         ctx.fillStyle = "rgba(0,0,0,0.1)";
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, radius, 0, 2 * Math.PI);
+        ctx.arc(this.position.x, this.position.y, Math.max(1, radius), 0, 2 * Math.PI);
         ctx.fill();
       }
       bullet[me].do = function () {
@@ -1035,7 +1035,7 @@ const b = {
           const radius = 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / suckCycles
           ctx.fillStyle = "rgba(0,0,0,0.1)";
           ctx.beginPath();
-          ctx.arc(this.position.x, this.position.y, radius, 0, 2 * Math.PI);
+          ctx.arc(this.position.x, this.position.y, Math.max(1, radius), 0, 2 * Math.PI);
           ctx.fill();
         }
       };
@@ -1093,7 +1093,7 @@ const b = {
             const radius = 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / suckCycles
             ctx.fillStyle = "rgba(0,0,0,0.1)";
             ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y, radius, 0, 2 * Math.PI);
+            ctx.arc(this.position.x, this.position.y, Math.max(1, radius), 0, 2 * Math.PI);
             ctx.fill();
           }
           //check if above mob
@@ -1149,7 +1149,7 @@ const b = {
                   const radius = 2.75 * this.explodeRad * (this.endCycle - simulation.cycle) / suckCycles
                   ctx.fillStyle = "rgba(0,0,0,0.1)";
                   ctx.beginPath();
-                  ctx.arc(this.position.x, this.position.y, radius, 0, 2 * Math.PI);
+                  ctx.arc(this.position.x, this.position.y, Math.max(1, radius), 0, 2 * Math.PI);
                   ctx.fill();
                 }
               }
@@ -1314,7 +1314,7 @@ const b = {
             }
           }
           ctx.beginPath();
-          ctx.arc(this.position.x, this.position.y, this.damageRadius, 0, 2 * Math.PI);
+          ctx.arc(this.position.x, this.position.y, Math.max(1, this.damageRadius), 0, 2 * Math.PI);
           ctx.globalCompositeOperation = "lighter"
           ctx.fillStyle = `rgba(25,139,170,${0.2 + 0.06 * Math.random()})`;
           ctx.fill();
@@ -2215,7 +2215,7 @@ const b = {
                   //draw outline
                   ctx.beginPath();
                   const r = this.size * (tech.isMissile2ndExplode ? 1.7 : 0.8)
-                  ctx.arc(this.where.x, this.where.y, r, 0, 2 * Math.PI);
+                  ctx.arc(this.where.x, this.where.y, Math.max(1, r), 0, 2 * Math.PI);
                   // ctx.fillStyle = "rgba(255,155,200,0.5)"
                   // ctx.fill()
                   ctx.strokeStyle = "#000"
@@ -2301,7 +2301,7 @@ const b = {
         ctx.beginPath(); //draw rocket
         ctx.arc(this.position.x - Math.cos(this.angle) * (25 * size - 3) + (Math.random() - 0.5) * 4,
           this.position.y - Math.sin(this.angle) * (25 * size - 3) + (Math.random() - 0.5) * 4,
-          11 * size, 0, 2 * Math.PI);
+          Math.max(1, 11 * size), 0, 2 * Math.PI);
         ctx.fillStyle = "rgba(255,155,0,0.5)";
         ctx.fill();
       },
@@ -3543,7 +3543,7 @@ const b = {
             ctx.lineTo(this.PposX, this.PposY);
             ctx.stroke();
             ctx.beginPath();
-            ctx.arc(this.PposX, this.PposY, this.size * (this.count + 2) / 7, 0, 2 * Math.PI);
+            ctx.arc(this.PposX, this.PposY, Math.max(1, this.size * (this.count + 2) / 7), 0, 2 * Math.PI);
             ctx.fillStyle = this.color
             ctx.fill();
           },
@@ -3796,7 +3796,7 @@ const b = {
         }
         //draw
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, this.radioRadius, 0, 2 * Math.PI);
+        ctx.arc(this.position.x, this.position.y, Math.max(1, this.radioRadius), 0, 2 * Math.PI);
         ctx.globalCompositeOperation = "lighter"
         // ctx.fillStyle = `rgba(25,139,170,${0.15+0.05*Math.random()})`;
         // ctx.fillStyle = `rgba(36, 207, 255,${0.1+0.05*Math.random()})`;
@@ -5235,7 +5235,7 @@ const b = {
             const v2 = Vector.add(this.waves[i].position, Vector.mult(this.waves[i].unit2, this.waves[i].radius))
             //draw wave
             ctx.moveTo(v1.x, v1.y)
-            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, this.waves[i].radius, this.waves[i].angle, this.waves[i].angle + this.waves[i].arc);
+            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, Math.max(1, this.waves[i].radius), this.waves[i].angle, this.waves[i].angle + this.waves[i].arc);
             //using small angle linear approximation of circle arc, this will not work if the arc gets large   // https://stackoverflow.com/questions/13652518/efficiently-find-points-inside-a-circle-sector
             let hits = Matter.Query.ray(mob, v1, v2, 50)
             for (let j = 0; j < hits.length; j++) {
@@ -7083,7 +7083,7 @@ const b = {
           for (let i = this.waves.length - 1; i > -1; i--) {
             //draw wave
             ctx.moveTo(this.waves[i].position.x + this.waves[i].radius, this.waves[i].position.y)
-            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, this.waves[i].radius, 0, 2 * Math.PI);
+            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, Math.max(1, this.waves[i].radius), 0, 2 * Math.PI);
             // collisions
             // if (tech.isBulletTeleport && Math.random() < 0.04) {
             //     const scale = 400 * Math.random()
@@ -7181,7 +7181,7 @@ const b = {
             const v2 = Vector.add(this.waves[i].position, Vector.mult(this.waves[i].unit2, this.waves[i].radius))
             //draw wave
             ctx.moveTo(v1.x, v1.y)
-            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, this.waves[i].radius, this.waves[i].angle, this.waves[i].angle + this.waves[i].arc);
+            ctx.arc(this.waves[i].position.x, this.waves[i].position.y, Math.max(1, this.waves[i].radius), this.waves[i].angle, this.waves[i].angle + this.waves[i].arc);
             //using small angle linear approximation of circle arc, this will not work if the arc gets large   // https://stackoverflow.com/questions/13652518/efficiently-find-points-inside-a-circle-sector
             let hits = Matter.Query.ray(mob, v1, v2, 50) //Matter.Query.ray(bodies, startPoint, endPoint, [rayWidth])
             for (let j = 0; j < hits.length; j++) {
@@ -7667,7 +7667,7 @@ const b = {
           //draw green glow
           ctx.fillStyle = "rgba(0,200,125,0.16)";
           ctx.beginPath();
-          ctx.arc(this.position.x, this.position.y, this.maxRadius, 0, 2 * Math.PI);
+          ctx.arc(this.position.x, this.position.y, Math.max(1, this.maxRadius), 0, 2 * Math.PI);
           ctx.fill();
         }
         bullet[me].grow = function () {
@@ -7701,7 +7701,7 @@ const b = {
           //draw green glow
           ctx.fillStyle = "rgba(0,200,125,0.16)";
           ctx.beginPath();
-          ctx.arc(this.position.x, this.position.y, this.maxRadius, 0, 2 * Math.PI);
+          ctx.arc(this.position.x, this.position.y, Math.max(1, this.maxRadius), 0, 2 * Math.PI);
           ctx.fill();
         };
         //spawn bullets on end
@@ -10058,7 +10058,7 @@ const b = {
           const start = targets[0];
           const pulse = 1 + Math.sin(simulation.cycle*0.2)*0.15;
           ctx.beginPath();
-          ctx.arc(start.position.x, start.position.y, 55*pulse, 0, Math.PI*2);
+          ctx.arc(start.position.x, start.position.y, Math.max(0, 55*pulse), 0, Math.PI*2);
           ctx.strokeStyle = "rgba(255,80,80,0.85)";
           ctx.lineWidth = 3;
           ctx.stroke();
