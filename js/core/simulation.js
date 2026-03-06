@@ -2025,20 +2025,28 @@ const simulation = {
       }
     },
     body() {
-      ctx.beginPath();
       for (let i = 0, len = body.length; i < len; ++i) {
-        let vertices = body[i].vertices;
+        let who = body[i]
+        ctx.beginPath();
+        let vertices = who.vertices;
         ctx.moveTo(vertices[0].x, vertices[0].y);
         for (let j = 1; j < vertices.length; j++) {
           ctx.lineTo(vertices[j].x, vertices[j].y);
         }
         ctx.lineTo(vertices[0].x, vertices[0].y);
+        if (who.style) {
+          ctx.lineWidth = who.style.lineWidth || 2;
+          ctx.fillStyle = who.style.fillStyle || color.block; //fallback
+          ctx.fill();
+          ctx.strokeStyle = who.style.strokeStyle || color.blockS; //fallback
+        } else {
+          ctx.lineWidth = 2;
+          ctx.fillStyle = color.block; //fallback
+          ctx.fill();
+          ctx.strokeStyle = color.blockS; //fallback
+        }
+        ctx.stroke();
       }
-      ctx.lineWidth = 2;
-      ctx.fillStyle = color.block;
-      ctx.fill();
-      ctx.strokeStyle = color.blockS;
-      ctx.stroke();
     },
     cons() {
       ctx.beginPath();
