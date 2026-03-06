@@ -14629,6 +14629,28 @@ const spawn = {
     Composite.add(engine.world, who); //add to world
     who.classType = "body"
   },
+  physicsBodyFromShape(x, y, vector, properties) { //same as spawn.bodyVertex, except being static doesn't remove restitution or friction
+    let static = properties.isStatic || false
+    delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
+    body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
+    const who = body[body.length - 1]
+    who.collisionFilter.category = cat.body;
+    who.collisionFilter.mask = cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet
+    Composite.add(engine.world, who); //add to world
+    who.classType = "body"
+    if (static) { //if isStatic was requested as true, add constraint
+      const where = { x: x, y: y }
+      who.constraint = Constraint.create({ //prevent movement, but allow other physics
+        pointA: where,
+        bodyB: who,
+        stiffness: 1,
+        damping: 1
+      })
+      Composite.add(engine.world, who.constraint) //apply constraint
+      Matter.Body.setVelocity(who, { x: 0, y: 0 })
+      Matter.Body.setPosition(who, where)
+    }
+  },
   mapRect(x, y, width, height, properties) { //adds rectangle to map array
     map[map.length] = Bodies.rectangle(x + width / 2, y + height / 2, width, height, properties);
   },

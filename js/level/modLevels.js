@@ -284,25 +284,8 @@ const modLevels = {
             level.enter.draw();
         };
         level.customTopLayer = () => { };
-        let newBlock = (x, y, vect, properties) => {
-          let isStatic = properties.isStatic || false
-          delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
-          spawn.bodyVertex(x, y, vect, properties);
-          if (isStatic) {
-            let who = body[body.length - 1], where = {x: x, y: y},
-            center = Constraint.create({ //prevent rotation, but allow other physics
-              pointA: where,
-              bodyB: who,
-              stiffness: 1,
-              damping: 1
-            })
-            Composite.add(engine.world, center)
-            Matter.Body.setVelocity(who, {x: 0, y: 0})
-            Matter.Body.setPosition(who, where)
-          }
-        }
-        newBlock(600, -100, "0 0 -400 200 0 200",
-            {
+        spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200",
+          {
             restitution: 0.1,
             isNotHoldable: true,
             isInvulnerable: true,
