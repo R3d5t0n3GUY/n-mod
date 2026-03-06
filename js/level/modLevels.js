@@ -265,8 +265,8 @@ const modLevels = {
         powerUps.addResearchToLevel() //needs to run after mobs are spawned
     },
     congregation() {
-      simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
-        <br>WORK IN PROGRESS`)
+        simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
+            <br>WORK IN PROGRESS`)
         level.setPosToSpawn(0, -100); //normal spawn
         level.exit.x = 1500;
         level.exit.y = 0;
@@ -284,23 +284,32 @@ const modLevels = {
             level.enter.draw();
         };
         level.customTopLayer = () => { };
-        spawn.mapRect(733.75, -42.5, 5, 10)
-        spawn.mapRect(733.75, -232.5, 5, 10)
-        spawn.mapRect(725, -32.5, 10, 5)
-        spawn.mapRect(333.75, -32.5, 10, 5)
-        spawn.mapVertex(337, -37.25, "0 0 10 -5 0 -5")
-        spawn.mapVertex(727, -231.5, "0 0 10 -5 0 -5")
-        spawn.bodyVertex(600, -100, "0 0 -400 200 0 200",
-          { //prevent rotation, but allow other physics
-            restitution: 1,
+        let newBlock = (x, y, vect, properties) => {
+          let isStatic = properties.isStatic || false
+          delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
+          spawn.bodyVertex(x, y, vect, properties);
+          if (isStatic) {
+            let who = body[body.length - 1], where = {x: x, y: y},
+            center = Constraint.create({ //prevent rotation, but allow other physics
+              pointA: where,
+              bodyB: who,
+              stiffness: 1,
+              damping: 1
+            })
+            Composite.add(engine.world, center)
+            Matter.Body.setVelocity(who, {x: 0, y: 0})
+            Matter.Body.setPosition(who, where)
+          }
+        }
+        newBlock(600, -100, "0 0 -400 200 0 200",
+            {
+            restitution: 0.1,
             isNotHoldable: true,
             isInvulnerable: true,
             inertia: Infinity,
-            isStatic: false,
-            frictionAir: 1,
-            friction: 0,
-            frictionStatic: 1,
-            density: 0.1
+            isStatic: true,
+            friction: -0.3,
+            density: 0.01,
         })
     }
 }

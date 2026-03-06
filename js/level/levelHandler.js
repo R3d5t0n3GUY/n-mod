@@ -51,6 +51,7 @@ const level = {
                     throw "Unknown level"
                 }
             } catch (err) {
+                console.error(err)
                 simulation.clearNow = true
                 level.fullLevelList.testing()
                 requestAnimationFrame(() => {
