@@ -43,41 +43,55 @@ Events.on(engine, 'afterUpdate', () => {
       .map(r => r.index)
       .sort((a, b) => b - a);
     entries.forEach(i => {
-      try {
-        switch (type) {
-          case 'bullet':
+      switch (type) {
+        case 'bullet':
+          if (i >= 0 && i < bullet.length && i == Math.floor(i)) {
             Matter.Composite.remove(engine.world, bullet[i]);
             bullet.splice(i, 1);
-            break;
-          case 'body':
+          } else {
+            console.warn(i + " is not a valid index")
+          }
+          break;
+        case 'body':
+          if (i >= 0 && i < body.length && i == Math.floor(i)) {
             Matter.Composite.remove(engine.world, body[i]);
             body.splice(i, 1);
-            break;
-          case 'mob':
+          } else {
+            console.warn(i + " is not a valid index")
+          }
+          break;
+        case 'mob':
+          if (i >= 0 && i < mob.length && i == Math.floor(i)) {
             Matter.Composite.remove(engine.world, mob[i]);
             mob.splice(i, 1);
-            break;
-          case 'powerUp':
+          } else {
+            console.warn(i + " is not a valid index")
+          }
+          break;
+        case 'powerUp':
+          if (i >= 0 && i < powerUp.length && i == Math.floor(i)) {
             Matter.Composite.remove(engine.world, powerUp[i]);
             powerUp.splice(i, 1);
-            break;
-          case 'map':
+          } else {
+            console.warn(i + " is not a valid index")
+          }
+          break;
+        case 'map':
+          if (i >= 0 && i < map.length && i == Math.floor(i)) {
             Matter.Composite.remove(engine.world, map[i]);
             map.splice(i, 1);
-            break;
-          // case 'cons':
-          //     Matter.Composite.remove(engine.world, cons[i]);
-          //     cons.splice(i, 1);
-          //     break;
-          // case 'consBB':
-          //     Matter.Composite.remove(engine.world, consBB[i]);
-          //     consBB.splice(i, 1);
-          //     break;
-        }
-      } catch (err) {
-        console.warn(err)
-        simulation.lastLogTime = 0 //since this is in a forEach loop, clear inGameConsole to reduce spaming
-        simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${err.name || "RangeError"}. :<u>${err.message || i + " is not a valid index"}</u>`)
+          } else {
+            console.warn(i + " is not a valid index")
+          }
+          break;
+        // case 'cons':
+        //     Matter.Composite.remove(engine.world, cons[i]);
+        //     cons.splice(i, 1);
+        //     break;
+        // case 'consBB':
+        //     Matter.Composite.remove(engine.world, consBB[i]);
+        //     consBB.splice(i, 1);
+        //     break;
       }
     });
   });
