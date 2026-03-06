@@ -293,6 +293,9 @@ const modLevels = {
             isStatic: true,
             friction: -0.3,
             density: 0.01,
+            style: {
+              fillStyle: "#c70"
+            }
         })
     }
 }

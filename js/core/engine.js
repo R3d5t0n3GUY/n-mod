@@ -43,35 +43,41 @@ Events.on(engine, 'afterUpdate', () => {
       .map(r => r.index)
       .sort((a, b) => b - a);
     entries.forEach(i => {
-      switch (type) {
-        case 'bullet':
-          Matter.Composite.remove(engine.world, bullet[i]);
-          bullet.splice(i, 1);
-          break;
-        case 'body':
-          Matter.Composite.remove(engine.world, body[i]);
-          body.splice(i, 1);
-          break;
-        case 'mob':
-          Matter.Composite.remove(engine.world, mob[i]);
-          mob.splice(i, 1);
-          break;
-        case 'powerUp':
-          Matter.Composite.remove(engine.world, powerUp[i]);
-          powerUp.splice(i, 1);
-          break;
-        case 'map':
-          Matter.Composite.remove(engine.world, map[i]);
-          map.splice(i, 1);
-          break;
-        // case 'cons':
-        //     Matter.Composite.remove(engine.world, cons[i]);
-        //     cons.splice(i, 1);
-        //     break;
-        // case 'consBB':
-        //     Matter.Composite.remove(engine.world, consBB[i]);
-        //     consBB.splice(i, 1);
-        //     break;
+      try {
+        switch (type) {
+          case 'bullet':
+            Matter.Composite.remove(engine.world, bullet[i]);
+            bullet.splice(i, 1);
+            break;
+          case 'body':
+            Matter.Composite.remove(engine.world, body[i]);
+            body.splice(i, 1);
+            break;
+          case 'mob':
+            Matter.Composite.remove(engine.world, mob[i]);
+            mob.splice(i, 1);
+            break;
+          case 'powerUp':
+            Matter.Composite.remove(engine.world, powerUp[i]);
+            powerUp.splice(i, 1);
+            break;
+          case 'map':
+            Matter.Composite.remove(engine.world, map[i]);
+            map.splice(i, 1);
+            break;
+          // case 'cons':
+          //     Matter.Composite.remove(engine.world, cons[i]);
+          //     cons.splice(i, 1);
+          //     break;
+          // case 'consBB':
+          //     Matter.Composite.remove(engine.world, consBB[i]);
+          //     consBB.splice(i, 1);
+          //     break;
+        }
+      } catch (err) {
+        console.warn(err)
+        simulation.lastLogTime = 0 //since this is in a forEach loop, clear inGameConsole to reduce spaming
+        simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${err.name || "RangeError"}. :<u>${err.message || i + " is not a valid index"}</u>`)
       }
     });
   });
