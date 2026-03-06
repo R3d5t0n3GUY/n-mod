@@ -14630,25 +14630,33 @@ const spawn = {
     who.classType = "body"
   },
   physicsBodyFromShape(x, y, vector, properties) { //same as spawn.bodyVertex, except being static doesn't remove restitution or friction
-    let static = properties.isStatic || false
+    let static = {
+      where: {
+        x: x,
+        y: y
+      },
+      isRequested: properties.isStatic || false,
+      collisionFilter: { //fallback to defaults where needed
+        category: properties.collisionFilter.category || cat.body,
+        mask: properties.collisionFilter.mask || (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
+      }
+    }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
+    delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
     const who = body[body.length - 1]
-    who.collisionFilter.category = cat.body;
-    who.collisionFilter.mask = cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet
     Composite.add(engine.world, who); //add to world
     who.classType = "body"
-    if (static) { //if isStatic was requested as true, add constraint
-      const where = { x: x, y: y }
+    who.collisionFilter = static.collisionFilter
+    who.static = static
+    if (static.isRequested) { //if isStatic was requested as true, add constraint
       who.constraint = Constraint.create({ //prevent movement, but allow other physics
-        pointA: where,
+        pointA: static.where,
         bodyB: who,
         stiffness: 1,
         damping: 1
       })
       Composite.add(engine.world, who.constraint) //apply constraint
-      Matter.Body.setVelocity(who, { x: 0, y: 0 })
-      Matter.Body.setPosition(who, where)
     }
   },
   mapRect(x, y, width, height, properties) { //adds rectangle to map array

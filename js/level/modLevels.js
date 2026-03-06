@@ -291,7 +291,7 @@ const modLevels = {
             isInvulnerable: true,
             inertia: Infinity,
             isStatic: true,
-            friction: -0.3,
+            friction: 0.1,
             density: 0.01,
             style: {
               fillStyle: "#c70"

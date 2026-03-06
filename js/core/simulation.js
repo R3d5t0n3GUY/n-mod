@@ -861,10 +861,15 @@ const simulation = {
   // },
   wipe() { }, //set in simulation.startGame
   gravity() {
-    function addGravity(bodies, magnitude) {
-      for (var i = 0; i < bodies.length; i++) {
-        bodies[i].force.y += bodies[i].mass * magnitude;
-      }
+    function addGravity(itms, magnitude) {
+      itms.forEach(who => {
+        if (who.static ? who.static.isRequested : false) {
+          Matter.Body.setVelocity(who, {x: 0, y: 0})
+          Matter.Body.setPosition(who, who.static.where)
+        } else {
+          who.force.y += who.mass * magnitude;
+        }
+      })
     }
     if (!m.isTimeDilated) {
       addGravity(powerUp, simulation.g);
