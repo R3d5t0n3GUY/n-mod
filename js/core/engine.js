@@ -49,7 +49,7 @@ Events.on(engine, 'afterUpdate', () => {
             Matter.Composite.remove(engine.world, bullet[i]);
             bullet.splice(i, 1);
           } else {
-            console.warn(i + " is not a valid index")
+            console.warn("bullet RangeError: " + i + " is not a valid index")
           }
           break;
         case 'body':
@@ -57,7 +57,7 @@ Events.on(engine, 'afterUpdate', () => {
             Matter.Composite.remove(engine.world, body[i]);
             body.splice(i, 1);
           } else {
-            console.warn(i + " is not a valid index")
+            console.warn("body RangeError: " + i + " is not a valid index")
           }
           break;
         case 'mob':
@@ -65,7 +65,7 @@ Events.on(engine, 'afterUpdate', () => {
             Matter.Composite.remove(engine.world, mob[i]);
             mob.splice(i, 1);
           } else {
-            console.warn(i + " is not a valid index")
+            console.warn("mob RangeError: " + i + " is not a valid index")
           }
           break;
         case 'powerUp':
@@ -73,7 +73,7 @@ Events.on(engine, 'afterUpdate', () => {
             Matter.Composite.remove(engine.world, powerUp[i]);
             powerUp.splice(i, 1);
           } else {
-            console.warn(i + " is not a valid index")
+            console.warn("powerUp RangeError: " + i + " is not a valid index")
           }
           break;
         case 'map':
@@ -81,7 +81,7 @@ Events.on(engine, 'afterUpdate', () => {
             Matter.Composite.remove(engine.world, map[i]);
             map.splice(i, 1);
           } else {
-            console.warn(i + " is not a valid index")
+            console.warn("map RangeError: " + i + " is not a valid index")
           }
           break;
         // case 'cons':
