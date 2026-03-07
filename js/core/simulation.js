@@ -1995,7 +1995,9 @@ const simulation = {
         ctx.globalCompositeOperation = oldCompositeOperation
         defineBounds()
         if (who.style) {
-          ctx.lineWidth = who.style.lineWidth || 2;
+          ctx.lineWidth = (Math.max(who.style.lineWidth + 1, 1) || 3) - 1;
+          ctx.lineJoin = who.style.lineJoin || "miter"
+          ctx.miterLimit = (Math.max(who.style.miterLimit + 1, 1) || 11) - 1;
           ctx.strokeStyle = who.style.strokeStyle || color.blockS
           ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.strokeStyle || 'source-over' : 'source-over' )
         } else { //fallback
