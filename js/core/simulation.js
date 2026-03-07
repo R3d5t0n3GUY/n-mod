@@ -869,8 +869,7 @@ const simulation = {
         } else {
           who.force.y += who.mass * magnitude;
         }
-        if (Math.log(who.inertia) > 15) {
-          who.inertia = Infinity
+        if (who.inertia === Infinity) {
           Matter.Body.setAngularVelocity(who, 0)
         }
       })
@@ -1620,8 +1619,11 @@ const simulation = {
       body[len] = Matter.Bodies.fromVertices(0, 0, holdTarget.vertices, {
         friction: holdTarget.friction,
         frictionAir: holdTarget.frictionAir,
-        frictionStatic: holdTarget.frictionStatic
+        frictionStatic: holdTarget.frictionStatic,
+        static: holdTarget.static,
+        style: holdTarget.style
       });
+      if (holdTarget.static ? holdTarget.static.vertices : false) Matter.Body.setVertices(body[len], holdTarget.static.vertices)
       Matter.Body.setPosition(body[len], m.pos);
       m.isHolding = true
       m.holdingTarget = body[len];
@@ -1970,19 +1972,22 @@ const simulation = {
         let who = body[i], oldCompositeOperation = ctx.globalCompositeOperation
         if (who.static) {
           if (who.static.isRequested) who.isNotHoldable = true
+          if (who.static.inertia) who.inertia = who.static.inertia
         }
         
-        let vertices = who.vertices, defineBounds = (vert = vertices) => {
+        let vertices = who.vertices, defineBounds = (invisible = false) => {
           ctx.beginPath();
-          ctx.moveTo(vert[0].x, vert[0].y);
-          for (let j = 1; j < vert.length; j++) {
-            ctx.lineTo(vert[j].x, vert[j].y);
+          ctx.moveTo(vertices[0].x, vertices[0].y);
+          for (let j = 1; j < vertices.length; j++) {
+            ctx.lineTo(vertices[j].x, vertices[j].y);
           }
-          ctx.lineTo(vert[0].x, vert[0].y);
+          ctx.lineTo(vertices[0].x, vertices[0].y);
+          if (invisible) {
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0)'
+            ctx.lineWidth = 0
+          }
         }
-        defineBounds()
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0)'
-        ctx.lineWidth = 0
+        defineBounds(true)
         if (who.style) {
           ctx.fillStyle = who.style.fillStyle || color.block
           ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.fillStyle || 'source-over' : 'source-over')

@@ -14635,6 +14635,7 @@ const spawn = {
         x: x,
         y: y
       },
+      vertices: Vertices.fromPath(vector),
       isRequested: properties.isStatic || false,
       collisionFilter: (properties.collisionFilter ? { //fallback to defaults where needed
         category: properties.collisionFilter.category || cat.body,
@@ -14643,12 +14644,16 @@ const spawn = {
         category: cat.body,
         mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
       }),
+      inertia: properties.inertia || 0,
+      angularVelocity: properties.angularVelocity || 0,
+      style: properties.style
     }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
     const who = body[body.length - 1]
     Matter.Body.setVertices(who, Vertices.fromPath(vector))
+    Matter.Body.setAngularVelocity(who, static.angularVelocity)
     Composite.add(engine.world, who); //add to world
     who.classType = "body"
     who.collisionFilter = static.collisionFilter
