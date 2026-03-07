@@ -869,7 +869,7 @@ const simulation = {
         } else {
           who.force.y += who.mass * magnitude;
         }
-        if (Math.log(who.inertia) > 10) {
+        if (Math.log(who.inertia) > 15) {
           who.inertia = Infinity
           Matter.Body.setAngularVelocity(who, 0)
         }
@@ -1967,34 +1967,44 @@ const simulation = {
     },
     body() {
       for (let i = 0, len = body.length; i < len; ++i) {
-        let who = body[i]
-        if (who.static ? who.static.isRequested : false) {
-          who.isNotHoldable = true
+        let who = body[i], oldCompositeOperation = ctx.globalCompositeOperation
+        if (who.static) {
+          if (who.static.isRequested) who.isNotHoldable = true
         }
-        if (Math.log(who.inertia) > 10) {
-          who.inertia = Infinity
-          Matter.Body.setAngularVelocity(who, 0)
+        
+        let vertices = who.vertices, defineBounds = (vert = vertices) => {
+          ctx.beginPath();
+          ctx.moveTo(vert[0].x, vert[0].y);
+          for (let j = 1; j < vert.length; j++) {
+            ctx.lineTo(vert[j].x, vert[j].y);
+          }
+          ctx.lineTo(vert[0].x, vert[0].y);
         }
-      
-        ctx.beginPath();
-        let vertices = who.vertices;
-        ctx.moveTo(vertices[0].x, vertices[0].y);
-        for (let j = 1; j < vertices.length; j++) {
-          ctx.lineTo(vertices[j].x, vertices[j].y);
+        defineBounds()
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0)'
+        ctx.lineWidth = 0
+        if (who.style) {
+          ctx.fillStyle = who.style.fillStyle || color.block
+          ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.fillStyle || 'source-over' : 'source-over')
+        } else {
+          ctx.fillStyle = color.block
+          ctx.globalCompositeOperation = 'source-over'
         }
-        ctx.lineTo(vertices[0].x, vertices[0].y);
+        ctx.fill();
+        ctx.stroke();
+        ctx.globalCompositeOperation = oldCompositeOperation
+        defineBounds()
         if (who.style) {
           ctx.lineWidth = who.style.lineWidth || 2;
-          ctx.fillStyle = who.style.fillStyle || color.block; //fallback
-          ctx.fill();
-          ctx.strokeStyle = who.style.strokeStyle || color.blockS; //fallback
-        } else {
+          ctx.strokeStyle = who.style.strokeStyle || color.blockS
+          ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.strokeStyle || 'source-over' : 'source-over' )
+        } else { //fallback
           ctx.lineWidth = 2;
-          ctx.fillStyle = color.block; //fallback
-          ctx.fill();
-          ctx.strokeStyle = color.blockS; //fallback
+          ctx.strokeStyle = color.blockS
+          ctx.globalCompositeOperation = 'source-over'
         }
-        ctx.stroke();
+        ctx.stroke()
+        ctx.globalCompositeOperation = oldCompositeOperation
       }
     },
     cons() {
