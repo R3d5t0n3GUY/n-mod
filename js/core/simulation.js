@@ -1969,7 +1969,11 @@ const simulation = {
     },
     body() {
       for (let i = 0, len = body.length; i < len; ++i) {
-        let who = body[i], oldCompositeOperation = ctx.globalCompositeOperation
+        let who = body[i], oldCtx = {
+          globalCompositeOperation: ctx.globalCompositeOperation,
+          lineJoin: ctx.lineJoin,
+          miterLimit: ctx.miterLimit
+        }
         if (who.static) {
           if (who.static.isRequested) who.isNotHoldable = true
           if (who.static.inertia) who.inertia = who.static.inertia
@@ -1997,7 +2001,7 @@ const simulation = {
         }
         ctx.fill();
         ctx.stroke();
-        ctx.globalCompositeOperation = oldCompositeOperation
+        Object.assign(ctx, oldCtx)
         defineBounds()
         if (who.style) {
           ctx.lineWidth = (Math.max(who.style.lineWidth + 1, 1) || 3) - 1;
@@ -2011,7 +2015,7 @@ const simulation = {
           ctx.globalCompositeOperation = 'source-over'
         }
         ctx.stroke()
-        ctx.globalCompositeOperation = oldCompositeOperation
+        Object.assign(ctx, oldCtx)
       }
     },
     cons() {
