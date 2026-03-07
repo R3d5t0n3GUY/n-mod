@@ -869,6 +869,10 @@ const simulation = {
         } else {
           who.force.y += who.mass * magnitude;
         }
+        if (Math.log(who.inertia) > 10) {
+          who.inertia = Infinity
+          Matter.Body.setAngularVelocity(who, 0)
+        }
       })
     }
     if (!m.isTimeDilated) {
@@ -1964,6 +1968,14 @@ const simulation = {
     body() {
       for (let i = 0, len = body.length; i < len; ++i) {
         let who = body[i]
+        if (who.static ? who.static.isRequested : false) {
+          who.isNotHoldable = true
+        }
+        if (Math.log(who.inertia) > 10) {
+          who.inertia = Infinity
+          Matter.Body.setAngularVelocity(who, 0)
+        }
+      
         ctx.beginPath();
         let vertices = who.vertices;
         ctx.moveTo(vertices[0].x, vertices[0].y);

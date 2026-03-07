@@ -54,10 +54,10 @@ window.addEventListener('error', event => {
 
     console.log(errorMessage);
     simulation.lastLogTime = 0 //prevent spamming by clearing console
-    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
+    if (simulation) simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
   } catch (err) {
     console.error("Logging Error: ", err)
-    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> LoggingError. <u>${err.message || err}</u>`, 480); //show for 8 seconds
+    if (simulation) simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> LoggingError. <u>${err.message || err}</u>`, 480); //show for 8 seconds
   } //finally { canvas.width = canvas.width }
 });
 
@@ -291,42 +291,6 @@ let color = { //light
   bullet: "#000"
 }
 
-// const color = { //dark
-//     background: "#333",
-//     block: "#444",
-//     blockS: "#aab",
-//     map: "#556",
-//     bullet: "#fff"
-// }
-
-// const color = { //dark
-//     background: "#999",
-//     block: "#888",
-//     blockS: "#111",
-//     map: "#444",
-// }
-
-// shrink power up selection menu
-// if (screen.height < 800) {
-//     document.getElementById("choose-grid").style.fontSize = "1em"; //1.3em is normal
-//     if (screen.height < 600) document.getElementById("choose-grid").style.fontSize = "0.8em"; //1.3em is normal
-// }
-
-
-//**********************************************************************
-// check for URL parameters to load an experimental game
-//**********************************************************************
-
-//example  https://landgreen.github.io/n-gon/index.html?
-//          &gun1=minigun&gun2=laser
-//          &tech1=laser-bot&tech2=mass%20driver&tech3=overcharge&tech4=laser-bot&tech5=laser-bot&field=phase%20decoherence%20field&difficulty=2
-//add ? to end of url then for each power up add
-// &gun1=name&gun2=name
-// &tech1=laser-bot&tech2=mass%20driver&tech3=overcharge&tech4=laser-bot&tech5=laser-bot
-// &field=phase%20decoherence%20field
-// &difficulty=2
-//use %20 for spaces
-//difficulty is 0 easy, 1 normal, 2 hard, 4 why
 function getUrlVars() {
   let vars = {};
   window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, k, v) {
