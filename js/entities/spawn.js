@@ -14642,13 +14642,14 @@ const spawn = {
       } : {
         category: cat.body,
         mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
-      })
+      }),
     }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
     const who = body[body.length - 1]
     Composite.add(engine.world, who); //add to world
+    requestAnimationFrame(() => {Matter.Body.setVertices(who, Vertices.fromPath(vector)) })
     who.classType = "body"
     who.collisionFilter = static.collisionFilter
     who.static = static

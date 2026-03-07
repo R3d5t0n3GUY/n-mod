@@ -14,7 +14,6 @@ const Engine = Matter.Engine,
       Body = Matter.Body,
       Bodies = Matter.Bodies,
       Vector = Matter.Vector
-      //decomp = Matter.Common.setDecomp(require('poly-decomp'))
 
 // create an engine
 const engine = Engine.create();

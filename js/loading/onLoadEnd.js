@@ -124,4 +124,5 @@ fileLoads.onLoadEnd = function () {
             event.target.parentElement.open = false
         })
     });
+    Matter.Common.setDecomp(decomp) //initialize decomposition of concave vertices
 };
