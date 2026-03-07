@@ -14636,10 +14636,13 @@ const spawn = {
         y: y
       },
       isRequested: properties.isStatic || false,
-      collisionFilter: { //fallback to defaults where needed
+      collisionFilter: (properties.collisionFilter ? { //fallback to defaults where needed
         category: properties.collisionFilter.category || cat.body,
         mask: properties.collisionFilter.mask || (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
-      }
+      } : {
+        category: cat.body,
+        mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
+      })
     }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one

@@ -13,7 +13,8 @@ const Engine = Matter.Engine,
       Query = Matter.Query,
       Body = Matter.Body,
       Bodies = Matter.Bodies,
-      Vector = Matter.Vector;
+      Vector = Matter.Vector
+      //decomp = Matter.Common.setDecomp(require('poly-decomp'))
 
 // create an engine
 const engine = Engine.create();
