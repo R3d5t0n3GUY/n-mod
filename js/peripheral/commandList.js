@@ -194,7 +194,29 @@ const cmdList = {
           throw new ReferenceError(`<strong class='color-var'>${what}</strong> is not a known object`)
         }
       },
-      description: `gives the player ammo, research, coupling, or tech
+      description: `Gives the player ammo, research, coupling, or tech
       <br><strong>SYNTAX:</strong> /give <em>&lt;what (ammo|coupling|research|tech)&gt; {&lt;name (if tech)&gt; | [quantity (if not tech)]} [quantity (if tech)]</em>`
+    },
+    warp: {
+      checkSyntax(input) {
+        cmdConsole.params = input.split(/\s+/)
+        if (cmdConsole.params.length < 2) {
+          return [true, ""]
+        } else {
+          return [false, "<strong class='color-var'>war</strong> requires less than two parameters"]
+        }
+      },
+      effect(input) {
+        cmdConsole.params = input.split(/\s+/)
+        let newLevel = cmdConsole.params[0]
+        if (!newLevel || level.fullLevelList[newLevel]) {
+          powerUps.warp[newLevel ? 'load' : 'effect'](newLevel)
+        } else {
+          throw new ReferenceError(`<strong class='color-var'>${newLevel}</strong> is not a known level`);
+        }
+      },
+      description: `If a level name is provided, takes the player to that level.
+      <br>Otherwise, opens the <strong class='color-warp'>warp</strong> menu
+      <br><strong>SYNTAX:</strong> /warp <em>[levelName]</em>`
     }
   } //will expand the list

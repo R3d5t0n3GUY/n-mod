@@ -7,10 +7,10 @@
 •My first custom level
 
 ************************************************* POSTPONED ********************************************
-•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 •More images in warp menu (Input needed from community)
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
+•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 •Add "too-punishing" update features from original n-gon (e.g. finalBoss's mob-based invulnerability)
 •Bringing back c-gon levels. If you want to play them, try c-gon instead
