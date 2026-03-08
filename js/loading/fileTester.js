@@ -11,10 +11,10 @@ const jsSrcs = [
     name: "Matter",
     src: 'lib/matter.min.js'
   },
-  {
+  /* {
     name: "PolyDecomp",
     src: 'lib/decomp.min.js'
-  },
+  }, */
   {
     name: "Howler",
     src: 'lib/howler.min.js'
@@ -124,7 +124,7 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isInitJS: false,
   isOnLoadEndJS: false,
   isMatterMinJS: false,
-  isDecompMinJS: false,
+  //isDecompMinJS: false,
   isHowlerMinJS: false,
   //isJsZipJS: false,
   isLocalSavesJS: false,

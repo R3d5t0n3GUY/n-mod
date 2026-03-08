@@ -1065,8 +1065,10 @@ const level = {
     },
     addToWorld() { //needs to be run to put bodies into the world
         for (let i = 0; i < map.length; i++) {
-            map[i].collisionFilter.category = cat.map;
-            map[i].collisionFilter.mask = cat.player | cat.map | cat.body | cat.bullet | cat.powerUp | cat.mob | cat.mobBullet;
+            map[i].collisionFilter = {
+                category: cat.map,
+                mask: cat.player | cat.map | cat.body | cat.bullet | cat.powerUp | cat.mob | cat.mobBullet
+            };
             Matter.Body.setStatic(map[i], true); //make static
             Composite.add(engine.world, map[i]); //add to world
         }

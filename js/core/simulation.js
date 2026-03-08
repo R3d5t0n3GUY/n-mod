@@ -1882,12 +1882,12 @@ const simulation = {
       //runs at each new level to store the path for the map since the map doesn't change
       simulation.draw.mapPath = new Path2D();
       for (let i = 0, len = map.length; i < len; ++i) {
-        let vertices = map[i].vertices;
-        simulation.draw.mapPath.moveTo(vertices[0].x, vertices[0].y);
-        for (let j = 1; j < vertices.length; j += 1) {
-          simulation.draw.mapPath.lineTo(vertices[j].x, vertices[j].y);
-        }
-        simulation.draw.mapPath.lineTo(vertices[0].x, vertices[0].y);
+          let vertices = map[i].vertices;
+          simulation.draw.mapPath.moveTo(vertices[0].x, vertices[0].y);
+          for (let j = 1; j < vertices.length; j += 1) {
+            simulation.draw.mapPath.lineTo(vertices[j].x, vertices[j].y);
+          }
+          simulation.draw.mapPath.lineTo(vertices[0].x, vertices[0].y);
       }
     },
     lineOfSightPrecalculation() {
