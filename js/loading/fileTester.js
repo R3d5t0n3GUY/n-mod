@@ -19,10 +19,10 @@ const jsSrcs = [
     name: "Howler",
     src: 'lib/howler.min.js'
   },
-  {
+  /* {
     name: "jsZip",
     src: 'lib/jszip.min.js'
-  },
+  }, */
   {
     name: "Local Saves",
     src: 'js/peripheral/localSaves.js'
@@ -126,7 +126,7 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isMatterMinJS: false,
   isDecompMinJS: false,
   isHowlerMinJS: false,
-  isJsZipJS: false,
+  //isJsZipJS: false,
   isLocalSavesJS: false,
   isPrototypesJS: false,
   isSimulationJS: false,
