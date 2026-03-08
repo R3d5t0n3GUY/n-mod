@@ -116,13 +116,13 @@ fileLoads.onLoadEnd = function () {
     experimentBtn.onclick = function () { tryRunning.experiment() }
     splashStart.onclick = function () { tryRunning.start() }
     document.body.appendChild(container); //append script loader (created in scriptLoader.js)
+    Matter.Common.setDecomp(decomp) //initialize decomposition of concave vertices
     Array.from(document.getElementsByClassName("details-collapse")).forEach(node => {
         node.type = "button" 
         node.style.cursor = "pointer"
         node.value = "collapse"
         node.addEventListener('click', (event) => {
-            event.target.parentElement.open = false
+            event.target.parentElement.parentElement.open = false
         })
     });
-    Matter.Common.setDecomp(decomp) //initialize decomposition of concave vertices
 };
