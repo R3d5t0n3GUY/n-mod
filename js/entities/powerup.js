@@ -1892,11 +1892,11 @@ const powerUps = {
       if (tech.isFlipFlopOn) {
         tech.isFlipFlopOn = false
         if (document.getElementById("tech-switch")) document.getElementById("tech-switch").innerHTML = ` = <strong>OFF</strong>`
-        m.eyeFillColor = 'transparent'
+        //m.eyeFillColor = 'transparent'
       } else {
         tech.isFlipFlopOn = true //immune to damage this hit, lose immunity for next hit
         if (document.getElementById("tech-switch")) document.getElementById("tech-switch").innerHTML = ` = <strong>ON</strong>`
-        m.eyeFillColor = m.fieldMeterColor //'#0cf'
+        //m.eyeFillColor = m.fieldMeterColor //'#0cf'
       }
       if (tech.isRelayEnergy) m.setMaxEnergy();
     }
@@ -2128,7 +2128,8 @@ const powerUps = {
 
     //count big power ups and small power ups
     let options = ["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
-    if (m.coupling) options.push("coupling")
+    if (tech.isHealAttract && Math.random() > 0.13) options.splice(0, 1) //if player has accretion, 13% chance to consider spawning more heals
+    if (m.coupling > 0) options.push("coupling")
     if (tech.isBoostPowerUps) options.push("boost")
 
     let bigIndexes = [], smallIndexes = [], ignoredIndexes = ["settings", "instructions", "warp", "difficulty", "entanglement"]
@@ -2140,7 +2141,7 @@ const powerUps = {
         } else {
           smallIndexes.push(i)
           if (powerUp[i].name === "heal" && (tech.isHealAttract || m.health >= m.maxHealth ||
-            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.72) { //if player has accretion, chance to spawn heal as larger powerUp
+            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.8) { //if player has accretion, or mass-energy without 1st ionization
             for (let i = 0; i < Math.ceil(Math.random() * 2); i++) {
               smallIndexes.push(i)
             }
@@ -2149,7 +2150,7 @@ const powerUps = {
       }
     }
 
-    if (smallIndexes.length > 2 && Math.random() < (tech.isHealAttract ? 0.75 : 0.66)) { //higher likelyhood to collide heals with accretion
+    if (smallIndexes.length > 2 && Math.random() < (tech.isHealAttract ? 0.9 : 0.66)) { //higher likelyhood to collide heals with accretion
       // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {

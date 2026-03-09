@@ -4368,8 +4368,9 @@ const m = {
               y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
             });
             powerUp[i].effect();
-            queueRemoval('powerUp', i)
-            return; //because the array order is messed up after splice
+            Matter.Composite.remove(engine.world, powerUp[i]);
+            powerUp.splice(i, 1);
+            len--; //because the array order is messed up after splice
           }
         }
       }
@@ -4401,8 +4402,9 @@ const m = {
               y: player.velocity.y + powerUp[i].velocity.y / player.mass * 4 * powerUp[i].mass * velMult
             });
             powerUp[i].effect();
-            queueRemoval('powerUp', i)
-            return; //because the array order is messed up after splice
+            Matter.Composite.remove(engine.world, powerUp[i]);
+            powerUp.splice(i, 1);
+            len--; //because the array order is messed up after splice
           }
         }
       }
@@ -6689,7 +6691,7 @@ const m = {
                   Matter.Composite.remove(engine.world, powerUp[i]);
                   powerUp.splice(i, 1);
                   // m.fieldRadius += 50
-                  break; //because the array order is messed up after splice
+                  len--; //because the array order is messed up after splice
                 }
                 // }
               }
@@ -6971,7 +6973,7 @@ const m = {
                   powerUp[i].effect();
                   Matter.Composite.remove(engine.world, powerUp[i]);
                   powerUp.splice(i, 1);
-                  break; //because the array order is messed up after splice
+                  len--; //because the array order is messed up after splice
                 }
               }
             }

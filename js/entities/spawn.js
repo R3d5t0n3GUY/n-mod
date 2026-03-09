@@ -14652,7 +14652,7 @@ const spawn = {
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
     const who = body[body.length - 1]
-    Matter.Body.setVertices(who, Vertices.fromPath(vector))
+    for (let i = 0; i < 3; i++) Matter.Body.setVertices(who, Vertices.fromPath(vector))
     Matter.Body.setAngularVelocity(who, static.angularVelocity)
     Composite.add(engine.world, who); //add to world
     who.classType = "body"

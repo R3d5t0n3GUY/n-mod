@@ -4591,7 +4591,7 @@ const tech = {
       }
     },
     {
-      name: "counterfactual conditional",
+      name: "counterfactuality",
       description: `add a <strong>30x</strong> <em class='flicker'>frequency</em> ${powerUps.orb.tech()} to the possible <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>
       <br>when chosen it <strong class='color-randomize'>randomizes</strong> current ${powerUps.orb.tech()} <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`,
       maxCount: 1,
@@ -4602,18 +4602,21 @@ const tech = {
       allowed() { return true },
       requires: "",
       effect() {
+        tech.isCounterfactuality = true
         for (let i = 0, len = tech.tech.length; i < len; i++) {
-          if (tech.tech[i].name === "counterfactual") tech.tech[i].frequency = 40
+          if (tech.tech[i].name === "counterfact") tech.tech[i].frequency = 40
         }
       },
       remove() {
+        tech.isCounterfactuality = false
         for (let i = 0, len = tech.tech.length; i < len; i++) {
-          if (tech.tech[i].name === "counterfactual") tech.tech[i].frequency = 0
+          if (tech.tech[i].name === "counterfact") tech.tech[i].frequency = 0
         }
+        this.count = 0 //because counterfact ejecting doesn't properly reset
       }
     },
     {
-      name: "counterfactual",
+      name: "counterfact",
       description: `<strong class='color-randomize'>randomize</strong> ${powerUps.orb.tech()} <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>
       <br><strong>10%</strong> chance to <span class='color-remove'>eject</span> this as a ${powerUps.orb.tech()}`,
       maxCount: 9,
@@ -4621,14 +4624,16 @@ const tech = {
       frequency: 0,
       frequencyDefault: 0,
       isInstant: true,
-      allowed() { return !build.isExperimentSelection },
-      requires: "not experiment mode",
+      allowed() { 
+        return tech.isCounterfactuality && !build.isExperimentSelection
+      },
+      requires: "counterfactuality, not experiment mode",
       effect() {
         if (Math.random() < 0.1) { //chance to remove this
           this.count = 0
-          tech.removeTech("counterfactual conditional")
+          tech.removeTech("counterfactuality")
           powerUps.spawnDelay("tech", 1);
-          simulation.inGameConsole(`<span class='color-var'>this</span>.frequency = 0  <em>//counterfactual removed</em>`, 360)
+          simulation.inGameConsole(`<span class='color-var'>this</span>.frequency = 0  <em>//counterfact removed</em>`, 360)
         } else {
           requestAnimationFrame(() => { //need a 2 cycle wait because of -> search for this:   tech.tech.unshift(item); // Add the element to the front of the array
             requestAnimationFrame(() => { // generates new choices
@@ -4641,7 +4646,7 @@ const tech = {
         }
       },
       remove() {
-        tech.removeTech("counterfactual conditional")
+        tech.removeTech("counterfactuality")
       }
     },
     {
@@ -12865,26 +12870,12 @@ const tech = {
       effect() {
         if (!tech.isJunkTechSwap) tech.isJunkTechSwap = false
         tech.isJunkTechSwap = !tech.isJunkTechSwap
-        for (let i = 0, len = tech.tech.length; i < len; i++) {
-          
-          tech.tech[i].isJunk = !tech.tech[i].isJunk
-          if (tech.tech[i].isJunk) { } else { }
-
-          if (tech.tech[i].frequency > 0 || tech.tech[i].isJunk) {
-            tech.tech[i].oldFrequency = tech.tech[i].frequency
-            tech.tech[i].frequency = 0
-          } else {
-            tech.tech[i].frequency = (tech.tech[i].oldFrequency || tech.tech[i].frequencyDefault || 2)
-            tech.tech[i].oldFrequency = 0
-          }
-        }
-        if (build.isExperimentSelection) {
-          build.populateGrid();
-        } else {
-          simulation.updateTechHUD();
-        }
+        tech.swapJunkTech()
       },
       remove() {
+        if (tech.isJunkTechSwap) {
+          tech.swapJunkTech()
+        }
         tech.isJunkTechSwap = false
       }
     },
@@ -14072,7 +14063,9 @@ const tech = {
           document.body.style.fontSize = "15px"
         }
       },
-      remove() { }
+      remove() {
+        document.body.style.fontFamily = "Chakra Petch, Arial"
+      }
     },
     {
       name: "sounds",
@@ -15932,6 +15925,25 @@ const tech = {
       remove() {}
     }
   ],
+  swapJunkTech() { //called by swap meet
+    for (let i = 0, len = tech.tech.length; i < len; i++) {      
+      tech.tech[i].isJunk = !tech.tech[i].isJunk
+      if (tech.tech[i].isJunk) { } else { }
+
+      if (tech.tech[i].frequency > 0 || tech.tech[i].isJunk) {
+        tech.tech[i].oldFrequency = tech.tech[i].frequency
+        tech.tech[i].frequency = 0
+      } else {
+        tech.tech[i].frequency = (tech.tech[i].oldFrequency || tech.tech[i].frequencyDefault || 2)
+        tech.tech[i].oldFrequency = 0
+      }
+    }
+    if (build.isExperimentSelection) {
+      build.populateGrid();
+    } else {
+      simulation.updateTechHUD();
+    }
+  },
   //variables use for gun tech upgrades
   fireRate: 1, //initializes to 1
   bulletSize: null,
@@ -16106,6 +16118,7 @@ const tech = {
   isBotDamage: null,
   isBanish: null,
   isRetain: null,
+  isCounterfactuality: null,
   isMaxEnergyTech: null,
   isLowEnergyDamage: null,
   isRewindBot: null,
