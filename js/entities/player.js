@@ -687,7 +687,7 @@ const m = {
     document.getElementById("health-bg").style.width = `${Math.floor(300 * m.maxHealth)}px`
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
-    } else if (m.health < m.maxHealth) {
+    } else if (m.health < m.maxHealth - 0.01) {
         id.style.borderRightColor = "rgb(51, 162, 125)"
     } else {
       id.style.borderRightColor = "rgb(91, 223, 255)"

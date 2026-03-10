@@ -886,7 +886,7 @@ const mainLevels = {
                         checkGate(gate, gateButton)
 
                         hazard1.query();
-                        hazard1.level(isSlimeRiseUp, 1.5)
+                        hazard1.level(isSlimeRiseUp && gateButton.isUp, 1.5)
                         if (!(hazard1.height < hazard1.maxHeight)) {
                             isSlimeRiseUp = false
                         } else if (!(hazard1.height > 0)) {
