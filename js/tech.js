@@ -12426,7 +12426,7 @@ const tech = {
     },
     {
       name: "de Broglie-Bohm theory",
-      description: `<strong>pilot wave</strong> can travel through <strong>anything</strong> at
+      description: `<strong>pilot wave</strong> can travel through <strong>anything</strong> for
         	<br><strong>2x</strong> the <strong class='color-f'>energy</strong> cost`,
       isFieldTech: true,
       maxCount: 1,
@@ -12441,21 +12441,29 @@ const tech = {
         tech.isPilotMapIgnore = true;
         let fieldRadius = m.fieldRadius;
         m.setField(m.fieldMode); //update pilot wave function
-        if (m.fieldMode === 8 && m.fieldOn) { //keep field position and radius. Not sure if it actually works
-          Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
-          m.fieldPosition = simulation.mouseInGame
-          m.fieldRadius = fieldRadius;
-        }
+        requestAnimationFrame(() => { //keep field position and radius. Not sure if it actually works
+          requestAnimationFrame(() => {
+            if (m.fieldMode === 8 && m.fieldOn) {
+              Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
+              m.fieldPosition = simulation.mouseInGame
+              m.fieldRadius = fieldRadius;
+            }
+          })
+        })
       },
       remove() {
         tech.isPilotMapIgnore = false;
         let fieldRadius = m.fieldRadius;
         m.setField(m.fieldMode); //update pilot wave function
-        if (m.fieldMode === 8 && m.fieldOn) { //keep field position and radius. Not sure if it actually works
-          Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
-          m.fieldPosition = simulation.mouseInGame
-          m.fieldRadius = fieldRadius;
-        }
+        requestAnimationFrame(() => { //keep field position and radius. Not sure if it actually works
+          requestAnimationFrame(() => {
+            if (m.fieldMode === 8 && m.fieldOn) {
+              Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
+              m.fieldPosition = simulation.mouseInGame
+              m.fieldRadius = fieldRadius;
+            }
+          })
+        })
       }
     },
     {
