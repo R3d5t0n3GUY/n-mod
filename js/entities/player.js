@@ -607,7 +607,7 @@ const m = {
         }
         simulation.isTextLogOpen = true;
         simulation.inGameConsole("simulation.amplitude <span class='color-symbol'>=</span> null");
-        tech.isImmortal = false //disable future immortality
+        //tech.isImmortal = false //disable future immortality
       }, 6 * swapPeriod);
     } else if (tech.isEigenstate && m.eigen.deathCount === 0) {
       m.eigen.deathCount++
@@ -685,20 +685,19 @@ const m = {
     // health display is a x^1.5 rule to make it seem like the player has lower health 
     id.style.width = Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4)) + "px";
     document.getElementById("health-bg").style.width = `${Math.floor(300 * m.maxHealth)}px`
+    let [hHue, hSat] = [Math.min(Math.max(m.health / Math.min(m.maxHealth, 10), 0), 1),
+      Math.min(Math.max(m.health / m.maxHealth, 0), 1)]
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
     } else if (m.health < m.maxHealth - 0.01) {
-        id.style.borderRightColor = "rgb(51, 162, 125)"
+        //id.style.borderRightColor = "rgb(51, 162, 125)"
+        id.style.borderRightColor = hsvo(170 * hHue - 5, 0.9 - 0.31 * hSat, 0.7 - 0.1 * hSat, 1)
     } else {
       id.style.borderRightColor = "rgb(91, 223, 255)"
       // id.style.borderRightColor = "pink"
     }
-    //css animation blink if health is low
-    // if (m.health < 0.3) {
-    //     id.classList.add("low-health");
-    // } else {
-    //     id.classList.remove("low-health");
-    // }
+    //id.style.backgroundColor = "hsl(160, 93%, 50%)";
+    id.style.backgroundColor = hsvo(180 * hHue - 20, 0.86 - 0.1 * hSat, 1, 1)
   },
   addHealth(heal) {
     if (!tech.isEnergyHealth) {
