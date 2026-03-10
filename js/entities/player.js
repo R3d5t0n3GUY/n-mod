@@ -697,7 +697,7 @@ const m = {
       // id.style.borderRightColor = "pink"
     }
     //id.style.backgroundColor = "hsl(160, 93%, 50%)";
-    id.style.backgroundColor = hsvo(180 * hHue - 20, 0.86 - 0.1 * hSat, 1, 1)
+    id.style.backgroundColor = hsvo(170 * hHue - 10, 0.86 - 0.1 * hSat, 1, 1)
   },
   addHealth(heal) {
     if (!tech.isEnergyHealth) {
