@@ -157,8 +157,8 @@ const defaultGameVars = {}
 let startBtn = document.getElementById("start-button"), trainBtn = document.getElementById("training-button"),
   experimentBtn = document.getElementById("experiment-button"), splashStart = document.getElementById("splash"),
   infoDiv = document.getElementById("info"), communityMaps = document.getElementById("community-maps"),
-  hideHUD = document.getElementById("hide-hud"), hideImages = document.getElementById("hide-images"),
-  bannedLevels = document.getElementById("banned")
+  hideHUD = document.getElementById("hide-hud"), healthBarMode = document.getElementById("health-bar-mode"),
+  hideImages = document.getElementById("hide-images"), bannedLevels = document.getElementById("banned")
 try {
   let errors = [], dotCount = 0, text = ""
   setTimeout(() => {

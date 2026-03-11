@@ -466,6 +466,13 @@ const build = {
       })
     }
   },
+  setHealthBarMode(from = "settings") {
+    if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
+    localSettings.isDynamicHealthBar = !localSettings.isDynamicHealthBar
+    document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
+    if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
+    if (from === "pause") m.displayHealth() //redraw health meter if setting is changed mid-game
+  },
   pauseGrid() {
     build.generatePauseLeft() //makes the left side of the pause menu with the tech
     build.generatePauseRight() //makes the right side of the pause menu with the tech
@@ -482,16 +489,12 @@ const build = {
   },
   generatePauseLeft() {
     //left side
-    let botText = ""
-    if (tech.nailBotCount) botText += `<br><strong class='color-bot no-box'>nail-bots ${tech.nailBotCount}</strong>`
-    if (tech.orbitBotCount) botText += `<br><strong class='color-bot no-box'>orbital-bots ${tech.orbitBotCount}</strong>`
-    if (tech.boomBotCount) botText += `<br><strong class='color-bot no-box'>boom-bots ${tech.boomBotCount}</strong>`
-    if (tech.laserBotCount) botText += `<br><strong class='color-bot no-box'>laser-bots ${tech.laserBotCount}</strong>`
-    if (tech.foamBotCount) botText += `<br><strong class='color-bot no-box'>foam-bots ${tech.foamBotCount}</strong>`
-    if (tech.soundBotCount) botText += `<br><strong class='color-bot no-box'>sound-bots ${tech.soundBotCount}</strong>`
-    if (tech.dynamoBotCount) botText += `<br><strong class='color-bot no-box'>dynamo-bots ${tech.dynamoBotCount}</strong>`
-    if (tech.plasmaBotCount) botText += `<br><strong class='color-bot no-box'>plasma-bots ${tech.plasmaBotCount}</strong>`
-    if (tech.missileBotCount) botText += `<br><strong class='color-bot no-box'>missile-bots ${tech.missileBotCount}</strong>`
+    let botText = "", addBotText = (type) => {
+      if (tech[type + "BotCount"]) botText += `<br><strong class='color-bot no-box'>${type === "orbit" ? "orbital" : type}-bots ${tech[type + "BotCount"]}</strong>`
+    }, types = ["nail", "orbit", "boom", "laser", "foam", "sound", "dynamo", "plasma", "missile", "harpoon"]
+    types.forEach(i => {
+      addBotText(i)
+    })
 
     // <strong class='color-g'>${b.activeGun === null || b.activeGun === undefined ? "undefined" : b.guns[b.activeGun].name}</strong> (${b.activeGun === null || b.activeGun === undefined ? "0" : b.guns[b.activeGun].ammo})
 
@@ -504,16 +507,16 @@ const build = {
     } else {
       mobText = ""
     }
-
+    let inputLabelText = (click, id, name, setting = "Allowed", title, text) => {
+      return `<br><input onclick="build.${click})" type="checkbox" id="${id}" name="${name || id}" ${localSettings["is" + setting] ? "checked" : ""}>
+\n<label for="${name || id}" title="${title}" style="font-size:1.15em">${text}</label>`
+    }, floater = (text) => { return `<span style="float:right;">${text}</span><br>` }
     let text = `<div class="pause-grid-module" style="padding: 8px;">
 <span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
 <em style="float: right;color:#ccc;">press ${input.key.pause} to resume</em>
-<br>
-<input onclick="build.hideHUD('settings')" type="checkbox" id="hide-hud" name="hide-hud" ${localSettings.isHideHUD ? "checked" : ""}>
-<label for="hide-hud" title="hide: tech, damage taken, damage, in game console" style="font-size:1.15em;">minimal HUD</label>
-<br>
-<input onclick="build.showImages('pause')" type="checkbox" id="hide-images" name="hide-images" ${localSettings.isHideImages ? "checked" : ""}>
-<label for="hide-images" title="hide images for fields, guns, and tech" style="font-size:1.15em;">hide images</label>
+${inputLabelText("hideHUD('settings'","hide-hud",0,"hideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
+${inputLabelText("setHealthBarMode('pause'","health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
+${inputLabelText("showImages('pause'","hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
 </div>
 
 <div class="pause-grid-module">
@@ -521,28 +524,27 @@ const build = {
 <summary>simulation variables</summary>
 <div class="pause-details">
 <strong class='color-d'>damage</strong> ${((tech.damageAdjustments())).toPrecision(4)}x
-<span style="float: right;">empty</span>
-<br><strong class='color-defense'>damage taken</strong> ${(m.defense()).toPrecision(4)}x
-<span style="float: right;">empty</span>
-<br><strong class='color-h'>health</strong> (${level.isHideHealth ? "null" : (m.health * 100).toFixed(0)} / ${(m.maxHealth * 100).toFixed(0)})
-<span style="float: right;">${powerUps.research.count} ${powerUps.orb.research()}</span>
-<br><strong class='color-f'>energy</strong> (${(m.energy * 100).toFixed(0)} / ${(m.maxEnergy * 100).toFixed(0)}) + (${(m.fieldRegen * 6000 * level.isReducedRegen).toFixed(0)}/s)
-<span style="float: right;">${tech.totalCount} ${powerUps.orb.tech()}</span>
-<br><strong><em>fire rate</em></strong> ${(1 / b.fireCDscale).toFixed(2)}x
-<span style="float: right;">mass ${player.mass.toFixed(1)}</span>
+${floater("empty")}
+<strong class='color-defense'>damage taken</strong> ${(m.defense()).toPrecision(4)}x
+${floater("empty")}
+<strong class='color-h'>health</strong> (${level.isHideHealth ? "null" : (m.health * 100).toFixed(0)} / ${(m.maxHealth * 100).toFixed(0)})
+${floater(`${powerUps.research.count} ${powerUps.orb.research()}`)}
+<strong class='color-f'>energy</strong> (${(m.energy * 100).toFixed(0)} / ${(m.maxEnergy * 100).toFixed(0)}) + (${(m.fieldRegen * 6000 * level.isReducedRegen).toFixed(0)}/s)
+${floater(`${tech.totalCount} ${powerUps.orb.tech()}`)}
+<strong><em>fire rate</em></strong> ${(1 / b.fireCDscale).toFixed(2)}x
+${floater(`mass ${player.mass.toFixed(1)}`)}
 ${m.coupling ? `<br><span style = 'font-size:90%;'>` + m.couplingDescription(m.coupling) + `</span> from ${(m.coupling).toFixed(0)} ${powerUps.orb.coupling(1)}` : ""}
-<br><strong class='color-dup'>duplication</strong> ${(tech.duplicationChance() * 100).toFixed(0)}%
-<span style="float: right;"><strong class='color-junk'>JUNK</strong> ${(100 * (tech.junkChance + level.junkAdded)).toFixed(0)}%</span>
+<strong class='color-dup'>duplication</strong> ${(tech.duplicationChance() * 100).toFixed(0)}%
+${floater(`<strong class='color-junk'>JUNK</strong> ${(100 * (tech.junkChance + level.junkAdded)).toFixed(0)}%`)}
 ${botText}
-<br>
 <br> ${level.levelAnnounce()}
-<span style="float: right;">position (${player.position.x.toFixed(0)}, ${player.position.y.toFixed(0)})</span>
-<br>seed ${Math.initialSeed}
-<span style="float: right;">mouse (${simulation.mouseInGame.x.toFixed(0)}, ${simulation.mouseInGame.y.toFixed(0)})</span>
-<br>cycles ${m.cycle}
-<span style="float: right;">velocity (${player.velocity.x.toFixed(2)}, ${player.velocity.y.toFixed(2)})</span>
-<br>bullets ${bullet.length}
-<span style="float: right;">power ups ${powerUp.length}</span>
+${floater(`position (${player.position.x.toFixed(0)}, ${player.position.y.toFixed(0)}`)}
+seed ${Math.initialSeed}
+${floater(`mouse (${simulation.mouseInGame.x.toFixed(0)}, ${simulation.mouseInGame.y.toFixed(0)}`)}
+cycles ${m.cycle}
+${floater(`velocity (${player.velocity.x.toFixed(2)}, ${player.velocity.y.toFixed(2)}`)}
+bullets ${bullet.length}
+${floater(`power ups ${powerUp.length}`)}
 ${mobText}
 
 ${simulation.isCheating ? "<br><br><em>lore disabled</em>" : ""}
@@ -1167,6 +1169,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       if (localSettings.isHideHUD === undefined) localSettings.isHideHUD = true
       document.getElementById("hide-hud").checked = localSettings.isHideHUD
 
+      if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
+      document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
+
       if (localSettings.difficultyCompleted === undefined) {
         localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
@@ -1185,6 +1190,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       }
     } else {
+      console.log('forced reset triggered')
       console.log('setting default localSettings')
       const isAllowed = localSettings.isAllowed //don't overwrite isAllowed value
       localSettings = {
@@ -1205,6 +1211,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         key: undefined,
         isHideImages: true, //default to hide images
         isHideHUD: false,
+        isDynamicHealthBar: false,
         pauseMenuDetailsOpen: [true, false, false, true],
         entanglement: undefined,
         techHistory: [],
@@ -1215,6 +1222,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       simulation.isCommunityMaps = localSettings.isCommunityMaps
       document.getElementById("hide-images").checked = localSettings.isHideImages
       document.getElementById("hide-hud").checked = localSettings.isHideHUD
+      document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
       document.getElementById("fps-select").value = localSettings.fpsCapDefault
       document.getElementById("banned").value = localSettings.banList
     }
@@ -1449,6 +1457,8 @@ const input = {
         case "key-testing":
           input.key.testing = event.code
           break;
+        default:
+          break;
       }
     }
     input.controlTextUpdate()
@@ -1500,6 +1510,7 @@ window.addEventListener("keyup", function (event) {
     case input.key.field:
       input.field = false
       break
+    default: break;
   }
 });
 
@@ -2032,7 +2043,7 @@ document.body.addEventListener("wheel", (e) => {
 //**********************************************************************
 let localSettings
 
-build.resetStorage();
+build.resetStorage(false);
 
 
 //**********************************************************************

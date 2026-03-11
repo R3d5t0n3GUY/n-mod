@@ -690,14 +690,20 @@ const m = {
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
     } else if (m.health < m.maxHealth - 0.01) {
-        //id.style.borderRightColor = "rgb(51, 162, 125)"
+      if (localSettings ? localSettings.isDynamicHealthBar : false) {
         id.style.borderRightColor = hsvo(170 * hHue - 5, 0.9 - 0.31 * hSat, 0.7 - 0.1 * hSat, 1)
+      } else {
+        id.style.borderRightColor = "rgb(51, 162, 125)"
+      }
     } else {
       id.style.borderRightColor = "rgb(91, 223, 255)"
       // id.style.borderRightColor = "pink"
     }
-    //id.style.backgroundColor = "hsl(160, 93%, 50%)";
-    id.style.backgroundColor = hsvo(170 * hHue - 10, 0.86 - 0.1 * hSat, 1, 1)
+    if (localSettings ? localSettings.isDynamicHealthBar : false) {
+      id.style.backgroundColor = hsvo(170 * hHue - 10, 0.86 - 0.1 * hSat, 1, 1)
+    } else {
+      id.style.backgroundColor = "hsl(160, 93%, 50%)";
+    }
   },
   addHealth(heal) {
     if (!tech.isEnergyHealth) {

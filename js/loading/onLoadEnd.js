@@ -122,7 +122,18 @@ fileLoads.onLoadEnd = function () {
         node.style.cursor = "pointer"
         node.value = "collapse"
         node.addEventListener('click', (event) => {
-            event.target.parentElement.parentElement.open = false
+            let collapseParentDetails = (el) => {
+                if (el.nodeName === "DETAILS") { //found a details node
+                    el.open = false //collapse it
+                } else if (["HEAD", "BODY", "HTML"].includes(el.nodeName)) { //no details nodes in ancestry
+                    console.warn("Uncaught HtmlError: Could not locate parent details node")
+                    return; //break out to prevent endless execution
+                } else { //valid node, but not details
+                    collapseParentDetails(el.parentElement) //check the parent node
+                }
+            }
+            const elmnt = event.target
+            collapseParentDetails(elmnt)
         })
     });
 };

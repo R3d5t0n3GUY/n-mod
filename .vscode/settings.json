@@ -66,4 +66,12 @@
     "vsicons.dontShowNewVersionMessage": true,
     "git.confirmSync": false,
     "files.saveConflictResolution": "overwriteFileOnDisk",
+    "editor.codeLensFontFamily": "editor",
+    "editor.inlayHints.fontFamily": "",
+    "editor.inlineSuggest.fontFamily": "editor",
+    "chat.editor.fontFamily": "editor",
+    "chat.fontFamily": "editor",
+    "debug.console.fontFamily": "editor",
+    "scm.inputFontFamily": "editor",
+    "notebook.markup.fontFamily": "editor",
 }

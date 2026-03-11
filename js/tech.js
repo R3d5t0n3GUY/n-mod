@@ -9446,6 +9446,7 @@ const tech = {
       requires: "harpoon",
       effect() {
         b.harpoonBot();
+        if (!tech.harpoonBotCount) tech.harpoonBotCount = 0
         tech.harpoonBotCount += 1;
         if (tech.haveGunCheck("harpoon", false)) b.removeGun("harpoon") //remove your last gun
         if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
@@ -15985,6 +15986,7 @@ const tech = {
   plasmaBotCount: null,
   missileBotCount: null,
   orbitBotCount: null,
+  harpoonBotCount: null,
   blockDmg: null,
   isBlockRadiation: null,
   isPiezo: null,

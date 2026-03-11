@@ -83,6 +83,11 @@ Press Escape to close"></textarea>
                         title="hide: tech, damage taken, damage, in game console, new level animation">minimal
                         HUD</label>
                     <br>
+                    <input onclick="build.setHealthBarMode('settings')" type="checkbox" id="health-bar-mode" name="health-bar-mode"
+                        style="width:17px; height:17px;">
+                    <label for="health-bar-mode"
+                        title="Enables or disables proportion-based health bar coloring">dynamic health bar</label>
+                    <br>
                     <label for="fps-select" title="use this to slow the game down">limit frames per second:</label>
                     <select name="fps-select" id="fps-select">
                         <option value="max" selected>no cap</option>
@@ -95,7 +100,7 @@ Press Escape to close"></textarea>
                     <input type="checkbox" id="community-maps" name="community-maps" style="width:17px; height:17px;">
                     <label for="community-maps" title="add community-made levels to the n-gon level pool">community
                         maps</label>
-                    <br><br>
+                    <br>
                     <label for="banned"
                         title="type banned levels with a space between them.  Example:  crimsonTowers ruins clock">banned
                         levels:</label>
