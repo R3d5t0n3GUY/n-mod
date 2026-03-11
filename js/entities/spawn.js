@@ -14642,7 +14642,8 @@ const spawn = {
         mask: properties.collisionFilter.mask || (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
       } : {
         category: cat.body,
-        mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
+        mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet),
+        group: 0
       }),
       inertia: properties.inertia || 0,
       angularVelocity: properties.angularVelocity || 0,
@@ -14651,23 +14652,22 @@ const spawn = {
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
-    const who = body[body.length - 1]
     for (let i = 0; i < 3; i++) { //makes sure it draws and collides properly
-      Matter.Body.setVertices(who, Vertices.fromPath(vector))
-      who.collisionFilter = static.collisionFilter
+      Matter.Body.setVertices(body[body.length - 1], Vertices.fromPath(vector))
+      body[body.length - 1].collisionFilter = static.collisionFilter
     }
-    Matter.Body.setAngularVelocity(who, static.angularVelocity)
-    Composite.add(engine.world, who); //add to world
-    who.classType = "body"
-    who.static = static
+    Matter.Body.setAngularVelocity(body[body.length - 1], static.angularVelocity)
+    Composite.add(engine.world, body[body.length - 1]); //add to world
+    body[body.length - 1].classType = "body"
+    body[body.length - 1].static = static
     if (static.isRequested) { //if isStatic was requested as true, add constraint
-      who.constraint = Constraint.create({ //prevent movement, but allow other physics
+      body[body.length - 1].constraint = Constraint.create({ //prevent movement, but allow other physics
         pointA: static.where,
         bodyB: who,
         stiffness: 1,
         damping: 1
       })
-      Composite.add(engine.world, who.constraint) //apply constraint
+      Composite.add(engine.world, body[body.length - 1].constraint) //apply constraint
     }
   },
   mapRect(x, y, width, height, properties) { //adds rectangle to map array
