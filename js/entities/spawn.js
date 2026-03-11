@@ -14652,11 +14652,13 @@ const spawn = {
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
     const who = body[body.length - 1]
-    for (let i = 0; i < 3; i++) Matter.Body.setVertices(who, Vertices.fromPath(vector))
+    for (let i = 0; i < 3; i++) { //makes sure it draws and collides properly
+      Matter.Body.setVertices(who, Vertices.fromPath(vector))
+      who.collisionFilter = static.collisionFilter
+    }
     Matter.Body.setAngularVelocity(who, static.angularVelocity)
     Composite.add(engine.world, who); //add to world
     who.classType = "body"
-    who.collisionFilter = static.collisionFilter
     who.static = static
     if (static.isRequested) { //if isStatic was requested as true, add constraint
       who.constraint = Constraint.create({ //prevent movement, but allow other physics
