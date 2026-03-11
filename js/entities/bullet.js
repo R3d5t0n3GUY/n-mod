@@ -3244,8 +3244,10 @@ const b = {
         this.torque += this.inertia * this.spin
       }
     })
-
+    let oldVertices = bullet[me].vertices
+    //bullet[me].vertices = kochFract(3, RADIUS) || oldVertices
     Composite.add(engine.world, bullet[me]); //add bullet to world
+    //Matter.Body.setVertices(bullet.me, verts)
     // Matter.Body.setAngularVelocity(bullet[me], 2 * (0.5 - Math.random()))  //doesn't work due to high friction
     Matter.Body.setVelocity(bullet[me], {
       x: speed * Math.cos(dir),

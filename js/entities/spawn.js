@@ -14637,7 +14637,7 @@ const spawn = {
       },
       vertices: Vertices.fromPath(vector),
       isRequested: properties.isStatic || false,
-      collisionFilter: (properties.collisionFilter ? { //fallback to defaults where needed
+      collisionFilter: ((properties ? properties.collisionFilter : false) ? { //fallback to defaults where needed
         category: properties.collisionFilter.category || cat.body,
         mask: properties.collisionFilter.mask || (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet)
       } : {
@@ -14645,14 +14645,14 @@ const spawn = {
         mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet),
         group: 0
       }),
-      inertia: properties.inertia || 0,
-      angularVelocity: properties.angularVelocity || 0,
-      style: properties.style
+      inertia: (properties ? properties.inertia || 0 : 0),
+      angularVelocity: (properties ? properties.angularVelocity || 0 : 0),
+      style: (properties ? properties.style || {} : {})
     }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
     delete properties.collisionFilter //unsets collision filter, so it doesn't override the requested one
     body[body.length] = Matter.Bodies.fromVertices(x, y, Vertices.fromPath(vector), properties);
-    for (let i = 0; i < 3; i++) { //makes sure it draws and collides properly
+    for (let i = 0; i < 3; i++) { //make EXTRA sure it draws and collides properly
       Matter.Body.setVertices(body[body.length - 1], Vertices.fromPath(vector))
       body[body.length - 1].collisionFilter = static.collisionFilter
     }
@@ -14669,6 +14669,7 @@ const spawn = {
       })
       Composite.add(engine.world, body[body.length - 1].constraint) //apply constraint
     }
+    return body[body.length - 1]
   },
   mapRect(x, y, width, height, properties) { //adds rectangle to map array
     map[map.length] = Bodies.rectangle(x + width / 2, y + height / 2, width, height, properties);
