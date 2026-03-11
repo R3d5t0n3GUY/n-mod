@@ -1,6 +1,7 @@
 **************************************************** TODO **********************************************
 •Add more commands to chat menu
 •Fix HTML generation for warp menu background images
+•Draw IceIX as Koch snowflakes
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon (for the most part; see NOT PLANNED section for exceptions)
