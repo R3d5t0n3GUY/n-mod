@@ -685,8 +685,8 @@ const m = {
     // health display is a x^1.5 rule to make it seem like the player has lower health 
     id.style.width = Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4)) + "px";
     document.getElementById("health-bg").style.width = `${Math.floor(300 * m.maxHealth)}px`
-    let [hHue, hSat] = [Math.min(Math.max(m.health / Math.min(m.maxHealth, 10), 0), 1),
-      Math.min(Math.max(m.health / m.maxHealth, 0), 1)]
+    let [hHue, hSat] = [Math.pow(m.health / Math.min(m.maxHealth, 10), Math.sqrt(2)).clampToRange(0, 1),
+      (m.health / m.maxHealth).clampToRange(0, 1)]
     if (m.health < 0) {
       id.style.borderRightColor = "#f00"
     } else if (m.health < m.maxHealth - 0.01) {
