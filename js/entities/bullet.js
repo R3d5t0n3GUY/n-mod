@@ -3182,7 +3182,9 @@ const b = {
     const THRUST = 0.0018
     const RADIUS = 18
     const SCALE = 1 - 0.11 / tech.bulletsLastLonger
-    bullet[me] = Bodies.polygon(where.x, where.y, 3, RADIUS, {
+    const ITERATIONS = 2 //[0, 1, 2].randomItem([3, 2, 1])
+    const VERTICES = kochFract(ITERATIONS, RADIUS)
+    bullet[me] = Bodies.polygon(where.x, where.y, 6, RADIUS, { //hexagons are the bestagons
       angle: dir - Math.PI,
       // inertia: Infinity,
       spin: 0.00004 * (0.1 + Math.random()) * (Math.round(Math.random()) ? 1 : -1),
@@ -3244,10 +3246,8 @@ const b = {
         this.torque += this.inertia * this.spin
       }
     })
-    let oldVertices = bullet[me].vertices
-    //bullet[me].vertices = kochFract(3, RADIUS) || oldVertices
+    Matter.Body.setVertices(bullet[me], VERTICES)
     Composite.add(engine.world, bullet[me]); //add bullet to world
-    //Matter.Body.setVertices(bullet.me, verts)
     // Matter.Body.setAngularVelocity(bullet[me], 2 * (0.5 - Math.random()))  //doesn't work due to high friction
     Matter.Body.setVelocity(bullet[me], {
       x: speed * Math.cos(dir),
