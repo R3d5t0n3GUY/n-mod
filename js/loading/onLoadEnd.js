@@ -86,6 +86,7 @@ fileLoads.onLoadEnd = function () {
         communityMaps.checked = localSettings.isCommunityMaps
         hideHUD.checked = localSettings.isHideHUD
         hideImages.checked = localSettings.isHideImages
+        healthBarMode.checked = localSettings.isDynamicHealthBar
         bannedLevels.innerHTML = localSettings.banList
     }
     document.getElementById("fps-select").addEventListener("input", () => {

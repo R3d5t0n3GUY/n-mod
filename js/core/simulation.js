@@ -518,6 +518,7 @@ const simulation = {
     }
   },
   inGameConsole(text, time = 240) {
+    //text = text.replaceAll("<script", "&lt;script").replaceAll("</script>", "&lt;/script&gt;") //didn't work properly
     if (!localSettings.isHideHUD && simulation.isTextLogOpen && !build.isExperimentSelection) {
       if (simulation.lastLogTime > m.cycle) { //if there is an older message
         document.getElementById("text-log").innerHTML = document.getElementById("text-log").innerHTML + '<br>' + text;

@@ -53,22 +53,6 @@ const tryRunning = {
     }
 }
 
-document.getElementById('save-file').addEventListener('mousedown', function () {
-    const jsonString = JSON.stringify(localSettings, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'localSettings.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
-});
-
-document.getElementById('load-file').addEventListener('mousedown', function () {
-    document.getElementById('file-import').click();
-});
-
 async function fetchTodoText() {
     try {
         const res = await fetch('todo.txt', { cache: 'no-cache', credentials: 'same-origin' });
