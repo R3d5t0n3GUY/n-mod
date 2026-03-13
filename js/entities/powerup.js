@@ -1827,7 +1827,10 @@ const powerUps = {
                             powerUps.endDraft('tech');"
                     	${style}>
                     <div class="card-text">
-              		<div class="grid-title"><div class="circle-grid research"></div>
+              		<div class="grid-title">
+                    <span style="position:relative;">
+                    <div class="circle-grid-skin"></div><div class="circle-grid-skin-eye"></div>
+                    </span> &nbsp; &nbsp; &nbsp; <div class="circle-grid research"></div>
                     <span style = 'font-size:90%; font-weight: 100; letter-spacing: -1.5px;'>microtransaction:</span>
                     <br>${tech.tech[choose].name + techCountText}</div>
                     ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
@@ -1850,7 +1853,7 @@ const powerUps = {
                             powerUps.endDraft('tech');"
                     	${style}>
                     <div class="card-text">
-              		<div class="grid-title"><div class="circle-grid research"></div>
+              		<div class="grid-title"><div class="circle-grid-instant"></div><div class="circle-grid research"></div>
                     <span style = 'font-size:90%; font-weight: 100; letter-spacing: -1.5px;'>composition:</span>
                     <br>${tech.tech[choose].name + techCountText}</div>
                     ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`

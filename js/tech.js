@@ -14347,11 +14347,14 @@ const tech = {
       allowed() { return true },
       requires: "",
       effect() {
+        simulation.removeEphemera("LoS (junk)")
         simulation.draw.lineOfSightPrecalculation() //required precalculation for line of sight
         simulation.draw.drawMapPath = simulation.draw.drawMapSight
 
         simulation.ephemera.push({
-          name: "LoS", count: 0, do() {
+          name: "LoS (junk)",
+          count: 0,
+          do() {
             const pos = m.pos
             const radius = 3000
             if (!simulation.isTimeSkipping) {
@@ -14398,7 +14401,9 @@ const tech = {
           },
         })
       },
-      remove() { }
+      remove() {
+        simulation.removeEphemera("LoS (junk)")
+      }
     },
     {
       name: "grayscale",
@@ -14432,7 +14437,9 @@ const tech = {
       },
       requires: "",
       effect() {
+        simulation.removeEphemera("canvasEffect")
         simulation.ephemera.push({
+          name: "canvasEffect",
           do() {
             // document.documentElement.style.filter = `blur(${2 + 2 * Math.sin(simulation.cycle * 0.01)}px)`
             if (!(simulation.cycle % 180)) document.documentElement.style.filter = `blur(${Math.floor(4 * Math.random())}px)`
@@ -14455,8 +14462,9 @@ const tech = {
       },
       requires: "",
       effect() {
-        //   
+        simulation.removeEphemera("canvasEffect")
         simulation.ephemera.push({
+          name: "canvasEffect",
           count: 0,
           do() {
             document.documentElement.style.filter = `hue-rotate(${simulation.cycle}deg)`
@@ -14479,15 +14487,18 @@ const tech = {
       },
       requires: "",
       effect() {
-        //   
+        simulation.removeEphemera("canvasEffect")
         simulation.ephemera.push({
+          name: "canvasEffect",
           count: 0,
           do() {
             document.documentElement.style.filter = `brightness(${1 + 0.5 * Math.sin(simulation.cycle * 0.03)})`
           }
         })
       },
-      remove() { }
+      remove() {
+        simulation.removeEphemera("canvasEffect")
+      }
     },
     {
       name: "umbra",
@@ -14506,7 +14517,9 @@ const tech = {
         ctx.shadowColor = '#06f';
         ctx.shadowBlur = 25;
       },
-      remove() { }
+      remove() {
+        ctx.shadowBlur = 0;
+      }
     },
     {
       name: "lighter",
