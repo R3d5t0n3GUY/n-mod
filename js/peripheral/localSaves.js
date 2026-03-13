@@ -10,9 +10,9 @@ const localSaves = {
   },
   defaultMenu() {
     let text = `<input type="file" id="file-import" accept=".json" onchange="localSaves.onImport(event)" hidden>
-<input type="button" value="Import" style="cursor:pointer;" title="Click to use your save file" onclick="localSaves.loadFile()">
-<input type="button" value="Export" style="cursor:pointer;" title="Click to download your save file" onclick="localSaves.exportSettings()">
-<input type="button" value="Wipe" style="color:red;cursor:pointer;" title="This cannot be undone!" onclick="localSaves.openConfirmation()">`
+<input type="button" value="Import" class="custom-file-button" title="Click to use your save file" onclick="localSaves.loadFile()">
+<input type="button" value="Export" class="custom-file-button" title="Click to download your save file" onclick="localSaves.exportSettings()">
+<input type="button" value="Wipe" class="custom-file-button" style="color:red;" title="This cannot be undone!" onclick="localSaves.openConfirmation()">`
     localSaveDiv.innerHTML = text
   },
   exportSettings() {
@@ -72,8 +72,8 @@ const localSaves = {
     let text = `
 <strong>This action is <span style='color:red'>IRREVERSIBLE!</span></strong>
 <br>
-<input type="button" value="Confirm Delete" style="color:red;cursor:pointer;" onclick='localSaves.wipeSave()'>
-<input type="button" value="Cancel" style="cursor:pointer;" onclick='localSaves.defaultMenu()'>
+<input type="button" value="Confirm Delete" class="custom-file-button" style="color:red;" onclick='localSaves.wipeSave()'>
+<input type="button" value="Cancel" class="custom-file-button" onclick='localSaves.defaultMenu()'>
 `
     document.getElementById("localSave-div").innerHTML = text
   },

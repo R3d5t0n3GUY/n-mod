@@ -182,6 +182,10 @@ summary {
   background-color: #eee;
 }
 
+#save-file-div {
+  cursor: default;
+}
+
 .custom-file-button {
   font-family: "Chakra Petch", sans-serif;
   cursor: pointer;
