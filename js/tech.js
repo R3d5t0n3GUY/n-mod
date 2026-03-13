@@ -14529,7 +14529,7 @@ const tech = {
     {
       name: "compositioning",
       description: `${powerUps.orb.tech()} have <strong>+1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong> where you can
-        <br>use ${powerUps.orb.research(1)} to change the <strong class='color-alt'>composite operation</strong>`,
+        <br>use ${powerUps.orb.research(1)} to change the <strong class='alt'>composite operation</strong>`,
       maxCount: 3,
       count: 0,
       frequency: 0,
