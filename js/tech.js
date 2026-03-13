@@ -14322,6 +14322,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14341,6 +14342,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() { return true },
       requires: "",
@@ -14405,6 +14407,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14422,6 +14425,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14444,6 +14448,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14467,6 +14472,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14491,6 +14497,7 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isComposite: true,
       allowed() {
         return true
       },
@@ -14508,6 +14515,7 @@ const tech = {
       count: 0,
       frequency: 0,
       isInstant: true,
+      isComposite: true,
       isJunk: true,
       allowed() {
         return true
@@ -14517,6 +14525,28 @@ const tech = {
         ctx.globalCompositeOperation = "lighter";
       },
       remove() { }
+    },
+    {
+      name: "compositioning",
+      description: `${powerUps.orb.tech()} have <strong>+1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong> where you can
+        <br>use ${powerUps.orb.research(1)} to change the <strong class='color-alt'>composite operation</strong>`,
+      maxCount: 3,
+      count: 0,
+      frequency: 0,
+      isComposite: true,
+      isJunk: true,
+      allowed() { return true },
+      requires: "",
+      effect() {
+        if (!tech.isCompositions) {
+          tech.isCompositions = 1
+        } else {
+          tech.isCompositions++
+        }
+      },
+      remove() {
+        tech.isCompositions = 0
+      }
     },
     {
       name: "the upside down",

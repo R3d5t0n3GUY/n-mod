@@ -725,61 +725,7 @@ const level = {
 
             //pop up new level info screen for a few seconds    //|| level.levels[level.onLevel] === "subway"
             if (!localSettings.isHideHUD && m.alive && (level.levels[level.onLevel] === "final" || level.levels[level.onLevel] === "reactor")) {
-                // if (!localSettings.isHideHUD && m.alive) {
-                //pause
-                if (!simulation.paused) {
-                    simulation.paused = true;
-                    simulation.isChoosing = true; //stops p from un pausing on key down
-                }
-
-                //build level info
-                document.getElementById("choose-grid").style.gridTemplateColumns = "250px"
-                let text = `<div class="card-background" style="height:auto; border: none; background-color: transparent; line-height: 160%; background-color: var(--card-color); font-size: 1.15em;"> <div class="card-text">`
-                for (let i = 0; i < level.levels.length; i++) {
-                    if (i < level.levelsCleared) {
-                        text += `<div style="user-select: none;">${level.levels[i]}</div>`
-                    } else if (i === level.levelsCleared) {
-                        text += `<div class="unblur" style="user-select: none;"><strong>${level.levels[i]}</strong></div>`
-                        // ${spawn.mobTypeSpawnOrder[level.levelsCleared]} Tier ${spawn.mobTierSpawnOrder[level.levelsCleared]}
-                        // <br>${spawn.mobTypeSpawnOrder[level.levelsCleared - 1]} Tier ${spawn.mobTierSpawnOrder[level.levelsCleared - 1]}`
-                    } else {
-                        text += `<div class= "blurry-text" style="user-select: none;">${level.levels[i]}</div>` //blurry text
-                        // `spawn<span class='color-symbol'>.</span><span class='color-symbol'>(</span>x<span class='color-symbol'>,</span>y<span class='color-symbol'>)</span>`
-                    }
-                }
-                text += `</div></div>`
-
-                document.getElementById("choose-grid").innerHTML = text
-                //show level info
-                document.getElementById("choose-grid").style.opacity = "1"
-                document.getElementById("choose-grid").style.transitionDuration = "0.25s"; //how long is the fade in on
-                document.getElementById("choose-grid").style.visibility = "visible"
-                simulation.draw.cons();
-                simulation.draw.body();
-                level.customTopLayer();
-                let count = countMax = simulation.testing ? 0 : 240
-                let newLevelDraw = () => {
-                    count--
-                    if (count > 0) {
-                        requestAnimationFrame(newLevelDraw);
-                    } else { //unpause
-                        setTimeout(() => {
-                            //document.getElementById("choose-grid").style.visibility = "hidden"
-                            powerUps.warp.exit(); //fixing a bug with picking up powerups after entering a new level
-                        }, 100);
-                    }
-                    //draw
-                    simulation.wipe();
-                    m.look();
-                    simulation.camera();
-                    const scale = 15
-                    ctx.setLineDash([scale * (countMax - count), scale * count]);
-                    simulation.draw.wireFrame();
-                    ctx.setLineDash([]);
-                    ctx.restore();
-                    simulation.drawCursor();
-                }
-                requestAnimationFrame(newLevelDraw);
+              powerUps.levelList.effect(0.25, false)
             }
         }
     },

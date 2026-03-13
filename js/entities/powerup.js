@@ -468,6 +468,7 @@ const powerUps = {
   instructions: {
     name: "instructions",
     color: "rgba(100,125,140,0.35)",
+    isLorePowerUp: true,
     size() {
       return 130
     },
@@ -545,6 +546,7 @@ const powerUps = {
   warp: {
     name: "warp",
     color: "rgb(110,155,160)",
+    isLorePowerUp: true,
     size() {
       return 30
     },
@@ -640,6 +642,7 @@ const powerUps = {
   settings: {
     name: "settings",
     color: "rgb(245, 24, 149)",
+    isLorePowerUp: true,
     size() {
       return 45
     },
@@ -720,6 +723,7 @@ const powerUps = {
     size() {
       return 80 / Math.pow(localSettings.difficultyMode, 1.5);
     },
+    isLorePowerUp: true,
     damageDone: 1,
     damageReduction: 1,
     setDamageAndDefense() {
@@ -909,6 +913,78 @@ const powerUps = {
           }
         }
       });
+    },
+  },
+  levelList: {
+    name: "levelList",
+    color: "#e82",
+    isLorePowerUp: true,
+    size() {
+      return 40
+    },
+    effect(fade = 0.5, isDrawPickUp = true) {
+      requestAnimationFrame(() => { //add a background behind the power up menu
+        ctx.fillStyle = `rgba(150,150,150,0.9)`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      });
+      if (isDrawPickUp) powerUps.animatePowerUpGrab('rgba(238, 136, 34, 0.3)')
+
+      //build level info
+      document.getElementById("choose-grid").classList.add('choose-grid-no-images');
+      document.getElementById("choose-grid").classList.remove('choose-grid');
+      //pause
+      if (!simulation.paused) {
+        simulation.paused = true;
+        simulation.isChoosing = true; //stops p from un pausing on key down
+      }
+      //build level info
+      document.getElementById("choose-grid").style.gridTemplateColumns = "250px"
+      let text = `<div class="card-background" style="height:auto; border: none; background-color: transparent; line-height: 160%; background-color: var(--card-color); font-size: 1.15em;"> <div class="card-text">`
+      for (let i = 0; i < level.levels.length; i++) {
+        if (i < level.levelsCleared) {
+          text += `<div style="user-select: none;">${level.levels[i]}</div>`
+        } else if (i === level.levelsCleared) {
+          text += `<div class="unblur" style="user-select: none;"><strong>${level.levels[i]}</strong></div>`
+          // ${spawn.mobTypeSpawnOrder[level.levelsCleared]} Tier ${spawn.mobTierSpawnOrder[level.levelsCleared]}
+          // <br>${spawn.mobTypeSpawnOrder[level.levelsCleared - 1]} Tier ${spawn.mobTierSpawnOrder[level.levelsCleared - 1]}`
+        } else {
+          text += `<div class= "blurry-text" style="user-select: none;">${level.levels[i]}</div>` //blurry text
+            // `spawn<span class='color-symbol'>.</span><span class='color-symbol'>(</span>x<span class='color-symbol'>,</span>y<span class='color-symbol'>)</span>`
+        }
+      }
+      text += `</div></div>`
+
+      document.getElementById("choose-grid").innerHTML = text
+      //show level info
+      document.getElementById("choose-grid").style.opacity = "1"
+      document.getElementById("choose-grid").style.transitionDuration = `${fade}s`; //how long is the fade in on
+      document.getElementById("choose-grid").style.visibility = "visible"
+      simulation.draw.cons();
+      simulation.draw.body();
+      level.customTopLayer();
+      let count = countMax = simulation.testing ? 0 : 240
+      let newLevelDraw = () => {
+        count--
+        if (count > 0) {
+          requestAnimationFrame(newLevelDraw);
+        } else { //unpause
+          setTimeout(() => {
+            //document.getElementById("choose-grid").style.visibility = "hidden"
+            powerUps.warp.exit(); //fixing a bug with picking up powerups after entering a new level
+          }, 100);
+        }
+        //draw
+        simulation.wipe();
+        m.look();
+        simulation.camera();
+        const scale = 15
+        ctx.setLineDash([scale * (countMax - count), scale * count]);
+        simulation.draw.wireFrame();
+        ctx.setLineDash([]);
+        ctx.restore();
+        simulation.drawCursor();
+      }
+      requestAnimationFrame(newLevelDraw);
     },
   },
   coupling: {
@@ -1738,7 +1814,8 @@ const powerUps = {
           if (tech.isMicroTransactions && powerUps.research.count > 0) {
             const skins = [] //find skins
             for (let i = 0; i < tech.tech.length; i++) {
-              if (tech.tech[i].isSkin && tech.tech[i].allowed()) skins.push(i)
+              if (tech.tech[i].isSkin && tech.tech[i].allowed() && tech.tech[i].name !== "microtransactions") skins.push(i)
+              if (tech.tech[i].name === "microtransactions" && Math.random() < 0.37) skins.push(i)
             }
             for (let j = 0, len = (tech.isMicroTransactions || 1); j < len; j++) {
               const choose = skins[Math.floor(Math.seededRandom(0, skins.length))] //pick an element from the array of options
@@ -1752,6 +1829,29 @@ const powerUps = {
                     <div class="card-text">
               		<div class="grid-title"><div class="circle-grid research"></div>
                     <span style = 'font-size:90%; font-weight: 100; letter-spacing: -1.5px;'>microtransaction:</span>
+                    <br>${tech.tech[choose].name + techCountText}</div>
+                    ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
+              //simulation.inGameConsole(style)
+            }
+          }
+          if (tech.isCompositions && powerUps.research.count > 0) {
+            const comps = [] //find compositions
+            for (let i = 0; i < tech.tech.length; i++) {
+              if (tech.tech[i].isComposite && tech.tech[i].allowed() && tech.tech[i].name !== "compositioning") comps.push(i)
+              if (tech.tech[i].name === "compositioning" && Math.random() < 0.37) comps.push(i)
+            }
+            for (let j = 0, len = (tech.isCompositions || 1); j < len; j++) {
+              const choose = comps[Math.floor(Math.seededRandom(0, comps.length))] //pick an element from the array of options
+              const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
+              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (!tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              text += `<div class="choose-grid-module card-background" onclick="
+              				tech.giveTech(${choose});
+                            powerUps.research.changeRerolls(-1);
+                            powerUps.endDraft('tech');"
+                    	${style}>
+                    <div class="card-text">
+              		<div class="grid-title"><div class="circle-grid research"></div>
+                    <span style = 'font-size:90%; font-weight: 100; letter-spacing: -1.5px;'>composition:</span>
                     <br>${tech.tech[choose].name + techCountText}</div>
                     ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
               //simulation.inGameConsole(style)
@@ -1789,6 +1889,7 @@ const powerUps = {
   entanglement: {
     name: "entanglement",
     color: "#fff", //"hsl(248,100%,65%)",
+    isLorePowerUp: true,
     size() {
       return 40
     },
@@ -2071,7 +2172,7 @@ const powerUps = {
       }
     }
   },
-  rerollMUgun(idx, name) {
+  rerollMUgun(idx, name) { //reroll marginal utility
     tech.tech[idx].gun = undefined;
     tech.tech[idx].effect();
     b.guns[name].ammoPack /= 2;
@@ -2100,8 +2201,8 @@ const powerUps = {
         tech.tech[index].isBadRandomOption = true
         powerUps.ejectTech(index)
         if (tech.isPauseEjectResearch) {
-          for (let i = 0; i < tech.pauseEjectResearch; i++) powerUps.research.changeRerolls(-1);
           if (tech.pauseEjectResearch < 0) tech.pauseEjectResearch = 0
+          for (let i = 0; i < tech.pauseEjectResearch; i++) powerUps.research.changeRerolls(-1);
           tech.pauseEjectResearch++;
         } else {
           if (m.immuneCycle < m.cycle) m.takeDamage(tech.pauseEjectTech * 0.01, false)
@@ -2125,36 +2226,33 @@ const powerUps = {
       Matter.Body.setPosition(powerUp[i], Vector.add(where, Vector.mult(unit, 20 + 25 * Math.random())));
       Matter.Body.setVelocity(powerUp[i], Vector.mult(unit, 20));
     }
-
+    let isExcessiveHeals = (tech.isHealAttract || m.health > m.maxHealth - 0.01 || (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) //if player has accretion, or mass-energy without 1st ionization
     //count big power ups and small power ups
-    let options = ["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
-    if (tech.isHealAttract && Math.random() > 0.13) options.splice(0, 1) //if player has accretion, 13% chance to consider spawning more heals
+    let options = [] //["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
+    if (!isExcessiveHeals || Math.random() < 0.13) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
+    if (!tech.isSuperDeterminism || Math.random() < 0.37) options.push("research")
+    if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) options.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
     if (m.coupling > 0) options.push("coupling")
     if (tech.isBoostPowerUps) options.push("boost")
 
-    let bigIndexes = [], smallIndexes = [], ignoredIndexes = ["settings", "instructions", "warp", "difficulty", "entanglement"]
+
+    let bigIndexes = [], smallIndexes = [] //, ignoredIndexes = ["settings", "instructions", "warp", "difficulty", "entanglement", "levelList"]
     for (let i = 0; i < powerUp.length; i++) {
-      let isLorePowerUp = ignoredIndexes.includes(powerUp[i].name)
-      if (!isLorePowerUp) {
+      //let isLorePowerUp = ignoredIndexes.includes(powerUp[i].name)
+      if (!powerUp[i].isLorePowerUp) {
         if (powerUp[i].name === "tech" || powerUp[i].name === "gun" || powerUp[i].name === "field") {
           bigIndexes.push(i)
         } else {
           smallIndexes.push(i)
-          if (powerUp[i].name === "heal" && (tech.isHealAttract || m.health >= m.maxHealth ||
-            (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) && Math.random() < 0.8) { //if player has accretion, or mass-energy without 1st ionization
-            for (let i = 0; i < Math.ceil(Math.random() * 2); i++) {
-              smallIndexes.push(i)
-            }
-          }
-       }
+        }
       }
     }
 
-    if (smallIndexes.length > 2 && Math.random() < (tech.isHealAttract ? 0.9 : 0.66)) { //higher likelyhood to collide heals with accretion
+    if (smallIndexes.length > 2 && Math.random() < (isExcessiveHeals ? 0.9 : 0.66)) { //higher likelyhood to collide heals with accretion
       // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {
-          if (powerUp[i].name === "heal" || powerUp[i].name === "research" || powerUp[i].name === "ammo" || powerUp[i].name === "coupling" || powerUp[i].name === "boost") {
+          if (["heal", "research", "ammo","coupling", "boost"].includes(powerUp[i].name)) {
             queueRemoval('powerUp', i)
             break
           }
@@ -2177,13 +2275,13 @@ const powerUps = {
       queueRemoval('powerUp', index)
     } else if (smallIndexes.length > 0) {
       // console.log("no big, at least 1 small will swap flavors")
-      let index = Math.floor(Math.random() * powerUp.length), isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
-      while (isLorePowerUp) { //don't remove lore/info powerUps (instructions, entanglement, warp, etc.)
+      let index = Math.floor(Math.random() * powerUp.length) //, isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
+      while (powerUp[index].isLorePowerUp) { //don't remove lore/info powerUps (instructions, entanglement, warp, etc.)
         index = Math.floor(Math.random() * powerUp.length)
-        isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
+        //isLorePowerUp = ignoredIndexes.includes(powerUp[index].name)
       }
       options = options.filter(e => {
-        return (e !== powerUp[index].name && !ignoredIndexes.includes(e)
+        return (e !== powerUp[index].name && !powerUps[e].isLorePowerUp
       )}); //don't repeat the current power up type
       powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
       queueRemoval('powerUp', index)
@@ -2215,13 +2313,18 @@ const powerUps = {
         name = 'boost'
         size = powerUps[name].size()
       }
-      for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance() + 1), 1); i++) { //if player hacks a dupe chance higher than 100%
-        powerUps.directSpawn(x, y, name, moving, size)
-      }
-      if (!level.isNextLevelPowerUps && (Math.random() < (tech.duplicationChance() % 1))) {
-        powerUps.directSpawn(x, y, name, moving, size, true)
-        powerUp[powerUp.length - 1].isDuplicated = true
-        if (tech.isDupEnergy) m.energy *= 2
+      powerUps.directSpawn(x, y, name, moving, size, false)
+      if (!level.isNextLevelPowerUps) {
+        for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance()), 0); i++) { //for dupe chance higher than 100%
+          powerUps.directSpawn(x, y, name, moving, size, true)
+          powerUp[powerUp.length - 1].isDuplicated = true
+          if (tech.isDupEnergy) m.energy *= 2
+        }
+        if (Math.random() < (tech.duplicationChance() % 1)) {
+          powerUps.directSpawn(x, y, name, moving, size, true)
+          powerUp[powerUp.length - 1].isDuplicated = true
+          if (tech.isDupEnergy) m.energy *= 2
+        }
       }
     }
   },
@@ -2258,10 +2361,9 @@ const powerUps = {
     Composite.add(engine.world, powerUp[index]);
   },
   randomLorePowerUp() {
-    let choices = ["difficulty", "instructions", "settings", "warp", "entanglement"],
-    weights = [2,4,3,3,1];
+    let choices = ["difficulty", "instructions", "levelList", "settings", "warp", "entanglement"],
+    weights = [2,5,4,3,3,1];
     powerUps.spawn(m.pos.x, m.pos.y, choices.randomItem(weights)) // Array.randomItem is declared in /lib/prototypes.js
   },
-  powerUpStorage: [], /* used when power ups are sent to the next level (for the constraint, level.isNextLevelPowerUps),
-  or when attempted to spawn when there are too many already active in engine.world */
+  powerUpStorage: [], // used when power ups are sent to the next level (for the constraint, level.isNextLevelPowerUps)
 };
