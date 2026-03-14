@@ -883,11 +883,8 @@ const simulation = {
   },
   firstRun: true,
   splashReturn() {
-    try {
-      fileStatusDiv.innerHTML = ""
-    } catch (err) {
-      document.getElementById("file-status-div").innerHTML = ""
-    }
+    localSaves.clearStatus()
+    localSaves.defaultMenu()
     document.getElementById("previous-seed").innerHTML = `previous seed: <span style="font-size:80%;">${Math.initialSeed}</span><br>`
     document.getElementById("seed").value = Math.initialSeed = Math.seed //randomize initial seed
 
@@ -932,7 +929,7 @@ const simulation = {
   then: null,
   hasAttemptedResolve: false,
   startGame(isBuildRun = false, isTrainingRun = false) {
-    fileStatusDiv.innerHTML = ""
+    localSaves.clearStatus()
     //level.fullLevelList = mainLevels.appendObjects([trainingLevels, communityLevels, removedLevels, modLevels, loreLevels]);
     simulation.isTextLogOpen = true
     simulation.clearMap()

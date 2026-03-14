@@ -75,7 +75,7 @@ const localSaves = {
 <input type="button" value="Confirm Delete" class="custom-file-button" style="color:red;" onclick='localSaves.wipeSave()'>
 <input type="button" value="Cancel" class="custom-file-button" onclick='localSaves.defaultMenu()'>
 `
-    document.getElementById("localSave-div").innerHTML = text
+    localSaveDiv.innerHTML = text
   },
   wipeSave() {
     localSaves.defaultMenu()

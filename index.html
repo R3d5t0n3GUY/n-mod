@@ -70,7 +70,7 @@ Press Escape to close"></textarea>
 
     <div id='info' style='visibility:hidden'>
         <div>
-            <details id='settings-details'>
+            <details id='settings-details' ontoggle="localSaves.clearStatus()">
                 <summary>settings</summary>
                 <div class="details-div" style="max-width: 24rem; line-height: 150%;">
                     <input onclick="build.showImages('settings')" type="checkbox" id="hide-images" name="hide-images"

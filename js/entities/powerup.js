@@ -1654,18 +1654,20 @@ const powerUps = {
     effect(cancelled = false) {
       if (m.alive) {
         // powerUps.animatePowerUpGrab('hsla(246, 100%, 77%,0.5)')
-        let options = []; //generate all options
+        let options = [], weights = []; //generate all options
         optionLengthNoDuplicates = 0
         for (let i = 0; i < tech.tech.length; i++) {
           if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isBanished) {
             if (tech.tech[i].frequency > 0) optionLengthNoDuplicates++
-            for (let j = 0, len = tech.tech[i].frequency; j < len; j++) options.push(i);
+            options.push(i);
+            weights.push(Math.max(tech.tech[i].frequency, Math.pow(10, -16)))
           }
         }
         function removeOption(index) {
           for (let i = options.length - 1; i > -1; i--) {
             if (index === options[i]) {
-              options.splice(i, 1) //remove all copies of that option form the options array (some tech are in the options array multiple times because of frequency)
+              options.splice(i, 1) //remove all copies of that option form the options array
+              weights.splice(i, 1) //some tech are in the options array multiple times because of frequency
               optionLengthNoDuplicates--
             }
             if (options.length < 1) return;
@@ -1738,7 +1740,10 @@ const powerUps = {
             }
           }
           for (let i = 0; i < totalChoices; i++) {
-            if (options.length < 1) break
+            if (options.length < 1) {
+              console.warn("no options")
+              break
+            }
             if (Math.random() < tech.junkChance + level.junkAdded) { // choose is set to a random JUNK tech
               const list = []
               for (let i = 0; i < tech.tech.length; i++) {
@@ -1748,7 +1753,7 @@ const powerUps = {
               if (tech.isRetain) powerUps.retainList.push(tech.tech[chooseJUNK].name)
               text += powerUps.junkTechText(chooseJUNK, `powerUps.choose('tech',${chooseJUNK})`)
             } else {
-              const choose = options[Math.floor(Math.seededRandom(0, options.length))] //pick an element from the array of options
+              const choose = options.randomItem(weights) //pick an element from the array of options
               if (tech.isBanish) {
                 tech.tech[choose].isBanished = true
                 if (i === 0) simulation.inGameConsole(`options.length = ${optionLengthNoDuplicates} 
