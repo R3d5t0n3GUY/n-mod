@@ -9090,7 +9090,7 @@ const b = {
               });
               Composite.add(engine.world, this.constraint);
             }
-            if(m.crouch && !this.isBroken && tech.heavenlyArray) {
+            if(m.crouch && !this.isBroken && tech.isHeavenlyArray) {
               this.breakSword();
             } else if(!m.crouch && this.isBroken) {
               this.reformSword();
