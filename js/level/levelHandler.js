@@ -26,7 +26,7 @@ const level = {
     removedCommunityLevels: ["lock", "reservoir", "interferometer", "diamagnetism", "run", "biohazard", "stereoMadness",
 		"yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
 		"unchartedCave", "dojo", "arena", "flappyGon", "rings", "trial", "soft", "movers"],
-    modSpecificLevels: [ "gettingOverIt", "movementTech" ], //"descent", "split", "boundary", "bifurcate"],
+    modSpecificLevels: [ "gettingOverIt", "movementTech", "zenith", "archipelago" ], //"descent", "split", "boundary", "bifurcate"],
     fullLevelList: {},
     populateLevelList() {
         let levelLists = [mainLevels, trainingLevels, communityLevels, removedLevels, modLevels, loreLevels]

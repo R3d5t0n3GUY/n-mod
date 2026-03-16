@@ -1929,16 +1929,23 @@ window.addEventListener("keydown", function (event) {
               mob[i].damage(Infinity, true)
             }
           }
-          setTimeout(() => {
+          let deathLoop = () => {
             for (let i = 0, len = mob.length; i < len; ++i) {
-              if (!mob[i].isFinalBoss && !mob[i].isZombie) mob[i].damage(Infinity, true)
+              if (len > 0) {
+                if (mob[i].alive && !mob[i].isFinalBoss && !mob[i].isZombie) mob[i].death()
+              }
             }
-          }, 100);
-          setTimeout(() => {
-            for (let i = 0, len = mob.length; i < len; ++i) {
-              if (!mob[i].isFinalBoss && !mob[i].isZombie) mob[i].damage(Infinity, true)
-            }
-          }, 200);
+            setTimeout(() => {
+              for (let i = 0, len = mob.length; i < len; ++i) {
+                if (len > 0) {
+                  if (!mob[i].isFinalBoss && !mob[i].isZombie && mob[i].alive) {
+                    requestAnimationFrame(deathLoop)
+                    break
+                  }
+                }
+              }
+            }, 10);
+          }
           break
         case "l":
           document.getElementById("field").style.display = "none"
