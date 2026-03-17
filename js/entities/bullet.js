@@ -3178,6 +3178,7 @@ const b = {
   },
   isoWave360Solo(where, end = 500 * Math.sqrt(tech.bulletsLastLonger), cd = 0) {//fire one 360 circular wave at a time,   the gun uses a more efficient method for firing several at a time
     simulation.ephemera.push({
+      name: `eigenWave id#${simulation.ephemera.length}`,
       position: where,
       radius: 25,
       resonanceCount: 0,
@@ -3256,7 +3257,7 @@ const b = {
 
           this.radius += 2 * 0.8 * tech.waveBeamSpeed //expand / move
           if (this.radius > this.end - 30 * this.resonanceCount) { //* Math.pow(0.9, this.waves[i].resonanceCount)
-            simulation.removeEphemera(this).name
+            simulation.removeEphemera(this.name)
           }
           ctx.stroke()
         }

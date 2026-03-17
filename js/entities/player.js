@@ -2173,6 +2173,26 @@ const m = {
               ctx.fillStyle = "rgb(9, 245, 166)"; //background
               ctx.fillRect(xOff, yOff - 15, range * health, height);
             }
+
+            //fire 360 iostropic wave form eigen block
+            if (tech.isNormalMode && m.eigen.cycle < m.eigen.cycleLimit) {
+              if (tech.isFirstHarmonic) {
+                rate = Math.floor(Math.max(4, 30 - 3.5 * m.eigen.block.speed))
+                if (!(simulation.cycle % rate)) b.isoWave360Solo(m.eigen.block.position)
+              } else {
+                if (!(simulation.cycle % 30)) b.isoWave360Solo(m.eigen.block.position)
+              }
+            }
+
+            //fire laser from eigen block
+            // const angle = m.eigen.block.angle
+            // const unit = { x: 30 * Math.cos(angle), y: 30 * Math.sin(angle) }
+            // const exit = Vector.add(m.eigen.block.position, unit)
+            // b.laser(exit, {
+            //     x: exit.x + 5000 * unit.x,
+            //     y: exit.y + 5000 * unit.y
+            // }, tech.laserDamage, false, false, 1, "#f00", false);
+            // b.plasma();
           }
         },
         draw0eye() {

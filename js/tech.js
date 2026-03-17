@@ -6280,7 +6280,7 @@ const tech = {
       }
     },
     {
-      name: "paradigm analysis",
+      name: "paradigmatic analysis",
       descriptionFunction(){
         return `<span class='color-remove'>ejecting</span> ${powerUps.orb.tech()} costs ${tech.pauseEjectResearch > 9 ? `<strong>${tech.pauseEjectResearch}</strong> ${powerUps.orb.research()}` : powerUps.orb.research(tech.pauseEjectResearch)}
           <br>instead of <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> <em style ="float: right;">(+1 cost each use)</em>`
