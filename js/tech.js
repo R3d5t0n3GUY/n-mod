@@ -859,6 +859,48 @@ const tech = {
       }
     },
     {
+      name: "normal mode",
+      descriptionFunction() {
+          return `<strong>eigenstate</strong> generates isotropic <strong>phonon</strong> waves
+          <br>for <strong>10</strong> seconds after <strong>swapping</strong> states`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed() {
+        return tech.isEigenstate
+      },
+      requires: "eigenstate",
+      effect() {
+        tech.isNormalMode = true;
+      },
+      remove() {
+        tech.isNormalMode = false;
+      }
+    },
+    {
+      name: "first harmonic",
+      descriptionFunction() {
+          return `if your <strong>eigenstate</strong> is moving get
+          <br>up to <strong>7x</strong> normal mode's wave <strong>frequency</strong>`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed() {
+        return tech.isNormalMode
+      },
+      requires: "normal mode",
+      effect() {
+          tech.isFirstHarmonic = true;
+      },
+      remove() {
+        tech.isFirstHarmonic = false;
+      }
+    },
+    {
       name: "CPT symmetry",
       descriptionFunction() {
         return `after losing <strong class='color-h'>health</strong>, if you have above <strong>${(85 * Math.min(1, m.maxEnergy)).toFixed(0)}</strong> <strong class='color-f'>energy</strong>
@@ -1237,39 +1279,6 @@ const tech = {
           }
         }
         requestAnimationFrame(cycle);
-
-        // for (let i = b.inventory.length - 1; i > -1; i--) { //backwards because some tech can remove or add guns
-        //     const gunTechPool = [] //find gun tech for this gun
-        //     for (let j = 0, len = tech.tech.length; j < len; j++) {
-        //         // console.log(j, tech.tech[j].isGunTech, tech.tech[j].allowed(), !tech.tech[j].isJunk, !tech.tech[j].isBadRandomOption, tech.tech[j].count < tech.tech[j].maxCount)
-        //         const originalActiveGunIndex = b.activeGun //set current gun to active so allowed works
-        //         b.activeGun = b.inventory[i] //to make the .allowed work for guns that aren't active
-        //         if (tech.tech[j].isGunTech && tech.tech[j].allowed() && !tech.tech[j].isJunk && !tech.tech[j].isBadRandomOption && tech.tech[j].count < tech.tech[j].maxCount) {
-        //             const regex = tech.tech[j].requires.search(b.guns[b.inventory[i]].name) //get string index of gun name
-        //             const not = tech.tech[j].requires.search(' not ') //get string index of ' not '
-        //             if (regex !== -1 && (not === -1 || not > regex)) gunTechPool.push(j) //look for the gun name in the requirements, but the gun name needs to show up before the word ' not '                        
-        //         }
-        //         b.activeGun = originalActiveGunIndex
-        //         if (!b.guns[b.activeGun].have) {
-        //             if (b.inventory.length === 0) {
-        //                 b.activeGun = null
-        //             } else {
-        //                 b.activeGun = b.inventory[0]
-        //             }
-        //             b.inventoryGun = 0;
-        //         }
-        //     }
-        //     if (gunTechPool.length) {
-        //         const index = Math.floor(Math.random() * gunTechPool.length)
-        //         // console.log(gunTechPool, index, gunTechPool[index], tech.tech[gunTechPool[index]].name)
-        //         simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<span class='color-text'>${tech.tech[gunTechPool[index]].name}</span>")`, 360)
-        //         // tech.tech[gunTechPool[index]].isInstant = true //makes it not remove properly under paradigm shift
-        //         tech.giveTech(gunTechPool[index]) // choose from the gun pool
-        //         // console.log(gunTechPool, index, gunTechPool[index], tech.tech[gunTechPool[index]].name)
-        //         // tech.tech[gunTechPool[index]].isFromAppliedScience = true //makes it not remove properly under paradigm shift
-        //     }
-        // }
-        // simulation.boldActiveGunHUD();
       },
       remove() { }
     },
@@ -2911,9 +2920,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isTokamak) && m.fieldMode !== 8 && m.fieldMode !== 9
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isTokamak || tech.isThrowBlocks) && m.fieldMode !== 8 && m.fieldMode !== 9
       },
-      requires: "mass driver, printer, tokamak, not wormhole, pilot wave",
+      requires: "mass driver, printer, tokamak, paramagnetism, not wormhole, pilot wave",
       effect() {
         tech.isGroupThrow = true
       },
@@ -2930,9 +2939,9 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter) && m.fieldMode !== 8 && m.fieldMode !== 9 && !tech.isTokamak
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isThrowBlocks) && m.fieldMode !== 8 && m.fieldMode !== 9 && !tech.isTokamak
       },
-      requires: "mass driver, printer, not pilot wave, tokamak, wormhole",
+      requires: "mass driver, printer, paramagnetism, not pilot wave, tokamak, wormhole",
       effect() {
         tech.isAddBlockMass = true
       },
@@ -2948,9 +2957,9 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter) && m.fieldUpgrades[m.fieldMode].name !== "pilot wave" && m.fieldUpgrades[m.fieldMode].name !== "wormhole" && !tech.isTokamak
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isThrowBlocks) && m.fieldUpgrades[m.fieldMode].name !== "pilot wave" && m.fieldUpgrades[m.fieldMode].name !== "wormhole" && !tech.isTokamak
       },
-      requires: "mass driver, printer, not pilot wave, tokamak, wormhole",
+      requires: "mass driver, printer, paramagnetism, not pilot wave, tokamak, wormhole",
       effect() {
         tech.isBlockRestitution = true
       },
@@ -2966,9 +2975,9 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter)
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isThrowBlocks)
       },
-      requires: "mass driver, printer",
+      requires: "mass driver, printer, or paramagnetism",
       effect() {
         tech.isMobBlockFling = true
       },
@@ -4145,7 +4154,8 @@ const tech = {
     {
       name: "adiabatic healing",
       descriptionFunction() {
-        return `<strong>2x</strong> <strong class='color-h'>healing</strong> from ${powerUps.orb.heal()}<br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
+        //this.requires = (tech.isEnergyHealth ? "1st-ionization" : "not mass-energy")
+        return `<strong>2x</strong> <strong class='color-${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "f'>energy" : "h'>health"}</strong> from ${powerUps.orb.heal()}<br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
       },
       isPacifist: true,
       maxCount: 3,
@@ -5739,10 +5749,10 @@ const tech = {
             }
 
             // check for collisions with mobs
-            if (!m.isTimeDilated) {
+            if (!m.isTimeDilated && !(tech.isIntangible && m.isCloak)) {
               for (let i = 1; i < this.segments.length - 1; i++) {
                 let hit = Matter.Query.ray(mob, this.segments[i], this.segments[i + 1])
-                if (hit.length && !hit[0].body.isUnblockable) {
+                if (hit.length && (!hit[0].body.isUnblockable || hit[0].body.shield)) {
                   if (tech.isChitin) { //tail segments past the collisions point are made into worms
                     hit = hit[0].body
                     for (let j = Math.max(1, i); j < this.segments.length - 1; j++) {
@@ -7280,7 +7290,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade
+        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
       },
       requires: "wave",
       effect() {
@@ -7301,7 +7311,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade
+        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
       },
       requires: "wave",
       effect() {
@@ -7427,7 +7437,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade
+        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
       },
       requires: "wave, phonon",
       effect() {
@@ -7446,7 +7456,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade
+        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
       },
       requires: "wave, phonon",
       effect() {
@@ -9113,7 +9123,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("harpoon") && !tech.isFilament && !tech.isHarpoonPowerUp && !tech.isBoostReplaceAmmo && !tech.isBreakHarpoon
+        return tech.haveGunCheck("harpoon") && !tech.isUHMWPE && !tech.isHarpoonPowerUp && !tech.isBoostReplaceAmmo && !tech.isBreakHarpoon
       },
       requires: "harpoon, not UHMWPE, induction furnace, quasiparticles, wear",
       ammoBonus: 9,
@@ -9380,10 +9390,10 @@ const tech = {
       },
       requires: "harpoon, not railgun",
       effect() {
-        tech.isFilament = true;
+        tech.isUHMWPE = true;
       },
       remove() {
-        tech.isFilament = false;
+        tech.isUHMWPE = false;
       }
     },
     {
@@ -11356,6 +11366,26 @@ const tech = {
       },
       remove() {
         tech.isStunField = 0;
+      }
+    },
+    {
+     name: "paramagnetism",
+      description: `activate <strong>perfect diamagnetism</strong> ${powerUps.orb.field()}
+      <br>and hold <strong>down</strong> to attract distant <strong class='color-block'>blocks</strong>`, // and <strong>release</strong> to launch
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+          return m.fieldMode === 2
+      },
+      requires: "perfect diamagnetism",
+      effect() {
+        tech.isThrowBlocks = true;
+      },
+      remove() {
+        tech.isThrowBlocks = false;
       }
     },
     {
@@ -16270,7 +16300,7 @@ const tech = {
   isExtraGunField: null,
   isBigField: null,
   isSmartRadius: null,
-  isFilament: null,
+  isUHMWPE: null,
   isLargeHarpoon: null,
   extraHarpoons: null,
   ammoCap: null,

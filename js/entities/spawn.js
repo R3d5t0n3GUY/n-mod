@@ -951,7 +951,7 @@ const spawn = {
     me.do = function () {
       this.fill = `hsl(${360 * Math.sin(this.cycle * 0.011)},${80 + 20 * Math.sin(this.cycle * 0.004)}%,${60 + 20 * Math.sin(this.cycle * 0.009)}%)`
       if (this.health < 1) {
-        if (this.seePlayer.recall) this.healthBarFinal()
+        if (this.seePlayer.recall) this[`healthBar${localSettings.isHideHUD ? "4" : "Final"}`]()
         this.cycle++;
         this.checkStatus();
         this.invulnerable();

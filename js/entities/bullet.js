@@ -3176,6 +3176,93 @@ const b = {
       }
     }
   },
+  isoWave360Solo(where, end = 500 * Math.sqrt(tech.bulletsLastLonger), cd = 0) {//fire one 360 circular wave at a time,   the gun uses a more efficient method for firing several at a time
+    simulation.ephemera.push({
+      position: where,
+      radius: 25,
+      resonanceCount: 0,
+      end: end,
+      phononWaveCD: cd,
+      do() {
+        if (!m.isTimeDilated && m.cycle % 2) {
+          ctx.strokeStyle = "rgb(0,40,50)" //"000";
+          ctx.lineWidth = 2 * tech.wavePacketDamage
+          ctx.beginPath();
+          ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+
+          for (let j = 0, len = mob.length; j < len; j++) {
+            if (!mob[j].isShielded) {
+              const dist = Vector.magnitude(Vector.sub(this.position, mob[j].position))
+              const r = mob[j].radius + 30
+              if (dist + r > this.radius && dist - r < this.radius) {
+                //make them shake around
+                if (!mob[j].isBadTarget) {
+                  mob[j].force.x += 0.01 * (Math.random() - 0.5) * mob[j].mass
+                  mob[j].force.y += 0.01 * (Math.random() - 0.5) * mob[j].mass
+                }
+                Matter.Body.setVelocity(mob[j], { //friction
+                  x: mob[j].velocity.x * 0.94,
+                  y: mob[j].velocity.y * 0.94
+                });
+                //draw vibes
+                if (!(m.cycle % 3)) {
+                  let vertices = mob[j].vertices;
+                  const vibe = 50 + mob[j].radius * 0.15
+                  ctx.moveTo(vertices[0].x + vibe * (Math.random() - 0.5), vertices[0].y + vibe * (Math.random() - 0.5));
+                  for (let k = 1; k < vertices.length; k++) {
+                    ctx.lineTo(vertices[k].x + vibe * (Math.random() - 0.5), vertices[k].y + vibe * (Math.random() - 0.5));
+                  }
+                  ctx.lineTo(vertices[0].x + vibe * (Math.random() - 0.5), vertices[0].y + vibe * (Math.random() - 0.5));
+                }
+                //damage
+                mob[j].locatePlayer();
+                const damage = 2 * 2.3 * tech.wavePacketDamage * tech.waveBeamDamage * (tech.isBulletTeleport ? 1.43 : 1) * (tech.isInfiniteWaveAmmo ? 0.75 : 1) //damage is lower for large radius mobs, since they feel the waves longer
+                mob[j].damage(damage / Math.sqrt(mob[j].radius));
+
+                if (tech.isPhononWave && this.phononWaveCD < m.cycle) {
+                  this.phononWaveCD = m.cycle + 50
+                  b.isoWave360Solo(mob[j].position, 500 * Math.sqrt(tech.bulletsLastLonger), this.phononWaveCD)
+                }
+              }
+            }
+          }
+          for (let j = 0, len = Math.min(30, body.length); j < len; j++) {
+            if (!body[j].isInvulnerable) {
+              const dist = Vector.magnitude(Vector.sub(this.position, body[j].position))
+              const r = 20
+              if (dist + r > this.radius && dist - r < this.radius) {
+                const who = body[j]
+                //make them shake around
+                who.force.x += 0.01 * (Math.random() - 0.5) * who.mass
+                who.force.y += (0.01 * (Math.random() - 0.5) - simulation.g * 0.25) * who.mass //remove force of gravity
+                //draw vibes
+                if (!(m.cycle % 5)) {
+                  let vertices = who.vertices;
+                  const vibe = 25
+                  ctx.moveTo(vertices[0].x + vibe * (Math.random() - 0.5), vertices[0].y + vibe * (Math.random() - 0.5));
+                  for (let k = 1; k < vertices.length; k++) {
+                    ctx.lineTo(vertices[k].x + vibe * (Math.random() - 0.5), vertices[k].y + vibe * (Math.random() - 0.5));
+                  }
+                  ctx.lineTo(vertices[0].x + vibe * (Math.random() - 0.5), vertices[0].y + vibe * (Math.random() - 0.5));
+                }
+                if (tech.isPhononBlock && !who.isNotHoldable && who.speed < 5 && who.angularSpeed < 0.1) {
+                  if (Math.random() < 0.5) b.targetedBlock(who, 50 - Math.min(25, who.mass * 3)) //    targetedBlock(who, speed = 50 - Math.min(20, who.mass * 2), range = 1600) {
+                  // Matter.Body.setAngularVelocity(who, (0.25 + 0.1 * Math.random()) * (Math.random() < 0.5 ? -1 : 1));
+                  who.torque += who.inertia * 0.001 * (Math.random() - 0.5)
+                }
+              }
+            }
+          }
+
+          this.radius += 2 * 0.8 * tech.waveBeamSpeed //expand / move
+          if (this.radius > this.end - 30 * this.resonanceCount) { //* Math.pow(0.9, this.waves[i].resonanceCount)
+            simulation.removeEphemera(this).name
+          }
+          ctx.stroke()
+        }
+      },
+    })
+  },
   iceIX(speed = 0, dir = m.angle + Math.PI * 2 * Math.random(), where = {
     x: m.pos.x + 30 * Math.cos(m.angle),
     y: m.pos.y + 30 * Math.sin(m.angle)
@@ -3186,7 +3273,7 @@ const b = {
     const SCALE = 1 - 0.11 / tech.bulletsLastLonger
     const ITERATIONS = 2 //[0, 1, 2].randomItem([3, 2, 1])
     const VERTICES = kochFract(ITERATIONS, RADIUS)
-    bullet[me] = Bodies.polygon(where.x, where.y, 6, RADIUS, { //hexagons are the bestagons
+    bullet[me] = Bodies.polygon(where.x, where.y, (ITERATIONS < 1 ? 3 : 6), RADIUS, { //hexagons are the bestagons
       angle: dir - Math.PI,
       // inertia: Infinity,
       spin: 0.00004 * (0.1 + Math.random()) * (Math.round(Math.random()) ? 1 : -1),
@@ -8160,13 +8247,13 @@ const b = {
         }
         //look for closest mob in player's LoS
         const harpoonSize = (tech.isLargeHarpoon ? 1 + 0.1 * Math.sqrt(this.ammo) : 1) //* (m.crouch ? 0.7 : 1)
-        const totalCycles = 6.5 * (tech.isFilament ? 1 + 0.013 * Math.min(110, this.ammo) : 1) * Math.sqrt(harpoonSize)
+        const totalCycles = 6.5 * (tech.isUHMWPE ? 1 + 0.013 * Math.min(110, this.ammo) : 1) * Math.sqrt(harpoonSize)
 
         if (tech.extraHarpoons && !m.crouch) { //multiple harpoons
           const SPREAD = 0.2
           let angle = m.angle - SPREAD * tech.extraHarpoons / 2;
           const dir = { x: Math.cos(angle), y: Math.sin(angle) }; //make a vector for the player's direction of length 1; used in dot product
-          const range = 450 * (tech.isFilament ? 1 + 0.012 * Math.min(110, this.ammo) : 1)
+          const range = 450 * (tech.isUHMWPE ? 1 + 0.012 * Math.min(110, this.ammo) : 1)
           let targetCount = 0
           for (let i = 0, len = mob.length; i < len; ++i) {
             if (mob[i].alive && !mob[i].isBadTarget && !mob[i].shield && Matter.Query.ray(map, m.pos, mob[i].position).length === 0 && !mob[i].isInvulnerable) {

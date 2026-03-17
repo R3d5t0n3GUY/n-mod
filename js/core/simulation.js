@@ -359,12 +359,12 @@ const simulation = {
         bolts[i].y += bolts[i].Vy
         if (Math.random() < 0.2) {
           simulation.drawList.push({
-            x: bolts[i].x,
-            y: bolts[i].y,
-            radius: 1.5 + 5 * Math.random(),
-            // color: "rgba(0,155,155,0.7)",
-            color: bolts[i].color,
-            time: Math.floor(9 + 25 * Math.random() * Math.random())
+              x: bolts[i].x,
+              y: bolts[i].y,
+              radius: 1.5 + 5 * Math.random(),
+              // color: "rgba(0,155,155,0.7)",
+              color: bolts[i].color,
+              time: Math.floor(9 + 25 * Math.random() * Math.random())
           });
         }
       }

@@ -2164,13 +2164,15 @@ const m = {
             }
             //health bar
             // Math.floor(300 * m.maxHealth * Math.pow(Math.max(0, m.health) / m.maxHealth, 1.4))
-            const health = m.eigen.health[m.eigen.state === 1 ? 0 : 1]
+            if (!level.isHideHealth) {
+              const health = m.eigen.health[m.eigen.state === 1 ? 0 : 1]
 
-            const xOff = m.eigen.block.position.x - range * m.maxHealth / 2
-            ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-            ctx.fillRect(xOff, yOff - 15, range * m.maxHealth, height);
-            ctx.fillStyle = "rgb(9, 245, 166)"; //background
-            ctx.fillRect(xOff, yOff - 15, range * health, height);
+              const xOff = m.eigen.block.position.x - range * m.maxHealth / 2
+              ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+              ctx.fillRect(xOff, yOff - 15, range * m.maxHealth, height);
+              ctx.fillStyle = "rgb(9, 245, 166)"; //background
+              ctx.fillRect(xOff, yOff - 15, range * health, height);
+            }
           }
         },
         draw0eye() {
@@ -3940,7 +3942,7 @@ const m = {
       if (input.field) {
         if (m.energy > 0.001) {
           if (m.fireCDcycle < m.cycle) m.fireCDcycle = m.cycle
-          if (tech.isCapacitor && m.throwCharge < 4) m.throwCharge = 4
+          if ((tech.isCapacitor || tech.isThrowBlocks) && m.throwCharge < 4) m.throwCharge = 4
           m.throwCharge += 0.5 / m.holdingTarget.mass / b.fireCDscale
           if (m.throwCharge < 6) m.energy -= 0.001 / b.fireCDscale; // m.throwCharge caps at 5 
 
@@ -5273,6 +5275,70 @@ const m = {
             ctx.quadraticCurveTo(cp1x, cp1y, m.pos.x + 1 * m.fieldRange * Math.cos(m.angle - Math.PI * m.fieldArc), m.pos.y + 1 * m.fieldRange * Math.sin(m.angle - Math.PI * m.fieldArc))
             ctx.fill();
             m.perfectPush();
+            if (tech.isThrowBlocks && input.down) {
+            let target = { index: null, dist: Infinity };
+            for (let i = 0, len = body.length; i < len; ++i) {
+              //check if looking at
+              if (
+                !body[i].isNotHoldable && !body[i].isInvulnerable &&
+                Matter.Query.ray(map, body[i].position, m.pos).length === 0 &&
+                Vector.dot({ x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }, Vector.normalise(Vector.sub(body[i].position, m.pos))) > 0.97
+              ) {
+                const dist = Vector.magnitude(Vector.sub(body[i].position, m.pos))
+                //if block is close hold it
+                if (dist < m.fieldRange) {
+                  m.holdingTarget = body[i];
+                  m.pickUp();
+                  m.throwCharge = 4//pre charge so player can throw immediately
+
+                  if (tech.isReel && m.immuneCycle < m.cycle) {
+                    const regen = Math.min(0.003 * m.holdingTarget.speed * m.holdingTarget.mass, 1) * level.isReducedRegen
+                    m.energy += regen
+                    simulation.drawList.push({ //add dmg to draw queue
+                      x: m.pos.x,
+                      y: m.pos.y,
+                      radius: regen * 30,
+                      color: m.fieldMeterColor,
+                      time: simulation.drawTime
+                    });
+                  }
+                  break
+                } else if (dist < target.dist && body[i].mass > 1) {
+                  target = {
+                    who: body[i],
+                    dist: dist
+                  }
+                  // ctx.beginPath();
+                  // let vertices = body[i].vertices;
+                  // ctx.moveTo(vertices[0].x, vertices[0].y);
+                  // for (let j = 1; j < vertices.length; j++) {
+                  //     ctx.lineTo(vertices[j].x, vertices[j].y);
+                  // }
+                  // ctx.lineTo(vertices[0].x, vertices[0].y);
+                  // ctx.strokeStyle = "#000";
+                  // ctx.stroke();
+                }
+              }
+            }
+
+            //pull blocks
+            if (target.who) {
+              const massCapped = Math.min(6, target.who.mass)
+              let attract = Vector.mult(Vector.normalise(Vector.sub(m.pos, target.who.position)), 0.03 * massCapped)
+              target.who.force.x += attract.x;
+              target.who.force.y += attract.y - massCapped * simulation.g; //negate gravity
+              Matter.Body.setVelocity(target.who, Vector.mult(target.who.velocity, 0.8));
+
+              ctx.beginPath();
+              let vertices = target.who.vertices;
+              ctx.moveTo(vertices[0].x, vertices[0].y);
+              for (let j = 1; j < vertices.length; j++) {
+                ctx.lineTo(vertices[j].x, vertices[j].y);
+              }
+              ctx.lineTo(vertices[0].x, vertices[0].y);
+              ctx.fillStyle = "rgb(112, 219, 255)"
+              ctx.fill();
+            }
           } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
             m.pickUp();
           } else {
@@ -6988,7 +7054,7 @@ const m = {
             const shrinkScale = 0.97;
             const slowScale = 0.9
             for (let i = 0, len = body.length; i < len; i++) {
-              if (!body[i].isNotHoldable) {
+              if (len > 0 ? (!body[i].isNotHoldable && !body[i].isInvulnerable) : false) {
                 const dist1 = Vector.magnitude(Vector.sub(m.hole.pos1, body[i].position))
                 const dist2 = Vector.magnitude(Vector.sub(m.hole.pos2, body[i].position))
                 if (dist1 < dist2) {
