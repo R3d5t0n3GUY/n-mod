@@ -5276,106 +5276,107 @@ const m = {
             ctx.fill();
             m.perfectPush();
             if (tech.isThrowBlocks && input.down) {
-            let target = { index: null, dist: Infinity };
-            for (let i = 0, len = body.length; i < len; ++i) {
-              //check if looking at
-              if (
-                !body[i].isNotHoldable && !body[i].isInvulnerable &&
-                Matter.Query.ray(map, body[i].position, m.pos).length === 0 &&
-                Vector.dot({ x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }, Vector.normalise(Vector.sub(body[i].position, m.pos))) > 0.97
-              ) {
-                const dist = Vector.magnitude(Vector.sub(body[i].position, m.pos))
-                //if block is close hold it
-                if (dist < m.fieldRange) {
-                  m.holdingTarget = body[i];
-                  m.pickUp();
-                  m.throwCharge = 4//pre charge so player can throw immediately
+              let target = { index: null, dist: Infinity };
+              for (let i = 0, len = body.length; i < len; ++i) {
+                //check if looking at
+                if (
+                  !body[i].isNotHoldable && !body[i].isInvulnerable &&
+                  Matter.Query.ray(map, body[i].position, m.pos).length === 0 &&
+                  Vector.dot({ x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }, Vector.normalise(Vector.sub(body[i].position, m.pos))) > 0.97
+                ) {
+                  const dist = Vector.magnitude(Vector.sub(body[i].position, m.pos))
+                  //if block is close hold it
+                  if (dist < m.fieldRange) {
+                    m.holdingTarget = body[i];
+                    m.pickUp();
+                    m.throwCharge = 4//pre charge so player can throw immediately
 
-                  if (tech.isReel && m.immuneCycle < m.cycle) {
-                    const regen = Math.min(0.003 * m.holdingTarget.speed * m.holdingTarget.mass, 1) * level.isReducedRegen
-                    m.energy += regen
-                    simulation.drawList.push({ //add dmg to draw queue
-                      x: m.pos.x,
-                      y: m.pos.y,
-                      radius: regen * 30,
-                      color: m.fieldMeterColor,
-                      time: simulation.drawTime
-                    });
+                    if (tech.isReel && m.immuneCycle < m.cycle) {
+                      const regen = Math.min(0.003 * m.holdingTarget.speed * m.holdingTarget.mass, 1) * level.isReducedRegen
+                      m.energy += regen
+                      simulation.drawList.push({ //add dmg to draw queue
+                        x: m.pos.x,
+                        y: m.pos.y,
+                        radius: regen * 30,
+                        color: m.fieldMeterColor,
+                        time: simulation.drawTime
+                      });
+                    }
+                    break
+                  } else if (dist < target.dist && body[i].mass > 1) {
+                    target = {
+                      who: body[i],
+                      dist: dist
+                    }
+                    // ctx.beginPath();
+                    // let vertices = body[i].vertices;
+                    // ctx.moveTo(vertices[0].x, vertices[0].y);
+                    // for (let j = 1; j < vertices.length; j++) {
+                    //     ctx.lineTo(vertices[j].x, vertices[j].y);
+                    // }
+                    // ctx.lineTo(vertices[0].x, vertices[0].y);
+                    // ctx.strokeStyle = "#000";
+                    // ctx.stroke();
                   }
-                  break
-                } else if (dist < target.dist && body[i].mass > 1) {
-                  target = {
-                    who: body[i],
-                    dist: dist
-                  }
-                  // ctx.beginPath();
-                  // let vertices = body[i].vertices;
-                  // ctx.moveTo(vertices[0].x, vertices[0].y);
-                  // for (let j = 1; j < vertices.length; j++) {
-                  //     ctx.lineTo(vertices[j].x, vertices[j].y);
-                  // }
-                  // ctx.lineTo(vertices[0].x, vertices[0].y);
-                  // ctx.strokeStyle = "#000";
-                  // ctx.stroke();
                 }
               }
-            }
 
-            //pull blocks
-            if (target.who) {
-              const massCapped = Math.min(6, target.who.mass)
-              let attract = Vector.mult(Vector.normalise(Vector.sub(m.pos, target.who.position)), 0.03 * massCapped)
-              target.who.force.x += attract.x;
-              target.who.force.y += attract.y - massCapped * simulation.g; //negate gravity
-              Matter.Body.setVelocity(target.who, Vector.mult(target.who.velocity, 0.8));
+              //pull blocks
+              if (target.who) {
+                const massCapped = Math.min(6, target.who.mass)
+                let attract = Vector.mult(Vector.normalise(Vector.sub(m.pos, target.who.position)), 0.03 * massCapped)
+                target.who.force.x += attract.x;
+                target.who.force.y += attract.y - massCapped * simulation.g; //negate gravity
+                Matter.Body.setVelocity(target.who, Vector.mult(target.who.velocity, 0.8));
 
-              ctx.beginPath();
-              let vertices = target.who.vertices;
-              ctx.moveTo(vertices[0].x, vertices[0].y);
-              for (let j = 1; j < vertices.length; j++) {
-                ctx.lineTo(vertices[j].x, vertices[j].y);
+                ctx.beginPath();
+                let vertices = target.who.vertices;
+                ctx.moveTo(vertices[0].x, vertices[0].y);
+                for (let j = 1; j < vertices.length; j++) {
+                  ctx.lineTo(vertices[j].x, vertices[j].y);
+                }
+                ctx.lineTo(vertices[0].x, vertices[0].y);
+                ctx.fillStyle = "rgb(112, 219, 255)"
+                ctx.fill();
               }
-              ctx.lineTo(vertices[0].x, vertices[0].y);
-              ctx.fillStyle = "rgb(112, 219, 255)"
-              ctx.fill();
+            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
+              m.pickUp();
+            } else {
+              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
+              if (!input.field) { //&& tech.isFieldFree
+                //draw field free of player
+                ctx.fillStyle = `rgba(110,150,220, ${0.27 + 0.2 * Math.random() - 0.1 * wave})`
+                ctx.strokeStyle = `rgba(110,180,255, ${0.4 + 0.5 * Math.random()})`
+                ctx.beginPath();
+                ctx.arc(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange, m.fieldAngle - Math.PI * m.fieldArc, m.fieldAngle + Math.PI * m.fieldArc, false);
+                ctx.lineWidth = 2.5 - 1.5 * wave;
+                ctx.stroke();
+                const curve = 0.8 + 0.06 * wave
+                const aMag = (1 - curve * 1.2) * Math.PI * m.fieldArc
+                let a = m.fieldAngle + aMag
+                ctx.quadraticCurveTo(m.fieldPosition.x + curve * m.fieldRange * Math.cos(a), m.fieldPosition.y + curve * m.fieldRange * Math.sin(a), m.fieldPosition.x + 1 * m.fieldRange * Math.cos(m.fieldAngle - Math.PI * m.fieldArc), m.fieldPosition.y + 1 * m.fieldRange * Math.sin(m.fieldAngle - Math.PI * m.fieldArc))
+                ctx.fill();
+                m.perfectPush(true);
+              }
             }
-          } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
-            m.pickUp();
-          } else {
-            m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
-            if (!input.field) { //&& tech.isFieldFree
-              //draw field free of player
-              ctx.fillStyle = `rgba(110,150,220, ${0.27 + 0.2 * Math.random() - 0.1 * wave})`
-              ctx.strokeStyle = `rgba(110,180,255, ${0.4 + 0.5 * Math.random()})`
-              ctx.beginPath();
-              ctx.arc(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange, m.fieldAngle - Math.PI * m.fieldArc, m.fieldAngle + Math.PI * m.fieldArc, false);
-              ctx.lineWidth = 2.5 - 1.5 * wave;
-              ctx.stroke();
-              const curve = 0.8 + 0.06 * wave
-              const aMag = (1 - curve * 1.2) * Math.PI * m.fieldArc
-              let a = m.fieldAngle + aMag
-              ctx.quadraticCurveTo(m.fieldPosition.x + curve * m.fieldRange * Math.cos(a), m.fieldPosition.y + curve * m.fieldRange * Math.sin(a), m.fieldPosition.x + 1 * m.fieldRange * Math.cos(m.fieldAngle - Math.PI * m.fieldArc), m.fieldPosition.y + 1 * m.fieldRange * Math.sin(m.fieldAngle - Math.PI * m.fieldArc))
-              ctx.fill();
-              m.perfectPush(true);
-            }
-          }
-          // m.drawRegenEnergy()
-          m.drawRegenEnergy("rgba(0,0,0,0.2)")
-          if (tech.isPerfectBrake) { //cap mob speed around player
-            const range = 200 + 140 * wave + 150 * m.energy
-            for (let i = 0; i < mob.length; i++) {
-              const distance = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
-              if (distance < range) {
-                const cap = mob[i].isShielded ? 8 : 4
-                if (mob[i].speed > cap && Vector.dot(mob[i].velocity, Vector.sub(m.pos, mob[i].position)) > 0) { // if velocity is directed towards player
-                  Matter.Body.setVelocity(mob[i], Vector.mult(Vector.normalise(mob[i].velocity), cap)); //set velocity to cap, but keep the direction
+            // m.drawRegenEnergy()
+            m.drawRegenEnergy("rgba(0,0,0,0.2)")
+            if (tech.isPerfectBrake) { //cap mob speed around player
+              const range = 200 + 140 * wave + 150 * m.energy
+              for (let i = 0; i < mob.length; i++) {
+                const distance = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
+                if (distance < range) {
+                  const cap = mob[i].isShielded ? 8 : 4
+                  if (mob[i].speed > cap && Vector.dot(mob[i].velocity, Vector.sub(m.pos, mob[i].position)) > 0) { // if velocity is directed towards player
+                    Matter.Body.setVelocity(mob[i], Vector.mult(Vector.normalise(mob[i].velocity), cap)); //set velocity to cap, but keep the direction
+                  }
                 }
               }
+              ctx.beginPath();
+              ctx.arc(m.pos.x, m.pos.y, range, 0, 2 * Math.PI);
+              ctx.fillStyle = "hsla(200,50%,61%,0.08)";
+              ctx.fill();
             }
-            ctx.beginPath();
-            ctx.arc(m.pos.x, m.pos.y, range, 0, 2 * Math.PI);
-            ctx.fillStyle = "hsla(200,50%,61%,0.08)";
-            ctx.fill();
           }
         }
       }
