@@ -4155,7 +4155,7 @@ const tech = {
       name: "adiabatic healing",
       descriptionFunction() {
         //this.requires = (tech.isEnergyHealth ? "1st-ionization" : "not mass-energy")
-        return `<strong>2x</strong> <strong class='color-${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "f'>energy" : "h'>health"}</strong> from ${powerUps.orb.heal()}<br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
+        return `<strong>2x</strong> ${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "maximum" : ""}<strong class='color-${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "f'>energy" : "h'>health"}</strong> from ${powerUps.orb.heal()}<br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
       },
       isPacifist: true,
       maxCount: 3,
@@ -11358,7 +11358,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return [1,2,4,13].includes(m.fiel)
+        return [1,2,4,13].includes(m.fieldMode)
       },
       requires: "a field that can block",
       effect() {
