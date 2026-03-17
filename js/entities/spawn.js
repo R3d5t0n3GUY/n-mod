@@ -309,7 +309,10 @@ const spawn = {
     me.isDarkMatter = true;
     me.frictionAir = 0.006
     me.onDeath = function () {
-      tech.isHarmDarkMatter = false;
+      requestAnimationFrame(() => {
+        spawn.darkMatter(this.position.x, this.position.y)
+      })
+      //tech.isHarmDarkMatter = false;
     }
     me.do = function () {
       if (!simulation.isTimeSkipping) {

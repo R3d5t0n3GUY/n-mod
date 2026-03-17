@@ -46,12 +46,16 @@ window.addEventListener('error', event => {
     }
 
     console.log(errorMessage);
-    simulation.lastLogTime = 0 //prevent spamming by clearing console
-    if (simulation) simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
+    simulation.clearConsole(); //prevent spamming by clearing console
+    simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
   } catch (err) {
     console.error("Logging Error: ", err)
-    if (simulation) simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> LoggingError. <u>${err.message || err}</u>`, 480); //show for 8 seconds
-  } //finally { canvas.width = canvas.width }
+    try {
+      simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> LoggingError. <u>${err.message || err}</u>`, 480); //show for 8 seconds
+    } catch (e) {
+      console.error(e)
+    }
+  } //finally { canvas.width = canvas.width } //update canvas to fix whatever render issue occurred
 });
 
 document.getElementById("seed").placeholder = Math.initialSeed = String(Math.floor(Date.now() % 100000))

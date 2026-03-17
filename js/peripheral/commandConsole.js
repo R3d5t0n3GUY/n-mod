@@ -29,7 +29,7 @@ const cmdConsole = {
         cmdConsole.runCmd(string)
       } else {
         setTimeout(() => {
-          simulation.lastLogTime = 0
+          simulation.clearConsole();
           simulation.inGameConsole(`<strong><span style="color:red;">WOAH THERE, </span> speedster!</strong>
         <br>We notice you've been quite active in the console lately.
         <br>Please slow down your command logging or you might break our game!`, 420); //show for 7 seconds
@@ -64,7 +64,7 @@ const cmdConsole = {
           }
         } catch (err) { //if an error occurs during execution
           document.getElementById('text-log').innerHTML = oldHTML //revert inGameConsole, in case logging occurred during execution
-          simulation.lastLogTime = 0 //clear console
+          simulation.clearConsole(); //clear console
           setTimeout(() => {
             simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${err.name}.
           <u>:${err.message.replaceAll("\n", "<br>")}`, 300)
@@ -72,7 +72,7 @@ const cmdConsole = {
         }
       } else { //unknown command. Throw error
         document.getElementById('text-log').innerHTML = oldHTML //revert inGameConsole, in case logging occurred during execution
-        simulation.lastLogTime = 0 //clear console
+        simulation.clearConsole(); //clear console
         setTimeout(() => {
           simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ReferenceError.
           <u>:<strong class='color-var'>${what}</strong> is not a known command`, 300)

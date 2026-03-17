@@ -4863,25 +4863,6 @@ const m = {
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
           if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
             m.fieldUpgrades[m.fieldMode].keyLog = [null, null, null, null, null, null, null, null]
-            /*let text = `<strong class='lore-text'>LOCAL SETTINGS:</strong><hr>`,
-                keys = Object.keys(localSettings), values = Object.values(localSettings)
-            for (let i = 0; i < keys.length; i++) {
-              if (values[i].length === undefined && typeof(values[i]) === "object"){ //if a value is an object, display its properties, instead of '[object Object]'
-                text += `<br>•<u>${keys[i]}</u>:`  
-                let subkeys = Object.keys(values[i]), subvalues = Object.values(values[i])
-                for (let j = 0; j < subkeys.length; j++) {
-                  if (subvalues[j].length !== undefined || typeof(subvalues[j]) !== "object"){ //if a value is an array, display its items, instead of '[object Object]'
-                    text += `<br>&nbsp; &nbsp; &nbsp; &nbsp;◦<u>${subkeys[j]}</u>: ${subvalues[j]}`
-                  } else {
-                    text += `<br>&nbsp; &nbsp; &nbsp; &nbsp;◦<u>${subkeys[j]}</u>: [object Object]...` 
-                  }
-                }
-              } else {
-                text += `<br>•<u>${keys[i]}</u>: ${values[i]}`
-              }
-            }
-            simulation.lastLogTime = 0	//clear console
-            simulation.inGameConsole(text, 1200)*/
             simulation.inGameConsole(`powerUps<span class='color-symbol'>.</span>directSpawn<span class='color-symbol'>(</span>
             	m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span>
                 m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>y<span class='color-symbol'>, </span>

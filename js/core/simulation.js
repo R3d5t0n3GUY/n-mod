@@ -359,12 +359,12 @@ const simulation = {
         bolts[i].y += bolts[i].Vy
         if (Math.random() < 0.2) {
           simulation.drawList.push({
-              x: bolts[i].x,
-              y: bolts[i].y,
-              radius: 1.5 + 5 * Math.random(),
-              // color: "rgba(0,155,155,0.7)",
-              color: bolts[i].color,
-              time: Math.floor(9 + 25 * Math.random() * Math.random())
+            x: bolts[i].x,
+            y: bolts[i].y,
+            radius: 1.5 + 5 * Math.random(),
+            // color: "rgba(0,155,155,0.7)",
+            color: bolts[i].color,
+            time: Math.floor(9 + 25 * Math.random() * Math.random())
           });
         }
       }
@@ -532,10 +532,13 @@ const simulation = {
   },
   textLog() {
     if (simulation.lastLogTime && simulation.lastLogTime < m.cycle) {
-      simulation.lastLogTime = 0;
-      // document.getElementById("text-log").innerHTML = " ";
-      document.getElementById("text-log").style.display = "none";
+      simulation.clearConsole()
     }
+  },
+  clearConsole() {
+    simulation.lastLogTime = 0;
+    // document.getElementById("text-log").innerHTML = " ";
+    document.getElementById("text-log").style.display = "none";
   },
   nextGun() {
     if (b.inventory.length > 1 && !(tech.isGunCycle || tech.isGunChoice)) {
@@ -1033,7 +1036,7 @@ const simulation = {
     simulation.fpsCap = simulation.fpsCapDefault;
     simulation.isAutoZoom = true;
     simulation.makeGunHUD();
-    simulation.lastLogTime = 0;
+    simulation.clearConsole();
     mobs.mobDeaths = 0
     level.isFlipped = false
     level.onLevel = 0;
@@ -1439,7 +1442,7 @@ const simulation = {
         }
       }
     }
-    simulation.lastLogTime = 0; //clear previous messages
+    simulation.clearConsole(); //clear previous messages
     spawn.allowShields = true;
     powerUps.totalPowerUps = powerUp.length
     let holdTarget = (m.holdingTarget) ? m.holdingTarget : undefined //if player is holding something this remembers it before it gets deleted

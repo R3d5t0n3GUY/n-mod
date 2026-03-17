@@ -369,7 +369,7 @@ const powerUps = {
     }
   },
   debugRerolls(type) {
-    //simulation.lastLogTime = 0;
+    //simulation.clearConsole();
     if (type === "gun") {
       simulation.inGameConsole(`${powerUps.orb.gun()}<strong class='color-g'>gun</strong> <strong class='color-cancel'>cancel</strong> count: ${tech.cancelGunCount}`);
       simulation.inGameConsole(`<span class='color-var'>tech</span>.canGunReroll <span class='color-symbol'>=</span> ${tech.canGunReroll}`);
@@ -2364,9 +2364,21 @@ const powerUps = {
       properties.inertia = Infinity //prevents rotation for circles only
       polygonSides = 12
     }
-    powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
-    if (moving) Matter.Body.setVelocity(powerUp[index], { x: (Math.random() - 0.5) * 15, y: Math.random() * -9 - 3 });
-    Composite.add(engine.world, powerUp[index]);
+
+    let smallNames = ["heal"] //["heal", "research", "ammo","coupling", "boost"]
+    if (!tech.isSuperDeterminism) smallNames.push("research")
+    if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) smallNames.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
+    if (m.coupling > 0) smallNames.push("coupling")
+    if (tech.isBoostPowerUps) smallNames.push("boost")
+
+    if (powerUp.length > 299 && smallNames.includes(name)) { //when trying to spawn a small powerup when there's too many
+      simulation.clearConsole();
+      powerUps[name].effect() //invoke its effect instead of spawning it
+    } else { //doing the same for larger one with menus (tech, warp, etc) would be asking for trouble
+      powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
+      if (moving) Matter.Body.setVelocity(powerUp[index], { x: (Math.random() - 0.5) * 15, y: Math.random() * -9 - 3 });
+      Composite.add(engine.world, powerUp[index]);
+    }
   },
   randomLorePowerUp() {
     let choices = ["difficulty", "instructions", "levelList", "settings", "warp", "entanglement"],

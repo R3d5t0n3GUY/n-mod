@@ -78,7 +78,7 @@ const cmdList = {
           if (item) {
             let helpText = (item.descriptionFunction ? item.descriptionFunction() : item.description)
             if (helpText) {
-              simulation.lastLogTime = 0
+              simulation.clearConsole();
               simulation.inGameConsole(helpText, 600)
             } else {
               throw new ReferenceError(`<strong class='color-var'>${input}</strong>.description is not defined`)
