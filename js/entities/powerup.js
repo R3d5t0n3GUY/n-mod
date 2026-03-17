@@ -2371,11 +2371,12 @@ const powerUps = {
     if (m.coupling > 0) smallNames.push("coupling")
     if (tech.isBoostPowerUps) smallNames.push("boost")
 
+    powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
     if (powerUp.length > 299 && smallNames.includes(name)) { //when trying to spawn a small powerup when there's too many
       simulation.clearConsole();
-      powerUps[name].effect() //invoke its effect instead of spawning it
+      powerUp[index].effect() //invoke its effect instead of spawning it
+      queueRemoval("powerUp", index) //don't add to world
     } else { //doing the same for larger one with menus (tech, warp, etc) would be asking for trouble
-      powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
       if (moving) Matter.Body.setVelocity(powerUp[index], { x: (Math.random() - 0.5) * 15, y: Math.random() * -9 - 3 });
       Composite.add(engine.world, powerUp[index]);
     }
