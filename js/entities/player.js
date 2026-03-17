@@ -5096,12 +5096,12 @@ const m = {
             })
 
 
-          }
+            }
         }
         window.addEventListener("keydown", m.fieldEvent);
 
+
         m.fieldMeterColor = "#48f" //"#0c5"
-        m.eyeFillColor = m.fieldMeterColor
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
         m.grabPowerUpRange2 = 10000000
@@ -5176,8 +5176,7 @@ const m = {
                   ctx.fill();
                   ctx.stroke();
                 } else {
-
-                  const eye = 15 * player.scale; //when blocking draw this graphic
+                  const eye = 15; //when blocking draw this graphic
                   const len = mob[i].vertices.length - 1;
                   ctx.lineWidth = 1;
                   ctx.fillStyle = `rgba(110,150,220, ${0.2 + 0.4 * Math.random()})`
@@ -5220,6 +5219,26 @@ const m = {
                 }
               }
             }
+
+              //deflect player with tech
+            if (isFree && tech.isPerfectBrake) {
+              const sub = Vector.sub(m.pos, m.fieldPosition)
+              const unit = Vector.normalise(sub)
+              if (
+                Vector.magnitude(sub) - 30 < m.fieldRange &&
+                Vector.magnitude(sub) + 130 > m.fieldRange &&
+                Matter.Query.ray(map, m.pos, m.fieldPosition).length === 0 &&
+                Vector.dot({ x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }, unit) > m.fieldThreshold
+              ) {
+                m.fieldCDcycle = m.cycle + m.fieldBlockCD
+                const mag = 30
+                const add = { x: mag * Math.cos(m.fieldAngle), y: mag * Math.sin(m.fieldAngle) }
+                const v = Vector.mult(Vector.normalise(Vector.add(add, player.velocity)), Math.max(40, player.speed))
+                // const v = Vector.mult(Vector.normalise(add), Math.max(40, player.speed))
+                Matter.Body.setVelocity(player, v);
+              }
+
+            }
           }
         }
         m.hold = function () {
@@ -5237,39 +5256,21 @@ const m = {
             // console.log(angleReduction)
             if (player.velocity.y > 1) {
               player.force.y -= angleReduction * (tech.isBigField ? 0.95 : 0.5) * player.mass * simulation.g;
-
               const pushX = 0.0007 * angleReduction * player.mass
               if (player.velocity.x > 0.5) {
                 player.force.x += pushX
               } else if (player.velocity.x < -0.5) {
                 player.force.x -= pushX
               }
-
-              Matter.Body.setVelocity(player, {
-                x: player.velocity.x,
-                y: 0.98 * player.velocity.y
-              });
-
-              //set velocity to cap, but keep the direction
-              // capX = 28
-              // Matter.Body.setVelocity(player, {
-              //     x: Math.abs(player.velocity.x) < capX ? Math.max(-capX, Math.min(1.0155 * player.velocity.x, capX)) : player.velocity.x,
-              //     y: 0.98 * player.velocity.y
-              // }); 
+              Matter.Body.setVelocity(player, { x: player.velocity.x, y: 0.98 * player.velocity.y });
             }
-
-            // go invulnerable while field is active, but also drain energy
-            // if (true && m.energy > 2 * m.fieldRegen && m.immuneCycle < m.cycle + tech.cyclicImmunity) {
-            //     m.immuneCycle = m.cycle + 1; //player is immune to damage for 60 cycles
-            //     m.energy -= 2 * m.fieldRegen
-            //     if (m.energy < m.fieldRegen) m.fieldCDcycle = m.cycle + 90;
-            // }
 
             if (m.energy > m.fieldRegen) m.energy -= m.fieldRegen
             m.grabPowerUp();
             m.lookForBlock();
             m.fieldPosition = { x: m.pos.x, y: m.pos.y }
             m.fieldAngle = m.angle
+
             //draw field attached to player
             if (m.holdingTarget) {
               ctx.fillStyle = `rgba(110,150,220, ${0.06 + 0.03 * Math.random()})`
@@ -5300,7 +5301,7 @@ const m = {
               for (let i = 0, len = body.length; i < len; ++i) {
                 //check if looking at
                 if (
-                  !body[i].isNotHoldable && !body[i].isInvulnerable &&
+                  !body[i].isNotHoldable &&
                   Matter.Query.ray(map, body[i].position, m.pos).length === 0 &&
                   Vector.dot({ x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }, Vector.normalise(Vector.sub(body[i].position, m.pos))) > 0.97
                 ) {
@@ -5359,44 +5360,44 @@ const m = {
                 ctx.fillStyle = "rgb(112, 219, 255)"
                 ctx.fill();
               }
-            } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
-              m.pickUp();
-            } else {
-              m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
-              if (!input.field) { //&& tech.isFieldFree
-                //draw field free of player
-                ctx.fillStyle = `rgba(110,150,220, ${0.27 + 0.2 * Math.random() - 0.1 * wave})`
-                ctx.strokeStyle = `rgba(110,180,255, ${0.4 + 0.5 * Math.random()})`
-                ctx.beginPath();
-                ctx.arc(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange, m.fieldAngle - Math.PI * m.fieldArc, m.fieldAngle + Math.PI * m.fieldArc, false);
-                ctx.lineWidth = 2.5 - 1.5 * wave;
-                ctx.stroke();
-                const curve = 0.8 + 0.06 * wave
-                const aMag = (1 - curve * 1.2) * Math.PI * m.fieldArc
-                let a = m.fieldAngle + aMag
-                ctx.quadraticCurveTo(m.fieldPosition.x + curve * m.fieldRange * Math.cos(a), m.fieldPosition.y + curve * m.fieldRange * Math.sin(a), m.fieldPosition.x + 1 * m.fieldRange * Math.cos(m.fieldAngle - Math.PI * m.fieldArc), m.fieldPosition.y + 1 * m.fieldRange * Math.sin(m.fieldAngle - Math.PI * m.fieldArc))
-                ctx.fill();
-                m.perfectPush(true);
-              }
             }
-            // m.drawRegenEnergy()
-            m.drawRegenEnergy("rgba(0,0,0,0.2)")
-            if (tech.isPerfectBrake) { //cap mob speed around player
-              const range = 200 + 140 * wave + 150 * m.energy
-              for (let i = 0; i < mob.length; i++) {
-                const distance = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
-                if (distance < range) {
-                  const cap = mob[i].isShielded ? 8 : 4
-                  if (mob[i].speed > cap && Vector.dot(mob[i].velocity, Vector.sub(m.pos, mob[i].position)) > 0) { // if velocity is directed towards player
-                    Matter.Body.setVelocity(mob[i], Vector.mult(Vector.normalise(mob[i].velocity), cap)); //set velocity to cap, but keep the direction
-                  }
+          } else if (m.holdingTarget && m.fieldCDcycle < m.cycle) { //holding, but field button is released
+            m.pickUp();
+          } else {
+            m.holdingTarget = null; //clears holding target (this is so you only pick up right after the field button is released and a hold target exists)
+            if (!input.field) { //&& tech.isFieldFree
+              //draw field free of player
+              ctx.fillStyle = `rgba(110,150,220, ${0.27 + 0.2 * Math.random() - 0.1 * wave})`
+              ctx.strokeStyle = `rgba(110,180,255, ${0.4 + 0.5 * Math.random()})`
+              ctx.beginPath();
+              ctx.arc(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange, m.fieldAngle - Math.PI * m.fieldArc, m.fieldAngle + Math.PI * m.fieldArc, false);
+              ctx.lineWidth = 2.5 - 1.5 * wave;
+              ctx.stroke();
+              const curve = 0.8 + 0.06 * wave
+              const aMag = (1 - curve * 1.2) * Math.PI * m.fieldArc
+              let a = m.fieldAngle + aMag
+              ctx.quadraticCurveTo(m.fieldPosition.x + curve * m.fieldRange * Math.cos(a), m.fieldPosition.y + curve * m.fieldRange * Math.sin(a), m.fieldPosition.x + 1 * m.fieldRange * Math.cos(m.fieldAngle - Math.PI * m.fieldArc), m.fieldPosition.y + 1 * m.fieldRange * Math.sin(m.fieldAngle - Math.PI * m.fieldArc))
+              ctx.fill();
+              m.perfectPush(true);
+            }
+          }
+          // m.drawRegenEnergy()
+          m.drawRegenEnergy("rgba(0,0,0,0.2)")
+          if (tech.isPerfectBrake) { //cap mob speed around player
+            const range = 100 + 90 * wave + 250 * m.energy
+            for (let i = 0; i < mob.length; i++) {
+              const distance = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
+              if (distance < range) {
+                const cap = mob[i].isShielded ? 8 : 4
+                if (mob[i].speed > cap && Vector.dot(mob[i].velocity, Vector.sub(m.pos, mob[i].position)) > 0) { // if velocity is directed towards player
+                  Matter.Body.setVelocity(mob[i], Vector.mult(Vector.normalise(mob[i].velocity), cap)); //set velocity to cap, but keep the direction
                 }
               }
-              ctx.beginPath();
-              ctx.arc(m.pos.x, m.pos.y, range, 0, 2 * Math.PI);
-              ctx.fillStyle = "hsla(200,50%,61%,0.08)";
-              ctx.fill();
             }
+            ctx.beginPath();
+            ctx.arc(m.pos.x, m.pos.y, range, 0, 2 * Math.PI);
+            ctx.fillStyle = "hsla(200,50%,61%,0.08)";
+            ctx.fill();
           }
         }
       }
