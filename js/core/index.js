@@ -1215,13 +1215,15 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       };
       input.setDefault()
       if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      document.getElementById("community-maps").checked = localSettings.isCommunityMaps
-      simulation.isCommunityMaps = localSettings.isCommunityMaps
-      document.getElementById("hide-images").checked = localSettings.isHideImages
-      document.getElementById("hide-hud").checked = localSettings.isHideHUD
-      document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
-      document.getElementById("fps-select").value = localSettings.fpsCapDefault
-      document.getElementById("banned").value = localSettings.banList
+      requestAnimFrames(2, () => {
+        document.getElementById("community-maps").checked = localSettings.isCommunityMaps
+        simulation.isCommunityMaps = localSettings.isCommunityMaps
+        document.getElementById("hide-images").checked = localSettings.isHideImages
+        document.getElementById("hide-hud").checked = localSettings.isHideHUD
+        document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
+        document.getElementById("fps-select").value = localSettings.fpsCapDefault
+        document.getElementById("banned").value = localSettings.banList
+      })
     }
     document.getElementById("control-testing").style.visibility = (localSettings.loreCount < 1) ? "hidden" : "visible"
     // document.getElementById("experiment-button").style.visibility = (localSettings.loreCount === 0) ? "hidden" : "visible"

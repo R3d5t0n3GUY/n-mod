@@ -4014,15 +4014,17 @@ const m = {
               const range = 810000
 
               for (let i = 0; i < body.length; i++) {
-                const sub = Vector.sub(m.pos, body[i].position)
-                const dist2 = Vector.magnitudeSquared(sub)
-                if (dist2 < range) {
-                  body[i].force.y -= body[i].mass * (simulation.g * 1.01); //remove a bit more then standard gravity
-                  if (dist2 > 40000) {
-                    const f = Vector.mult(Vector.normalise(sub), 0.0008 * body[i].mass)
-                    body[i].force.x += f.x
-                    body[i].force.y += f.y
-                    Matter.Body.setVelocity(body[i], { x: 0.96 * body[i].velocity.x, y: 0.96 * body[i].velocity.y });
+                if (!body[i].isNotHoldable && !body[i].isInvulnerable) {
+                  const sub = Vector.sub(m.pos, body[i].position)
+                  const dist2 = Vector.magnitudeSquared(sub)
+                  if (dist2 < range) {
+                    body[i].force.y -= body[i].mass * (simulation.g * 1.01); //remove a bit more then standard gravity
+                    if (dist2 > 40000) {
+                      const f = Vector.mult(Vector.normalise(sub), 0.0008 * body[i].mass)
+                      body[i].force.x += f.x
+                      body[i].force.y += f.y
+                      Matter.Body.setVelocity(body[i], { x: 0.96 * body[i].velocity.x, y: 0.96 * body[i].velocity.y });
+                    }
                   }
                 }
               }
@@ -4038,15 +4040,17 @@ const m = {
               const range = 810000
 
               for (let i = 0; i < body.length; i++) {
-                const sub = Vector.sub(m.pos, body[i].position)
-                const dist2 = Vector.magnitudeSquared(sub)
-                if (dist2 < range) {
-                  body[i].force.y -= body[i].mass * (simulation.g * 1.01); //remove a bit more then standard gravity
-                  if (dist2 > 40000) {
-                    const f = Vector.mult(Vector.normalise(sub), 0.0008 * body[i].mass)
-                    body[i].force.x += f.x
-                    body[i].force.y += f.y
-                    Matter.Body.setVelocity(body[i], { x: 0.96 * body[i].velocity.x, y: 0.96 * body[i].velocity.y });
+                if (!body[i].isNotHoldable && !body[i].isInvulnerable) {
+                  const sub = Vector.sub(m.pos, body[i].position)
+                  const dist2 = Vector.magnitudeSquared(sub)
+                  if (dist2 < range) {
+                    body[i].force.y -= body[i].mass * (simulation.g * 1.01); //remove a bit more then standard gravity
+                    if (dist2 > 40000) {
+                      const f = Vector.mult(Vector.normalise(sub), 0.0008 * body[i].mass)
+                      body[i].force.x += f.x
+                      body[i].force.y += f.y
+                      Matter.Body.setVelocity(body[i], { x: 0.96 * body[i].velocity.x, y: 0.96 * body[i].velocity.y });
+                    }
                   }
                 }
               }
@@ -4104,7 +4108,7 @@ const m = {
 
         m.isHolding = false;
 
-        if (tech.isTokamak && m.throwCharge > 4 && !m.holdingTarget.isInvulnerable) { //remove the block body and pulse  in the direction you are facing
+        if (tech.isTokamak && m.throwCharge > 4 && !m.holdingTarget.isInvulnerable && !m.holdingTarget.isNotHoldable) { //remove the block body and pulse  in the direction you are facing
           //m.throwCharge > 5 seems to be when the field full colors in a block you are holding
           m.throwCycle = m.cycle + 180 //used to detect if a block was thrown in the last 3 seconds
           if (m.immuneCycle < m.cycle) m.energy += 0.25 * Math.sqrt(m.holdingTarget.mass) * Math.min(5, m.throwCharge) * level.isReducedRegen
@@ -4198,7 +4202,7 @@ const m = {
           if (tech.isGroupThrow) {
             const range = 810000
             for (let i = 0; i < body.length; i++) {
-              if (body[i] && body[i] !== m.holdingTarget && !body[i].isNotHoldable) {
+              if (body[i] && body[i] !== m.holdingTarget && !body[i].isNotHoldable && !body[i].isInvulnerable) {
                 const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
                 if (dist2 < range && !body[i].isInvulnerable) {
                   const blockSpeed = 90 * charge * Math.min(0.85, 0.8 / Math.pow(body[i].mass, 0.25)) * Math.pow((range - dist2) / range, 0.2)

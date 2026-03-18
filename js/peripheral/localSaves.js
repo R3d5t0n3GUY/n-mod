@@ -81,8 +81,8 @@ const localSaves = {
     localSaves.defaultMenu()
     let oldSettings = localSettings; //in case something goes wrong during erase, keep current settings
     try {
-      localSettings = {}; //reset local settings
-      build.resetStorage(true); //force reset
+      localSettings = {}; //since localSettings is declared with "let" instead of "const", this will not error
+      build.resetStorage(true); //force reset. restore to defaults
       if (localSettings.isAllowed) {
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       } else {
@@ -91,13 +91,13 @@ const localSaves = {
     } catch (error) {
       let errorMsg = "Failed to wipe save file: " + error.message
       console.warn(errorMsg);
-      localSettings = oldSettings
+      localSettings = oldSettings //restore settings, since erasure failed
       fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR RESETTING FILE</strong>"
       setTimeout(() =>{window.alert(errorMsg)}, 100);
     }
   }
 }
-Object.freeze(localSaves)
+Object.freeze(localSaves) //since localSaves only stores functions
 
 setTimeout(() => {
   localSaves.defaultMenu()
