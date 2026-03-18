@@ -872,7 +872,7 @@ const lore = {
         }, 1000);
       },
       () => {
-        lore.miriam.text("So, We figured out how to inject console commands into your game.")
+        lore.anand.text("So, We figured out how to inject console commands into your game.")
       },
       () => {
         lore.anand.text("If you get attacked again I think we can help out.")
@@ -891,12 +891,12 @@ const lore = {
       },
 
       () => {
-        lore.miriam.text("If they attack again I think you'll have a chance.")
+        lore.anand.text("If they attack again I think you'll have a chance.")
         spawn.beetleBoss(-1700, -500);
         spawn.beetleBoss(1700, -500);
       },
       () => {
-        lore.miriam.text("Of course they attack right now.")
+        lore.anand.text("Of course they attack right now.")
       },
       () => {
         lore.miriam.text("Just don't get stuck in the slime.")
@@ -1166,7 +1166,7 @@ const lore = {
         if (mobs.mobDeaths < level.levelsCleared) {
           lore.anand.text(`Yeah, at the end it wasn't attacking you.`)
         } else if (!simulation.isCheating) {
-          lore.miriam.text(`Try again to get to the final boss without killing any mobs.`)
+          lore.anand.text(`Try again to get to the final boss without killing any mobs.`)
         }
       },
       () => {
@@ -1244,108 +1244,59 @@ const lore = {
         lore.talkingColor = "#dff"
       },
     ],
-  ],
 
-  // () => { lore.anand.text("The adversarial network might go after you in the real world.") },
-  // () => { lore.anand.text("If it was able to control you then it might have control over others.") },
-  // () => { lore.anand.text("Judging by all the fighting it's been simulating,") },
-  // () => { lore.anand.text("I think it might eventually try to extend the simulation in the real world.") },
-  // () => { lore.miriam.text("We think it might be a threat, but it's just too advanced for us to understand it's goals.") },
+   /*
+    [ //chapter 7 - SCRAPPED DURING DEVELOPMENT OF N-GON; NOT PLANNED FOR N-MOD
+      () => { lore.anand.text("The adversarial network might go after you in the real world.") },
+      () => { lore.anand.text("If it was able to control you then it might have control over others.") },
+      () => { lore.anand.text("Judging by all the fighting it's been simulating,") },
+      () => { lore.anand.text("I think it might eventually try to extend the simulation in the real world.") },
+      () => { lore.miriam.text("We think it might be a threat, but it's just too advanced for us to understand it's goals.") },
 
-  // () => { lore.miriam.text("I think we have a couple options.") },
-  // () => { lore.miriam.text("1. You could try to hack the adversarial network.") },
-  // () => { lore.anand.text("you might be able to inject some commands that give you more control over the simulation.") },
+      () => { lore.miriam.text("I think we have a couple options.") },
+      () => { lore.miriam.text("1. You could try to hack the adversarial network.") },
+      () => { lore.anand.text("you might be able to inject some commands that give you more control over the simulation.") },
 
-  // () => { lore.miriam.text("2. You can wipe all memory of you from the adversarial network") },
-  // () => { lore.anand.text("This could protect you from possible real world attacks.") },
-  //player chooses 1 or 2
-  //reactor bosses start attacking
-  //miriam spawns power ups to help
+      () => { lore.miriam.text("2. You can wipe all memory of you from the adversarial network") },
+      () => { lore.anand.text("This could protect you from possible real world attacks.") },
+      //player chooses 1 or 2
+      //reactor bosses start attacking
+      //miriam spawns power ups to help
 
-  //once all the mobs are dead you get instructions for 1,2, 3
+      //once all the mobs are dead you get instructions for 1,2, 3
 
-  //1 the player gains the lasting effect of some JUNK tech
-  //the effect doesn't go away until you get lore again
-  //2 the player enters console commands to wipe local storage
-  //3 the player enters console commands to gain some benefit in future runs
-  //the lore ends
+      //1 the player gains the lasting effect of some JUNK tech
+      //the effect doesn't go away until you get lore again
+      //2 the player enters console commands to wipe local storage
+      //3 the player enters console commands to gain some benefit in future runs
+      //the lore ends
 
-
-
-  // () => { setTimeout(() => { lore.miriam.text("As a quantum computer you output the superposition of many different amplitudes.") }, 500); },
-  // () => { lore.miriam.text("Simply put there are many different simulations all choosing different technology combinations.") },
-  // () => {
-  //     function product_Range(a, b) {
-  //         var prd = a,
-  //             i = a;
-  //         while (i++ < b) prd *= i;
-  //         return prd;
-  //     }
-
-  //     function combinations(n, r) {
-  //         if (n == r) {
-  //             return 1;
-  //         } else {
-  //             r = (r < n - r) ? n - r : r;
-  //             return product_Range(r + 1, n) / product_Range(1, n - r);
-  //         }
-  //     }
-  //     simulation.inGameConsole(`n <span class='color-symbol'>=</span> ${combinations(tech.tech.length + b.guns.length + m.fieldUpgrades.length, 50).toExponential(10)}`, Infinity);
-  //     lore.miriam.text(`There are roughly 5 times 10 to the 60 possible combinations. `)
-  // },
-  // () => { lore.miriam.text("Even if each simulation took 1 nano-second,") },
-  // () => { lore.miriam.text("it would still take longer then the age of the universe to try every combination.") },
-  // () => { lore.anand.text("This is why we run these simulations in superposition.") },
-  // () => { lore.miriam.text("When you die a negative amplitude is added to the superposition.") },
-  // () => { lore.miriam.text("When you clear the final boss a positive amplitude is added.") },
-  // () => { lore.miriam.text("Each branch is independently researching new technology.") },
+      () => { setTimeout(() => { lore.miriam.text("As a quantum computer you output the superposition of many different amplitudes.") }, 500); },
+      () => { lore.miriam.text("Simply put there are many different simulations all choosing different technology combinations.") },
+      () => {
+        function product_Range(a, b) {
+          let prd = a, i = a;
+          while (i++ < b) prd *= i;
+          return prd;
+        }
+        function combinations(n, r) {
+          if (n == r) {
+            return 1;
+          } else {
+            r = (r < n - r) ? n - r : r;
+            return product_Range(r + 1, n) / product_Range(1, n - r);
+          }
+        }
+        simulation.inGameConsole(`n <span class='color-symbol'>=</span> ${combinations(tech.tech.length + b.guns.length + m.fieldUpgrades.length, 50).toExponential(10)}`, Infinity);
+        lore.miriam.text(`There are roughly 5 times 10 to the 60 possible combinations. `)
+      },
+      () => { lore.miriam.text("Even if each simulation took 1 nano-second,") },
+      () => { lore.miriam.text("it would still take longer then the age of the universe to try every combination.") },
+      () => { lore.anand.text("This is why we run these simulations in superposition.") },
+      () => { lore.miriam.text("When you die a negative amplitude is added to the superposition.") },
+      () => { lore.miriam.text("When you clear the final boss a positive amplitude is added.") },
+      () => { lore.miriam.text("Each branch is independently researching new technology.") },
+    ],
+   */
+  ]
 }
-
-
-// How to get to the console in chrome:
-// Press either CTRL + SHIFT + I or F12   or   Option + ⌘ + J on a Mac
-// Press ESC (or click on “Show console” in the bottom right corner) to slide the console up.
-
-// How to get to the console in firefox:
-// from the keyboard: press Ctrl+Shift+J (or ⌘+Shift+J on a Mac).
-
-// How to get to the console in safari:
-// Option + ⌘ + C
-// http://xahlee.info/comp/unicode_computing_symbols.html
-
-
-// speech: function(say) {
-//   var utterance = new SpeechSynthesisUtterance(say);
-//   //msg.voice = voices[10]; // Note: some voices don't support altering params
-//   //msg.voiceURI = 'native';
-//   //utterance.volume = 1; // 0 to 1
-//   //utterance.rate = 1; // 0.1 to 10
-//   //utterance.pitch = 1; //0 to 2
-//   //utterance.text = 'Hello World';
-//   //http://stackoverflow.com/questions/14257598/what-are-language-codes-for-voice-recognition-languages-in-chromes-implementati
-//   //de-DE  en-GB  fr-FR  en-US en-AU
-//   utterance.lang = "en-GB";
-//   speechSynthesis.speak(utterance);
-// }
-
-/* <option value="en-GB">GB</option>
-<option value="en-US">US</option>
-<option value="en-AU">AU</option>
-<option value="fr-FR">FR</option>
-<option value="de-DE">DE</option>
-<option value="en-IN">IN</option>
-<option value="zh-CN">CN</option>
-<option value="pl">PL</option>
-<option value="ru">RU</option>
-<option value="sv-SE">SE</option>
-<option value="en-ZA">ZA</option> */
-
-
-// The API also allows you to get a list of voice the engine supports:
-// speechSynthesis.getVoices().forEach(function(voice) {
-//   console.log(voice.name, voice.default ? voice.default :'');
-// });
-// Then set a different voice, by setting .voice on the utterance object:
-// var msg = new SpeechSynthesisUtterance('I see dead people!');
-// msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Whisper'; })[0];
-// speechSynthesis.speak(msg);
