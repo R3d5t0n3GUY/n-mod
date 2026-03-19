@@ -298,7 +298,8 @@ const modLevels = {
     })
   },
   arena() {
-    simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>`)
+    simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>
+      <br>made for n-scythe`)
     let genisis, genisisJumpSensor, genisisBody, genisisHead, genisisHeadSensor, genisisBodySensor;
     let control = {
       left: false,
@@ -2278,7 +2279,8 @@ const modLevels = {
     }
   },
   zenith() {
-    simulation.inGameConsole(`<strong>zenith</strong> by <b style='color: crimson;'>Destiny</b>`);
+    simulation.inGameConsole(`<strong>zenith</strong> by <b style='color: crimson;'>WhyIsThisNotAvailable</b>
+      <br>made for n-scythe`);
     level.setPosToSpawn(0, -50); //normal spawn
     level.exit.x = 5288;
     level.exit.y = 145;
