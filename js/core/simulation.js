@@ -1214,29 +1214,29 @@ const simulation = {
             } catch (err) {
               simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${err.name || "TypeError"}. <u>:${
                 err.message || "Cannot set properties of <em>null</em> (setting 'position')"}`)
-              setTimeout(() => {
-                let text = "", dotCount = 0
-                const resolveInterval = setInterval(() => {
-                  //if (!(dotCount % 4)) simulation.lastLogTime = 0
-                  text = "Attempting to resolve issue"
-                  text = text.padEnd(dotCount + 27, ".")
-                  if (dotCount < 3) text += " "
-                  text = text.padEnd(10, "\u00A0")
-                  simulation.inGameConsole(text)
-                  dotCount = (dotCount + 1) % 4
-                }, 250)
-                setTimeout(() => {
+              let resolveInterval = null;
+              setTimeOuts([
+                () => {
+                  let text = "", dotCount = 0
+                  resolveInterval = setInterval(() => {
+                    //if (!(dotCount % 4)) simulation.lastLogTime = 0
+                    text = "Attempting to resolve issue"
+                    text = text.padEnd(dotCount + 27, ".")
+                    if (dotCount < 3) text += " "
+                    text = text.padEnd(10, "\u00A0")
+                    simulation.inGameConsole(`(<span style="color:#888; font-size: 70%;">${(Date.now() / 1000).toFixed(0)} s</span>)
+                    <span class='color-symbol'>:</span> ${text}`)
+                    dotCount = (dotCount + 1) % 4
+                  }, 250)
+                },
+                () => {
                   clearInterval(resolveInterval)
                   //simulation.lastLogTime = 0
                   simulation.inGameConsole("<strong style='color:red;'>Uncaught Error</strong>: Error resolution failed.")
-                  setTimeout(() => {
-                    simulation.inGameConsole("Aborting simulation...")
-                    setTimeout(() => {
-                      m.death();
-                    }, 2500)
-                  }, 2000)
-                }, 6250)
-              }, 1000)
+                },
+                () => { simulation.inGameConsole("Aborting simulation...") },
+                m.death
+              ], [1000, 6250, 2000, 2500])
             }
           }
           if (m.lastKillCycle + 300 > m.cycle) { //effects active for 5 seconds after killing a mob
