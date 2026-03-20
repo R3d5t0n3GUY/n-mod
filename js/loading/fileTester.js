@@ -11,18 +11,18 @@ const jsSrcs = [
     name: "Matter",
     src: 'lib/matter.min.js'
   },
-  /* {
+  {
     name: "PolyDecomp",
     src: 'lib/decomp.min.js'
-  }, */
+  },
   {
     name: "Howler",
     src: 'lib/howler.min.js'
   },
-  /* {
-    name: "jsZip",
-    src: 'lib/jszip.min.js'
-  }, */
+  {
+    name: "Eruda",
+    src: 'lib/eruda.js'
+  },
   {
     name: "Local Saves",
     src: 'js/peripheral/localSaves.js'
@@ -124,9 +124,9 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isInitJS: false,
   isOnLoadEndJS: false,
   isMatterMinJS: false,
-  //isDecompMinJS: false,
+  isDecompMinJS: false,
   isHowlerMinJS: false,
-  //isJsZipJS: false,
+  isErudaJS: false,
   isLocalSavesJS: false,
   isPrototypesJS: false,
   isSimulationJS: false,

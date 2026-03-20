@@ -29,16 +29,15 @@ const scripts = [
 If you want to play in them, check out c-gon, an awesome n-gon mod they made!`)
     },
     title: `Throws a message about c-gon's maps. Does nothing else.`
-  }
-  /*
+  },
   {
-    name: 'Force Start Game',
+    name: 'Console',
     afterLoad() {
-      simulation.startGame()
+      this.loaded = true
+      eruda.init();
     },
-    title: `Forces n-gon to start`
+    title: `Opens a browser console for those without Dev Tool access`
   }
-  */
 ];
 const container = document.createElement('div');
 container.id = 'scriptLoaderContainer';

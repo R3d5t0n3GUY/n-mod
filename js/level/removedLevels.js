@@ -9615,7 +9615,7 @@ const removedLevels = {
     bouncyBody.restitution = 0.9;
     spawn.mapVertex(-2175 + 1300 / 2, -1050 + 1225 / 2, "0 -400 -100 -300 -100 0 100 0 100 -300");
 
-    spawn.mapVertex(-4150 + 1975 / 2, -200 + 2575 / 2, "0 -800 -200 -600 -200 0 0 200 200 0 200 -600 0 200");
+    spawn.mapVertex(-4150 + 1975 / 2, -200 + 2575 / 2, "0 -800 -200 -600 -200 0 0 200 200 0 200 -600");
     const mapWithVertex = map[map.length - 1];
     let index1 = 0;
     level.custom = () => {

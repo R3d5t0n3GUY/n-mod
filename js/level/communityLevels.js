@@ -12246,7 +12246,7 @@ const communityLevels = {
     spawn.mapRect(4685, 1300, 50, 550);
     spawn.mapRect(4400, 2000, 550, 50);
     spawn.mapRect(5150, 1000, 550, 50);
-    spawn.mapVertex(5500, 1550, "0 0  -500 600  100 0  -400 600");
+    spawn.mapVertex(5500, 1550, "0 0 -500 600 -400 600 100 0");
 
     //second room
     spawn.mapRect(8000, 0, 1500, 2300);
