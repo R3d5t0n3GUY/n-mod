@@ -14666,7 +14666,7 @@ const spawn = {
     if (static.isRequested) { //if isStatic was requested as true, add constraint
       body[body.length - 1].constraint = Constraint.create({ //prevent movement, but allow other physics
         pointA: static.where,
-        bodyB: who,
+        bodyB: body[body.length - 1],
         stiffness: 1,
         damping: 1
       })
