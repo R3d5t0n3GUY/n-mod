@@ -100,6 +100,17 @@ const tech = {
     simulation.updateTechHUD();
     return totalRemoved //return the total number of tech removed
   },
+  isAllowed(name) {
+    let id = (tech.tech.find(i => i.name === name))
+    if (id === undefined) return new ReferenceError('Cannot read properties of undefined (reading "allowed")')
+    let status = null
+    try {
+      status = id.allowed()
+    } catch (err) {
+      status = err
+    }
+    return status;
+  },
   junkChance: 0,
   addJunkTechToPool(percent) { //percent is number between 0-1
     tech.junkChance += percent

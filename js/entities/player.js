@@ -4115,14 +4115,15 @@ const m = {
           m.throwCharge = 0;
           m.definePlayerMass() //return to normal player mass
           //remove block before pulse, so it doesn't get in the way
+          const mass = m.holdingTarget.mass, dmg1 = 60 * Math.pow(mass, 0.25)
           for (let i = 0; i < body.length; i++) {
             if (body[i] === m.holdingTarget) {
               queueRemoval('body', i)
             }
           }
-          const mass = m.holdingTarget.mass
+          
           requestAnimationFrame(() => {
-            b.pulse(60 * Math.pow(mass, 0.25), m.angle)
+            b.pulse(dmg1, m.angle)
             if (tech.isTokamakHeal && tech.tokamakHealCount < 5) {
               tech.tokamakHealCount++
               let massScale = Math.min(65 * Math.sqrt(m.maxHealth), 14 * Math.pow(mass, 0.4))
@@ -4135,10 +4136,10 @@ const m = {
                 if (body[i] !== m.holdingTarget && !body[i].isInvulnerable && !body[i].isNotHoldable) {
                   const dist2 = Vector.magnitudeSquared(Vector.sub(m.pos, body[i].position))
                   if (dist2 < range) {
-                      const where = { x: body[i].position.x, y: body[i].position.y }
+                      const where = { x: body[i].position.x, y: body[i].position.y }, dmg2 = 60 * Math.pow(mass, 0.25)
                       queueRemoval('body', i)
                       requestAnimationFrame(() => {
-                          b.pulse(60 * Math.pow(mass, 0.25), m.angle, where)
+                          b.pulse(dmg2, m.angle, where)
                       });//    pulse(charge, angle = m.angle, where = m.pos) {
                   }
                 }
