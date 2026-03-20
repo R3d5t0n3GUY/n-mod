@@ -13,6 +13,7 @@ The following libraries are used:
 <ul>
   <li><a href='https://github.com/liabru/matter-js'>Matter</a> by <a href="https://github.com/liabru">Liabru</a></li>
   <li> <a href='https://github.com/goldfire/howler.js/blob/master/dist/howler.js'>Howler</a> by <a href="https://github.com/goldfire">James Simpson</a> <em>(still trying to figure pitch shifting out, help would be appreciated)</em></li>
+  <li> <a href='https://cdn.jsdelivr.net/npm/eruda'>Eruda</a> by <a href='https://github.com/liriliri'>Liriliri</a></li>
 </ul>
 Most of the sounds used are from <a href="https://minecraft.wiki/">Minecraft</a> and <a href="https://minecraft.wiki/w/Dungeons:Wiki">Minecraft Dungeons</a>. If it becomes an issue, I will remove them from this repo, and find something else to use.
 <br><br>

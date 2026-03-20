@@ -21,7 +21,7 @@ const jsSrcs = [
   },
   {
     name: "Eruda",
-    src: 'lib/eruda.js'
+    src: 'lib/eruda.min.js'
   },
   {
     name: "Local Saves",
@@ -126,7 +126,7 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isMatterMinJS: false,
   isDecompMinJS: false,
   isHowlerMinJS: false,
-  isErudaJS: false,
+  isErudaMinJS: false,
   isLocalSavesJS: false,
   isPrototypesJS: false,
   isSimulationJS: false,
