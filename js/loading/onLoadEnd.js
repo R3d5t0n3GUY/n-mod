@@ -139,4 +139,15 @@ fileLoads.onLoadEnd = function () {
             collapseParentDetails(elmnt)
         })
     });
+    let ReadMeSpan = document.getElementById("README-span")
+    (async (url, target) => {
+      try {
+        let response = await fetch(url);
+        let text = await response.text();
+        target.innerHTML = text
+      } catch (err) {
+        console.warn(err)
+        target.innerHTML = `<iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;" src="README.md"></iframe>`
+      }
+    })("/n-mod/README.md", ReadMeSpan)
 };
