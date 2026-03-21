@@ -24,7 +24,6 @@ const scripts = [
     loaded: false,
     attempt: 0,
     afterLoad() {
-      this.loaded = true
       window.alert(`NOTICE: C-GON MAPS HAVE BEEN REMOVED BY THE REQUEST OF CoalDeficit\n
 If you want to play in them, check out c-gon, an awesome n-gon mod they made!`)
     },
@@ -33,10 +32,16 @@ If you want to play in them, check out c-gon, an awesome n-gon mod they made!`)
   {
     name: 'Console',
     afterLoad() {
-      this.loaded = true
       eruda.init();
     },
     title: `Opens a browser console for those without Dev Tool access`
+  },
+  {
+    name: 'n-spider',
+    afterLoad() {
+      requestAnimFrames(10, spiderInit)
+    },
+    title: `hopefully you don't have arachniphobia`
   }
 ];
 const container = document.createElement('div');
@@ -256,6 +261,7 @@ ${e.message}`);
         }
       } else {
         if (script.afterLoad) {
+          script.loaded = true
           script.afterLoad();
         }
         setTimeout(() => {

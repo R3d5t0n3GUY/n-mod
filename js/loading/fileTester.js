@@ -36,6 +36,10 @@ const jsSrcs = [
     src: "js/core/simulation.js"
   },
   {
+    name: "Spider",
+    src: "js/entities/spider.js"
+  },
+  {
     name: "Player",
     src: "js/entities/player.js"
   },
@@ -130,6 +134,7 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isLocalSavesJS: false,
   isPrototypesJS: false,
   isSimulationJS: false,
+  isSpiderJS: false,
   isPlayerJS: false,
   isPowerUpJS: false,
   isTechJS: false,
