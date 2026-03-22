@@ -660,8 +660,7 @@ summary {
 }
 
 .info-tag {
-  overflow-wrap: anywhere;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .details-div {
