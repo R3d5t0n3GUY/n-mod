@@ -147,7 +147,7 @@ fileLoads.onLoadEnd = function () {
           throw new HttpError(res.status);
         } else {
           const todoText = await res.text();
-          document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${todoText}</pre>`;
+          document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;">${todoText}</pre>`;
           document.getElementById('todo-iframe').classList.add('info-tag')
         }
       } catch (err) {
@@ -162,7 +162,7 @@ fileLoads.onLoadEnd = function () {
           throw new HttpError(res.status);
         } else {
           const READMEtext = await res.text();
-          document.getElementById('README-div').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${READMEtext}</pre>`;
+          document.getElementById('README-div').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;">${READMEtext}</pre>`;
           document.getElementById('README-div').classList.add('info-tag')
         }
       } catch (err) {
