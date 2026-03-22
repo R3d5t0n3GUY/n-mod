@@ -140,5 +140,33 @@ fileLoads.onLoadEnd = function () {
         collapseParentDetails(elmnt)
       })
     });
-    fileLoads.loadInfo();
+    async function loadInfo(){
+      try { 
+        const res = await fetch('todo.txt', { cache: 'no-cache', credentials: 'same-origin' });
+        if (!res.ok) {
+          throw new HttpError(res.status);
+        } else {
+          const todoText = await res.text();
+          document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: auto;">${todoText}</pre>`;
+        }
+      } catch (err) {
+        console.warn(`Uncaught ${err.name || "HttpError"} loading todo.txt: ${err.message}`);
+        document.getElementById('todo-iframe').innerHTML = `<iframe style="font-size: 70%;width: 792px;height:256px;overflow: hidden;"
+          src="todo.txt"></iframe>`;
+      }
+      try { 
+        const res = await fetch('README.md', { cache: 'no-cache', credentials: 'same-origin' });
+        if (!res.ok) {
+          throw new HttpError(res.status);
+        } else {
+          const READMEtext = await res.text();
+          document.getElementById('README-span').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: auto;">${READMEtext}</pre>`;
+        }
+      } catch (err) {
+        console.warn(`Uncaught ${err.name || "HttpError"} loading README.md: ${err.message}`);
+        document.getElementById('README-span').innerHTML = `<iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
+          src="README.md"></iframe>`;
+      }
+    }
+    loadInfo();
 };
