@@ -52,19 +52,3 @@ const tryRunning = {
         }
     }
 }
-
-async function fetchTodoText() {
-    try {
-        const res = await fetch('todo.txt', { cache: 'no-cache', credentials: 'same-origin' });
-        if (!res.ok) {
-            throw new Error(' HTTP error! status: ' + res.status);
-        } else {
-            const todoText = await res.text();
-            document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: auto;">${todoText}</pre>`;
-        }
-    } catch (err) {
-        console.warn('Err loading todo.txt:', err);
-        document.getElementById('todo-iframe').innerHTML = `<iframe id="todo-file" style="font-size: 70%;width: 792px;height:256px;overflow: hidden;"
-                            src="todo.txt"></iframe>`;
-    }
-}
