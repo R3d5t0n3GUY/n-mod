@@ -142,30 +142,37 @@ fileLoads.onLoadEnd = function () {
     });
     async function loadInfo(){
       try { 
-        const res = await fetch('todo.txt', { cache: 'no-cache', credentials: 'same-origin' });
+        const res = await fetch('https://r3d5t0n3guy.github.io/n-mod/todo.txt')
         if (!res.ok) {
           throw new HttpError(res.status);
         } else {
           const todoText = await res.text();
-          document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: auto;">${todoText}</pre>`;
+          document.getElementById('todo-iframe').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${todoText}</pre>`;
+          document.getElementById('todo-iframe').classList.add('info-tag')
         }
       } catch (err) {
         console.warn(`Uncaught ${err.name || "HttpError"} loading todo.txt: ${err.message}`);
         document.getElementById('todo-iframe').innerHTML = `<iframe style="font-size: 70%;width: 792px;height:256px;overflow: hidden;"
           src="todo.txt"></iframe>`;
+        document.getElementById('todo-iframe').classList.remove('info-tag')
       }
       try { 
-        const res = await fetch('README.md', { cache: 'no-cache', credentials: 'same-origin' });
+        const res = await fetch('https://r3d5t0n3guy.github.io/n-mod/README.md')
         if (!res.ok) {
           throw new HttpError(res.status);
         } else {
           const READMEtext = await res.text();
-          document.getElementById('README-span').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: auto;">${READMEtext}</pre>`;
+          document.getElementById('README-span').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${READMEtext}</pre>`;
+          document.getElementById('README-span').classList.add('info-tag')
         }
       } catch (err) {
         console.warn(`Uncaught ${err.name || "HttpError"} loading README.md: ${err.message}`);
-        document.getElementById('README-span').innerHTML = `<iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
+        document.getElementById('README-span').innerHTML = `
+          <a id="github" href="https://github.com/landgreen/n-gon" aria-label="github">
+            <img src="img/favicon.ico" style="height:200px; margin-left:5rem">
+          </a><iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
           src="README.md"></iframe>`;
+          document.getElementById('README-span').classList.remove('info-tag')
       }
     }
     loadInfo();

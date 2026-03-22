@@ -659,6 +659,11 @@ summary {
   /* background-color: #fff; */
 }
 
+.info-tag {
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+}
+
 .details-div {
   padding: 10px;
   border-radius: 8px;
