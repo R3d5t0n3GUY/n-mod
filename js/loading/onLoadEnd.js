@@ -162,17 +162,17 @@ fileLoads.onLoadEnd = function () {
           throw new HttpError(res.status);
         } else {
           const READMEtext = await res.text();
-          document.getElementById('README-span').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${READMEtext}</pre>`;
-          document.getElementById('README-span').classList.add('info-tag')
+          document.getElementById('README-div').innerHTML = `<pre style="font-size: 70%;width: 792px;height:256px;overflow: scroll;">${READMEtext}</pre>`;
+          document.getElementById('README-div').classList.add('info-tag')
         }
       } catch (err) {
         console.warn(`Uncaught ${err.name || "HttpError"} loading README.md: ${err.message}`);
-        document.getElementById('README-span').innerHTML = `
+        document.getElementById('README-div').innerHTML = `
           <a id="github" href="https://github.com/landgreen/n-gon" aria-label="github">
             <img src="img/favicon.ico" style="height:200px; margin-left:5rem">
           </a><iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
           src="README.md"></iframe>`;
-          document.getElementById('README-span').classList.remove('info-tag')
+          document.getElementById('README-div').classList.remove('info-tag')
       }
     }
     loadInfo();
