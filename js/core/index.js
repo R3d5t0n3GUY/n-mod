@@ -422,6 +422,15 @@ const build = {
       })
     }
   },
+  setDarkMode(from = "settings") {
+    if (localSettings.isDarkMode === undefined) localSettings.isDarkMode = false //default to light mode
+    localSettings.isDarkMode = !localSettings.isDarkMode
+    document.getElementById("dark-mode").checked = localSettings.isDarkMode
+    if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
+    document.documentElement.style.setProperty('--build-bg-color', `hsvo(216, 0.1, ${localSettings.isDarkMode ? 0.19 : 0.76})`)
+    document.documentElement.style.setProperty('--card-color', `hsvo(200, 0.02, ${localSettings.isDarkMode ? 0.47 : 0.95})`)
+    document.documentElement.style.setProperty('--hover-card-color', `hsvo(240, 0.05, ${localSettings.isDarkMode ? 0.44 : 0.93})`)
+  },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
     localSettings.isDynamicHealthBar = !localSettings.isDynamicHealthBar
@@ -463,16 +472,17 @@ const build = {
     } else {
       mobText = ""
     }
-    let inputLabelText = (click, id, name, setting = "Allowed", title, text) => {
-      return `<br><input onclick="build.${click})" type="checkbox" id="${id}" name="${name || id}" ${localSettings["is" + setting] ? "checked" : ""}>
+    let inputLabelText = (what, where = 'pause', id, name, setting = "Allowed", title, text) => {
+      return `<br><input onclick="build.${what}('${where}')" type="checkbox" id="${id}" name="${name || id}" ${localSettings["is" + setting] ? "checked" : ""}>
 \n<label for="${name || id}" title="${title}" style="font-size:1.15em">${text}</label>`
     }, floater = (text) => { return `<span style="float:right;">${text}</span><br>` }
     let text = `<div class="pause-grid-module" style="padding: 8px;">
 <span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
 <em style="float: right;color:#ccc;">press ${input.key.pause} to resume</em>
-${inputLabelText("hideHUD('settings'","hide-hud",0,"hideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
-${inputLabelText("setHealthBarMode('pause'","health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
-${inputLabelText("showImages('pause'","hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
+${inputLabelText("hideHUD",'settings',"hide-hud",0,"HideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
+${inputLabelText("setHealthBarMode",0,"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
+${inputLabelText("setDarkMode",0,"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
+${inputLabelText("showImages",0,"hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
 </div>
 
 <div class="pause-grid-module">
@@ -1089,10 +1099,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         input.setDefault()
       }
 
-      if (localSettings.loreCount === undefined) {
-        localSettings.loreCount = 0
-        localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      }
+      if (localSettings.loreCount === undefined) localSettings.loreCount = 0
 
       simulation.isCommunityMaps = localSettings.isCommunityMaps
       document.getElementById("community-maps").checked = localSettings.isCommunityMaps
@@ -1107,17 +1114,14 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       document.getElementById("fps-select").value = localSettings.fpsCapDefault
 
       if (!localSettings.banList) localSettings.banList = ""
-      if (localSettings.banList.length === 0 || localSettings.banList === "undefined") {
-        localSettings.banList = ""
-        localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      }
+      if (localSettings.banList.length === 0 || localSettings.banList === "undefined") localSettings.banList = ""
       document.getElementById("banned").value = localSettings.banList
 
       if (!localSettings.isLoreDoesNotNeedReset) {
         localSettings.isLoreDoesNotNeedReset = true
         localSettings.loreCount = 0; //this sets what conversation is heard
-        if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       }
+
       if (localSettings.isHideImages === undefined) localSettings.isHideImages = true //default to hide images
       document.getElementById("hide-images").checked = localSettings.isHideImages
       // localSettings.isHideImages = true //no images
@@ -1128,23 +1132,19 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
       document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
 
-      if (localSettings.difficultyCompleted === undefined) {
-        localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
-        localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      }
+      if (localSettings.isDarkMode === undefined) localSettings.isDarkMode = false //default to light mode
+      document.getElementById("dark-mode").checked = localSettings.isDarkMode
+
+      if (localSettings.difficultyCompleted === undefined) localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
 
       if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
       simulation.difficultyMode = localSettings.difficultyMode
       lore.setTechGoal()
 
-      if (localSettings.pauseMenuDetailsOpen === undefined) {
-        localSettings.pauseMenuDetailsOpen = [true, false, false, true]
-        localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      }
-      if (localSettings.techHistory === undefined) {
-        localSettings.techHistory = []
-        localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-      }
+      if (localSettings.pauseMenuDetailsOpen === undefined) localSettings.pauseMenuDetailsOpen = [true, false, false, true]
+      if (localSettings.techHistory === undefined) localSettings.techHistory = []
+      
+      localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     } else {
       console.log('forced reset triggered')
       console.log('setting default localSettings')
@@ -1168,6 +1168,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         isHideImages: true, //default to hide images
         isHideHUD: false,
         isDynamicHealthBar: false,
+        isDarkMode: false,
         pauseMenuDetailsOpen: [true, false, false, true],
         entanglement: undefined,
         techHistory: [],
@@ -1180,6 +1181,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         document.getElementById("hide-images").checked = localSettings.isHideImages
         document.getElementById("hide-hud").checked = localSettings.isHideHUD
         document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
+        document.getElementById("dark-mode").checked = localSettings.isDarkMode
         document.getElementById("fps-select").value = localSettings.fpsCapDefault
         document.getElementById("banned").value = localSettings.banList
       })
