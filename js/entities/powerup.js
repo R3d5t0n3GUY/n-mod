@@ -89,6 +89,7 @@ const powerUps = {
           text += '&thinsp; '
         }
       }
+      return text
     },
     tech(num = 1) {
       return `<div class="circle-grid tech tooltip" style="width: 1.32em; height: 1.32em;"><span class="tooltiptext color-m">tech</span></div>`
