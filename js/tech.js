@@ -5227,7 +5227,8 @@ const tech = {
     {
       name: "mass production",
       descriptionFunction() {
-        return `${powerUps.orb.tech()} have extra <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> to spawn ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)}<br><strong>+3%</strong> chance to <strong class='color-dup'>duplicate</strong> spawned <strong>power ups</strong>`
+        return `${powerUps.orb.tech()} have extra <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> to spawn ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;${powerUps.orb.Casimir(1)}, &nbsp;and&nbsp; ${powerUps.orb.research(1)}
+          <br><strong>+3%</strong> chance to <strong class='color-dup'>duplicate</strong> spawned <strong>power ups</strong>`
       },
       maxCount: 1,
       count: 0,
