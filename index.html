@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,28 +16,28 @@
     <link rel="stylesheet" href="style.css">
     <link id='favIcon' rel='shortcut icon' href='img/favicon.ico' type='image/x-icon' />
     <script>
-        "use strict";
-        console.clear();
-        const favIcon = document.getElementById('favIcon')
+      "use strict";
+      console.clear();
+      const favIcon = document.getElementById('favIcon')
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id='guns'></div>
     <div id='field'></div>
     <div id='right-HUD-constraint'></div>
     <div id='right-HUD'></div>
     <div id="text-log"></div>
     <div id="chat-window" style="display:none;">
-        Press any key to focus
-        <hr>
-        <textarea id='chat-input' rows="4" cols="50" spellcheck="false" placeholder="This chat is a work in progress
+      Press any key to focus
+      <hr>
+      <textarea id='chat-input' rows="4" cols="50" spellcheck="false" placeholder="This chat is a work in progress
 Press Escape to close"></textarea>
-        <br>
-        <input type="button" id="execute-command" value="Enter">
-        <input type="button" id="close-chat" value="Exit"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="button" id="jump-to" value="Jump to...">
-        <input type="number" id="history" min="-1" max="1" placeholder="0 (where you left off)" style="width:200px">
+      <br>
+      <input type="button" id="execute-command" value="Enter">
+      <input type="button" id="close-chat" value="Exit"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" id="jump-to" value="Jump to...">
+      <input type="number" id="history" min="-1" max="1" placeholder="0 (where you left off)" style="width:200px">
     </div>
     <div id="fade-out"></div>
     <div id="health-bg"></div>
@@ -51,338 +50,322 @@ Press Escape to close"></textarea>
     <div id="choose-grid"></div>
     <div id="experiment-grid"></div>
     <div style="position: absolute; top:0;left:0;">
-        <div id="pause-grid-left" class="pause-grid"></div>
+      <div id="pause-grid-left" class="pause-grid"></div>
     </div>
     <div style="position: absolute; top:0;right:0;">
-        <div id="pause-grid-right" class="pause-grid"></div>
+      <div id="pause-grid-right" class="pause-grid"></div>
     </div>
     <svg class="SVG-button SVG-button-splash" id="start-button" width="82" height="45" stroke='none' fill='#333'
         font-size="15px" onclick=null>
-        <text x="10" y="32"></text>
+      <text x="10" y="32"></text>
     </svg>
     <svg class="SVG-button SVG-button-splash" id="training-button" width="120" height="45" stroke='none' fill='#333'
-        font-size="15px" onclick=null>
-        <text x="10" y="32"></text>
+      font-size="15px" onclick=null>
+      <text x="10" y="32"></text>
     </svg>
     <svg class="SVG-button SVG-button-splash" id="experiment-button" width="170" height="45" onclick=null>
-        <text stroke='none' fill='#333' stroke-width="2" font-size="30px" x="10" y="32"></text>
+      <text stroke='none' fill='#333' stroke-width="2" font-size="30px" x="10" y="32"></text>
     </svg>
 
     <div id='info' style='visibility:hidden'>
-        <div>
-            <details id='settings-details' ontoggle="localSaves.clearStatus()">
-                <summary>settings</summary>
-                <div class="details-div" style="max-width: 24rem; line-height: 150%;">
-                    <input onclick="build.showImages('settings')" type="checkbox" id="hide-images" name="hide-images"
-                        style="width:17px; height:17px;">
-                    <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
-                    <br>
-                    <input onclick="build.hideHUD('settings')" type="checkbox" id="hide-hud" name="hide-hud"
-                        style="width:17px; height:17px;">
-                    <label for="hide-hud"
-                        title="hide: tech, damage taken, damage, in game console, new level animation">minimal
-                        HUD</label>
-                    <br>
-                    <input onclick="build.setHealthBarMode('settings')" type="checkbox" id="health-bar-mode" name="health-bar-mode"
-                        style="width:17px; height:17px;">
-                    <label for="health-bar-mode"
-                        title="Enables or disables proportion-based health bar coloring">dynamic health bar</label>
-                    <br>
-                    <label for="fps-select" title="use this to slow the game down">limit frames per second:</label>
-                    <select name="fps-select" id="fps-select">
-                        <option value="max" selected>no cap</option>
-                        <option value="72">72 fps</option>
-                        <option value="60">60 fps</option>
-                        <option value="45">45 fps</option>
-                        <option value="30">30 fps</option>
-                    </select>
-                    <br>
-                    <input type="checkbox" id="community-maps" name="community-maps" style="width:17px; height:17px;">
-                    <label for="community-maps" title="add community-made levels to the n-gon level pool">community
-                        maps</label>
-                    <br>
-                    <label for="banned"
-                        title="type banned levels with a space between them.  Example:  crimsonTowers ruins clock">banned
-                        levels:</label>
-                    <input id="banned" name="banned" placeholder="list levels by name" autocomplete="off"
-                        spellcheck="false" style="width: 182px;" />
-                    <br>
-                    <label for="seed"
-                        title="the randoms seed determines level order, tech choices, and mob types">randomization
-                        seed:</label>
-                    <input type="text" id="seed" name="seed" autocomplete="off" spellcheck="false" minlength="1"
-                        style="width: 120px;">
-                    <br><span id="previous-seed" style="color:#bbb"></span>
-                    <br>
-                    <div id="save-file-div">
-                        Save File: <div id='file-status-div'></div>
-                        <div id="localSave-div">
-                    </div>
-                    </div>
-                    <input class="details-collapse">
-                </div>
-            </details>
+      <div>
+        <details id='settings-details' ontoggle="localSaves.clearStatus()">
+          <summary>settings</summary>
+            <div class="details-div" style="max-width: 24rem; line-height: 150%;">
+              <input onclick="build.showImages('settings')" type="checkbox" id="hide-images" name="hide-images"
+                style="width:17px; height:17px;">
+              <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
+              <br>
+              <input onclick="build.hideHUD('settings')" type="checkbox" id="hide-hud" name="hide-hud"
+                style="width:17px; height:17px;">
+              <label for="hide-hud"
+                title="hide: tech, damage taken, damage, in game console, new level animation">minimal
+                HUD</label>
+              <br>
+              <input onclick="build.setHealthBarMode('settings')" type="checkbox" id="health-bar-mode" name="health-bar-mode"
+                style="width:17px; height:17px;">
+              <label for="health-bar-mode"
+                title="Enables or disables proportion-based health bar coloring">dynamic health bar</label>
+              <br>
+              <label for="fps-select" title="use this to slow the game down">limit frames per second:</label>
+              <select name="fps-select" id="fps-select">
+                <option value="max" selected>no cap</option>
+                <option value="72">72 fps</option>
+                <option value="60">60 fps</option>
+                <option value="45">45 fps</option>
+                <option value="30">30 fps</option>
+              </select>
+              <br>
+              <input type="checkbox" id="community-maps" name="community-maps" style="width:17px; height:17px;">
+              <label for="community-maps" title="add community-made levels to the n-gon level pool">community
+                maps</label>
+              <br>
+              <label for="banned"
+                title="type banned levels with a space between them.  Example:  crimsonTowers ruins clock">banned
+                levels:</label>
+              <input id="banned" name="banned" placeholder="list levels by name" autocomplete="off"
+                spellcheck="false" style="width: 182px;" />
+              <br>
+              <label for="seed"
+                title="the random seed determines level order, tech choices, and mob types">randomization
+                seed:</label>
+              <input type="text" id="seed" name="seed" autocomplete="off" spellcheck="false" minlength="1"
+                style="width: 120px;">
+              <span id="previous-seed" style="color:#bbb"><br></span>
+              <br>
+              <div id="save-file-div">
+                Save File: <div id='file-status-div'></div>
+                <div id="localSave-div">
+              </div>
+            </div>
+          <input class="details-collapse">
         </div>
-        <div>
-            <details id="control-details">
-                <summary>controls</summary>
-                <div class="details-div" style="max-width: 24rem;">
-                    To change controls click a box
-                    <br>and press an unused key.
-                    <br><br>
-                    <table id="control-table">
-                        <tr>
-                            <th>FIRE</th>
-                            <td id='key-fire' class='key-input'>F</td>
-                            <td class='key-used'>MouseLeft</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th>FIELD</th>
-                            <td id='key-field' class='key-input'>SPACE</td>
-                            <td class='key-used'>MouseRight</td>
-                        </tr>
-                        <tr>
-                            <th>JUMP</th>
-                            <td id='key-up' class='key-input'>W</td>
-                            <td class='key-used'>ArrowUp</td>
-                        </tr>
-                        <tr>
-                            <th>CROUCH</th>
-                            <td id='key-down' class='key-input'>S</td>
-                            <td class='key-used'>ArrowDown</td>
-                        </tr>
-                        <tr>
-                            <th>LEFT</th>
-                            <td id='key-left' class='key-input'>A</td>
-                            <td class='key-used'>ArrowLeft</td>
-                        </tr>
-                        <tr>
-                            <th>RIGHT</th>
-                            <td id='key-right' class='key-input'>D</td>
-                            <td class='key-used'>ArrowRight</td>
-                        </tr>
-                        <tr>
-                            <th>GUN →</th>
-                            <td id='key-next-gun' class='key-input'>Q</td>
-                            <td class='key-used'>MouseWheel</td>
-                        </tr>
-                        <tr>
-                            <th>GUN ←</th>
-                            <td id='key-previous-gun' class='key-input'>E</td>
-                            <td class='key-used'>MouseWheel</td>
-                        </tr>
-                        <tr style="opacity:0.5;">
-                            <th>GUN #</th>
-                            <td id="key-num" class='key-input'>Num</td>
-                        </tr>
-                        <tr>
-                            <th>PAUSE</th>
-                            <td id='key-pause' class='key-input'>P</td>
-                            <td></td>
-                        </tr>
-                        <tr id="control-testing">
-                            <th>TESTING</th>
-                            <td id='key-testing' class='key-input'>T</td>
-                            <td></td>
-                        </tr>
-                    </table>
-                    <br><button id="control-reset" type="button">reset</button><span style="font-size: 60%;"> to default
-                        keys</span>
-                    <br>
-                    <input class="details-collapse">       
-                </div>
-            </details>
+      </details>
+    </div>
+    <div>
+      <details id="control-details">
+        <summary>controls</summary>
+        <div class="details-div" style="max-width: 24rem;">To change controls click a box
+            <br>and press an unused key.
+          <br><br>
+          <table id="control-table">
+            <tr>
+                <th>FIRE</th>
+                <td id='key-fire' class='key-input'>F</td>
+                <td class='key-used'>MouseLeft</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>FIELD</th>
+                <td id='key-field' class='key-input'>SPACE</td>
+                <td class='key-used'>MouseRight</td>
+            </tr>
+            <tr>
+                <th>JUMP</th>
+                <td id='key-up' class='key-input'>W</td>
+                <td class='key-used'>ArrowUp</td>
+            </tr>
+            <tr>
+                <th>CROUCH</th>
+                <td id='key-down' class='key-input'>S</td>
+                <td class='key-used'>ArrowDown</td>
+            </tr>
+            <tr>
+                <th>LEFT</th>
+                <td id='key-left' class='key-input'>A</td>
+                <td class='key-used'>ArrowLeft</td>
+            </tr>
+            <tr>
+                <th>RIGHT</th>
+                <td id='key-right' class='key-input'>D</td>
+                <td class='key-used'>ArrowRight</td>
+            </tr>
+            <tr>
+                <th>GUN →</th>
+                <td id='key-next-gun' class='key-input'>Q</td>
+                <td class='key-used'>MouseWheel</td>
+            </tr>
+            <tr>
+                <th>GUN ←</th>
+                <td id='key-previous-gun' class='key-input'>E</td>
+                <td class='key-used'>MouseWheel</td>
+            </tr>
+            <tr style="opacity:0.5;">
+                <th>GUN #</th>
+                <td id="key-num" class='key-input'>Num</td>
+            </tr>
+            <tr>
+                <th>PAUSE</th>
+                <td id='key-pause' class='key-input'>P</td>
+                <td></td>
+            </tr>
+            <tr id="control-testing">
+                <th>TESTING</th>
+                <td id='key-testing' class='key-input'>T</td>
+                <td></td>
+            </tr>
+          </table>
+          <br><button id="control-reset" type="button">reset</button><span style="font-size: 60%;"> to default keys</span>
+            <br>
+            <input class="details-collapse">       
         </div>
-        <div>
-            <details id="todo-list">
-                <summary>todo</summary>
-                <div class="details-div"
-                    style="font-size: 70%;height: 400px;overflow: scroll;max-width: 50rem;">
-                    <strong>n-mod</strong>: <a href="todo.txt">todo list</a>
-                    <hr>
-                    <div id="todo-div">
-                        <iframe style="font-size: 70%;width: 792px;height:256px;overflow: hidden;"
-                            src="todo.txt"></iframe>
-                    </div>
-                    <input class="details-collapse">
-                </div>
-            </details>
-        </div>
-        <div>
-            <details id="about" style="width: 512px;">
-                <summary>about</summary>
-                <div class="details-div">
-                    <div id="README-div" style="font-size: 70%;height: 256px;overflow: scroll;max-width: 32rem;">
-                        <a id="github" href="https://github.com/landgreen/n-gon" aria-label="github">
-                            <img src="img/favicon.ico" style="height:200px; margin-left:5rem">
-                        </a>
-                        <iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
-                          src="README.md"></iframe>
-                    </div>
-                    <span style="max-width: 25rem; line-height: 180%;">
-                        <label for="classic-select" title="play older versions of n-gon">classic n-gon:</label>
-                        <select name="classic-select" id="classic-select" onChange="window.location.href=this.value">
-                            <option value="">Select older versions</option>
-                            <option class="choice" value="https://scratch.mit.edu/projects/14005697/fullscreen/">mech:
-                                2014</option>
-                            <option class="choice" value="https://scratch.mit.edu/projects/22573757/fullscreen/">
-                                spacetime: 2015</option>
-                            <option class="choice" value="https://scratch.mit.edu/projects/41429974/fullscreen/">
-                                ballistics: 2015</option>
-                            <option class="choice" value="https://scratch.mit.edu/projects/43690666/fullscreen/">portal:
-                                2016</option>
-                            <option class="choice" value="https://landgreen.github.io/n-gon/index.html/">Original Game
-                            </option>
-                            <option class="choice" value="https://github.com/landgreen/n-gon">Original Game Repository
-                            </option>
-                            <option class="choice" value="https://github.com/c-rxxp-y/n-gon-treasury/">The Lost Treasury
-                            </option class="choice" value="https://cornbread2100.com/n-gon-loader">Every
-                            Version, One website</option>
-                        </select>
-                        <br><label for="links-select" title="community links">community links:</label>
-                        <select class="choice" name="links-select" id="links-select"
-                            onChange="window.location.href=this.value">
-                            <option class="choice" value="https://www.cornbread2100.com/n-gon-loader">n-commit loader
-                            </option>
-                            <option class="choice" value="https://3xiondev.github.io/n-gon-upgraded">n-gon upgraded
-                            </option>
-                            <option class="choice" value="https://n-gon-enhanced.vercel.app">n-gon enhanced</option>
-                            <option class="choice" value="https://coaldeficit.github.io/c-gon">c-gon</option>
-                            <option class="choice" value="https://kgurchiek.github.io/n-gon-portal-gun">n-gon portal gun
-                            </option>
-                            <option class="choice" value="https://github.com/Whyisthisnotavalable/n-scythe">n-scythe
-                            </option>
-                            <option class="choice" value="https://github.com/kgurchiek/n-gon-mobile">n-mobile</option>
-                            <option class="choice" value="https://github.com/kgurchiek/n-gon-controller">n-controller
-                            </option>
-                            <option class="choice" value="https://github.com/kgurchiek/n-gon-stopwatch">n-stopwatch
-                            </option>
-                            <option class="choice" value="https://github.com/Ant-Throw-Pology/n-qol">n-qol</option>
-                            <option class="choice" value="https://github.com/c-rxxp-y/n-gon-treasury">n-treasury
-                            </option>
-                            <option class="choice" value="https://github.com/3xionDev/n-docs">n-docs</option>
-                            <option class="choice" value="https://ngon.fandom.com/wiki/N-gon">n-wiki fandom</option>
-                            <option class="choice" value="https://n-gon.wiki/">n-wiki n-gon</option>
-                            <option value="" selected>mods, forks, info</option>
-                        </select>
-                    </span>
-                    <input class="details-collapse">
-                </div>
-            </details>
-        </div>
+      </details>
+    </div>
+    <div>
+      <details id="todo-list">
+        <summary>todo</summary>
+          <div class="details-div"
+            style="font-size: 70%;height: 400px;overflow: scroll;max-width: 50rem;">
+            <strong>n-mod</strong>: <a href="todo.txt">todo list</a>
+            <hr>
+            <div id="todo-div">
+              <iframe style="font-size: 70%;width: 792px;height:256px;overflow: hidden;"
+                src="todo.txt"></iframe>
+              </div>
+            <input class="details-collapse">
+          </div>
+      </details>
+    </div>
+    <div>
+      <details id="about" style="width: 512px;">
+      <summary>about</summary>
+        <div class="details-div">
+          <div id="README-div" style="font-size: 70%;height: 256px;overflow: scroll;max-width: 32rem;">
+            <a id="github" href="https://github.com/landgreen/n-gon" aria-label="github">
+                <img src="img/favicon.ico" style="height:200px; margin-left:5rem">
+            </a>
+            <iframe style="font-size: 70%;width: 384px;height:256px;overflow: hidden;"
+                src="README.md"></iframe>
+            </div>
+            <span style="max-width: 25rem; line-height: 180%;">
+              <label for="classic-select" title="play older versions of n-gon">classic n-gon:</label>
+              <select name="classic-select" id="classic-select" onChange="window.location.href=this.value">
+                <option value="">Select older versions</option>
+                <option class="choice" value="https://scratch.mit.edu/projects/14005697/fullscreen/">mech: 2014</option>
+                <option class="choice" value="https://scratch.mit.edu/projects/22573757/fullscreen/">spacetime: 2015</option>
+                <option class="choice" value="https://scratch.mit.edu/projects/41429974/fullscreen/">ballistics: 2015</option>
+                <option class="choice" value="https://scratch.mit.edu/projects/43690666/fullscreen/">portal: 2016</option>
+                <option class="choice" value="https://landgreen.github.io/n-gon/index.html/">Original Game</option>
+                <option class="choice" value="https://github.com/landgreen/n-gon">Original Game Repository</option>
+                <option class="choice" value="https://github.com/c-rxxp-y/n-gon-treasury/">The Lost Treasury</option>
+                <option class="choice" value="https://cornbread2100.com/n-gon-loader">Every Version, One website</option>
+              </select>
+              <br><label for="links-select" title="community links">community links:</label>
+              <select class="choice" name="links-select" id="links-select"
+                onChange="window.location.href=this.value">
+                <option class="choice" value="https://www.cornbread2100.com/n-gon-loader">n-commit loader</option>
+                <option class="choice" value="https://3xiondev.github.io/n-gon-upgraded">n-gon upgraded</option>
+                <option class="choice" value="https://n-gon-enhanced.vercel.app">n-gon enhanced</option>
+                <option class="choice" value="https://coaldeficit.github.io/c-gon">c-gon</option>
+                <option class="choice" value="https://kgurchiek.github.io/n-gon-portal-gun">n-gon portal gun</option>
+                <option class="choice" value="https://github.com/Whyisthisnotavalable/n-scythe">n-scythe</option>
+                <option class="choice" value="https://github.com/kgurchiek/n-gon-mobile">n-mobile</option>
+                <option class="choice" value="https://github.com/kgurchiek/n-gon-controller">n-controller</option>
+                <option class="choice" value="https://github.com/kgurchiek/n-gon-stopwatch">n-stopwatch</option>
+                <option class="choice" value="https://github.com/Ant-Throw-Pology/n-qol">n-qol</option>
+                <option class="choice" value="https://github.com/c-rxxp-y/n-gon-treasury">n-treasury</option>
+                <option class="choice" value="https://github.com/3xionDev/n-docs">n-docs</option>
+                <option class="choice" value="https://ngon.fandom.com/wiki/N-gon">n-wiki fandom</option>
+                <option class="choice" value="https://n-gon.wiki/">n-wiki n-gon</option>
+                <option value="" selected>mods, forks, info</option>
+              </select>
+            </span>
+            <input class="details-collapse">
+          </div>
+        </details>
+      </div>
     </div>
 
     <svg id='splash' class="intro ui" viewBox="0 0 800 800" onclick=null>
-        <g class="fade-in" transform="translate(25,210) scale(34)" fill="#afafaf" stroke="none">
-            <rect x="1.5" y="-2.5" width="1.25" height="5.5" stroke-width="0.0875" rx="0.03" /> <!--L (fill)-->
-            <path transform="translate(4.5,0) scale(1.25)"
-                d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width="0.07" />
-            <!-- O (fill)-->
-            <path transform="translate(8,0) scale(1.25)"
-                d="M0 0  h1  l 0.3 0.3  v-0.5 h0.8 v2.6 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--A (fill)-->
-            <path transform="translate(12,0) scale(1.25)"
-                d="M0 0  h1  l 0.3 0.3  v-2.6 h0.8 v4.7 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--D (fill)-->
-            <rect x="15.5" y="0.5" width="1.25" height="2.5" stroke-width="0.0875" rx="0.03" /> <!--I (fill)-->
-            <rect x="15.5" y="-1.5" width="1.25" height="1.25" stroke-width="0.0875" rx="0.03" /> <!--I (fill)-->
-            <path transform="translate(17.5,0)" d="M0 0  h1  v0.2  h1.7  l0.3 0.3  v2.6  h-1  v-1.7  h-1  v1.7  h-1 z"
-                stroke-width="0.0875" /> <!--N (fill)-->
-            <path transform="translate(22,0) scale(1.25)"
-                d="M0 0  h1  l 0.7 0.7  v2.3  l-0.2 0.2 h-1.8 v-0.5 h1.4   L 1.1 2.4   h-1.1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--G (fill)-->
-        </g>
+      <g class="fade-in" transform="translate(25,210) scale(34)" fill="#afafaf" stroke="none">
+        <rect x="1.5" y="-2.5" width="1.25" height="5.5" stroke-width="0.0875" rx="0.03" /> <!--L (fill)-->
+        <path transform="translate(4.5,0) scale(1.25)"
+          d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width="0.07" />
+        <!-- O (fill)-->
+        <path transform="translate(8,0) scale(1.25)"
+          d="M0 0  h1  l 0.3 0.3  v-0.5 h0.8 v2.6 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+          stroke-width="0.07" /> <!--A (fill)-->
+        <path transform="translate(12,0) scale(1.25)"
+          d="M0 0  h1  l 0.3 0.3  v-2.6 h0.8 v4.7 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+          stroke-width="0.07" /> <!--D (fill)-->
+        <rect x="15.5" y="0.5" width="1.25" height="2.5" stroke-width="0.0875" rx="0.03" /> <!--I (fill)-->
+        <rect x="15.5" y="-1.5" width="1.25" height="1.25" stroke-width="0.0875" rx="0.03" /> <!--I (fill)-->
+        <path transform="translate(17.5,0)" d="M0 0  h1  v0.2  h1.7  l0.3 0.3  v2.6  h-1  v-1.7  h-1  v1.7  h-1 z"
+          stroke-width="0.0875" /> <!--N (fill)-->
+        <path transform="translate(22,0) scale(1.25)"
+          d="M0 0  h1  l 0.7 0.7  v2.3  l-0.2 0.2 h-1.8 v-0.5 h1.4   L 1.1 2.4   h-1.1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+          stroke-width="0.07" /> <!--G (fill)-->
+      </g>
 
-        <g transform="translate(25,210) scale(34)" fill="none" stroke="#333" stroke-linejoin="round"
-            stroke-linecap="round">
-            <rect class="draw-lines-d" x="1.5" y="-2.5" width="1.25" height="5.5" stroke-width="0.0875" rx="0.03" />
-            <!--L (outline)-->
-            <path class="draw-lines-o" transform="translate(4.5,0) scale(1.25)"
-                d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width="0.07" />
-            <!--O (outline)-->
-            <path class="draw-lines-l" transform="translate(8,0) scale(1.25)"
-                d="M0 0  h1  l 0.3 0.3  v-0.5 h0.8 v2.6 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--A (outline)-->
-            <path class="draw-lines-a" transform="translate(12,0) scale(1.25)"
-                d="M0 0  h1  l 0.3 0.3  v-2.6 h0.8 v4.7 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--D (outline)-->
-            <rect class="draw-lines-i" x="15.5" y="0.5" width="1.25" height="2.5" stroke-width="0.0875" rx="0.03" />
-            <!--I (outline)-->
-            <rect class="draw-lines-o" x="15.5" y="-1.5" width="1.25" height="1.25" stroke-width="0.0875" rx="0.03" />
-            <!--I (outline)-->
-            <path class="draw-lines-n" transform="translate(17.5,0)"
-                d="M0 0  h1  v0.2  h1.7  l0.3 0.3  v2.6  h-1  v-1.7  h-1  v1.7  h-1 z" stroke-width="0.0875" />
-            <!--N (outline)-->
-            <path class="draw-lines-g" transform="translate(22,0) scale(1.25)"
-                d="M0 0  h1  l 0.7 0.7  v2.3  l-0.2 0.2 h-1.8 v-0.5 h1.4   L 1.1 2.4   h-1.1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
-                stroke-width="0.07" /> <!--G (outline)-->
-        </g>
+      <g transform="translate(25,210) scale(34)" fill="none" stroke="#333" stroke-linejoin="round"
+        stroke-linecap="round">
+        <rect class="draw-lines-d" x="1.5" y="-2.5" width="1.25" height="5.5" stroke-width="0.0875" rx="0.03" />
+        <!--L (outline)-->
+        <path class="draw-lines-o" transform="translate(4.5,0) scale(1.25)"
+          d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width="0.07" />
+        <!--O (outline)-->
+        <path class="draw-lines-l" transform="translate(8,0) scale(1.25)"
+          d="M0 0  h1  l 0.3 0.3  v-0.5 h0.8 v2.6 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+          stroke-width="0.07" /> <!--A (outline)-->
+        <path class="draw-lines-a" transform="translate(12,0) scale(1.25)"
+          d="M0 0  h1  l 0.3 0.3  v-2.6 h0.8 v4.7 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+          stroke-width="0.07" /> <!--D (outline)-->
+        <rect class="draw-lines-i" x="15.5" y="0.5" width="1.25" height="2.5" stroke-width="0.0875" rx="0.03" />
+        <!--I (outline, body)-->
+        <rect class="draw-lines-o" x="15.5" y="-1.5" width="1.25" height="1.25" stroke-width="0.0875" rx="0.03" />
+        <!--I (outline, dot)-->
+        <path class="draw-lines-n" transform="translate(17.5,0)"
+          d="M0 0  h1  v0.2  h1.7  l0.3 0.3  v2.6  h-1  v-1.7  h-1  v1.7  h-1 z" stroke-width="0.0875" />
+        <!--N (outline)-->
+        <path class="draw-lines-g" transform="translate(22,0) scale(1.25)"
+          d="M0 0  h1  l 0.7 0.7  v2.3  l-0.2 0.2 h-1.8 v-0.5 h1.4   L 1.1 2.4   h-1.1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
+        stroke-width="0.07" /> <!--G (outline)-->
+      </g>
     </svg>
     <script>
-        const fileLoader = document.createElement("script")
-        let hasFileTesterFailed = false
-        fileLoader.src = "./js/loading/fileTester.js"
-        setTimeout(() => {
-            if (!fileLoads.isFileTesterJS) {
-              hasFileTesterFailed = true
-              try {
-                if (loadText) clearInterval(loadText); //stop loading animation for buttons
-              } catch (e) {}
-              document.body.style.backgroundColor = "white";
-              document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
-              <hr>Please properly define this file before running n-mod`
-              favIcon.href = 'img/Error.png'
-              document.title = "n-mod: FAULTY FILES DETECTED"
-            }
-        }, 250);
-        document.body.appendChild(fileLoader)
-
-        /***** Scramble color-censored here (does NOT work if loaded anywhere else) *****/
-        function scramble(text) {
-            let result = "";
-            for (let i = 0; i < text.length; i++) {
-                let char = text[i];
-                // Preserve whitespace exactly
-                if (/\s/.test(char)) {
-                    result += char;
-                } else {
-                    result += String.fromCharCode(Math.floor(Math.random() * 94) + 33);
-                }
-            }
-            return result;
+      const fileLoader = document.createElement("script")
+      let hasFileTesterFailed = false
+      fileLoader.src = "./js/loading/fileTester.js"
+      setTimeout(() => {
+        if (!fileLoads.isFileTesterJS) {
+          hasFileTesterFailed = true
+        try {
+          if (loadText) clearInterval(loadText); //stop loading animation for buttons
+        } catch (e) {}
+          document.body.style.backgroundColor = "white";
+          document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
+            <hr>Please properly define this file before running n-mod`
+          favIcon.href = 'img/Error.png'
+          document.title = "n-mod: FAULTY FILES DETECTED"
         }
+      }, 300);
+      document.body.appendChild(fileLoader)
 
-        function initColorCensored(el) {
-          if (el.dataset.init == 1) {
-            return;
+      /***** Scramble color-censored here (does NOT work if loaded anywhere else) *****/
+      function scramble(text) {
+        let result = "";
+        for (let i = 0; i < text.length; i++) {
+          let char = text[i];
+          // Preserve whitespace exactly
+          if (/\s/.test(char)) {
+            result += char;
           } else {
-            el.dataset.init = "1";
-            const trueText = el.textContent;
-            el.dataset.true = trueText
-            // 🔒 FORCE LAYOUT HACK
-            el.textContent = "\u00A0".repeat(trueText.length * 2);
-            el.addEventListener("copy", e => {
-              e.preventDefault();
-              e.clipboardData.setData("text/plain", trueText);
-            });
-            function animate() {
-              el.setAttribute("data-fake", scramble(trueText));
-            }
-            animate();
-            setInterval(animate, 50);
+            result += String.fromCharCode(Math.floor(Math.random() * 94) + 33);
           }
         }
+        return result;
+      }
 
-        function scan(root = document) {
-          root.querySelectorAll(".color-censored").forEach(initColorCensored);
+      function initColorCensored(el) {
+        if (el.dataset.init == 1) {
+          return;
+        } else {
+          el.dataset.init = "1";
+          const trueText = el.textContent;
+          el.dataset.true = trueText
+          // 🔒 FORCE LAYOUT HACK
+          el.textContent = "\u00A0".repeat(trueText.length * 2);
+          el.addEventListener("copy", e => {
+            e.preventDefault();
+            e.clipboardData.setData("text/plain", trueText);
+          });
+          function animate() {
+            el.setAttribute("data-fake", scramble(trueText));
+          }
+          animate();
+          setInterval(animate, 50);
         }
-        new MutationObserver(muts => {
-          muts.forEach(m =>
-            m.addedNodes.forEach(n => n.nodeType === 1 && scan(n))
-          );
-        }).observe(document.body, { childList: true, subtree: true });
-        document.addEventListener("copy", e => {
+      }
+
+      function scan(root = document) {
+        root.querySelectorAll(".color-censored").forEach(initColorCensored);
+      }
+      new MutationObserver(muts => {
+        muts.forEach(m =>
+          m.addedNodes.forEach(n => n.nodeType === 1 && scan(n))
+        );
+      }).observe(document.body, { childList: true, subtree: true });
+      document.addEventListener("copy", e => {
         const sel = document.getSelection();
         if (!sel.rangeCount) {
           return;
@@ -403,16 +386,15 @@ Press Escape to close"></textarea>
             });
 
             output += fragment.textContent;
+          }
+          if (handled) {
+            e.preventDefault();
+            e.clipboardData.setData("text/plain", output);
+          }
         }
-        if (handled) {
-          e.preventDefault();
-          e.clipboardData.setData("text/plain", output);
-        }
-      }
-    });
-    scan();
-    setInterval(scan, 50);
+      });
+      scan();
+      setInterval(scan, 50);
     </script>
-</body>
-
+  </body>
 </html>

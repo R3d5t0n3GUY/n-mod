@@ -159,48 +159,7 @@ window.addEventListener('load', () => {
     document.getElementById("myAnimation").beginElement();
   }
 });
-// function vertexCollision(v1, v1End, domain, best) {
-//     let results
-//     for (let i = 0; i < domain.length; ++i) {
-//         let vertices = domain[i].vertices;
-//         const len = vertices.length - 1;
-//         for (let j = 0; j < len; j++) {
-//             results = simulation.checkLineIntersection(v1, v1End, vertices[j], vertices[j + 1]);
-//             if (results.onLine1 && results.onLine2) {
-//                 const dx = v1.x - results.x;
-//                 const dy = v1.y - results.y;
-//                 const dist2 = dx * dx + dy * dy;
-//                 if (dist2 < best.dist2 && (!domain[i].mob || domain[i].alive)) {
-//                     best = {
-//                         x: results.x,
-//                         y: results.y,
-//                         dist2: dist2,
-//                         who: domain[i],
-//                         v1: vertices[j],
-//                         v2: vertices[j + 1]
-//                     };
-//                 }
-//             }
-//         }
-//         results = simulation.checkLineIntersection(v1, v1End, vertices[0], vertices[len]);
-//         if (results.onLine1 && results.onLine2) {
-//             const dx = v1.x - results.x;
-//             const dy = v1.y - results.y;
-//             const dist2 = dx * dx + dy * dy;
-//             if (dist2 < best.dist2) {
-//                 best = {
-//                     x: results.x,
-//                     y: results.y,
-//                     dist2: dist2,
-//                     who: domain[i],
-//                     v1: vertices[0],
-//                     v2: vertices[len]
-//                 };
-//             }
-//         }
-//     }
-//     return best
-// }
+
 //this function is used for finding the point where a ray hits things,  used for lasers mostly
 function vertexCollision(v1, v1End, domains) {  //= [map, body, [playerBody, playerHead]]     //m.isCloak ? [map, body] : [map, body, [playerBody, playerHead]]
   let results
