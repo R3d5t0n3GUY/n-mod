@@ -76,19 +76,23 @@ const powerUps = {
       return text
     },
     heal(num = 1) {
+      let text = '<span style="position:relative;">'
       if (powerUps.healGiveMaxEnergy) {
         switch (num) {
-          case 1: return `<div class="energy-circle"></div>`
+          case 1:
+            return `<div class="energy-circle"></div>`
         }
-        let text = '<span style="position:relative;">'
         for (let i = 0; i < num; i++) {
           text += `<div class="energy-circle" style="position:absolute; top:1.5px; left:${i * 0.5}em;"></div>`
         }
-        text += '</span> &nbsp; &nbsp;'
+      } else {
+        if (num === 1) return `<div class="heal-circle"></div>`
         for (let i = 0; i < num; i++) {
-          text += '&thinsp; '
+          text += `<div class="heal-circle" style="position:absolute; top:1px; left:${i * 0.6}em;"></div>`
         }
       }
+      text += '</span> &nbsp; &nbsp; '
+      for (let i = 0; i < num; i++) text += '&nbsp; '
       return text
     },
     tech(num = 1) {
