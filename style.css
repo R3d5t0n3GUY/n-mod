@@ -44,7 +44,7 @@ body {
   margin: 0;
   overflow: hidden;
   cursor: auto;
-  background-color: #f00;
+  background-color: #fff;
   /* filter: grayscale(1); */
   /* transition: background-color 0.2s ease-in-out; */
   font-size: 16px;
@@ -657,10 +657,6 @@ summary {
   /* border: 1.5px #333 solid; */
   /* border-radius: 8px; */
   /* background-color: #fff; */
-}
-
-.info-tag {
-  overflow-wrap: break-word;
 }
 
 .details-div {
