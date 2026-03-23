@@ -770,8 +770,10 @@ const tech = {
       name: "1st ionization energy",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Ionization_energy' class="link">1st ionization energy</a>`,
       descriptionFunction() {
-        return `convert current and future <div class="heal-circle"></div> into <div class="heal-circle" style="background-color: #ff0; border: 0.5px #000 solid;"></div>
-            		<br><div class="heal-circle" style="background-color: #ff0; border: 0.5px #000 solid;"></div> give <strong>+${15 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)}</strong> maximum <strong class='color-f'>energy</strong>`
+        /* return `convert current and future <div class="heal-circle"></div> into <div class="heal-circle" style="background-color: #ff0; border: 0.5px #000 solid;"></div>
+            		<br><div class="heal-circle" style="background-color: #ff0; border: 0.5px #000 solid;"></div> give <strong>+${15 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)}</strong> maximum <strong class='color-f'>energy</strong>` */
+        return `convert future <div class="heal-circle"></div> into ${powerUps.orb.Casimir(1)}
+                <br><em>${powerUps.Casimir.descriptionFunction()}</em>`
       },
       maxCount: 1,
       count: 0,
@@ -4066,7 +4068,9 @@ const tech = {
     {
       name: "ergodicity",
       descriptionFunction() {
-        return `<strong>0.5x</strong> <strong class='color-h'>healing</strong> from ${powerUps.orb.heal()}<br><strong>1.7x</strong> <strong class='color-d'>damage</strong>`
+        return `<strong>0.5x</strong> <strong class='color-h'>healing</strong> from ${powerUps.orb.heal()}
+        ${tech.isCasimir ? ` and ${powerUps.orb.Casimir(1)} give <strong>0.5x</strong> effect` : ""}
+        <br><strong>1.7x</strong> <strong class='color-d'>damage</strong>`
       },
       maxCount: 1,
       count: 0,
@@ -4166,7 +4170,9 @@ const tech = {
       name: "adiabatic healing",
       descriptionFunction() {
         //this.requires = (tech.isEnergyHealth ? "1st-ionization" : "not mass-energy")
-        return `<strong>2x</strong> ${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "maximum" : ""}<strong class='color-${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "f'>energy" : "h'>health"}</strong> from ${powerUps.orb.heal()}<br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
+        return `<strong>2x</strong> ${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "maximum" : ""}<strong class='color-${tech.isEnergyHealth && powerUps.healGiveMaxEnergy ? "f'>energy" : "h'>health"}</strong> from ${powerUps.orb.heal()}
+        ${tech.isCasimir ? ` and ${powerUps.orb.Casimir(1)} give <strong>2x</strong> effect` : ""}
+        <br><strong>+4%</strong> chance for <strong class='color-junk'>JUNK</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`
       },
       isPacifist: true,
       maxCount: 3,
@@ -5326,6 +5332,25 @@ const tech = {
       }
     },
     {
+      name: "energy",
+      descriptionFunction() {
+        return `spawn ${powerUps.orb.Casimir(6)}
+        <br><em>${powerUps.Casimir.descriptionFunction()}</em>`
+      },
+      maxCount: 9,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isInstant: true,
+      isMassProduction: true,
+      allowed: () => true,
+      requires: "",
+      effect() {
+        powerUps.spawnDelay("Casimir", 6)
+      },
+      remove() { }
+    },
+    {
       name: "quintessence",
       descriptionFunction() {
         if (this.count) {
@@ -5406,6 +5431,88 @@ const tech = {
       },
       remove() {
         tech.isCouplingPowerUps = false
+      }
+    },
+    {
+      name: "Casimir effect",
+      descriptionFunction() {
+        return `<strong>10%</strong> chance after mobs <strong>die</strong> to spawn ${powerUps.orb.Casimir(1)}<br><em>${powerUps.Casimir.descriptionFunction()}</em>`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed: () => true,
+      requires: "",
+      effect() {
+        tech.isCasimir = true //about 20-30 mobs per level so at 17% that's about 4*5 max energy per level 
+      },
+      remove() {
+        tech.isCasimir = false
+      }
+    },
+    {
+      name: "Lie group",
+      descriptionFunction() {
+        const resultsArray = tech.mergedList.map(item => powerUps.orb[item](1));
+        const resultString = resultsArray.join(", ");
+        return `randomly merge future ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)}, ${powerUps.orb.boost(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)} into ${powerUps.orb.Casimir(1)}
+        <br>${powerUps.orb.Casimir(1)} gain their effect <em style ="float: right;">(merged: ${resultString})</em>`
+      },
+      maxCount: 4,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed: () => tech.isCasimir && !tech.isEnergyHealth,
+      requires: "Casimir effect, not mass-energy",
+      list: ["coupling", "boost", "research", "ammo"],
+      effect() {
+        const pick1 = this.list[Math.floor(this.list.length * Math.random())]
+        this.list = this.list.filter(item => item !== pick1)
+        tech.mergedList.push(pick1)
+        simulation.inGameConsole(`${powerUps.orb[pick1](1)} merged into ${powerUps.orb.Casimir(1)} <em>//from Lie group</em>`);
+        // console.log(tech.mergedList, this.list, pick1)
+      },
+      remove() {
+        tech.mergedList = []
+      }
+    },
+    {
+      name: "van der Waals force",
+      descriptionFunction() {
+          return `${powerUps.orb.Casimir(1)} will also give <strong>10</strong> maximum <strong class='color-h'>health</strong>
+          <br><em>${powerUps.Casimir.descriptionFunction()}</em>`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed: () => tech.isCasimir,
+      requires: "Casimir effect",
+      effect() {
+        tech.isCasimirHealth = true //about 20-30 mobs per level so at 17% that's about 4*5 max energy per level 
+      },
+      remove() {
+        tech.isCasimirHealth = false
+      }
+    },
+    {
+      name: "vacuum energy",
+      descriptionFunction() {
+        return `after using ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;${powerUps.orb.Casimir(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)}
+        <br>randomly set your <strong class='color-f'>energy</strong> to <strong>0</strong> or <strong>${(100 * m.maxEnergy).toFixed(0)}`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed: () => tech.isCasimir,
+      requires: "Casimir effect",
+      effect() {
+        tech.isCasimirRandom = true //about 20-30 mobs per level so at 17% that's about 4*5 max energy per level 
+      },
+      remove() {
+        tech.isCasimirRandom = false
       }
     },
     {
@@ -11780,11 +11887,11 @@ const tech = {
       },
       requires: "molecular assembler, pilot wave, standing wave",
       effect() {
-        tech.isMassEnergy = true // used in m.grabPowerUp
+        tech.isPairProduction = true // used in m.grabPowerUp
         m.energy += 2 * level.isReducedRegen
       },
       remove() {
-        tech.isMassEnergy = false;
+        tech.isPairProduction = false;
       }
     },
     {
@@ -16037,7 +16144,7 @@ const tech = {
       simulation.updateTechHUD();
     }
   },
-  //variables use for gun tech upgrades
+  /* //variables use for gun tech upgrades
   fireRate: 1, //initializes to 1
   bulletSize: null,
   energySiphon: null,
@@ -16058,7 +16165,7 @@ const tech = {
   isLowHealthFireRate: null,
   isFarAwayDmg: null,
   isFirstDer: null,
-  isMassEnergy: null,
+  isPairProduction: null,
   isEndothermic: null,
   extraChoices: null,
   laserBotCount: null,
@@ -16440,5 +16547,5 @@ const tech = {
   isBreakHarpoonGain: null,
   isSounds: null,
   isPeriodicRealitySwitch: null,
-  isJunkTechSwap: null
+  isJunkTechSwap: null */
 }

@@ -5,12 +5,13 @@
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon
-•My first custom level
 
 ************************************************* POSTPONED ********************************************
 •More images in warp menu (Input needed from community)
+•My first custom level
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
+•TimeSkip for Pair Production
 •Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 •Bringing back c-gon levels. If you want to play them, try c-gon instead
