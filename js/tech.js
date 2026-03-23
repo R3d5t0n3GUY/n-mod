@@ -5320,6 +5320,7 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       isInstant: true,
+      isMassProduction: true,
       allowed() {
         return true
       },
