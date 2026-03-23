@@ -1,5 +1,7 @@
 **************************************************** TODO **********************************************
 •Add more commands to chat menu
+•Dark Mode setting
+•Import & Export Experiment Build as JSON
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon
