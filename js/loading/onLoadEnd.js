@@ -88,6 +88,7 @@ fileLoads.onLoadEnd = function () {
       hideHUD.checked = localSettings.isHideHUD
       hideImages.checked = localSettings.isHideImages
       healthBarMode.checked = localSettings.isDynamicHealthBar
+      darkMode.checked = localSettings.isDarkMode
       bannedLevels.innerHTML = localSettings.banList
     }
     document.getElementById("fps-select").addEventListener("input", () => {
