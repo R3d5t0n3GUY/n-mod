@@ -89,7 +89,7 @@ option {
 input {
   padding: 0px 4px;
   font-size: 0.8em;
-  border: 1px var(--border-color) solid;
+  border: 1px var(--text-color) solid;
   border-radius: 4px;
 }
 
@@ -134,7 +134,7 @@ td {
 .key-input-train {
   padding: 0px 5px;
   border: 2px solid var(--border-color);
-  color: var(--border-color);
+  color: var(--text-color);
   border-radius: 4px;
   background-color: var(--bg-color-hover);
   text-align: center;

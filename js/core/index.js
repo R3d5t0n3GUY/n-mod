@@ -1189,7 +1189,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         document.getElementById("dark-mode").checked = localSettings.isDarkMode
         document.getElementById("fps-select").value = localSettings.fpsCapDefault
         document.getElementById("banned").value = localSettings.banList
-        build.setDarkMode()
+        requestAnimFrames(4, build.setDarkMode)
       })
     }
     document.getElementById("control-testing").style.visibility = (localSettings.loreCount < 1) ? "hidden" : "visible"
