@@ -430,6 +430,10 @@ const build = {
     document.querySelector(':root').style.setProperty('--build-bg-color', hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)))
     document.querySelector(':root').style.setProperty('--card-color', hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)))
     document.querySelector(':root').style.setProperty('--hover-card-color', hsvo(240, 0.05, (localSettings.isDarkMode ? 0.44 : 0.93)))
+    document.querySelector(':root').style.setProperty('--bg-color', `#${localSettings.isDarkMode ? '000' : 'fff'}`)
+    document.querySelector(':root').style.setProperty('--bg-color-hover', `#${localSettings.isDarkMode ? '111' : 'eee'}`)
+    document.querySelector(':root').style.setProperty('--fade-color', hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)))
+    document.querySelector(':root').style.setProperty('--text-color', `#${localSettings.isDarkMode ? 'fff' : '000'}`)
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
