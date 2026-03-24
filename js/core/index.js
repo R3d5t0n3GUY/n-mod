@@ -434,6 +434,7 @@ const build = {
     document.querySelector(':root').style.setProperty('--bg-color-hover', `#${localSettings.isDarkMode ? '111' : 'eee'}`)
     document.querySelector(':root').style.setProperty('--fade-color', hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)))
     document.querySelector(':root').style.setProperty('--text-color', `#${localSettings.isDarkMode ? 'fff' : '000'}`)
+    document.querySelector(':root').style.setProperty('--border-color', `#${localSettings.isDarkMode ? 'ccc' : '333'}`)
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar

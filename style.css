@@ -6,6 +6,7 @@
   --bg-color-hover: #eee;
   --fade-color: #e2e9ec;
   --text-color: #000;
+  --border-color: #333;
 }
 
 @font-face {
@@ -69,14 +70,16 @@ canvas {
 
 select {
   font-size: 0.8em;
-  border: 1px #333 solid;
+  border: 1px var(--border-color) solid;
   border-radius: 6px;
   background-color: var(--bg-color);
+  color: var(--text-color);
   cursor: pointer;
 }
 
 option {
   background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 #choice {
@@ -86,7 +89,7 @@ option {
 input {
   padding: 0px 4px;
   font-size: 0.8em;
-  border: 1px #333 solid;
+  border: 1px var(--border-color) solid;
   border-radius: 4px;
 }
 
@@ -130,17 +133,17 @@ td {
 
 .key-input-train {
   padding: 0px 5px;
-  border: 2px solid #444;
-  color: #444;
+  border: 2px solid var(--border-color);
+  color: var(--border-color);
   border-radius: 4px;
-  background-color: #d0d0d0;
+  background-color: var(--bg-color-hover);
   text-align: center;
   font-weight: 400;
 }
 
 .key-input {
   padding: 3px 8px;
-  border: 2px solid #333;
+  border: 2px solid var(--border-color);
   background-color: var(--bg-color);
   text-align: center;
 }
@@ -152,7 +155,7 @@ td {
 .key-input-pause {
   width: 15px;
   padding: 0px 2px;
-  border: 2px solid #333;
+  border: 2px solid var(--border-color);
   background-color: var(--bg-color);
   text-align: center;
 }
@@ -170,10 +173,12 @@ summary {
   border: 1.5px #333 solid;
   border-radius: 8px;
   background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .SVG-button:hover {
   background-color: var(--bg-color-hover);
+  color: var(--text-color);
 }
 
 .SVG-button-splash {
@@ -181,10 +186,12 @@ summary {
   border-radius: 8px;
   background-color: var(--bg-color);
   transition: opacity 5s ease-in;
+  color: var(--text-color);
 }
 
 .SVG-button-splash:hover {
   background-color: var(--bg-color-hover);
+  color: var(--text-color);
 }
 
 #save-file-div {
@@ -237,7 +244,7 @@ summary {
   font-size: 0.9em;
   white-space: pre;
   padding: 3px;
-  border: 1px #333 solid;
+  border: 1px var(--border-color) solid;
 }
 
 #flex-center {
@@ -271,9 +278,9 @@ summary {
 
 .choose-grid-no-images {
   border-radius: 8px;
-  border: 10px solid #444;
+  border: 10px solid var(--border-color);
   gap: 10px;
-  background-color: #444;
+  background-color: var(--border-color);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -367,10 +374,11 @@ summary {
 
 .sort {
   padding: 0.1em 0.3em;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   /* min-height: 88px; */
   line-height: 100%;
   background-color: var(--card-color);
+  color: var(--text-color);
 }
 
 .sort-button {
@@ -378,6 +386,7 @@ summary {
   border-radius: 0.4em;
   background-color: var(--bg-color);
   font-size: 0.5em;
+  color: var(--text-color);
   /* padding: 0.3em; */
 
 }
@@ -438,6 +447,7 @@ summary {
 
 .experiment-start-box {
   background-color: var(--card-color);
+  color: var(--text-color);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -448,7 +458,7 @@ summary {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 2px #333 solid;
+  border: 2px var(--border-color) solid;
   border-top: 0px;
   border-radius: 10px;
   border-top-left-radius: 0px;
@@ -473,7 +483,8 @@ summary {
 .card-text {
   background-color: var(--card-color);
   padding: 0.5em 1em;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   margin-top: -1px;
   margin-right: -1px;
   font-size: 0.92em;
@@ -486,7 +497,8 @@ summary {
   font-size: 1.1em;
   font-weight: 100;
   justify-self: end;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   margin-top: -1px;
   margin-right: -1px;
   padding: 1px;
@@ -501,7 +513,7 @@ summary {
 .research-card {
   font-size: 1.1em;
   font-weight: 100;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   margin-top: -1px;
   margin-right: -1px;
   padding: 1px 0px 1px 10px;
@@ -667,7 +679,7 @@ summary {
 .details-div {
   padding: 10px;
   border-radius: 8px;
-  border: 2px #333 solid;
+  border: 2px var(--border-color) solid;
   background-color: var(--card-color);
 }
 
@@ -766,7 +778,7 @@ summary {
   left: 15px;
   z-index: 2;
   font-size: 23px;
-  color: #222;
+  color: var(--text-color);
   background-color: rgba(255, 255, 255, 0.2);
   line-height: 120%;
   user-select: none;
@@ -781,7 +793,7 @@ summary {
   left: 15px;
   z-index: 2;
   font-size: 23px;
-  color: #000;
+  color: var(--text-color);
   text-align: right;
   opacity: 0.7;
   background-color: rgba(190, 210, 245, 0.25);
@@ -802,7 +814,7 @@ summary {
   user-select: none;
   pointer-events: none;
   /*border: 2px solid rgba(0, 0, 0, 0.4);*/
-  color: #222;
+  color: var(--text-color);
   padding: 0px 5px 0px 5px;
   border-radius: 5px;
   opacity: 0.35;
@@ -1234,7 +1246,7 @@ summary {
   display: inline-block;
   background-color: var(--bg-color);
   opacity: 0.8;
-  border: 0.08em solid #222;
+  border: 0.08em solid var(--border-color);
   position: absolute;
   top: -0.05em;
   left: 0em;
@@ -1246,7 +1258,7 @@ summary {
   border-radius: 50%;
   display: inline-block;
   background-color: var(--bg-color);
-  border: 0.08em solid #222;
+  border: 0.08em solid var(--border-color);
   position: absolute;
   top: 0.45em;
   left: 0.9em;
@@ -1451,7 +1463,7 @@ summary {
 
 .box {
   padding: 3px 8px 3px 8px;
-  border: 2px solid #444;
+  border: 2px solid var(--border-color);
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.5);
 }
@@ -1962,7 +1974,7 @@ summary {
 
 .pause-details {
   background-color: var(--fade-color);
-  border: 1px solid #333;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   padding: 7px;
   margin-bottom: 10px;
