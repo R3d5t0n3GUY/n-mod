@@ -427,9 +427,9 @@ const build = {
     localSettings.isDarkMode = !localSettings.isDarkMode
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-    document.documentElement.style.setProperty('--build-bg-color', hsvo(216, 0.1, localSettings.isDarkMode ? 0.19 : 0.76)
-    document.documentElement.style.setProperty('--card-color', hsvo(200, 0.02, localSettings.isDarkMode ? 0.47 : 0.95)
-    document.documentElement.style.setProperty('--hover-card-color', hsvo(240, 0.05, localSettings.isDarkMode ? 0.44 : 0.93)
+    document.querySelector(':root').style.setProperty('--build-bg-color', hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)))
+    document.querySelector(':root').style.setProperty('--card-color', hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)))
+    document.querySelector(':root').style.setProperty('--hover-card-color', hsvo(240, 0.05, (localSettings.isDarkMode ? 0.44 : 0.93)))
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
