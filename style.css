@@ -102,6 +102,10 @@ em {
   opacity: 0.7;
 }
 
+text {
+  color: var(--text-color)
+}
+
 #splash {
   user-select: none;
   position: absolute;
