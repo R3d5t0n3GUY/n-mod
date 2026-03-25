@@ -943,20 +943,6 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       }
     }
   },
-  //     <div>
-  // <select name="difficulty-select" id="difficulty-select-experiment">
-  // <option value="1">easy</option>
-  // <option value="2" selected>normal ⚆</option>
-  // <option value="4">hard ⚆</option>
-  // <option value="5">why ⚇</option>
-  // </select>
-  // &nbsp; &nbsp;
-  //     <label for="hide-images-experiment" title="reload experiment with no images for fields, guns, and tech" style="font-size: 0.85em;">hide images</label>
-  //     <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images-experiment" name="hide-images-experiment" style="width:13px; height:13px;" ${localSettings.isHideImages ? "checked" : ""}>
-  // </div>
-
-  // <button onclick="build.sortTech('allowed', true)" class='sort-button' style="letter-spacing: 1px;font-weight: 400;">allowed</button>
-  // <button onclick="build.sortTech('have', true)" class='sort-button color-m' style="letter-spacing: 1px;font-weight: 800;">have</button>
   populateGrid() { //background-color:var(--build-bg-color);
     let text = `
 <div class="experiment-start-box">
@@ -971,7 +957,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         <button onclick="build.sortTech('input', true)" class='sort-button' style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
     </div>
     <div>
-        <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 25px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px 10px 25px;line-height: 100%;">
+        <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 10px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px -10px 10px;line-height: 100%;">
             <div style="grid-column: 1;grid-row: 2 / 4;">
                 <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70" >
                     <g stroke='none' fill='var(--text-color)' stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
@@ -985,6 +971,16 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                         <text x="5" y="18">reset</text>
                     </g>
                 </svg>
+            </div>
+            <div style='grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-10px;margin-bottom:5px;'>
+              <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images"
+                  style="width:12px; height:12px;"${localSettings.isHideImages ? " checked" : ""}>
+              <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
+              <br>
+              <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode"
+                  style="width:12px; height:12px;"${localSettings.isDarkMode ? " checked" : ""}>
+              <label for="dark-mode"
+                title="Changes document coloring, allowing easier reading">dark mode</label>
             </div>
         </div>
     </div>
