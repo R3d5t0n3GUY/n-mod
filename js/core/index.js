@@ -430,7 +430,7 @@ const build = {
     let styles = [
       { name: 'build-bg-color', col: hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)) },
       { name: 'card-color', col: hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)) },
-      { name: 'hover-card-color', col: hsvo(240, 0.05, (localSettings.isDarkMode ? 0.44 : 0.93)) },
+      { name: 'hover-card-color', col: hsvo(240, 0.05, (localSettings.isDarkMode ? 0.5 : 0.93)) },
       { name: 'bg-color', col: `#${localSettings.isDarkMode ? '000' : 'fff'}` },
       { name: 'bg-color-hover', col: `#${localSettings.isDarkMode ? '111' : 'eee'}` },
       { name: 'fade-color', col: hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)) },
@@ -439,7 +439,7 @@ const build = {
       { name: 'tooltip-color', col: `#${localSettings.isDarkMode ? '333' : 'ccc'}` },
       { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}`},
       { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}`},
-      { name: 'combo-color', col: `#${localSettings.isDarkMode ? "777" : "fff"}`}
+      { name: 'combo-color', col: `#${localSettings.isDarkMode ? "6a6a6a" : "fff"}`}
     ]
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
