@@ -4,10 +4,9 @@ setTimeout(() => {
 
 fileLoads.onLoadEnd = function () {
   document.title = 'n-mod'
-  startBtn.innerHTML = `<text x="10" y="32">start</text>`
-  trainBtn.innerHTML = `<text x="10" y="32">training</text>`
-  experimentBtn.innerHTML = `<text stroke='none' fill='#333' stroke-width="2" font-size="15px",
-    sans-serif" x="10" y="32">experiment</text>`
+  startBtn.innerHTML = `<fill='var(--text-color)' text x="10" y="32">start</text>`
+  trainBtn.innerHTML = `<fill='var(--text-color)' text x="10" y="32">training</text>`
+  experimentBtn.innerHTML = `<fill='var(--text-color)' x="10" y="32">experiment</text>`
   startBtn.style.cursor = "pointer"
   trainBtn.style.cursor = "pointer"
   experimentBtn.style.cursor = "pointer"
