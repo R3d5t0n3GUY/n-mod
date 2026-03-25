@@ -1174,7 +1174,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         isHideImages: true, //default to hide images
         isHideHUD: false,
         isDynamicHealthBar: false,
-        isDarkMode: false,
+        isDarkMode: false, //default to light mode
         pauseMenuDetailsOpen: [true, false, false, true],
         entanglement: undefined,
         techHistory: [],
@@ -1182,14 +1182,18 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       input.setDefault()
       if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       requestAnimFrames(2, () => {
-        document.getElementById("community-maps").checked = localSettings.isCommunityMaps
-        simulation.isCommunityMaps = localSettings.isCommunityMaps
-        document.getElementById("hide-images").checked = localSettings.isHideImages
-        document.getElementById("hide-hud").checked = localSettings.isHideHUD
-        document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
-        document.getElementById("dark-mode").checked = localSettings.isDarkMode
-        document.getElementById("fps-select").value = localSettings.fpsCapDefault
-        document.getElementById("banned").value = localSettings.banList
+        try {
+          document.getElementById("community-maps").checked = localSettings.isCommunityMaps
+          simulation.isCommunityMaps = localSettings.isCommunityMaps
+          document.getElementById("hide-images").checked = localSettings.isHideImages
+          document.getElementById("hide-hud").checked = localSettings.isHideHUD
+          document.getElementById("health-bar-mode").checked = localSettings.isDynamicHealthBar
+          document.getElementById("dark-mode").checked = localSettings.isDarkMode
+          document.getElementById("fps-select").value = localSettings.fpsCapDefault
+          document.getElementById("banned").value = localSettings.banList
+        } catch (e) {
+          console.warn(e)
+        }
         requestAnimFrames(4, () => {
           build.setDarkMode('splash-start')
         })
