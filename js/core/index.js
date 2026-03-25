@@ -424,7 +424,7 @@ const build = {
   },
   setDarkMode(from = "settings") {
     if (localSettings.isDarkMode === undefined) localSettings.isDarkMode = false //default to light mode
-    localSettings.isDarkMode = !localSettings.isDarkMode
+    if (from !== 'spash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     document.querySelector(':root').style.setProperty('--build-bg-color', hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)))
@@ -1189,7 +1189,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         document.getElementById("dark-mode").checked = localSettings.isDarkMode
         document.getElementById("fps-select").value = localSettings.fpsCapDefault
         document.getElementById("banned").value = localSettings.banList
-        requestAnimFrames(4, build.setDarkMode)
+        requestAnimFrames(4, () => {
+          build.setDarkMode('splash-start')
+        })
       })
     }
     document.getElementById("control-testing").style.visibility = (localSettings.loreCount < 1) ? "hidden" : "visible"
