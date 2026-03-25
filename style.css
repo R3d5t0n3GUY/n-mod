@@ -7,6 +7,7 @@
   --fade-color: #e2e9ec;
   --text-color: #000;
   --border-color: #333;
+  --tooltip-color: #ccc;
 }
 
 @font-face {

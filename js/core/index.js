@@ -264,7 +264,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 // const ctx = canvas.getContext('2d', { alpha: false }); //optimization, this works if you wipe with the background color of each level
 
-document.body.style.backgroundColor = "#fff";
+document.body.style.backgroundColor = "var(--bg-color)";
 
 //disable pop up menu on right click
 document.oncontextmenu = function () {
@@ -435,6 +435,7 @@ const build = {
     document.querySelector(':root').style.setProperty('--fade-color', hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)))
     document.querySelector(':root').style.setProperty('--text-color', `#${localSettings.isDarkMode ? 'fff' : '000'}`)
     document.querySelector(':root').style.setProperty('--border-color', `#${localSettings.isDarkMode ? 'ccc' : '333'}`)
+    document.querySelector(':root').style.setProperty('--tooltip-color', `#${localSettings.isDarkMode ? '333' : 'ccc'}`)
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
@@ -483,7 +484,7 @@ const build = {
     }, floater = (text) => { return `<span style="float:right;">${text}</span><br>` }
     let text = `<div class="pause-grid-module" style="padding: 8px;">
 <span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
-<em style="float: right;color:#ccc;">press ${input.key.pause} to resume</em>
+<em style="float: right;color:var(--tooltip-color);">press ${input.key.pause} to resume</em>
 ${inputLabelText("hideHUD",'settings',"hide-hud",0,"HideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
 ${inputLabelText("setHealthBarMode",0,"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
 ${inputLabelText("setDarkMode",0,"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
@@ -542,7 +543,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 <details id = "console-log-details" style="padding: 0 8px;">
 <summary>console log</summary>
 <div class="pause-details">
-    <div class="pause-grid-module" style="    background-color: #e2e9ec;font-size: 0.8em;">${document.getElementById("text-log").innerHTML}</div>
+    <div class="pause-grid-module" style="background-color: var(--fade-color);font-size: 0.8em;">${document.getElementById("text-log").innerHTML}</div>
 </div>
 </details>
 </div>`
@@ -550,7 +551,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       // const fieldNameP = m.fieldUpgrades[m.fieldMode > 1 ? m.fieldMode - 1 : m.fieldUpgrades.length - 1].name
       // const fieldNameN = m.fieldUpgrades[m.fieldMode === m.fieldUpgrades.length - 2 ? 1 : m.fieldMode + 1].name
       //button above for previous
-      text += `<div class="pause-grid-module" id ="pause-field-previous" style="animation: fieldColorCycle 3s linear infinite alternate; border-top: 1px solid #000;border-bottom: 1px solid #000;">
+      text += `<div class="pause-grid-module" id ="pause-field-previous" style="animation: fieldColorCycle 3s linear infinite alternate; border-top: 1px solid var(--text-color);border-bottom: 1px solid var(--text-color);">
                            <div class="grid-title" style="text-align: center;">↑ <div class="circle-grid field"></div> ↑</div></div>`
       //button for current
       const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: url("img/field/${m.fieldUpgrades[m.fieldMode].name}.webp"), url("img/junk.webp")'`
@@ -559,7 +560,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                                                         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
                                                         ${m.fieldUpgrades[m.fieldMode].description}</div> </div>`
       //button below for next
-      text += `<div class="pause-grid-module" id="pause-field-next" style="animation: fieldColorCycle 3s linear infinite alternate;border-bottom: 1px solid #000;">
+      text += `<div class="pause-grid-module" id="pause-field-next" style="animation: fieldColorCycle 3s linear infinite alternate;border-bottom: 1px solid var(--text-color);">
                                                     <div class="grid-title" style="text-align: center;">↓ <div class="circle-grid field"></div> ↓</div></div>`
 
 
@@ -600,8 +601,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     <button onclick="build.sortTech('damage taken')" class='sort-button'><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
     <button onclick="build.sortTech('heal')" class='sort-button'><strong class='color-h'>heal</strong></button>
     <button onclick="build.sortTech('energy')" class='sort-button'><strong class='color-f'>energy</strong></button>
-    <input type="search" id="sort-input" style="width: 8em;font-size: 0.6em;color:#000;" placeholder="sort by" />
-    <button onclick="build.sortTech('input')" class='sort-button' style="border-radius: 0em;border: 1.5px #000 solid;font-size: 0.6em;" value="damage">sort</button>
+    <input type="search" id="sort-input" style="width: 8em;font-size: 0.6em;color:var(--text-color);" placeholder="sort by" />
+    <button onclick="build.sortTech('input')" class='sort-button' style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
 </div>`;
     const ejectClass = (tech.isPauseEjectTech && !simulation.isChoosing) ? 'pause-eject' : ''
     for (let i = 0, len = tech.tech.length; i < len; i++) {
@@ -958,21 +959,21 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         <button onclick="build.sortTech('damage taken', true)" class='sort-button'><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
         <button onclick="build.sortTech('heal', true)" class='sort-button'><strong class='color-h'>heal</strong></button>
         <button onclick="build.sortTech('energy', true)" class='sort-button'><strong class='color-f'>energy</strong></button>
-        <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:#000;" placeholder="sort by" />
-        <button onclick="build.sortTech('input', true)" class='sort-button' style="border-radius: 0em;border: 1.5px #000 solid;font-size: 0.6em;" value="damage">sort</button>
+        <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);" placeholder="sort by" />
+        <button onclick="build.sortTech('input', true)" class='sort-button' style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
     </div>
     <div>
         <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 25px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px 10px 25px;line-height: 100%;">
             <div style="grid-column: 1;grid-row: 2 / 4;">
                 <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70" >
-                    <g stroke='none' fill='#333' stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
+                    <g stroke='none' fill='var(--text-color)' stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
                         <text x="10" y="57">start</text>
                     </g>
                 </svg>
             </div>
             <div style="grid-column: 2;grid-row: 2;">
                 <svg class="SVG-button" onclick="build.reset()" width="50" height="25">
-                    <g stroke='none' fill='#333' stroke-width="2" font-size="17px" font-family="Chakra Petch, sans-serif">
+                    <g stroke='none' fill='var(--text-color)' stroke-width="2" font-size="17px" font-family="Chakra Petch, sans-serif">
                         <text x="5" y="18">reset</text>
                     </g>
                 </svg>
