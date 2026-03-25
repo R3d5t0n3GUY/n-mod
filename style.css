@@ -10,6 +10,7 @@
   --tooltip-color: #ccc;
   --bounce-color: #aaa;
   --rest-color: #555;
+  --combo-color: #fff;
 }
 
 @font-face {
@@ -971,7 +972,7 @@ summary {
   float: right;
   font-family: monospace;
   font-size:1rem;
-  color: var(--bg-color);
+  color: var(--combo-color);
 }
 
 .color-censored {

@@ -427,15 +427,23 @@ const build = {
     if (from !== 'spash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-    document.querySelector(':root').style.setProperty('--build-bg-color', hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)))
-    document.querySelector(':root').style.setProperty('--card-color', hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)))
-    document.querySelector(':root').style.setProperty('--hover-card-color', hsvo(240, 0.05, (localSettings.isDarkMode ? 0.44 : 0.93)))
-    document.querySelector(':root').style.setProperty('--bg-color', `#${localSettings.isDarkMode ? '000' : 'fff'}`)
-    document.querySelector(':root').style.setProperty('--bg-color-hover', `#${localSettings.isDarkMode ? '111' : 'eee'}`)
-    document.querySelector(':root').style.setProperty('--fade-color', hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)))
-    document.querySelector(':root').style.setProperty('--text-color', `#${localSettings.isDarkMode ? 'fff' : '000'}`)
-    document.querySelector(':root').style.setProperty('--border-color', `#${localSettings.isDarkMode ? 'ccc' : '333'}`)
-    document.querySelector(':root').style.setProperty('--tooltip-color', `#${localSettings.isDarkMode ? '333' : 'ccc'}`)
+    let styles = [
+      { name: 'build-bg-color', col: hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)) },
+      { name: 'card-color', col: hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)) },
+      { name: 'hover-card-color', col: hsvo(240, 0.05, (localSettings.isDarkMode ? 0.44 : 0.93)) },
+      { name: 'bg-color', col: `#${localSettings.isDarkMode ? '000' : 'fff'}` },
+      { name: 'bg-color-hover', col: `#${localSettings.isDarkMode ? '111' : 'eee'}` },
+      { name: 'fade-color', col: hsvo(198, 0.04, (localSettings.isDarkMode ? 0.1 : 0.93)) },
+      { name: 'text-color', col: `#${localSettings.isDarkMode ? 'fff' : '000'}` },
+      { name: 'border-color', col: `#${localSettings.isDarkMode ? 'ccc' : '333'}` },
+      { name: 'tooltip-color', col: `#${localSettings.isDarkMode ? '333' : 'ccc'}` },
+      { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}`},
+      { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}`},
+      { name: 'combo-color', col: `#${localSettings.isDarkMode ? "777" : "fff"}`}
+    ]
+    styles.forEach(i => {
+      document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
+    })
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
