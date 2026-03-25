@@ -4860,7 +4860,7 @@ const m = {
       name: "field emitter",
       description: `<em>initial field</em><br>use <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs and <strong>throw</strong> <strong class='color-block'>blocks</strong>
           <br><strong>4</strong> <strong class='color-f'>energy</strong> per second
-          <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↑↓ ← → ↑↓ ← →</em>`, //            <br><strong>100</strong> max <strong class='color-f'>energy</strong>
+          <em class='color-combo'>↑↓ ← → ↑↓ ← →</em>`, //            <br><strong>100</strong> max <strong class='color-f'>energy</strong>
       keyLog: [null, null, null, null, null, null, null, null],
       effect: () => {
         m.fieldEvent = function (event) {
@@ -4909,7 +4909,7 @@ const m = {
       description: `<strong>3</strong> oscillating <strong>shields</strong> are permanently active
               <br><strong>+150</strong> max <strong class='color-f'>energy</strong>
               <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
-              <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">←←↓→→↓</em>`,
+              <em class='color-combo'>←←↓→→↓</em>`,
       keyLog: [null, null, null, null, null, null],
       energyHealthRatio: 1,
       drainCD: 0,
@@ -5047,7 +5047,7 @@ const m = {
       description: `<strong>deflecting</strong> does not drain <strong class='color-f'>energy</strong>
       				<br><strong>shield</strong> maintains <strong>functionality</strong> while inactive
                     <br><strong>5</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">← → ← → ↧</em>`,
+                    <em class='color-combo'>← → ← → ↧</em>`,
       keyLog: [null, null, null, null, null],
       effect: () => {
         //store event function so it can be found and removed in m.setField()
@@ -5397,7 +5397,7 @@ const m = {
       description: `use <strong class='color-f'>energy</strong> to nullify &nbsp;<strong style='letter-spacing: 7px;'>gravity</strong>
       				<br><strong>0.5x</strong> <strong class='color-defense'>damage taken</strong>
                     <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">←↑→↑↑</em>`,
+                    <em class='color-combo'>←↑→↑↑</em>`,
       fieldDrawRadius: 0,
       keyLog: [null, null, null, null, null],
       effect: () => {
@@ -5624,9 +5624,9 @@ const m = {
               "<strong>drones"
         }</strong>
                     <br><strong>12</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↓→↓←↑↑↓</em>`,
+                    <em class='color-combo'>↓→↓←↑↑↓</em>`,
       setDescription() {
-        return `use <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs<br>excess <strong class='color-f'>energy</strong> used to <strong class='color-print'>print</strong> ${simulation.molecularMode === 0 ? "<strong class='color-p' style='letter-spacing: 2px;'>spores" : simulation.molecularMode === 1 ? "<strong>missiles" : simulation.molecularMode === 2 ? "<strong class='color-s'>ice IX" : "<strong>drones"}</strong><br><strong>12</strong> <strong class='color-f'>energy</strong> per second <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↓→↓←↑↑↓</em>`
+        return `use <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs<br>excess <strong class='color-f'>energy</strong> used to <strong class='color-print'>print</strong> ${simulation.molecularMode === 0 ? "<strong class='color-p' style='letter-spacing: 2px;'>spores" : simulation.molecularMode === 1 ? "<strong>missiles" : simulation.molecularMode === 2 ? "<strong class='color-s'>ice IX" : "<strong>drones"}</strong><br><strong>12</strong> <strong class='color-f'>energy</strong> per second <em class='color-combo'>↓→↓←↑↑↓</em>`
       },
       endoThermic(drain) {
         if (tech.isEndothermic) {
@@ -5803,7 +5803,7 @@ const m = {
       description: `use <strong class='color-f'>energy</strong> to emit short range <strong class='color-plasma'>plasma</strong>
       				<br><strong>1.5x</strong> <strong class='color-d'>damage</strong>
                     <br><strong>10</strong> <strong class='color-f'>energy</strong> per second
-                    <em style="float: right;font-family: monospace;font-size: 1rem;color: #fff;">←↓→→↧</em>`,
+                    <em class='color-combo'>←↓→→↧</em>`,
       keyLog: [null, null, null, null, null],
       set() {
         //store event function so it can be found and removed in m.setField()
@@ -6280,7 +6280,7 @@ const m = {
       description: `use <strong class='color-f'>energy</strong> to <strong style='letter-spacing: 2px;'>stop time</strong>
       				<br><strong>1.2x</strong> <strong class='color-speed'>movement</strong> and <em>fire rate</em></strong>
                     <br><strong>12</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">←↓→↑←↓→↑</em>`,
+                    <em class='color-combo' style="font-size:0.8rem;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
       set() {
@@ -6403,7 +6403,7 @@ const m = {
       description: `<strong>0.4x</strong> <strong class='color-defense'>damage taken</strong> while <strong class='color-cloaked'>cloaked</strong>
       				<br>after <strong class='color-cloaked'>decloaking</strong> <strong>4.5x</strong> <strong class='color-d'>damage</strong> for <strong>2</strong> s
                     <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↑↓←↓→</em>`,
+                    <em class='color-combo'>↑↓←↓→</em>`,
       keyLog: [null, null, null, null, null],
       smallFieldRadius: 130,
       effect: () => {
@@ -6587,7 +6587,7 @@ const m = {
     {
       name: "pilot wave",
       description: `use <strong class='color-f'>energy</strong> to guide <strong class='color-block'>blocks</strong>
-      				<em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↓↓→↓←↓↓</em>
+      				<em class='color-combo'>↓↓→↓←↓↓</em>
                     <br><div class="circle-grid tech"></div>, <div class="circle-grid gun"></div>, and <div class="circle-grid field"></div> have <strong>+3</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ces</span></strong>
                     <br><strong>10</strong> <strong class='color-f'>energy</strong> per second`,
       keyLog: [null, null, null, null, null, null, null],
@@ -6906,7 +6906,7 @@ const m = {
       description: `use <strong>16</strong> <strong class='color-f'>energy</strong> to <strong>tunnel</strong> through a <strong class='color-worm'>wormhole</strong>
       				<br><strong>+8%</strong> chance to <strong class='color-dup'>duplicate</strong> <strong>power ups</strong>
                     <br><strong>8</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↓↓↓↑↓</em>`,
+                    <em class='color-combo'>↓↓↓↑↓</em>`,
       keyLog: [null, null, null, null, null],
       drain: 0,
       effect: () => {
@@ -7331,7 +7331,7 @@ const m = {
       description: `use <strong class='color-f'>energy</strong> to fire a hook that <strong>pulls</strong> you
       				<br><strong>0.5x</strong> <strong class='color-defense'>damage taken</strong>
                     <br><strong>9</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↑↑↓↓</em>`,
+                    <em class='color-combo'>↑↑↓↓</em>`,
       keyLog: [null, null, null, null],
       effect: () => {
         //store event function so it can be found and removed in m.setField()
@@ -7483,7 +7483,7 @@ const m = {
     {
       name: "tachyonic field",
       description: `use <strong class="color-f">energy</strong> to gain a <strong>burst</strong> of <strong class='color-speed'>speed</strong>
-              <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">←↑→↓↓</em>
+              <em class='color-combo'>←↑→↓↓</em>
       				<br>multiply <strong class='color-speed'>momentum</strong> <strong>exponentially</strong>
                     <br>16 <strong class="color-f">energy</strong> per second`,
       canMove: false,
@@ -7684,7 +7684,7 @@ const m = {
       name: "energy condenser",
       //<br>hold <strong class='color-block'>blocks</strong> as if they have a lower <strong>mass</strong>
       description: `use <strong class='color-f'>energy</strong> to recover <strong class='color-h'>health</strong>
-      				<em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">→↓←↓↓</em>
+      				<em class='color-combo'>→↓←↓↓</em>
       				<br>must be <strong>crouching</strong> to use this effect
             		<br><strong>6</strong> <strong class='color-f'>energy</strong> per second`,
       keyLog: [null, null, null, null, null],
@@ -7766,7 +7766,7 @@ const m = {
       description: `<strong>shield</strong> maintains <strong>functionality</strong> while inactive
         			<br>allows <strong>slow fall</strong>
             		<br><strong>4</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↑←↓→↧</em>`,
+                    <em class='color-combo'>↑←↓→↧</em>`,
       keyLog: [null, null, null, null, null],
       effect: () => {
         m.fieldEvent = function (event) {
@@ -8037,7 +8037,7 @@ const m = {
       description: `use <strong class='color-f'>energy</strong> to <strong>teleport</strong> to mouse position
       				<br>use excess <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs
                     <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
-                    <em style ="float: right; font-family: monospace;font-size:1rem;color:#fff;">↓↓↑↑↓</em>`,
+                    <em class='color-combo'>↓↓↑↑↓</em>`,
       keyLog: [null, null, null, null, null],
       teleportCDcycle: 0,
       effect: () => {

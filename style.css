@@ -8,6 +8,8 @@
   --text-color: #000;
   --border-color: #333;
   --tooltip-color: #ccc;
+  --bounce-color: #aaa;
+  --rest-color: #555;
 }
 
 @font-face {
@@ -965,6 +967,13 @@ summary {
   color: #6e9ba0;
 }
 
+.color-combo {
+  float: right;
+  font-family: monospace;
+  font-size:1rem;
+  color: var(--bg-color);
+}
+
 .color-censored {
   position: relative;
   font-family: 'Mojangles';
@@ -1033,7 +1042,7 @@ summary {
   display: inline-block;
   animation: bounce 3s infinite;
   transform-origin: bottom;
-  color: #555;
+  color: var(--rest-color);
 }
 
 .color-choice span:nth-child(1) {
@@ -1055,7 +1064,7 @@ summary {
 
   15% {
     transform: translateY(-2px);
-    color: #aaa;
+    color: var(--bounce-color);
   }
 
   30% {
@@ -1068,8 +1077,8 @@ summary {
 }
 
 .color-invulnerable {
-  color: #fff;
-  text-shadow: 0px 0px 7px #000;
+  color: var(--bg-color);
+  text-shadow: 0px 0px 7px var(--text-color);
 }
 
 .color-dark-matter {

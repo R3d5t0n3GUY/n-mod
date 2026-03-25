@@ -10315,7 +10315,7 @@ const tech = {
 			name: "hartman effect",
 			descriptionFunction() {
 				return `use <strong class="color-f">energy</strong> to split <strong>nearby mobs</strong>
-        <br><strong class="color-d">damage</strong> scales with number of <strong>mobs</strong><em style ="float: right; font-family: monospace;font-size:0.8rem;color:#fff;">↓↓← →</em>`
+        <br><strong class="color-d">damage</strong> scales with number of <strong>mobs</strong><em class='color-combo' style="font-size:0.8rem;">↓↓← →</em>`
 			},
 			isGunTech: true,
 			maxCount: 1,
