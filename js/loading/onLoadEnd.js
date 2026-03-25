@@ -19,7 +19,7 @@ fileLoads.onLoadEnd = function () {
       <path transform="translate(11.9,0) scale(1.25)" d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" /><!--O (fill)-->
       <path transform="translate(15.9,0) scale(1.25)" d="M0 0  h1  l 0.3 0.3  v-2 h0.8 v4.1 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" /><!--D (fill)-->
     </g>
-    <g transform="translate(100,210) scale(34)" fill='none' stroke='#333' stroke-linejoin="round" stroke-linecap="round">
+    <g transform="translate(100,210) scale(34)" fill='none' stroke='var(--border-color)' stroke-linejoin="round" stroke-linecap="round">
       <path class="draw-lines-n" d="M0 0  h1  v0.2  h1.7  l0.3 0.3  v2.6  h-1  v-1.7  h-1  v1.7  h-1 z" stroke-width='0.0875' /><!--N (outline)-->
       <rect class="draw-lines-dash" x="4" y="1.25" width="1" height="0.5" stroke-width='0.0875' rx='0.03' /><!--Hyphen (outline)-->
       <path class="draw-lines-m" transform="translate(6,0)" d="M0 0  h1  v0.2  h1  l0.3 0.3 0.3 -0.3 1.3 0 0.3 0.3 v2.6 h-.8 v-1.8 h-0.8 v1.8 h-.8 v-1.8 h-.8 v1.8 h-1 z " stroke-width='0.0875' /><!--M (trace)-->
@@ -29,18 +29,18 @@ fileLoads.onLoadEnd = function () {
 
     <!-- mouse -->
     <g class="draw-lines3" transform="translate(290,430) scale(0.28)" stroke-linecap="round" stroke-linejoin="round" stroke-width="10px" stroke="#333" fill="none">
-      <path class="fade-in" stroke="none" fill="#fff" d="M827,112 h30 a140,140,0,0,1,140,140 v268 a140,140,0,0,1-140,140 h-60 a140,140,0,0,1-140-140v-268 a140,140,0,0,1,140-140h60" />
+      <path class="fade-in" stroke="none" fill="var(--bg-color)" d="M827,112 h30 a140,140,0,0,1,140,140 v268 a140,140,0,0,1-140,140 h-60 a140,140,0,0,1-140-140v-268 a140,140,0,0,1,140-140h60" />
       <path class="fade-in" d="M832.41,106.64 V322 H651.57 V255 c0-82,67.5-148,150-148 Z" fill="rgb(0, 200, 255)" stroke="none" />
       <path d="M827,112 h30 a140,140,0,0,1,140,140 v268 a140,140,0,0,1-140,140 h-60 a140,140,0,0,1-140-140v-268 a140,140,0,0,1,140-140h60" />
       <path d="M657 317 h340 h-170 v-25 m0 -140 v-42 s 21 -59, -5 -59 S 807 7, 807 7" />
       <ellipse fill="none" cx="827.57" cy="218.64" rx="29" ry="68" />
-      <ellipse fill="#fff" class="fade-in-fast" cx="827.57" cy="218.64" rx="29" ry="68" />
+      <ellipse fill="var(--bg-color)" class="fade-in-fast" cx="827.57" cy="218.64" rx="29" ry="68" />
     </g>
 
     <!-- keys -->
     <g transform="translate(195,480) scale(0.8)">
       <!-- fade in background -->
-      <g fill='#fff' stroke='none' class="fade-in">
+      <g fill='var(--bg-color)' stroke='none' class="fade-in">
         <path d="M0 60 h60 v-60 h-60 v60" class="draw-lines-box-1" />
         <path d="M70 60 h60 v-60 h-60 v60" class="draw-lines-box-2" />
         <path d="M140 60 h60 v-60 h-60 v60" class="draw-lines-box-3" />
@@ -48,7 +48,7 @@ fileLoads.onLoadEnd = function () {
         <path d="M70 70 h60 v60 h-60 v-60" class="draw-lines-box-2" />
         <path d="M140 70 h60 v60 h-60 v-60" class="draw-lines-box-3" />
       </g>
-      <g fill='none' stroke='#333' stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+      <g fill='none' stroke='var(--border-color)' stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
         <path d="M0 60 h60 v-60 h-60 v60" class="draw-lines-box-1" />
         <!-- <rect x="0" y="0" width="60" height="60" rx="10" ry="10" class="draw-lines-box-1" /> -->
         <path d="M70 60 h60 v-60 h-60 v60" class="draw-lines-box-2" />
@@ -57,7 +57,7 @@ fileLoads.onLoadEnd = function () {
         <path d="M70 70 h60 v60 h-60 v-60" class="draw-lines-box-2" />
         <path d="M140 70 h60 v60 h-60 v-60" class="draw-lines-box-3" />
       </g>
-      <g class="draw-lines4" text-anchor="middle" stroke='#000' fill='none' stroke-width="2" font-size="38px">
+      <g class="draw-lines4" text-anchor="middle" stroke='var(--text-color)' fill='none' stroke-width="2" font-size="38px">
         <text x="30" y="45" id="splash-previous-gun" stroke-width="2">Q</text>
         <text x="100" y="45" id="splash-up">W</text>
         <text x="170" y="45" id="splash-next-gun" stroke-width="2">E</text>
