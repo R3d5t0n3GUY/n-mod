@@ -196,10 +196,10 @@ function collisionChecks(event) {
             let dmg = Math.min(Math.max(0.025 * Math.sqrt(mob[k].mass), 0.05), 0.3) * mob[k].damageScale();
             mob[k].foundPlayer();
             if (tech.isRewindAvoidDeath && m.energy > 0.85 * Math.min(1, m.maxEnergy) && dmg > 0.01) { //CPT reversal runs in m.damage, but it stops the rest of the collision code here too
-              if (tech.isFlipFlopOn || !tech.isFlipFlopHarm) m.takeDamage(dmg);
+              if (tech.isFlipFlopOn || !tech.isFlipFlopImmune) m.takeDamage(dmg);
               return
             }
-            if (tech.isFlipFlopOn || !tech.isFlipFlopHarm) m.takeDamage(dmg); //normal damage
+            if (tech.isFlipFlopOn || !tech.isFlipFlopImmune) m.takeDamage(dmg); //normal damage
 
             if (tech.isCollisionRealitySwitch && m.alive) {
               m.switchWorlds("Hilbert space")
@@ -294,7 +294,7 @@ function collisionChecks(event) {
                   tech.isFlipFlopOn = true //immune to damage this hit, lose immunity for next hit
                   if (document.getElementById("tech-flip-flop")) document.getElementById("tech-flip-flop").innerHTML = ` = <strong>ON</strong>`
                   m.eyeFillColor = m.fieldMeterColor //'#0cf'
-                  if (!tech.isFlipFlopHarm) m.takeDamage(dmg);
+                  if (!tech.isFlipFlopImmune) m.takeDamage(dmg);
                 }
                 if (tech.isFlipFlopHealth) {
                   m.setMaxHealth();
