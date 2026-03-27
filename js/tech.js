@@ -9580,8 +9580,7 @@ const tech = {
     },
     {
       name: "protoporphyrin IX",
-      description: `<strong class="color-h">health</strong> is converted to <strong>spear</strong> <em>durability</em>
-        <br>when spear <em>durability</em> reaches 0`,
+      description: `<strong class="color-h">health</strong> is converted to <strong>spear</strong> <em>durability</em><br>when spear <em>durability</em> reaches 0`,
       isGunTech: true,
       isNscytheTech: true,
       maxCount: 1,
@@ -9653,8 +9652,7 @@ const tech = {
     },
     {
       name: "dry lightning",
-      description: `imbue <strong>spear</strong> with <strong class="color-f">energy</strong>
-        <br>mobs are <strong class="color-s">stunned</strong> by <strong>spear</strong>`,
+      description: `imbue <strong>spear</strong> with <strong class="color-f">energy</strong><br>mobs are <strong class="color-s">stunned</strong> by <strong>spear</strong>`,
       isGunTech: true,
       isNscytheTech: true,
       maxCount: 1,
@@ -9672,8 +9670,7 @@ const tech = {
     },
     {
       name: "arc discharge",
-      description: `spear <strong style="color: rgb(220, 20, 220);">lightning</strong> may strike nearby mobs
-        <br>increases <strong>probability</strong> and <strong class="color-f">energy</strong> cost`,
+      description: `spear <strong style="color: rgb(220, 20, 220);">lightning</strong> may strike nearby mobs<br>increases <strong>probability</strong> and <strong class="color-f">energy</strong> cost`,
       isGunTech: true,
       maxCount: 9,
       count: 0,
@@ -9690,8 +9687,7 @@ const tech = {
     },
     {
       name: "polonium-210",
-      description: `crouching <strong>charges</strong> a ball of <strong class='color-plasma'>plasma</strong> onto spear
-        <br>uncrouching <strong>releases</strong> a <strong class='color-d>powerful</strong> beam of <strong class="color-f">energy</strong>`,
+      description: `crouching <strong>charges</strong> a ball of <strong class='color-plasma'>plasma</strong> onto spear<br>uncrouching <strong>releases</strong> a <strong class='color-d>powerful</strong> beam of <strong class="color-f">energy</strong>`,
       isGunTech: true,
       isNscytheTech: true,
       maxCount: 1,
@@ -9962,8 +9958,7 @@ const tech = {
     },
     {
       name: "blood transfusion",
-      description: `sacrifice <strong class="color-h">health</strong> onto your spear
-        <br>-6 <strong class="color-h">health</strong>/second but <strong>3x</strong> spear <strong class="color-d">damage</strong>`,
+      description: `sacrifice <strong class="color-h">health</strong> onto your spear<br>-6 <strong class="color-h">health</strong>/second but <strong>3x</strong> spear <strong class="color-d">damage</strong>`,
       isGunTech: true,
       isNscytheTech: true,
       maxCount: 1,
@@ -10192,8 +10187,7 @@ const tech = {
     //**************************************************
     {
       name: "spherical harmonics",
-      description: `<strong>1.5x</strong> <strong>standing wave</strong> deflection <strong class='color-f'>energy</strong> efficiency
-        	<br>shield deflection <strong>radius</strong> is stable`, //<strong>standing wave</strong> oscillates in a 3rd dimension<br>
+      description: `<strong>1.5x</strong> <strong>standing wave</strong> deflection <strong class='color-f'>energy</strong> efficiency<br>shield deflection <strong>radius</strong> is stable`, //<strong>standing wave</strong> oscillates in a 3rd dimension<br>
       isFieldTech: true,
       maxCount: 9,
       count: 0,
@@ -10214,8 +10208,7 @@ const tech = {
     },
     {
       name: "superposition",
-      description: `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong>
-        <br>while you have above <strong>200</strong> <strong class='color-f'>energy</strong>`,
+      description: `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong><br>while you have above <strong>200</strong> <strong class='color-f'>energy</strong>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,
@@ -10233,8 +10226,7 @@ const tech = {
     },
     {
       name: "surface plasmons",
-      description: `if <strong>deflecting</strong> drains all your <strong class='color-f'>energy</strong>
-        	<br>emit <strong class='color-laser'>laser</strong> beams that scale with max <strong class='color-f'>energy</strong>`,
+      description: `if <strong>deflecting</strong> drains all your <strong class='color-f'>energy</strong><br>emit <strong class='color-laser'>laser</strong> beams that scale with max <strong class='color-f'>energy</strong>`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10277,8 +10269,7 @@ const tech = {
     },
     {
       name: "expansion",
-      description: `using standing wave <strong>expands</strong> its <strong>radius</strong>
-      		<br><strong>+77</strong> maximum <strong class='color-f'>energy</strong>`,
+      description: `using standing wave <strong>expands</strong> its <strong>radius</strong><br><strong>+77</strong> maximum <strong class='color-f'>energy</strong>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,
@@ -10301,8 +10292,7 @@ const tech = {
     },
     {
       name: "electronegativity",
-      descriptionFunction: () => `<strong>1.0023x</strong> <strong class='color-d'>damage</strong> per <strong class='color-f'>energy</strong>
-        <br><em style ="float: right;">(${(1 + 0.23 * m.energy).toFixed(2)}x, ${(1 + 0.23 * m.maxEnergy).toFixed(2)}x at max energy)</em>`,
+      descriptionFunction: () => `<strong>1.0023x</strong> <strong class='color-d'>damage</strong> per <strong class='color-f'>energy</strong><br><em style ="float: right;">(${(1 + 0.23 * m.energy).toFixed(2)}x, ${(1 + 0.23 * m.maxEnergy).toFixed(2)}x at max energy)</em>`,
       // description: "<strong>+1%</strong> <strong class='color-d'>damage</strong> per <strong>8</strong> stored <strong class='color-f'>energy</strong>",
       isFieldTech: true,
       maxCount: 9,
@@ -10337,8 +10327,7 @@ const tech = {
     },
     {
       name: "cherenkov radiation", //<strong>deflecting</strong> and <strong class='color-block'>blocks</strong>
-      description: `bremsstrahlung's effects are <strong class='color-p'>radioactive</strong>
-      		<br><strong>3.5x</strong> <strong class='color-d'>damage</strong> over <strong>3</strong> seconds`,
+      description: `bremsstrahlung's effects are <strong class='color-p'>radioactive</strong><br><strong>3.5x</strong> <strong class='color-d'>damage</strong> over <strong>3</strong> seconds`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10356,8 +10345,7 @@ const tech = {
     },
     {
       name: "flux pinning",
-      description: `mobs <strong>deflected</strong> by your ${powerUps.orb.field()}
-        	<br>are <strong>stunned</strong> for <strong>4</strong> seconds`,
+      description: `mobs <strong>deflected</strong> by your ${powerUps.orb.field()}<br>are <strong>stunned</strong> for <strong>4</strong> seconds`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 9,
@@ -10375,8 +10363,7 @@ const tech = {
     },
     {
       name: "paramagnetism",
-      description: `activate <strong>perfect diamagnetism</strong> ${powerUps.orb.field()}
-      <br>and hold <strong>down</strong> to attract distant <strong class='color-block'>blocks</strong>`, // and <strong>release</strong> to launch
+      description: `activate <strong>perfect diamagnetism</strong> ${powerUps.orb.field()}<br>and hold <strong>down</strong> to attract distant <strong class='color-block'>blocks</strong>`, // and <strong>release</strong> to launch
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10393,8 +10380,7 @@ const tech = {
     },
     {
       name: "eddy current brake",
-      description: `perfect diamagnetism and Einstein's field <strong class='color-s'>slow</strong> nearby mobs
-      		<br>effect <strong>radius</strong> scales with stored <strong class='color-f'>energy</strong>`,
+      description: `perfect diamagnetism and Einstein's field <strong class='color-s'>slow</strong> nearby mobs<br>effect <strong>radius</strong> scales with stored <strong class='color-f'>energy</strong>`,
       isFieldTech: true,
       isPacifist: true,
       maxCount: 1,
@@ -10412,8 +10398,7 @@ const tech = {
     },
     {
       name: "Meissner effect",
-      description: `<strong>1.55x</strong> perfect diamagnetism <strong>radius</strong>
-        	<br><strong>+22°</strong> perfect diamagnetism circular <strong>arc</strong>`,
+      description: `<strong>1.55x</strong> perfect diamagnetism <strong>radius</strong><br><strong>+22°</strong> perfect diamagnetism circular <strong>arc</strong>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,
@@ -10431,8 +10416,7 @@ const tech = {
     },
     {
       name: "radiative equilibrium",
-      descriptionFunction: () => `after losing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> ${tech.isEnergyHealth ? "from collisions" : ""}
-        <br><strong>4x</strong> <strong class='color-d'>damage</strong> for <strong>4</strong> seconds`,
+      descriptionFunction: () => `after losing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> ${tech.isEnergyHealth ? "from collisions" : ""}<br><strong>4x</strong> <strong class='color-d'>damage</strong> for <strong>4</strong> seconds`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10449,8 +10433,7 @@ const tech = {
     },
     {
       name: "dynamic equilibrium",
-      descriptionFunction: () => `increase <strong class='color-d'>damage</strong> by your most recent <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> loss
-        <br> <em style ="float: right;">(${(1 + (tech.lastHitDamage === 0 ? 6 : tech.lastHitDamage) * m.lastHit).toFixed(2)}x)</em>`,
+      descriptionFunction: () => `increase <strong class='color-d'>damage</strong> by your most recent <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> loss<br> <em style ="float: right;">(${(1 + (tech.lastHitDamage === 0 ? 6 : tech.lastHitDamage) * m.lastHit).toFixed(2)}x)</em>`,
       isFieldTech: true,
       maxCount: 3,
       count: 0,
@@ -10467,8 +10450,7 @@ const tech = {
     },
     {
       name: "neutronium",
-      description: `<strong>0.8x</strong> <strong>move</strong> and <strong>jump</strong>, but
-        	<br>while your ${powerUps.orb.field()} is active <strong>0.05x</strong> <strong class='color-defense'>damage taken</strong>`,
+      description: `<strong>0.8x</strong> <strong>move</strong> and <strong>jump</strong>, but<br>while your ${powerUps.orb.field()} is active <strong>0.05x</strong> <strong class='color-defense'>damage taken</strong>`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10567,8 +10549,7 @@ const tech = {
       }
     }, {
       name: "Newtons 1st law",
-      descriptionFunction: () => `<strong class='color-defense'>damage taken</strong> reduces as your <strong class="color-speed">speed</strong> increases
-      <br>up to <strong>0.05x</strong> <strong class='color-defense'>damage taken</strong> at <strong>60</strong> <strong class="color-speed">speed</strong> <em style ="float: right;">(${(1 - Math.min((tech.speedAdded + player.speed) * 0.01583, 0.95)).toFixed(2)}x)</em>`,
+      descriptionFunction: () => `<strong class='color-defense'>damage taken</strong> reduces as your <strong class="color-speed">speed</strong> increases<br>up to <strong>0.05x</strong> <strong class='color-defense'>damage taken</strong> at <strong>60</strong> <strong class="color-speed">speed</strong> <em style ="float: right;">(${(1 - Math.min((tech.speedAdded + player.speed) * 0.01583, 0.95)).toFixed(2)}x)</em>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,
@@ -10586,8 +10567,7 @@ const tech = {
     },
     {
       name: "Newtons 2nd law",
-      descriptionFunction: () => `<strong class='color-d'>damage</strong> increases proportional to your <strong class="color-speed">speed</strong>
-      <br>up to <strong>3x</strong> <strong class='color-d'>damage</strong> at <strong>60</strong> <strong class="color-speed">speed</strong> <em style ="float: right;">(${(1 + Math.min(2, ((tech.speedAdded + player.speed) * 0.033))).toFixed(2)}x)</em>`,
+      descriptionFunction: () => `<strong class='color-d'>damage</strong> increases proportional to your <strong class="color-speed">speed</strong><br>up to <strong>3x</strong> <strong class='color-d'>damage</strong> at <strong>60</strong> <strong class="color-speed">speed</strong> <em style ="float: right;">(${(1 + Math.min(2, ((tech.speedAdded + player.speed) * 0.033))).toFixed(2)}x)</em>`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10604,8 +10584,7 @@ const tech = {
     },
     {
       name: "MOND",
-      descriptionFunction: () => `your <strong class="color-speed">speed</strong> counts as <strong>+20</strong> higher
-      <br><em>(for Newton's 1st and 2nd laws)</em>`,
+      descriptionFunction: () => `your <strong class="color-speed">speed</strong> counts as <strong>+20</strong> higher<br><em>(for Newton's 1st and 2nd laws)</em>`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10622,8 +10601,7 @@ const tech = {
     },
     {
       name: "additive manufacturing",
-      description: `hold <strong>crouch</strong> and use ${powerUps.orb.field()} to <strong class='color-print'>print</strong> a <strong class='color-block'>block</strong>
-      <br> with <strong>1.8x</strong> density, <strong class='color-d'>damage</strong>, and launch speed`,
+      description: `hold <strong>crouch</strong> and use ${powerUps.orb.field()} to <strong class='color-print'>print</strong> a <strong class='color-block'>block</strong><br> with <strong>1.8x</strong> density, <strong class='color-d'>damage</strong>, and launch speed`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -10915,8 +10893,7 @@ const tech = {
     },
     {
       name: "plasma-bot upgrade",
-      description: `<strong>convert</strong> your <strong class='color-bot'>bots</strong> to <strong class='color-bot'>plasma-bots</strong>
-        	<br><strong>2x</strong> <strong class='color-plasma'>plasma</strong> <strong class='color-d'>damage</strong> and <strong class='color-f'>energy</strong> efficiency`,
+      description: `<strong>convert</strong> your <strong class='color-bot'>bots</strong> to <strong class='color-bot'>plasma-bots</strong><br><strong>2x</strong> <strong class='color-plasma'>plasma</strong> <strong class='color-d'>damage</strong> and <strong class='color-f'>energy</strong> efficiency`,
       maxCount: 1,
       count: 0,
       frequency: 3,
@@ -11127,8 +11104,7 @@ const tech = {
     },
     {
       name: "Lorentz transformation",
-      description: `use ${powerUps.orb.research(3)}
-      <br><strong>1.5x</strong> <strong class='color-speed'>movement</strong>, <strong>jumping</strong>, and <em>fire rate</em>`,
+      description: `use ${powerUps.orb.research(3)}<br><strong>1.5x</strong> <strong class='color-speed'>movement</strong>, <strong>jumping</strong>, and <em>fire rate</em>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 3,
@@ -11223,8 +11199,7 @@ const tech = {
     },
     {
       name: "symbiosis",
-      descriptionFunction: () => `after a <strong>boss</strong> <strong>dies</strong> spawn ${powerUps.orb.research(4)}${powerUps.orb.heal(3)}${powerUps.orb.tech()}
-        <br>after a <strong>mob</strong> <strong>dies</strong> <strong>–0.25</strong> maximum <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>`,
+      descriptionFunction: () => `after a <strong>boss</strong> <strong>dies</strong> spawn ${powerUps.orb.research(4)}${powerUps.orb.heal(3)}${powerUps.orb.tech()}<br>after a <strong>mob</strong> <strong>dies</strong> <strong>–0.25</strong> maximum <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -11357,8 +11332,7 @@ const tech = {
     },
     {
       name: "de Broglie-Bohm theory",
-      description: `<strong>pilot wave</strong> can travel through <strong>anything</strong> for
-        	<br><strong>2x</strong> the <strong class='color-f'>energy</strong> cost`,
+      description: `<strong>pilot wave</strong> can travel through <strong>anything</strong> for <br><strong>2x</strong> the <strong class='color-f'>energy</strong> cost`,
       isFieldTech: true,
       maxCount: 1,
       count: 0,
@@ -11397,8 +11371,7 @@ const tech = {
     },
     {
       name: "principle of locality",
-      description: `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong> while inside <strong>pilot wave</strong>
-        	<br><div class="circle-grid tech"></div>, <div class="circle-grid gun"></div>, and <div class="circle-grid field"></div> have <strong>-2</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`,
+      description: `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong> while inside <strong>pilot wave</strong><br><div class="circle-grid tech"></div>, <div class="circle-grid gun"></div>, and <div class="circle-grid field"></div> have <strong>-2</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,
