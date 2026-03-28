@@ -13733,49 +13733,18 @@ const tech = {
           oscillator2.start();
           return audioCtx
         }
-        let sound = EBS()
-
-        delay = 1000
-        setTimeout(() => {
-          build.sound.suspend()
-          powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-          setTimeout(() => {
-            build.sound.resume()
-            setTimeout(() => {
-              build.sound.suspend()
-              powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-              setTimeout(() => {
-                build.sound.resume()
-                setTimeout(() => {
-                  build.sound.suspend()
-                  powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-                  setTimeout(() => {
-                    build.sound.resume()
-                    setTimeout(() => {
-                      build.sound.suspend()
-                      powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-                      setTimeout(() => {
-                        build.sound.resume()
-                        setTimeout(() => {
-                          build.sound.suspend()
-                          powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-                          setTimeout(() => {
-                            build.sound.resume()
-                            setTimeout(() => {
-                              build.sound.suspend()
-                              build.sound.close()
-                              powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal");
-                            }, delay);
-                          }, delay);
-                        }, delay);
-                      }, delay);
-                    }, delay);
-                  }, delay);
-                }, delay);
-              }, delay);
-            }, delay);
-          }, delay);
-        }, delay);
+        let sound = EBS(), delay = 1000, i = 0, loopSteps = [
+          () => { sound.resume() },
+          () => {
+            sound.suspend() //.tryNoCatch()
+            if (i > 5) sound.close()
+            powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal")
+            i++
+          }
+        ], looping = loopSteps.concat(loopSteps, loopSteps, loopSteps, loopSteps, loopSteps),
+        delays = looping.concat([])
+        delays = delays.fill(delay)
+        setTimeOuts(looping, delays);
       },
       remove() { }
     },
