@@ -9,7 +9,7 @@ const localSaves = {
     fileStatusDiv.innerHTML = ""
   },
   defaultMenu() {
-    let text = `<input type="file" id="file-import" accept=".json" onchange="localSaves.onImport(event)" hidden>
+    let text = `<input type="file" id="local-settings-import" accept=".json" onchange="localSaves.onImport(event)" hidden>
 <input type="button" value="Import" class="custom-file-button" title="Click to use your save file" onclick="localSaves.loadFile()">
 <input type="button" value="Export" class="custom-file-button" title="Click to download your save file" onclick="localSaves.exportSettings()">
 <input type="button" value="Wipe" class="custom-file-button" style="color:red;" title="This cannot be undone!" onclick="localSaves.openConfirmation()">`
@@ -27,7 +27,7 @@ const localSaves = {
     URL.revokeObjectURL(a.href);
   },
   loadFile() {
-    document.getElementById('file-import').click();
+    document.getElementById('local-settings-import').click();
   },
   onImport(oevent) {
     let file = oevent.target.files[0];

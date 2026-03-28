@@ -987,11 +987,12 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
             <text x="5" y="18">Save Build</text>
           </g>
         </svg>
-        <svg class="SVG-button" width="70" height="25" onclick="build.import()">
+        <svg class="SVG-button" width="70" height="25" onclick="document.getElementById('experiment-build-import').click()">
           <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="12px" font-family="Chakra Petch, sans-serif">
             <text x="5" y="18">Load Build</text>
           </g>
         </svg>
+        <input type="file" id="experiment-build-import" accept=".json" onchange="buid.import(event)" hidden>
       </div>
     </div>
   </div>
