@@ -1,6 +1,5 @@
 **************************************************** TODO **********************************************
 •Add more commands to chat menu
-•Import & Export Experiment Build as JSON
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon
@@ -8,6 +7,7 @@
 ************************************************* POSTPONED ********************************************
 •More images in warp menu (Input needed from community)
 •My first custom level
+•Import & Export Experiment Build as JSON
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity

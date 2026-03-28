@@ -946,44 +946,55 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   populateGrid() { //background-color:var(--build-bg-color);
     let text = `
 <div class="experiment-start-box">
-    <div class="sort" style="border: 0px;">
-        <button onclick="build.sortTech('guntech', true)" class='sort-button'>${powerUps.orb.gunTech()}</button>
-        <button onclick="build.sortTech('fieldtech', true)" class='sort-button'>${powerUps.orb.fieldTech()}</button>
-        <button onclick="build.sortTech('damage', true)" class='sort-button'><strong class='color-d'>damage</strong></button>
-        <button onclick="build.sortTech('damage taken', true)" class='sort-button'><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
-        <button onclick="build.sortTech('heal', true)" class='sort-button'><strong class='color-h'>heal</strong></button>
-        <button onclick="build.sortTech('energy', true)" class='sort-button'><strong class='color-f'>energy</strong></button>
-        <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);" placeholder="sort by" />
-        <button onclick="build.sortTech('input', true)" class='sort-button' style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
+  <div class="sort" style="border: 0px;">
+    <button onclick="build.sortTech('guntech', true)" class="sort-button"><div class="circle-grid tech tooltip" style="position:relative; top:-0.05em; left:0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div>
+      <div class="circle-grid gun tooltip" style="position:relative; top:-0.05em; left:-0.55em; opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div></button>
+    <button onclick="build.sortTech('fieldtech', true)" class="sort-button"><div class="circle-grid tech tooltip" style="position:relative; top:-0.05em; left:0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div>
+      <div class="circle-grid field tooltip" style="position:relative; top:-0.05em; left:-0.55em;opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div></button>
+    <button onclick="build.sortTech('damage', true)" class="sort-button"><strong class="color-d">damage</strong></button>
+    <button onclick="build.sortTech('damage taken', true)" class="sort-button"><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
+    <button onclick="build.sortTech('heal', true)" class="sort-button"><strong class="color-h">heal</strong></button>
+    <button onclick="build.sortTech('energy', true)" class="sort-button"><strong class="color-f">energy</strong></button>
+    <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);" placeholder="sort by">
+    <button onclick="build.sortTech('input', true)" class="sort-button" style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
+  </div>
+  <div id="experiment-settings" style="height:116px;">
+    <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 10px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px -10px 10px;line-height: 100%;">
+      <div style="grid-column: 1;grid-row: 2;">
+        <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70">
+          <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
+            <text x="10" y="57">start</text>
+          </g>
+        </svg>
+      </div>
+      <div style="grid-column: 2;grid-row: 2;">
+        <svg class="SVG-button" onclick="build.reset()" width="50" height="25">
+          <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="17px" font-family="Chakra Petch, sans-serif">
+            <text x="5" y="18">reset</text>
+          </g>
+        </svg>
+      </div>
+      <div style="grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-58px;margin-bottom:5px;">
+        <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images" style="width:12px; height:12px;" checked="">
+        <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
+        <br>
+        <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode" style="width:12px; height:12px;" checked="">
+        <label for="dark-mode" title="Changes document coloring, allowing easier reading">dark mode</label>
+      </div>
+      <div style="grid-column:1;margin-top:-1.25em;grid-row:4;height:30px;">
+        <svg class="SVG-button" width="70" height="25" onclick="build.export()">
+          <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="12px" font-family="Chakra Petch, sans-serif">
+            <text x="5" y="18">Save Build</text>
+          </g>
+        </svg>
+        <svg class="SVG-button" width="70" height="25" onclick="build.import()">
+          <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="12px" font-family="Chakra Petch, sans-serif">
+            <text x="5" y="18">Load Build</text>
+          </g>
+        </svg>
+      </div>
     </div>
-    <div>
-        <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 10px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px -10px 10px;line-height: 100%;">
-            <div style="grid-column: 1;grid-row: 2 / 4;">
-                <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70" >
-                    <g stroke='none' fill='var(--text-color)' stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
-                        <text x="10" y="57">start</text>
-                    </g>
-                </svg>
-            </div>
-            <div style="grid-column: 2;grid-row: 2;">
-                <svg class="SVG-button" onclick="build.reset()" width="50" height="25">
-                    <g stroke='none' fill='var(--text-color)' stroke-width="2" font-size="17px" font-family="Chakra Petch, sans-serif">
-                        <text x="5" y="18">reset</text>
-                    </g>
-                </svg>
-            </div>
-            <div style='grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-10px;margin-bottom:5px;'>
-              <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images"
-                  style="width:12px; height:12px;"${localSettings.isHideImages ? " checked" : ""}>
-              <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
-              <br>
-              <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode"
-                  style="width:12px; height:12px;"${localSettings.isDarkMode ? " checked" : ""}>
-              <label for="dark-mode"
-                title="Changes document coloring, allowing easier reading">dark mode</label>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>`
     const hideStyle = `style="height:auto; border: none; background-color: transparent;"`
     for (let i = 0, len = m.fieldUpgrades.length; i < len; i++) {
