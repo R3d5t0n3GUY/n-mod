@@ -13741,9 +13741,14 @@ const tech = {
             powerUps.spawn(m.pos.x + 160 * (Math.random() - 0.5), m.pos.y + 160 * (Math.random() - 0.5), "heal")
             i++
           }
-        ], looping = loopSteps.concat(loopSteps, loopSteps, loopSteps, loopSteps, loopSteps),
-        delays = looping.concat([])
+        ], maxSteps = 6,
+        looping = ((k, m) => {
+          for (let j = 0, l = []; j < Math.abs(m); j++) l.push(k);
+          return l;
+        })(loopSteps, maxSteps)
+        delays = Array.fromRange(maxSteps)
         delays = delays.fill(delay)
+        sound.suspend()
         setTimeOuts(looping, delays);
       },
       remove() { }
@@ -14841,7 +14846,7 @@ const tech = {
     {
       name: "Youve... been... TROLLED!",
       description: "Yes, you've probably been told.",
-      macCount: 1,
+      maxCount: 1,
       count: 0,
       frequency: 0,
       isInstant: true,
