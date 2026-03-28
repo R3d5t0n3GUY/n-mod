@@ -4155,4 +4155,264 @@ const modLevels = {
     spawn.secondaryBossChance(1250, -11075)
     powerUps.addResearchToLevel()
   },
+  vents() {
+    simulation.inGameConsole(`<strong>vents</strong> by <b style='color: crimson;'>Richard0820</b>`);
+    level.setPosToSpawn(-2300, 592.5);
+    level.exit.x = -3062.5;
+    level.exit.y = 612.5;
+    level.defaultZoom = 1800
+    simulation.zoomTransition(level.defaultZoom)
+    document.body.style.backgroundColor = "#d8dadf";
+    const el0 = level.elevator(3350, 600, 300, 50, -1875);
+    const sp1 = level.spinner(1700, -1550, 525, 50);
+    const sp2 = level.spinner(850, -1550, 525, 50);
+    const mo3 = level.mover(-475, -587.5, 3525, 50);
+    const bu0 = level.button(-2350, -575);
+    const bu1 = level.button(2700, -2400);
+    const ro0 = level.rotor(-8350, -400, 125, 1000, 40, 0, 0.5, 0, -2);
+    spawn.mapRect(-3500, 650, 7475, 325);
+    spawn.mapRect(-3500, 0, 325, 950);
+    spawn.mapRect(-3062.5, 637.5, 100, 25);
+    spawn.mapRect(-3500, -2400, 325, 1950);
+    spawn.mapRect(-3500, -575, 2475, 125);
+    spawn.mapRect(-2850, 0, 1075, 125);
+    spawn.mapRect(-2850, 25, 125, 725);
+    spawn.mapRect(-2350, 637.5, 100, 25);
+    spawn.mapRect(-1525, 0, 1525, 125);
+    spawn.mapRect(-7600, -675, 4425, 225);
+    spawn.mapRect(-7600, 0, 4425, 225);
+    spawn.mapRect(-3500, -2400, 2475, 300);
+    spawn.mapRect(-600, -575, 3800, 125);
+    spawn.mapRect(650, 0, 2550, 125);
+    spawn.mapRect(3050, -1875, 300, 2000);
+    spawn.mapRect(3650, -2400, 325, 3375);
+    spawn.mapRect(-600, -1150, 125, 700);
+    spawn.mapRect(-1900, 325, 375, 125);
+    spawn.mapRect(-1900, 0, 125, 450);
+    spawn.mapRect(-600, -2400, 4575, 300);
+    spawn.mapRect(-7600, 0, 200, 875);
+    spawn.mapRect(-9250, 650, 1850, 225);
+    spawn.mapRect(-9250, -675, 1850, 225);
+    spawn.mapRect(-9250, -675, 200, 1550);
+    spawn.mapRect(725, -1175, 1625, 125);
+    spawn.mapRect(1475, -1675, 125, 875);
+    spawn.mapRect(275, 0, 125, 725);
+    spawn.mapRect(3650, -3925, 325, 1825);
+    spawn.mapRect(-3500, -3925, 325, 1800);
+    spawn.mapRect(0, -2725, 300, 575);
+    spawn.mapRect(500, -2725, 1450, 150);
+    spawn.mapRect(1825, -3350, 1925, 125);
+    spawn.mapRect(-2875, -2750, 1650, 150);
+    spawn.mapRect(-2875, -3075, 150, 475);
+    spawn.mapRect(-1325, -3650, 300, 1050);
+    spawn.mapRect(-3200, -2750, 100, 150);
+    spawn.mapRect(1825, -3350, 125, 775);
+    spawn.bodyRect(1650, -2900, 175, 175);
+    spawn.mapRect(-3500, -3925, 2475, 325);
+    spawn.mapRect(-600, -3925, 4575, 325);
+    spawn.mapRect(0, 325, 400, 125);
+    spawn.mapRect(1700, 0, 125, 425);
+    spawn.mapRect(275, -925, 2475, 125);
+    spawn.mapRect(-600, -925, 425, 125);
+    spawn.bodyRect(2450, -2575, 50, 50);
+    spawn.bodyRect(2450, -2675, 50, 50);
+    spawn.bodyRect(2450, -2725, 50, 50);
+    spawn.bodyRect(-2400, -2975, 725, 175);
+    spawn.bodyRect(-2650, -3075, 225, 225);
+    spawn.bodyRect(-2025, -850, 575, 275);
+    spawn.bodyRect(2575, -1075, 150, 125);
+    spawn.bodyRect(1200, -1300, 150, 125);
+    spawn.bodyRect(1950, 450, 250, 125);
+    spawn.bodyRect(1175, 350, 200, 150);
+    spawn.bodyRect(2900, -125, 150, 125);
+    spawn.bodyRect(-1425, 400, 450, 250);
+    spawn.bodyRect(-2675, -625, 50, 50);
+    spawn.bodyRect(-2675, -700, 50, 50);
+    spawn.bodyRect(-2675, -775, 50, 50);
+    spawn.bodyRect(-1150, -550 - 25, 700, 75, 1, spawn.propsDoor); // door
+    body[body.length - 1].isNotHoldable = true;
+    body[body.length - 1].collisionFilter.mask = cat.player | cat.body | cat.mob | cat.mobBullet | cat.bullet
+    cons[cons.length] = Constraint.create({
+      bodyB: body[body.length - 1],
+      pointB: {
+          x: 300,
+          y: 0
+      },
+      pointA: {
+          x: -538, 
+          y: -512 - 25
+      },
+      stiffness: 1,
+    });
+    Composite.add(engine.world, cons[cons.length - 1]);
+    const connector = cons[cons.length] = Constraint.create({
+      bodyB: body[body.length - 1],
+      pointB: {
+        x: -300,
+        y: 0
+      },
+      pointA: {
+        x: -1150, 
+        y: -525 - 25
+      },
+      stiffness: 0.5,
+    });
+    Composite.add(engine.world, cons[cons.length - 1]);
+    spawn.randomMob(2275, -2875, Infinity);
+    spawn.randomMob(3100, -2925, Infinity);
+    spawn.randomMob(3425, -2875, Infinity);
+    spawn.randomMob(2900, -2775, Infinity);
+    spawn.randomMob(2550, -2575, Infinity);
+    spawn.randomMob(1550, -2525, Infinity);
+    spawn.randomMob(650, -2475, Infinity);
+    spawn.randomMob(1400, -3150, Infinity);
+    spawn.randomMob(600, -3075, Infinity);
+    spawn.randomMob(-2950, -3175, Infinity);
+    spawn.randomMob(-1825, -3250, Infinity);
+    spawn.randomMob(-2275, -2500, Infinity);
+    spawn.randomMob(-2775, -2475, Infinity);
+    spawn.randomMob(-1300, -2450, Infinity);
+    spawn.randomMob(1250, -1775, Infinity);
+    spawn.randomMob(2400, -1525, Infinity);
+    spawn.randomMob(2675, -1075, Infinity);
+    spawn.randomMob(1825, -1025, Infinity);
+    spawn.randomMob(550, -1025, Infinity);
+    spawn.randomMob(-225, -1100, Infinity);
+    spawn.randomMob(575, -700, Infinity);
+    spawn.randomMob(2400, -675, Infinity);
+    spawn.randomMob(-2400, -1150, Infinity);
+    spawn.randomMob(-2750, -700, Infinity);
+    spawn.randomMob(-1900, -950, Infinity);
+    spawn.randomMob(-1225, -725, Infinity);
+    spawn.randomMob(-900, 275, Infinity);
+    spawn.randomMob(-375, 175, Infinity);
+    spawn.randomMob(550, 300, Infinity);
+    spawn.randomMob(2000, 250, Infinity);
+    spawn.randomMob(1575, 225, Infinity);
+    spawn.randomMob(3200, 250, Infinity);
+    spawn.randomMob(3200, -2000, Infinity);
+    const windStreamers = [];
+    function spawnStreamer(x, y, angle = 0) {
+      windStreamers.push({
+        x: x,
+        y: y,
+        angle: angle,
+        speed: 30 + Math.random() * 2,
+        life: 1,
+        length: 500 + Math.random() * 300,
+        width: 5 + Math.random() * 5,
+        phase: Math.random() * Math.PI * 2,
+        wobble: 10 + Math.random() * 10
+      });
+    }
+    function drawStreamers() {
+      windStreamers.forEach((s, i) => {
+        s.life -= 0.02;
+        if (s.life <= 0) {
+          windStreamers.splice(i, 1);
+          return;
+        }
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        s.phase += 0.2;
+        ctx.lineWidth = s.width;
+        ctx.strokeStyle = `rgba(255,255,255,${s.life})`;
+        ctx.beginPath();
+        for (let j = 0; j < s.length; j += 5) {
+          const t = j / s.length;
+          let px = s.x - Math.cos(s.angle) * j;
+          let py = s.y - Math.sin(s.angle) * j;
+          const perpX = -Math.sin(s.angle);
+          const perpY = Math.cos(s.angle);
+          const wave = Math.sin(s.phase + t * 6) * s.wobble * (1 - t);
+          px += perpX * wave;
+          py += perpY * wave;
+          if (j === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      });
+    }
+    const windZones = [
+      {
+        bounds: { min: { x: -7500, y: -450 }, max: { x: 3050, y: 0 } },
+        force: { x: 0.03, y: 0 }
+      },
+      {
+        bounds: { min: { x: -1025, y: -3600 }, max: { x: -600, y: -200 } },
+        force: { x: 0, y: -0.023 }
+      }
+    ];
+    function applyWind(zone, bodies) {
+      const list = Matter.Query.region(bodies, zone.bounds);
+      for (let b of list) {
+        if (b.isStatic) continue;
+        b.force.x += zone.force.x * (b.position.x > 650 ? 0.5 : 1);
+        b.force.y += zone.force.y;
+      }
+    }
+    level.custom = () => {
+      level.exit.drawAndCheck();
+
+      level.enter.draw();
+
+      el0.move();
+		  el0.drawTrack();
+      mo3.push();
+      mo3.draw();
+      
+      bu0.query();
+      bu0.queryRemove();
+      bu0.draw();
+
+      bu1.query();
+      bu1.queryRemove();
+      bu1.draw();
+      if (bu1.isUp) {
+        windZones[0].bounds.max.x = bu0.isUp ? 3050 : -800;
+        applyWind(windZones[0], body);
+        applyWind(windZones[0], mob);
+        applyWind(windZones[0], bullet);
+        applyWind(windZones[0], powerUp);
+        applyWind(windZones[0], [player]);
+        if (!bu0.isUp) {
+          applyWind(windZones[1], body);
+          applyWind(windZones[1], mob);
+          applyWind(windZones[1], bullet);
+          applyWind(windZones[1], powerUp);
+          applyWind(windZones[1], [player]);
+        }
+        if (Math.random() < 0.1) spawnStreamer( -7500 + Math.random() * (bu0.isUp ? 10000 : 6400), -300 + Math.random() * 200, 0);
+        if (!bu0.isUp && Math.random() < 0.1) spawnStreamer(-1000 + Math.random() * 400, -3700 + Math.random() * 3000, -Math.PI / 2);
+        ro0.rotate();
+      }
+      connector.pointA = {
+        x: (bu0.isUp ? -1150 : -1000), 
+        y: (bu0.isUp ? -550 : 100)
+      }
+    };
+    level.customTopLayer = () => {
+      if(bu1.isUp) {
+        if(bu0.isUp) {
+            ctx.fillStyle = "rgba(180,200,255, 0.2)"
+            ctx.fillRect(-7500, -450, 10675, 450);
+        } else {
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(180,200,255, 0.2)"
+            ctx.moveTo(-7500, 0);
+            ctx.lineTo(-925, 0);
+            ctx.lineTo(-600, -450);
+            ctx.lineTo(-600, -3800);
+            ctx.lineTo(-1025, -3800);
+            ctx.lineTo(-1025, -450);
+            ctx.lineTo(-7500, -450);
+            ctx.fill();
+        }
+      }
+      drawStreamers();
+    };
+    spawn.randomLevelBoss(472, -1403);
+    spawn.secondaryBossChance(-2056, -3178);
+    powerUps.addResearchToLevel();
+},
 }

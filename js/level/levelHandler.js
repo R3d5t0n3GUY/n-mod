@@ -30,7 +30,7 @@ const level = {
     "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
   ],
-  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"],
+  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago", "vents"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
   fullLevelList: {},
   populateLevelList() {
     let levelLists = [mainLevels, trainingLevels, communityLevels, removedLevels, modLevels, loreLevels]
@@ -164,7 +164,7 @@ const level = {
     if (simulation.isTraining) {
       simulation.difficultyMode = 1
     } else {
-      simulation.inGameConsole(`<span class='color-var'>level</span>.onLevel <span class='color-symbol'>=</span> "<span class='color-text'>${level.levels[level.onLevel]}</span>"`);
+      simulation.inGameConsole(`<span class='color-var'>level</span>.onLevel <span class='color-symbol'>=</span> "<strong>${level.levels[level.onLevel]}</strong>"`);
       document.title = "n-mod: " + level.levelAnnounce();
     }
     level.setConstraints()
