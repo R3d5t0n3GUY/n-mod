@@ -1062,6 +1062,34 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   nameLink(text) { //converts text into a clickable wikipedia search
     return `<a target="_blank" href='https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(text).replace(/' /g, '%27')}&title=Special:Search' class="link">${text}</a>`
   },
+  import(event) {
+    /* let file = oevent.target.files[0];
+    if (file) {
+      let reader = new FileReader(), oldExperimentBuild = experimentBuild; //in case something goes wrong during import, keep current build
+      reader.onload = function (e) {
+        try {
+          let importedBuild = e.target.result
+          importedBuild = importedBuild.parseAsJSON();
+          ... //load guns field and tech selection
+        } catch (err) {
+
+        }
+      }
+    } */
+  },
+  export() {
+    window.alert('WORK IN PROGRESS!')
+    /* let experimentBuild = ... //gotta work on parsing...
+    let jsonString = JSON.stringify(experimentBuild, null, 2);
+    let blob = new Blob([jsonString], { type: 'application/json' });
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'experimentBuild.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href); */
+  },
   reset() {
     build.isExperimentSelection = true;
     build.isExperimentRun = true;
@@ -2040,7 +2068,7 @@ document.body.addEventListener("wheel", (e) => {
 //**********************************************************************
 //  local storage
 //**********************************************************************
-let localSettings
+let localSettings //, experimentBuild //should I make this a separate var..?
 
 build.resetStorage(false);
 
