@@ -358,7 +358,7 @@ const build = {
     localSettings.isHideImages = !localSettings.isHideImages
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     if (from === 'experiment') {
-      build.reset();
+      build.populateGrid();
     } else if (from === 'pause') {
       build.unPauseGrid()
       if (simulation.isChoosing) { //trying to solve a bug with powerup choices, but maybe it doesn't help
@@ -444,6 +444,7 @@ const build = {
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
     })
+    if (from === 'experiment') requestAnimationFrame(build.populateGrid);
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
@@ -975,10 +976,10 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         </svg>
       </div>
       <div style="grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-58px;margin-bottom:5px;">
-        <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images" style="width:12px; height:12px;" checked="">
+        <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images" style="width:12px; height:12px;" ${localSettings.isHideImages ? "checked" : ""}>
         <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
         <br>
-        <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode" style="width:12px; height:12px;" checked="">
+        <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode" style="width:12px; height:12px;" ${localSettings.isDarkMode ? "checked" : ""}>
         <label for="dark-mode" title="Changes document coloring, allowing easier reading">dark mode</label>
       </div>
       <div style="grid-column:1;margin-top:-1.25em;grid-row:4;height:30px;">
@@ -1187,9 +1188,11 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
       if (localSettings.difficultyCompleted === undefined) localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
 
-      if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
-      simulation.difficultyMode = localSettings.difficultyMode
-      lore.setTechGoal()
+      (() => {
+        if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
+        simulation.difficultyMode = localSettings.difficultyMode
+        lore.setTechGoal() 
+      }).tryNoCatch()
 
       if (localSettings.pauseMenuDetailsOpen === undefined) localSettings.pauseMenuDetailsOpen = [true, false, false, true]
       if (localSettings.techHistory === undefined) localSettings.techHistory = []
