@@ -33,6 +33,7 @@ If you want to play in them, check out c-gon, an awesome n-gon mod they made!`)
     name: 'Console',
     afterLoad() {
       eruda.init();
+      requestAnimationFrame(console.clear)
     },
     title: `Opens a browser console for those without Dev Tool access`
   },
@@ -65,7 +66,7 @@ container.style.userSelect = 'none';
 container.style.cursor = 'auto';
 
 const header = document.createElement('div');
-header.style.padding = '10px';
+header.style.padding = '5px';
 header.style.backgroundColor = '#333';
 header.style.color = 'white';
 header.style.cursor = 'grab';
@@ -98,7 +99,34 @@ closeBtn.onclick = function() {
 controls.appendChild(closeBtn);
 header.appendChild(controls);
 
-const content = document.createElement('div');
+const scriptDiv = document.createElement('div');
+const collapseScripts = document.createElement('button')
+collapseScripts.id = 'collapse-scripts'
+collapseScripts.textContent = '⮟'
+collapseScripts.style.background = 'transparent';
+collapseScripts.style.border = 'none';
+collapseScripts.style.color = 'white';
+collapseScripts.style.cursor = 'pointer';
+collapseScripts.style.fontSize = '18px';
+collapseScripts.style.lineHeight = '1';
+collapseScripts.title = 'Click to collapse buttons'
+collapseScripts.onclick = () => {
+  if (document.getElementById('collapse-scripts').textContent == '⮟') {
+    document.getElementById('collapse-scripts').innerHTML = '⮞ <span style="color:#888;">...</span>'
+    document.getElementById('collapse-scripts').title = 'Click to expand buttons'
+    document.getElementById('script-selection').style.display = 'none'
+    document.getElementById('script-footer').innerHTML = ""
+  } else {
+    document.getElementById('collapse-scripts').textContent = '⮟'
+    document.getElementById('collapse-scripts').title = 'Click to collapse buttons'
+    document.getElementById('script-selection').style.display = 'flex'
+    document.getElementById('script-footer').innerHTML = "Click buttons to load scripts"
+  }
+}
+scriptDiv.appendChild(collapseScripts)
+
+const content = document.createElement('div')
+content.id = 'script-selection'
 content.style.padding = '15px';
 content.style.display = 'flex';
 content.style.flexDirection = 'column';
@@ -184,8 +212,7 @@ scripts.forEach(script => {
               statusIcon.textContent = '✗';
               statusIcon.style.color = '#F44336';
               console.error('Error executing script:', e);
-              window.alert(`Error executing script:
-${e.message}`);
+              window.alert(`Error executing script: ${e.message}`);
               btn.style.cursor = 'pointer';
               script.attempt++;
             }
@@ -282,14 +309,17 @@ ${e.message}`);
 
 });
 const footer = document.createElement('div');
-footer.style.padding = '10px';
+footer.id = 'script-footer'
+footer.style.padding = '5px';
 footer.style.backgroundColor = '#252525';
 footer.style.fontSize = '12px';
 footer.style.color = '#aaa';
 footer.style.textAlign = 'center';
 footer.textContent = 'Click buttons to load scripts';
+
+scriptDiv.appendChild(content)
 container.appendChild(header);
-container.appendChild(content);
+container.appendChild(scriptDiv);
 container.appendChild(footer);
 
 let isDragging = false;
