@@ -452,7 +452,16 @@ const build = {
           build.populateGrid();
           break;
         case 'pause':
-          build.pauseGrid();
+          if (simulation.isChoosing) { //trying to solve a bug with powerup choices, but maybe it doesn't help
+            if (localSettings.isHideImages) {
+              document.getElementById("choose-grid").classList.add('choose-grid-no-images');
+              document.getElementById("choose-grid").classList.remove('choose-grid');
+            } else {
+              document.getElementById("choose-grid").classList.add('choose-grid');
+              document.getElementById("choose-grid").classList.remove('choose-grid-no-images');
+            }
+          }
+          build.pauseGrid() //redraw pause text with images
           break;
         default:
           break;
@@ -508,9 +517,9 @@ const build = {
 <span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
 <em style="float: right;color:var(--tooltip-color);">press ${input.key.pause} to resume</em>
 ${inputLabelText("hideHUD",'settings',"hide-hud",0,"HideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
-${inputLabelText("setHealthBarMode",0,"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
+${inputLabelText("setHealthBarMode",'pause',"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
 ${inputLabelText("setDarkMode",'pause',"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
-${inputLabelText("showImages",0,"hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
+${inputLabelText("showImages",'pause',"hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
 </div>
 
 <div class="pause-grid-module">
