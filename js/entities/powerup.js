@@ -1290,8 +1290,8 @@ const powerUps = {
         for (let i = 0, len = b.inventory.length; i < len; i++) {
           const k = b.inventory[i], name = b.guns[k], boostTarget = (name.ammoType == 'durability' ? 'durability' : 'ammo')
           if (b.activeGun === k  || !tech.isAmmoForGun) { //if logistics, only give ammo to current gun. otherwise, give ammo to all inventory guns
-            if (name[boostTarget] !== Infinity && name.ammoType !== 'health') {
-              let ammoIncrease = (name.ammoPack || 1) * (tech.isAmmoCap ? tech.ammoCap || 1 : 1) * couplingExtraAmmo * Math.pow(2, tech.isAmmoForGun) * (tech.isMoreGunAmmo && j.gun === k ? Math.pow(2, tech.moreGunAmmo) : 1)
+            if (name[boostTarget] !== Infinity && !(/health/i).test(name.ammoType) && !(/energy/i).test(name.ammoType)) {
+              let ammoIncrease = (name.ammoPack || 1) * (tech.isAmmoCap ? tech.ammoCap || 1 : 1) * couplingExtraAmmo // * Math.pow(2, tech.isAmmoForGun) * (tech.isMoreGunAmmo && j.gun === k ? Math.pow(2, tech.moreGunAmmo) : 1)
               if (tech.ammoCap) {
                 b.guns[k][boostTarget] = Math.ceil(ammoIncrease)
               } else { //default ammo behavior

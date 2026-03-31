@@ -1361,17 +1361,10 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         let limited = b.inventory.some(i => {
-          return (i.ammoType != 'health' && i.name != 'laser' && (i.ammoType == 'durability' || i.ammo != Infinity))
-        })/* false;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "scythe") {
-            limited = tech.isAmmoScythe || tech.durabilityScythe;
-          } else {
-            limited = !(b.guns[b.inventory[i]].ammo === Infinity || b.guns[b.inventory[i]].name === "laser") ||
-              (b.guns[b.inventory[i]].durability != undefined);
-          }
-        } */
-        return limited && !(tech.isEnergyNoAmmo || tech.isBoostReplaceAmmo)
+          let boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
+          return (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType))
+        })
+        return limited && !tech.isEnergyNoAmmo && !tech.isBoostReplaceAmmo
       },
       requires: "At least 1 weapon with finite ammo/durability, not non-renewables, quasiparticles",
       gun: undefined, //the gun's index in the catalog
@@ -1381,10 +1374,14 @@ const tech = {
         tech.moreGunAmmo++
         if (this.gun === undefined) this.gun = this.gunSelect() //don't pick laser
         simulation.inGameConsole(`${b.guns[this.gun].ammoPack.toFixed(2)} → ${(2 * b.guns[this.gun].ammoPack).toFixed(2)} average <strong class='color-ammo'>${b.guns[this.gun].ammoType == 'durability' ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
+        let i = b.guns[this.gun], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
+        if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[this.gun].ammoPack *= 2
       },
       remove() {
         if (this.count) {
           tech.isMoreGunAmmo = false;
+          let i = b.guns[this.gun], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
+          if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[this.gun].ammoPack *= Math.pow(0.5, tech.moreGunAmmo)
           tech.moreGunAmmo = 0
         }
       }
