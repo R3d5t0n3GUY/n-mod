@@ -427,7 +427,7 @@ const build = {
     if (from !== 'spash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] <= tech.pauseEjectTech)) ? 15 : 253)
+    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] <= tech.pauseEjectTech)) ? 12 : 253)
     let styles = [
       { name: 'build-bg-color', col: hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)) },
       { name: 'card-color', col: hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)) },
@@ -446,7 +446,16 @@ const build = {
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
     })
-    if (from === 'experiment') requestAnimationFrame(build.populateGrid);
+    requestAnimationFrame(() => {
+      switch (from) {
+        case 'experiment':
+          return buid.populateGrid
+        case 'pause':
+          return build.pauseGrid
+        default:
+          return
+        }
+      })
   },
   setHealthBarMode(from = "settings") {
     if (localSettings.isDynamicHealthBar === undefined) localSettings.isDynamicHealthBar = false //default to normal health bar
@@ -498,7 +507,7 @@ const build = {
 <em style="float: right;color:var(--tooltip-color);">press ${input.key.pause} to resume</em>
 ${inputLabelText("hideHUD",'settings',"hide-hud",0,"HideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
 ${inputLabelText("setHealthBarMode",0,"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
-${inputLabelText("setDarkMode",0,"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
+${inputLabelText("setDarkMode",'pause',"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
 ${inputLabelText("showImages",0,"hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
 </div>
 
@@ -605,6 +614,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     });
   },
   generatePauseRight() {
+    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] * 100 <= tech.pauseEjectTech)) ? 12 : 253)
+    document.querySelector(':root').style.setProperty(`--tech-color`, hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.3), (localSettings.isDarkMode ? 0.3 : 1)))
     let text = `<div class="sort">
     <button onclick="build.sortTech('guntech')" class='sort-button'>${powerUps.orb.gunTech()}</button>
     <button onclick="build.sortTech('fieldtech')" class='sort-button'>${powerUps.orb.fieldTech()}</button>
