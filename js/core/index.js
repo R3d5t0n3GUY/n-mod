@@ -427,7 +427,7 @@ const build = {
     if (from !== 'spash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] <= tech.pauseEjectTech)) ? 12 : 253)
+    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] <= tech.pauseEjectTech)) ? 10 : 253)
     let styles = [
       { name: 'build-bg-color', col: hsvo(216, 0.1, (localSettings.isDarkMode ? 0.19 : 0.76)) },
       { name: 'card-color', col: hsvo(200, 0.02, (localSettings.isDarkMode ? 0.47 : 0.95)) },
@@ -441,7 +441,7 @@ const build = {
       { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}`},
       { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}`},
       { name: 'combo-color', col: `#${localSettings.isDarkMode ? "6a6a6a" : "fff"}`},
-      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.3), (localSettings.isDarkMode ? 0.3 : 1))}
+      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.3 : 1))}
     ]
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
@@ -614,8 +614,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     });
   },
   generatePauseRight() {
-    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] * 100 <= tech.pauseEjectTech)) ? 12 : 253)
-    document.querySelector(':root').style.setProperty(`--tech-color`, hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.3), (localSettings.isDarkMode ? 0.3 : 1)))
+    let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] * 100 <= tech.pauseEjectTech)) ? 10 : 253)
+    document.querySelector(':root').style.setProperty(`--tech-color`, hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.3 : 1)))
     let text = `<div class="sort">
     <button onclick="build.sortTech('guntech')" class='sort-button'>${powerUps.orb.gunTech()}</button>
     <button onclick="build.sortTech('fieldtech')" class='sort-button'>${powerUps.orb.fieldTech()}</button>
