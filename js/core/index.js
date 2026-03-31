@@ -1094,8 +1094,17 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     } */
   },
   export() {
-    window.alert('WORK IN PROGRESS!')
-    /* let experimentBuild = ... //gotta work on parsing...
+    let experimentBuild = {
+      fieldIndex: m.fieldMode,
+      gunIndexes: b.inventory,
+      techIndexes: []
+    }
+    tech.tech.forEach(i => {
+      if (i.count > 0) experimentBuild.techIndexes.push({
+        name: i.name,
+        count: i.count
+      })
+    })
     let jsonString = JSON.stringify(experimentBuild, null, 2);
     let blob = new Blob([jsonString], { type: 'application/json' });
     let a = document.createElement('a');
@@ -1104,7 +1113,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(a.href); */
+    URL.revokeObjectURL(a.href);
   },
   reset() {
     build.isExperimentSelection = true;
