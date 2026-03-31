@@ -11,6 +11,7 @@
   --bounce-color: #aaa;
   --rest-color: #555;
   --combo-color: #fff;
+  --tech-color: hsl(253, 100%, 90%);
 }
 
 @font-face {
@@ -1567,7 +1568,7 @@ summary {
 
 @keyframes fieldColorCycle {
   0% {
-    background-color: rgb(255, 255, 255)
+    background-color: var(--bg-color)
   }
 
   100% {
@@ -1577,11 +1578,11 @@ summary {
 
 @keyframes techColorCycle {
   0% {
-    background-color: hsl(253, 100%, 100%)
+    background-color: var(--bg-color)
   }
 
   100% {
-    background-color: hsl(253, 100%, 90%)
+    background-color: var(--tech-color)
   }
 }
 
