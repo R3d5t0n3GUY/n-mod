@@ -91,7 +91,7 @@ const tech = {
     }
     if (tech.tech[index].count === 0) return 0
     const totalRemoved = tech.tech[index].count
-    simulation.inGameConsole(`<span class='color-var'>tech</span>.removeTech("<span class='color-text'>${tech.tech[index].name}</span>")`, 360)
+    simulation.inGameConsole(`<span class='color-var'>tech</span>.removeTech("<strong>${tech.tech[index].name}</strong>")`, 360)
     tech.tech[index].remove();
     tech.removeCount += totalRemoved
     tech.tech[index].count = 0;
@@ -116,7 +116,7 @@ const tech = {
     tech.junkChance += percent
     if (tech.junkChance < 0.001 || tech.junkChance === undefined) tech.junkChance = 0
     if (tech.junkChance > 1) tech.junkChance = 1
-    simulation.inGameConsole(`<strong>+${(100 * percent).toFixed(0)}%</strong> <span class='color-text'>JUNK</span><span class='color-var'>tech</span> chance (${(100 * tech.junkChance).toFixed(0)}% total chance)`)
+    simulation.inGameConsole(`<strong>+${(100 * percent).toFixed(0)}%</strong> <strong>JUNK</strong><span class='color-var'>tech</span> chance (${(100 * tech.junkChance).toFixed(0)}% total chance)`)
     // tech.junkChance += (1 - tech.junkChance) * percent
     return percent
 
@@ -169,7 +169,7 @@ const tech = {
       // give a random tech from the tech I don't have
       if (options.length > 0) {
         let newTech = options[Math.floor(Math.random() * options.length)]
-        simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-text'>${tech.tech[newTech].name}</strong>")<em> //random tech</em>`);
+        simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong>${tech.tech[newTech].name}</strong>")<em> //random tech</em>`);
         tech.giveTech(newTech)
       }
     } else {
@@ -1282,7 +1282,7 @@ const tech = {
                 //give the tech that was found for this gun
                 if (gunTechPool.length) {
                   const index = Math.floor(Math.random() * gunTechPool.length)
-                  simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-text'>${tech.tech[gunTechPool[index]].name}</strong>")`, 360)
+                  simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong>${tech.tech[gunTechPool[index]].name}</strong>")`, 360)
                   tech.giveTech(gunTechPool[index]) // choose from the gun pool
                   simulation.boldActiveGunHUD();
                 }
@@ -9594,7 +9594,9 @@ const tech = {
         requestAnimationFrame(() => {
           let techGiven = 0
           for (let j = 0; j < 3; j++) {
-            const names = ["quasiparticles", "lens", "compound lens", "arc length", "infrared diode", "free-electron laser", "dye laser", "relativistic momentum", "specular reflection", "diffraction grating", "diffuse beam", "output coupler", "slow light", "laser-bot", "laser-bot upgrade", "collimator", "optical tweezers"]
+            const names = ["lens", "compound lens", "arc length", "infrared diode", "free-electron laser", //"quasiparticles"
+              "dye laser", "relativistic momentum", "specular reflection", "diffraction grating", "diffuse beam",
+              "output coupler", "slow light", "laser-bot", "laser-bot upgrade", "collimator", "optical tweezers"]
             //convert names into indexes
             const options = []
             for (let i = 0; i < names.length; i++) {
@@ -9615,7 +9617,7 @@ const tech = {
             //pick one option
             if (options.length) {
               const index = options[Math.floor(Math.random() * options.length)]
-              simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<span class='color-text'>${tech.tech[index].name}</span>") <em>//optical amplifier</em>`, 360);
+              simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong>${tech.tech[index].name}</strong>") <em>//optical amplifier</em>`, 360);
               tech.giveTech(index)
               techGiven++
             }
@@ -13307,7 +13309,7 @@ const tech = {
             if (tech.tech[i].isJunk) list.push(tech.tech[i].name)
           }
           let name = list[Math.floor(Math.random() * list.length)]
-          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<span class='color-text'>${name}</span>")`);
+          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong>${name}</strong>")`);
           tech.giveTech(name)
         }
       },

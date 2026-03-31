@@ -449,11 +449,13 @@ const build = {
     requestAnimationFrame(() => {
       switch (from) {
         case 'experiment':
-          return buid.populateGrid
+          buid.populateGrid();
+          break;
         case 'pause':
-          return build.pauseGrid
+          build.pauseGrid();
+          break;
         default:
-          return
+          break;
         }
       })
   },
