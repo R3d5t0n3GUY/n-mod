@@ -291,8 +291,8 @@ const tech = {
       build.sound.tone(375)
     }
   },
-  haveGunCheck(name, needActive = true) {
-    if (b.activeGun === null || b.activeGun === undefined) return false
+  haveGunCheck(name, needActive = !build.isExperimentSelection) {
+    if ((b.activeGun === null || b.activeGun === undefined) && needActive) return false
     if (build.isExperimentSelection || !needActive) {
       for (i = 0, len = b.inventory.length; i < len; i++) {
         if (b.guns[b.inventory[i]].name === name) return true
@@ -1330,7 +1330,11 @@ const tech = {
           }
         }
         pickList = pickList.filter(function (item) {
-          return item.ammo != undefined;
+          try {
+            return item.ammo != undefined;
+          } catch (e) {
+            return false
+          }
         });
         let idx = Math.floor(Math.random() * (pickList.length - 1));
         let isGunInfinite = false;
@@ -1361,8 +1365,8 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         let limited = b.inventory.some(i => {
-          let boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
-          return (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType))
+          let j = b.guns[i], boostTarget = (j.ammoType == 'durability' ? 'durability' : 'ammo')
+          return (j[boostTarget] !== Infinity && !(/health/i).test(j.ammoType) && !(/energy/i).test(j.ammoType))
         })
         return limited && !tech.isEnergyNoAmmo && !tech.isBoostReplaceAmmo
       },
@@ -6656,6 +6660,7 @@ const tech = {
       effect() {
         tech.isIceCrystals = true;
         b.guns[0].ammoPack = Infinity
+        b.guns[0].ammoType = 'energy'
         b.guns[0].recordedAmmo = b.guns[0].ammo
         b.guns[0].ammo = Infinity
         simulation.updateGunHUD();
@@ -6663,6 +6668,7 @@ const tech = {
       remove() {
         if (tech.isIceCrystals) {
           tech.isIceCrystals = false;
+          b.guns[0].ammoType = 'ammo'
           b.guns[0].ammoPack = b.guns[0].defaultAmmoPack;
           if (b.guns[0].recordedAmmo) b.guns[0].ammo = b.guns[0].recordedAmmo
           simulation.updateGunHUD();

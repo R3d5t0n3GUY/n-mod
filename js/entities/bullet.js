@@ -8399,6 +8399,10 @@ const b = {
         <br>reflects off map, <strong class='color-block'>blocks</strong>, and mobs <strong>${(tech.isWideLaser || tech.isPulseLaser) ? 0 : tech.laserReflections}</strong> times
         <br>costs <strong>${(tech.laserDrain * 6000).toFixed(1)}</strong> <strong class='color-f'>energy</strong> per second and 0 <strong>ammo</strong>`
       },
+      ammoType: "energy",
+      get ammoType() { //laser will only ever use energy
+        return "energy"
+      },
       ammo: 0,
       ammoPack: Infinity,
       defaultAmmoPack: Infinity,
@@ -8726,6 +8730,7 @@ const b = {
       get ammoType() { //sword never uses durability or ammo
         return 'health'
       },
+      ammoType: 'health',
       ammo: Infinity,
       ammoPack: Infinity,
       defaultAmmoPack: Infinity,

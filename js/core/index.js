@@ -1093,39 +1093,47 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     return experimentBuild
   },
   import(oevent) {
-    let experimentBuild = build.getExperimentBuild(), file = oevent.target.files[0];
+    let file = oevent.target.files[0];
     if (file) {
-      let reader = new FileReader(), oldExperimentBuild = experimentBuild; //in case something goes wrong during import, keep current build
+      let reader = new FileReader()
       reader.onload = function (e) {
-        try {
-          let importedBuild = e.target.result
-          experimentBuild = importedBuild.parseAsJSON();
-          m.fieldMode = experimentBuild.fieldIndex || oldExperimentBuild.fieldIndex || 0
-          b.inventory = experimentBuild.gunIndexes || oldExperimentBuild.gunIndexes || []
-          let newTech = experimentBuild.techIndexes || oldExperimentBuild.techIndexes || []
-          newTech.forEach(i => {
-            for (let j = 0, len = tech.tech.length; j < len; j++) {
-              if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
-                switch (typeof(i)) {
-                  case 'string':
-                    if (i === tech.tech[j].name) tech.tech[j].count = 1
-                    break;
-                  case 'object':
-                    if (i.name === tech.tech[j].name) tech.tech[j].count = i.count || 0
-                    break;
-                  default:
-                    tech.tech[j].count = 0
-                    break;
-                }
+        let importedBuild = e.target.result
+        importedBuild = importedBuild.parseAsJSON();
+        m.fieldMode = importedBuild.fieldIndex || 0
+        b.inventory = importedBuild.gunIndexes || []
+        let newTech = importedBuild.techIndexes || []
+        for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
+        let oldTexlLogStatus = simulation.isTextLogOpen
+        simulation.isTextLogOpen = false
+        newTech.forEach(i => {
+          for (let j = 0, len = tech.tech.length; j < len; j++) {
+            if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
+              switch (typeof(i)) {
+                case 'string':
+                  if (i === tech.tech[j].name) {
+                    tech.tech[j].effect()
+                    tech.tech[j].count = 1
+                    if (!tech.tech[j].isInstant) tech.totalCount++
+                  }
+                  break;
+                case 'object':
+                  if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++){
+                    tech.tech[j].effect()
+                    tech.tech[j].count++
+                    if (!tech.tech[j].isInstant) tech.totalCount++
+                  }
+                  break;
+                default:
+                  tech.tech[j].remove()
+                  tech.tech[j].count = 0
+                  break;
               }
             }
-          })
-        } catch (err) {
-          experimentBuild = oldExperimentBuild
-          console.warn(`Uncaught ${err.name || "Error"} during import: ${err.message || err || "faulty target file"}`)
-        } finally {
-          requestAnimationFrame(build.populateGrid)
-        }
+          }
+        })
+        for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
+        requestAnimFrames(3, build.populateGrid);
+        simulation.isTextLogOpen = oldTexlLogStatus
       }
       reader.readAsText(file)
     }
