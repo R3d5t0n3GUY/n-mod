@@ -971,13 +971,13 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     <button onclick="build.sortTech('damage taken', true)" class="sort-button"><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
     <button onclick="build.sortTech('heal', true)" class="sort-button"><strong class="color-h">heal</strong></button>
     <button onclick="build.sortTech('energy', true)" class="sort-button"><strong class="color-f">energy</strong></button>
-    <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);" placeholder="sort by">
+    <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);background-color:var(--bg-color);" placeholder="sort by">
     <button onclick="build.sortTech('input', true)" class="sort-button" style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
   </div>
   <div id="experiment-settings" style="height:116px;">
     <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 10px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px -10px 10px;line-height: 100%;">
       <div style="grid-column: 1;grid-row: 2;">
-        <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70">
+        <svg class="SVG-button" onclick="build.startExperiment()" width="150" height="70" style='cursor:pointer;'>
           <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="65px" font-family="Chakra Petch, sans-serif">
             <text x="10" y="57">start</text>
           </g>
@@ -998,12 +998,12 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         <label for="dark-mode" title="Changes document coloring, allowing easier reading">dark mode</label>
       </div>
       <div style="grid-column:1;margin-top:-1.25em;grid-row:4;height:30px;">
-        <svg class="SVG-button" width="70" height="25" onclick="build.export()">
+        <svg class="SVG-button" width="70" height="25" onclick="build.export()" style='cursor:pointer;'>
           <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="12px" font-family="Chakra Petch, sans-serif">
             <text x="5" y="18">Save Build</text>
           </g>
         </svg>
-        <svg class="SVG-button" width="70" height="25" onclick="document.getElementById('experiment-build-import').click()">
+        <svg class="SVG-button" width="70" height="25" onclick="document.getElementById('experiment-build-import').click()" style='cursor:pointer;'>
           <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="12px" font-family="Chakra Petch, sans-serif">
             <text x="5" y="18">Load Build</text>
           </g>
@@ -1073,7 +1073,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       }
     }
 
-    requestAnimationFrame(() => { document.getElementById("sort-input").focus(); });
+    requestAnimFrames(5, () => {document.getElementById("sort-input").focus()});
   },
   nameLink(text) { //converts text into a clickable wikipedia search
     return `<a target="_blank" href='https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(text).replace(/' /g, '%27')}&title=Special:Search' class="link">${text}</a>`
