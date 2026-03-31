@@ -1092,21 +1092,42 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     })
     return experimentBuild
   },
-  import(event) {
+  import(oevent) {
     let experimentBuild = build.getExperimentBuild(), file = oevent.target.files[0];
     if (file) {
       let reader = new FileReader(), oldExperimentBuild = experimentBuild; //in case something goes wrong during import, keep current build
       reader.onload = function (e) {
         try {
           let importedBuild = e.target.result
-          importedBuild = importedBuild.parseAsJSON();
-          /* ... //load guns field and tech selection */
+          experimentBuild = importedBuild.parseAsJSON();
+          m.fieldMode = experimentBuild.fieldIndex || oldExperimentBuild.fieldIndex || 0
+          b.inventory = experimentBuild.gunIndexes || oldExperimentBuild.gunIndexes || []
+          let newTech = experimentBuild.techIndexes || oldExperimentBuild.techIndexes || []
+          newTech.forEach(i => {
+            for (let j = 0, len = tech.tech.length; j < len; j++) {
+              if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
+                switch (typeof(i)) {
+                  case 'string':
+                    if (i === tech.tech[j].name) tech.tech[j].count = 1
+                    break;
+                  case 'object':
+                    if (i.name === tech.tech[j].name) tech.tech[j].count = i.count || 0
+                    break;
+                  default:
+                    tech.tech[j].count = 0
+                    break;
+                }
+              }
+            }
+          })
         } catch (err) {
-
-        } /* finally {
-          build.populateGrid()
-        } */
+          experimentBuild = oldExperimentBuild
+          console.warn(`Uncaught ${err.name || "Error"} during import: ${err.message || err || "faulty target file"}`)
+        } finally {
+          requestAnimationFrame(build.populateGrid)
+        }
       }
+      reader.readAsText(file)
     }
   },
   export() {
