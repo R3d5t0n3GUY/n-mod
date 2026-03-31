@@ -1103,7 +1103,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       if (i.count > 0) experimentBuild.techIndexes.push((i.count > 1 ? {
         name: i.name,
         count: i.count
-      }) : i.name)
+      } : i.name))
     })
     let jsonString = JSON.stringify(experimentBuild, null, 2);
     let blob = new Blob([jsonString], { type: 'application/json' });
