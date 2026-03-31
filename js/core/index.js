@@ -449,7 +449,7 @@ const build = {
     requestAnimationFrame(() => {
       switch (from) {
         case 'experiment':
-          buid.populateGrid();
+          build.populateGrid();
           break;
         case 'pause':
           build.pauseGrid();
@@ -1008,7 +1008,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
             <text x="5" y="18">Load Build</text>
           </g>
         </svg>
-        <input type="file" id="experiment-build-import" accept=".json" onchange="buid.import(event)" hidden>
+        <input type="file" id="experiment-build-import" accept=".json" onchange="build.import(event)" hidden>
       </div>
     </div>
   </div>
@@ -1078,22 +1078,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   nameLink(text) { //converts text into a clickable wikipedia search
     return `<a target="_blank" href='https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(text).replace(/' /g, '%27')}&title=Special:Search' class="link">${text}</a>`
   },
-  import(event) {
-    /* let file = oevent.target.files[0];
-    if (file) {
-      let reader = new FileReader(), oldExperimentBuild = experimentBuild; //in case something goes wrong during import, keep current build
-      reader.onload = function (e) {
-        try {
-          let importedBuild = e.target.result
-          importedBuild = importedBuild.parseAsJSON();
-          ... //load guns field and tech selection
-        } catch (err) {
-
-        }
-      }
-    } */
-  },
-  export() {
+  getExperimentBuild() {
     let experimentBuild = {
       fieldIndex: m.fieldMode,
       gunIndexes: b.inventory,
@@ -1105,6 +1090,27 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         count: i.count
       } : i.name))
     })
+    return experimentBuild
+  },
+  import(event) {
+    let experimentBuild = build.getExperimentBuild(), file = oevent.target.files[0];
+    if (file) {
+      let reader = new FileReader(), oldExperimentBuild = experimentBuild; //in case something goes wrong during import, keep current build
+      reader.onload = function (e) {
+        try {
+          let importedBuild = e.target.result
+          importedBuild = importedBuild.parseAsJSON();
+          /* ... //load guns field and tech selection */
+        } catch (err) {
+
+        } /* finally {
+          build.populateGrid()
+        } */
+      }
+    }
+  },
+  export() {
+    let experimentBuild = build.getExperimentBuild()
     let jsonString = JSON.stringify(experimentBuild, null, 2);
     let blob = new Blob([jsonString], { type: 'application/json' });
     let a = document.createElement('a');
