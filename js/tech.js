@@ -1360,7 +1360,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        let limited = false;
+        let limited = b.inventory.some(i => {
+          return (i.ammoType != 'health' && i.name != 'laser' && (i.ammoType == 'durability' || i.ammo != Infinity))
+        })/* false;
         for (let i = 0, len = b.inventory.length; i < len; ++i) {
           if (b.guns[b.inventory[i]].name === "scythe") {
             limited = tech.isAmmoScythe || tech.durabilityScythe;
@@ -1368,31 +1370,22 @@ const tech = {
             limited = !(b.guns[b.inventory[i]].ammo === Infinity || b.guns[b.inventory[i]].name === "laser") ||
               (b.guns[b.inventory[i]].durability != undefined);
           }
-        }
+        } */
         return limited && !(tech.isEnergyNoAmmo || tech.isBoostReplaceAmmo)
       },
       requires: "At least 1 weapon with finite ammo/durability, not non-renewables, quasiparticles",
-      gun: undefined, //the gun this tech 
+      gun: undefined, //the gun's index in the catalog
       effect() {
         tech.isMoreGunAmmo = true;
-        let ammoBoost = 2 ** this.count;
+        if (!tech.moreGunAmmo) tech.moreGunAmmo = 0
+        tech.moreGunAmmo++
         if (this.gun === undefined) this.gun = this.gunSelect() //don't pick laser
-        if (b.guns[this.gun].name === "scythe") { // correct the ammo bug for scythe
-          b.guns[this.gun].ammoPack *= ammoBoost;
-        }
-        simulation.inGameConsole(`${b.guns[this.gun].ammoPack.toFixed(2)} → ${(2 * b.guns[this.gun].ammoPack).toFixed(2)} average <strong class='color-ammo'>${(b.guns[this.gun].name === "scythe" && tech.durabilityScythe) || (b.guns[this.gun].name === "spear") ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
-        b.guns[this.gun].ammoPack *= 2
-        // simulation.inGameConsole(`${(tech.interestRate * 100).toFixed(0)}<span class='color-symbol'>%</span> <span class='color-m'>interest</span> on <span class='color-h'>health</span> <span class='color-symbol'>=</span> ${h > 20 ? h + powerUps.orb.heal(1) : powerUps.orb.heal(h)}`)
-
-        // for (let i = 0; i < 4; i++) powerUps.spawn(m.pos.x + 10 * Math.random(), m.pos.y + 10 * Math.random(), "ammo");
+        simulation.inGameConsole(`${b.guns[this.gun].ammoPack.toFixed(2)} → ${(2 * b.guns[this.gun].ammoPack).toFixed(2)} average <strong class='color-ammo'>${b.guns[this.gun].ammoType == 'durability' ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
       },
       remove() {
         if (this.count) {
-          //let lvl = this.count;
-          b.guns[this.gun].ammoPack /= 2;
-          if (!tech.isRerollGunAmmo) {
-            tech.isMoreGunAmmo = false;
-          }
+          tech.isMoreGunAmmo = false;
+          tech.moreGunAmmo = 0
         }
       }
     },
@@ -1477,10 +1470,13 @@ const tech = {
       },
       requires: "not non-renewables",
       effect() {
-        tech.ammoCap = 15;
+        tech.isAmmoCap = true
+        if (!tech.ammoCap) tech.ammoCap = 0
+        tech.ammoCap += 15;
         powerUps.ammo.effect()
       },
       remove() {
+        tech.isAmmoCap = false
         tech.ammoCap = 0;
       }
     },
@@ -10431,7 +10427,7 @@ const tech = {
         tech.isAmmoScythe = true;
         for (let i = 0, len = b.inventory.length; i < len; ++i) {
           if (b.guns[b.inventory[i]].name === "scythe") {
-            b.guns[b.inventory[i]].ammo = 17;
+            b.guns[b.inventory[i]].ammoType = 'ammo';
           }
         }
         simulation.updateGunHUD();
@@ -10441,6 +10437,11 @@ const tech = {
       remove() {
         if (tech.isAmmoScythe) {
           tech.isAmmoScythe = false;
+          for (let i = 0, len = b.inventory.length; i < len; ++i) {
+            if (b.guns[b.inventory[i]].name === "scythe") {
+              b.guns[b.inventory[i]].ammoType = (tech.durabilityScythe ? 'durability' : 'health')
+            }
+          }
           simulation.updateGunHUD();
         }
         tech.isAmmoScythe = false;
@@ -10516,21 +10517,21 @@ const tech = {
       requires: "scythe, not titanium nitride, duality, reaping, quasiparticles",
       effect() {
         tech.durabilityScythe = true;
+        for (let i = 0, len = b.guns.length; i < len; ++i) {
+          if (b.guns[i].name === "scythe") {
+            b.guns[i].ammoType = 'durability'
+          }
+        }
+        simulation.updateGunHUD();
       },
       remove() {
         tech.durabilityScythe = false;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "scythe" && b.guns[b.inventory[i]].maxDurability > 200) {
-            b.guns[b.inventory[i]].maxDurability -= 100;
-          } else {
-            if (b.guns[b.inventory[i]].name === "scythe" && !m.alive) {
-              b.guns[b.inventory[i]].cycle = 0;
-              b.guns[b.inventory[i]].haveEphemera = false;
-              b.guns[b.inventory[i]].durability = 200;
-              b.guns[b.inventory[i]].maxDurability = 200;
-            }
+        for (let i = 0, len = b.guns.length; i < len; ++i) {
+          if (b.guns[i].name === "scythe") {
+            b.guns[i].ammoType = (tech.isAmmoScythe ? 'ammo' : 'health')
           }
         }
+        simulation.updateGunHUD();
       }
     },
     {

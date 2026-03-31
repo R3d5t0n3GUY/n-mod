@@ -8723,6 +8723,9 @@ const b = {
         return `swing a <b>sword</b> that <b style="color: indigo;">lifesteals</b> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>
         <br>drains <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> instead of ammunition
         <br>doesn't use <b>ammo</b>` },
+      get ammoType() { //sword never uses durability or ammo
+        return 'health'
+      },
       ammo: Infinity,
       ammoPack: Infinity,
       defaultAmmoPack: Infinity,
@@ -10476,8 +10479,9 @@ const b = {
     {
       name: "scythe",
       descriptionFunction() { return `throw a <b>scythe</b> that keeps velocity upon collisions<br>drains <strong class='color-h'>health</strong> instead of ammunition<br>doesn't use <b>ammo</b>` },
-      ammo: Infinity,
-      ammoPack: Infinity,
+      ammoType: "health",
+      ammo: 17,
+      ammoPack: 1,
       defaultAmmoPack: Infinity,
       have: false,
       fire() { },
@@ -10493,24 +10497,6 @@ const b = {
       haveEphemera: false,
       right: true,
       do() {
-        if (this.cycle2 === 0) {
-          const oldEffect = powerUps.ammo.effect;
-          powerUps.ammo.effect = () => {
-            oldEffect();
-            for (let i = 0, len = b.inventory.length; i < len; ++i) {
-              if (b.guns[b.inventory[i]].name === "scythe" && tech.durabilityScythe) {
-                let duraBoost = ((tech.isAmmoForGun && b.guns[b.activeGun].name === 'scythe') ? 30 : 15);
-                tech.tech.forEach(t => {
-                  if (t.name === "marginal utility") {
-                    if (b.guns[t.gun].name === 'scythe') duraBoost *= Math.pow(2, t.count)
-                  }
-                })
-                if (tech.isRadioScythe) duraBoost *= 0.75
-                b.guns[b.inventory[i]].durability += duraBoost;
-              }
-            }
-          }
-        }
         this.cycle2++;
         if (!this.haveEphemera) {
           this.haveEphemera = true;
@@ -10546,18 +10532,17 @@ const b = {
             },
           })
         }
-        if (tech.isAmmoScythe) {
+        /* if (tech.isAmmoScythe) {
           if (tech.isRadioScythe) {
             this.ammoPack = 0.6;
           } else {
             this.ammoPack = 1;
           }
-          this.defaultAmmoPack = 1;
         } else {
           this.ammo = Infinity;
-          this.ammoPack = Infinity;
-          this.defaultAmmoPack = Infinity;
-        }
+          this.ammoPack = 15;
+          this.defaultAmmoPack = 15;
+        } */
         this.durability = Math.max(0, Math.min(this.durability, this.maxDurability));
         let drain = 0.1;
         if (tech.isRadioScythe) {
@@ -11010,9 +10995,10 @@ const b = {
     {
       name: "spear",
       descriptionFunction() { return `control a <b>spear</b> that has <em style="color: gray;">durability</em><br>spear is <b>controlled</b> by <b>cursor</b><br><strong>${tech.isAmmoForGun ? 30 - (tech.tempering ? tech.tempering : 0) : 15 - (tech.tempering ? tech.tempering : 0)}</strong> </em style="color: gray;">durability</em> per ${powerUps.orb.ammo()}` },
+      ammoType: "durability",
       ammo: Infinity,
-      ammoPack: Infinity,
-      defaultAmmoPack: Infinity,
+      ammoPack: 15,
+      defaultAmmoPack: 15,
       have: false,
       orbitals: [],
       bladeSegments: undefined,
@@ -11069,17 +11055,6 @@ const b = {
               }
             },
           })
-        }
-        if (this.cycle === 0) {
-          const oldEffect = powerUps.ammo.effect;
-          powerUps.ammo.effect = () => {
-            oldEffect();
-            for (let i = 0, len = b.inventory.length; i < len; ++i) {
-              if (b.guns[b.inventory[i]].name === "spear") {
-                b.guns[b.inventory[i]].durability += (tech.isAmmoForGun && b.guns[b.activeGun].name === 'spear') ? 30 - (tech.tempering ? tech.tempering : 0) : 15 - (tech.tempering ? tech.tempering : 0);
-              }
-            }
-          }
         }
         this.cycle++;
         this.durability = Math.min(this.maxDurability, Math.max(0, this.durability));
@@ -11642,7 +11617,6 @@ const b = {
         ctx.stroke();
       },
     },
-    //*
     {
       name: "sniper", //12
       // description: `fire a wide <strong>burst</strong> of short range <strong> bullets</strong><br>with a low <strong><em>fire rate</em></strong><br><strong>3-4</strong> nails per ${powerUps.orb.ammo()}`,
@@ -11748,26 +11722,6 @@ const b = {
             }
           }
         }
-        /*
-                const isSniperDefense = function () {
-                    if (tech.isSniperDefense) {
-                        m.fieldHarmReduction = 0.75
-                    }
-                }
-                */
-        /*
-                const isZoom = function () {
-                    if (tech.isSniperZoom) {
-                        document.body.addEventListener("wheel", (e) => {
-                            if (e.deltaY > 0) {
-                                simulation.setZoom(simulation.zoomScale - 10)
-                            } else {
-                                simulation.setZoom(simulation.zoomScale + 10)
-                            }
-                        });
-                    }
-                }
-                */
         const chooseBulletType = function () {
           if (tech.isExplodeSnipe) {
             spread = 0;

@@ -1286,23 +1286,16 @@ const powerUps = {
       const couplingExtraAmmo = (m.fieldMode === 10 || m.fieldMode === 0) ? 1 + 0.04 * m.coupling : 1
       if (b.inventory.length > 0) {
         powerUps.animatePowerUpGrab('rgba(68, 102, 119,0.25)')
-        if (tech.isAmmoForGun && (b.activeGun !== null && b.activeGun !== undefined)) { //give extra ammo to one gun only with tech logistics
-          const name = b.guns[b.activeGun]
-          if (name.ammo !== Infinity) {
-            if (tech.ammoCap) {
-              name.ammo = Math.ceil(2 * name.ammoPack * tech.ammoCap * couplingExtraAmmo)
-            } else {
-              name.ammo += Math.ceil(2 * (Math.random() + Math.random()) * name.ammoPack * couplingExtraAmmo)
-            }
-          }
-        } else { //give ammo to all guns in inventory
-          for (let i = 0, len = b.inventory.length; i < len; i++) {
-            const name = b.guns[b.inventory[i]]
-            if (name.ammo !== Infinity) {
+        let j = tech.tech.find(i => i.name === 'marginal utility')
+        for (let i = 0, len = b.inventory.length; i < len; i++) {
+          const k = b.inventory[i], name = b.guns[k], boostTarget = (name.ammoType == 'durability' ? 'durability' : 'ammo')
+          if (b.activeGun === k  || !tech.isAmmoForGun) { //if logistics, only give ammo to current gun. otherwise, give ammo to all inventory guns
+            if (name[boostTarget] !== Infinity && name.ammoType !== 'health') {
+              let ammoIncrease = (name.ammoPack || 1) * (tech.isAmmoCap ? tech.ammoCap || 1 : 1) * couplingExtraAmmo * Math.pow(2, tech.isAmmoForGun) * (tech.isMoreGunAmmo && j.gun === k ? Math.pow(2, tech.moreGunAmmo) : 1)
               if (tech.ammoCap) {
-                name.ammo = Math.ceil(name.ammoPack * tech.ammoCap * couplingExtraAmmo)
+                b.guns[k][boostTarget] = Math.ceil(ammoIncrease)
               } else { //default ammo behavior
-                name.ammo += Math.ceil((Math.random() + Math.random()) * name.ammoPack * couplingExtraAmmo)
+                b.guns[k][boostTarget] += Math.ceil((Math.random() + Math.random()) * ammoIncrease)
               }
             }
           }
@@ -2225,20 +2218,14 @@ const powerUps = {
       }
     }
   },
-  rerollMUgun(idx, name) { //reroll marginal utility
-    tech.tech[idx].gun = undefined;
-    tech.tech[idx].effect();
-    b.guns[name].ammoPack /= 2;
-    b.guns[name].defaultAmmoPack /= 2;
-  },
   pauseEjectTech(index) {
     if ((tech.isPauseEjectTech || simulation.testing) && !(simulation.isChoosing || tech.tech[index].isInstant)) {
-      if ((tech.tech[index].name === "marginal utility") && tech.isRerollGunAmmo) {
+      if ((tech.tech[index].name === "marginal utility") && tech.isRerollGunAmmo) { //if player has cardinal utility, reroll marginal utility instead of ejecting it
         let oldGun = tech.tech[index].gun;
-        powerUps.rerollMUgun(index, oldGun);
+        tech.tech[index].gun = tech.tech[index].gunSelect();
         let gunName = tech.tech[index].gun;
         while (gunName === oldGun) { //don't pick the same gun as before
-          powerUps.rerollMUgun(index, oldGun);
+          tech.tech[index].gun = tech.tech[index].gunSelect();
           gunName = tech.tech[index].gun;
         }
         build.generatePauseLeft();
