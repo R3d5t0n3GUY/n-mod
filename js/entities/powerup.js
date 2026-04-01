@@ -273,11 +273,11 @@ const powerUps = {
         tech.canGunReroll = true
       }
       b.giveGuns(index)
-      let text = `<div class="circle-grid gun"></div> &nbsp; b.giveGuns("<strong class='color-text'>${b.guns[index].name}</strong>")`
+      let text = `<div class="circle-grid gun"></div> &nbsp; b.giveGuns("<strong class='color-g'>${b.guns[index].name}</strong>")`
       if (b.inventory.length === 1) text += `<br>input.key.gun<span class='color-symbol'>:</span> ["<span class='color-text'>MouseLeft</span>"]`
       if (b.inventory.length === 2) text += `
-            <br>input.key.nextGun<span class='color-symbol'>:</span> ["<span class='color-text'>${input.key.nextGun}</span>","<span class='color-text'>MouseWheel</span>"]
-            <br>input.key.previousGun<span class='color-symbol'>:</span> ["<span class='color-text'>${input.key.previousGun}</span>","<span class='color-text'>MouseWheel</span>"]`
+            <br>input.key.nextGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.nextGun}</span>","<span class='color-text'>MouseWheel</span>"]
+            <br>input.key.previousGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.previousGun}</span>","<span class='color-text'>MouseWheel</span>"]`
       simulation.inGameConsole(text);
       if (tech.isExtraGunTech && b.inventory.length) {
         //find guntech that matches most recent gun in inventory
@@ -304,7 +304,7 @@ const powerUps = {
         //give the tech that was found for this gun
         if (gunTechPool.length) {
           const index = Math.floor(Math.random() * gunTechPool.length)
-          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-text'>${tech.tech[gunTechPool[index]].name}</strong>")`, 360)
+          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-tech'>${tech.tech[gunTechPool[index]].name}</strong>")`, 360)
           tech.giveTech(gunTechPool[index]) // choose from the gun pool
           simulation.boldActiveGunHUD();
         }
@@ -325,7 +325,7 @@ const powerUps = {
         //give the tech that was found for this gun
         if (techPool.length) {
           const index = Math.floor(Math.random() * techPool.length)
-          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-text'>${tech.tech[techPool[index]].name}</strong>")`, 360)
+          simulation.inGameConsole(`<span class='color-var'>tech</span>.giveTech("<strong class='color-tech'>${tech.tech[techPool[index]].name}</strong>")`, 360)
           tech.giveTech(techPool[index]) // choose from the gun pool
           simulation.boldActiveGunHUD();
         }
@@ -340,7 +340,7 @@ const powerUps = {
         if (localSettings.techHistory.length > 1000) localSettings.techHistory.shift() //prevent the local storage from taking up too much space by remove oldest tech names
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       }
-      simulation.inGameConsole(`<div class="circle-grid tech"></div> &nbsp; <span class='color-var'>tech</span>.giveTech("<strong class='color-text'>${tech.tech[index].name}</strong>")`);
+      simulation.inGameConsole(`<div class="circle-grid tech"></div> &nbsp; <span class='color-var'>tech</span>.giveTech("<strong class='color-tech'>${tech.tech[index].name}</strong>")`);
       tech.giveTech(index)
     }
     powerUps.endDraft(type);
@@ -2183,7 +2183,7 @@ const powerUps = {
 
         if (have.length) {
           choose = have[Math.floor(Math.random() * have.length)]
-          simulation.inGameConsole(`<span class='color-var'>tech</span>.remove("<strong class='color-text'>${tech.tech[choose].name}</strong>")`)
+          simulation.inGameConsole(`<span class='color-var'>tech</span>.remove("<strong class='color-tech'>${tech.tech[choose].name}</strong>")`)
 
           for (let i = 0; i < tech.tech[choose].count; i++) {
             powerUps.directSpawn(m.pos.x, m.pos.y, "tech");
@@ -2202,7 +2202,7 @@ const powerUps = {
           return false
         }
       } else if (tech.tech[choose].count && !tech.tech[choose].isInstant) {
-        simulation.inGameConsole(`<span class='color-var'>tech</span>.remove("<strong class='color-text'>${tech.tech[choose].name}</strong>")`)
+        simulation.inGameConsole(`<span class='color-var'>tech</span>.remove("<strong class='color-tech'>${tech.tech[choose].name}</strong>")`)
 
         for (let i = 0; i < tech.tech[choose].count; i++) {
           powerUps.directSpawn(m.pos.x, m.pos.y, "tech");

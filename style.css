@@ -1405,7 +1405,7 @@ summary {
   display: inline-block;
   animation: randomize 4s infinite alternate;
   transform-origin: bottom;
-  color: #555;
+  color: var(--rest-color);
 }
 
 @keyframes randomize {

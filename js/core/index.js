@@ -1680,6 +1680,7 @@ window.addEventListener("keydown", function (event) {
       }
     }
   } else {
+    if (event.keyCode == 32) event.preventDefault() //disable spacebar scrolling
     // input.lastDown = event.code
     // console.log(event.code)
     switch (event.code) {
@@ -1703,6 +1704,7 @@ window.addEventListener("keydown", function (event) {
         input.fire = true
         break
       case input.key.field:
+
         input.field = true
         break
       case input.key.nextGun:

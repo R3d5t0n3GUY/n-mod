@@ -119,39 +119,8 @@ const tech = {
     simulation.inGameConsole(`<strong>+${(100 * percent).toFixed(0)}%</strong> <strong>JUNK</strong><span class='color-var'>tech</span> chance (${(100 * tech.junkChance).toFixed(0)}% total chance)`)
     // tech.junkChance += (1 - tech.junkChance) * percent
     return percent
-
-    //make an array for possible junk tech to add
-    // let options = [];
-    // for (let i = 0; i < tech.tech.length; i++) {
-    //     if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].isJunk) options.push(i);
-    // }
-    // if (options.length) {
-    //     let countNonJunk = 0 // count total non junk tech
-    //     for (let i = 0, len = tech.tech.length; i < len; i++) {
-    //         if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isJunk) countNonJunk += tech.tech[i].frequency
-    //     }
-    //     const num = Math.ceil(percent * countNonJunk) //scale number added
-    //     for (let i = 0; i < num; i++) tech.tech[options[Math.floor(Math.random() * options.length)]].frequency++ //add random array options to tech pool
-    //     simulation.inGameConsole(`<span class='color-var'>tech</span>.tech.push(${num.toFixed(0)} <span class='color-text'>JUNK</span>)`)
-    //     return num
-    // } else {
-    //     return 0
-    // }
   },
   removeJunkTechFromPool(percent) {
-    // for (let j = 0; j < num; j++) {
-    //     for (let i = 0; i < tech.tech.length; i++) {
-    //         if (tech.tech[i].isJunk && tech.tech[i].frequency > 0 && tech.tech[i].count < tech.tech[i].maxCount) {
-    //             tech.tech[i].frequency--
-    //             break
-    //         }
-    //     }
-    // }
-
-    // if (percent > 0) {
-    //     tech.junkChance = (tech.junkChance - percent) / (1 - percent)
-    //     if (tech.junkChance < 0.001 || tech.junkChance === undefined) tech.junkChance = 0
-    // }
     tech.junkChance -= percent
     if (tech.junkChance < 0.001 || tech.junkChance === undefined) tech.junkChance = 0
     if (tech.junkChance > 1) tech.junkChance = 1
