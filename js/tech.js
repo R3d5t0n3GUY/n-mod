@@ -9095,7 +9095,10 @@ const tech = {
     {
       name: "capacitor bank",
       descriptionFunction() {
-        return `<strong>charge</strong> effects build up almost <strong>instantly</strong><br><em style = 'font-size:93%;'><strong class='color-block'>blocks</strong>, ${tech.haveGunCheck("foam", false) ? "<strong>foam</strong>" : "foam"}, ${tech.isPlasmaBall ? "<strong>plasma ball</strong>" : "plasma ball"}, ${tech.isRailGun ? "<strong>railgun</strong>" : "railgun"}, ${tech.isPulseLaser ? "<strong>pulse</strong>" : "pulse"}, ${tech.isTokamak ? "<strong>tokamak</strong>" : "tokamak"}</em>`
+        return `<strong>charge</strong> effects build up almost <strong>instantly</strong><br><em style = 'font-size:93%;'><strong class='color-block'>blocks</strong>, 
+        ${tech.haveGunCheck("foam", false) ? "<strong>foam</strong>" : "foam"}, ${tech.isPlasmaBall ? "<strong>plasma ball</strong>" : "plasma ball"}, 
+        ${tech.isRailGun ? "<strong>railgun</strong>" : "railgun"}, ${tech.isPulseLaser ? "<strong>pulse</strong>" : "pulse"}, 
+        ${tech.isTokamak ? "<strong>tokamak</strong>" : "tokamak"}, ${tech.spearRadioactive ? "<strong>po-210</strong>" : "po-210"}</em>`
       },
       isGunTech: true,
       maxCount: 1,
@@ -10157,9 +10160,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword && !tech.isHeavenlyArray
+        return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword // && !tech.isHeavenlyArray
       },
-      requires: "sword, not plasmon, canton's theorem, dirac sea",
+      requires: "sword, not plasmon, canton's theorem", // dirac sea
       effect() {
         tech.greatSword = true;
       },
@@ -10208,9 +10211,9 @@ const tech = {
 			frequency: 2,
 			frequencyDefault: 2,
 			allowed() { 
-				return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword && !tech.isStabSword
+				return tech.haveGunCheck("sword") && !tech.infinityEdge && !tech.soundSword && !tech.longSword && !tech.isStabSword && !tech.sizeIllusion
 			},
-			requires: "sword, not plasmon, canton's theorem, longsword, silicon carbide",
+			requires: "sword, not plasmon, canton's theorem, longsword, silicon carbide, size-weight illusion",
 			effect() {
 				tech.isHeavenlyArray = true;
 			},
@@ -11789,7 +11792,7 @@ const tech = {
     },
     {
       name: "pair production",
-      description: "after picking up a <strong>power up</strong><br><strong>+200</strong> <strong class='color-f'>energy</strong>",
+      description: `after picking up a <strong>power up</strong>, <strong>+200</strong> <strong class='color-f'>energy</strong><br>and <strong>-0.5</strong> seconds of <strong class="color-invulnerable">invulnerbility</strong>`,
       isPacifist: true,
       isFieldTech: true,
       maxCount: 1,

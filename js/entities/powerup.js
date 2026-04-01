@@ -2025,7 +2025,10 @@ const powerUps = {
     powerUps.totalUsed++
     powerUps.research.currentRerollCount = 0
     if (tech.isTechDamage && who.name === "tech") m.takeDamage(0.1)
-    if (tech.isPairProduction) m.energy += 2 * level.isReducedRegen;
+    if (tech.isPairProduction) {
+      m.energy += 2 * level.isReducedRegen;
+      m.immuneCycle -= 30
+    }
     if (tech.isMineDrop && bullet.length < 150 && Math.random() < 0.5) {
       if (tech.isLaserMine && input.down) {
         b.laserMine(who.position)
@@ -2292,7 +2295,7 @@ const powerUps = {
       // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {
-          if (["heal", "research", "ammo","coupling", "boost"].includes(powerUp[i].name)) {
+          if (["heal", "research", "ammo","coupling", "boost", "Casimir"].includes(powerUp[i].name)) {
             queueRemoval('powerUp', i)
             break
           }
@@ -2330,7 +2333,7 @@ const powerUps = {
   spawn(x, y, name, moving = true, size = 0) {
     if (name === "random") {
       let pickList = ["heal", "ammo", "boost", "gun", "field", "tech"];
-      if (!this.tech.isSuperDeterminism) pickList.push('research')
+      if (!tech.isSuperDeterminism) pickList.push('research')
       if (m.coupling > 0) pickList.push("coupling")
       let idx = Math.floor(Math.random() * pickList.length);//round down
       while (
@@ -2411,14 +2414,17 @@ const powerUps = {
       polygonSides = 12
     }
 
-    let smallNames = ["heal", "Casimir"] //["heal", "research", "ammo","coupling", "boost"]
+    let smallNames = ["Casimir"] //["heal", "research", "ammo","coupling", "boost"]
+    let healing = Math.pow((size / 40 / (simulation.healScale ** 0.25)), 2)
+    let healOutput = (healing > 0 ? Math.min(m.maxHealth - m.health, healing) : -1) 
+    if ((tech.isEnergyHealth && !powerUps.healGiveMaxEnergy) || tech.isOverHeal || healOutput > 0) smallNames.push("heal")
     if (!tech.isSuperDeterminism) smallNames.push("research")
     if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) smallNames.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
     if (m.coupling > 0) smallNames.push("coupling")
     if (tech.isBoostPowerUps) smallNames.push("boost")
 
     powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
-    if (powerUp.length > 299 && smallNames.includes(name)) { //when trying to spawn a small powerup when there's too many
+    if (powerUp.length > 256 && smallNames.includes(name)) { //when trying to spawn a small powerup when there's too many
       simulation.clearConsole();
       powerUp[index].effect() //invoke its effect instead of spawning it
       queueRemoval("powerUp", index) //don't add to world
