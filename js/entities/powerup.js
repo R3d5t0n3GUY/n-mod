@@ -2329,7 +2329,9 @@ const powerUps = {
   },
   spawn(x, y, name, moving = true, size = 0) {
     if (name === "random") {
-      let pickList = ["heal", "ammo", "research", "boost", "coupling", "gun", "field", "tech"];
+      let pickList = ["heal", "ammo", "boost", "gun", "field", "tech"];
+      if (!this.tech.isSuperDeterminism) pickList.push('research')
+      if (m.coupling > 0) pickList.push("coupling")
       let idx = Math.floor(Math.random() * pickList.length);//round down
       while (
         (pickList[idx] === "coupling" && !tech.isCouplingPowerUps) || //don't pick coupling if it hasn't spawned
@@ -2409,7 +2411,7 @@ const powerUps = {
       polygonSides = 12
     }
 
-    let smallNames = ["heal"] //["heal", "research", "ammo","coupling", "boost"]
+    let smallNames = ["heal", "Casimir"] //["heal", "research", "ammo","coupling", "boost"]
     if (!tech.isSuperDeterminism) smallNames.push("research")
     if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) smallNames.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
     if (m.coupling > 0) smallNames.push("coupling")

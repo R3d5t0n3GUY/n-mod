@@ -969,19 +969,26 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     }
   },
   populateGrid() { //background-color:var(--build-bg-color);
-    let text = `
+    let buttonText = (name) => {
+      return `<button onclick="build.sortTech('${name}', true)" class="sort-button"`
+    }, circleText = (n) => {
+      return `<div class="circle-grid ${n} tooltip" style="position:relative; top:-0.05em; left:"`
+    }, inputLabelText = (what, id, setting = "Allowed", title, text) => {
+      return `<input onclick="build.${what}('experiment')" type="checkbox" id="${id}" name="${id}" style="width:12px; height:12px;" ${localSettings["is" + setting] ? "checked" : ""}>
+\n<label for="${id}" title="${title}">${text}</label>`
+    }, text = `
 <div class="experiment-start-box">
   <div class="sort" style="border: 0px;">
-    <button onclick="build.sortTech('guntech', true)" class="sort-button"><div class="circle-grid tech tooltip" style="position:relative; top:-0.05em; left:0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div>
-      <div class="circle-grid gun tooltip" style="position:relative; top:-0.05em; left:-0.55em; opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div></button>
-    <button onclick="build.sortTech('fieldtech', true)" class="sort-button"><div class="circle-grid tech tooltip" style="position:relative; top:-0.05em; left:0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div>
-      <div class="circle-grid field tooltip" style="position:relative; top:-0.05em; left:-0.55em;opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div></button>
-    <button onclick="build.sortTech('damage', true)" class="sort-button"><strong class="color-d">damage</strong></button>
-    <button onclick="build.sortTech('damage taken', true)" class="sort-button"><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
-    <button onclick="build.sortTech('heal', true)" class="sort-button"><strong class="color-h">heal</strong></button>
-    <button onclick="build.sortTech('energy', true)" class="sort-button"><strong class="color-f">energy</strong></button>
+    ${buttonText('guntech')}>${circleText('tech')}0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div>
+      ${circleText('gun')}-0.55em; opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-g">gun</span><span class="color-m">tech</span></span></div></button>
+    ${buttonText('fieldtech')}><div class="circle-grid tech tooltip" style="position:relative; top:-0.05em; left:0.55em;opacity:0.8;margin-left:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div>
+      ${circleText('field')}-0.55em;opacity:0.65;margin-right:-0.55em;"><span class="tooltiptext"><span class="color-f">field</span><span class="color-m">tech</span></span></div></button>
+    ${buttonText('damage')}><strong class="color-d">damage</strong></button>
+    ${buttonText('damage taken')}><strong style="letter-spacing: 1px;font-weight: 100;">dmg taken</strong></button>
+    ${buttonText('heal')}><strong class="color-h">heal</strong></button>
+    ${buttonText('energy')}><strong class="color-f">energy</strong></button>
     <input type="search" id="sort-input" style="width: 7.5em;font-size: 0.6em;color:var(--text-color);background-color:var(--bg-color);" placeholder="sort by">
-    <button onclick="build.sortTech('input', true)" class="sort-button" style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
+    ${buttonText('input')} style="border-radius: 0em;border: 1.5px var(--text-color) solid;font-size: 0.6em;" value="damage">sort</button>
   </div>
   <div id="experiment-settings" style="height:116px;">
     <div style="display: grid;grid-template-columns: repeat(3, 1fr);row-gap: 10px;column-gap: 10px;grid-auto-rows: minmax(5px, auto);margin:-5px 0px -10px 10px;line-height: 100%;">
@@ -1000,11 +1007,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         </svg>
       </div>
       <div style="grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-58px;margin-bottom:5px;">
-        <input onclick="build.showImages('experiment')" type="checkbox" id="hide-images" name="hide-images" style="width:12px; height:12px;" ${localSettings.isHideImages ? "checked" : ""}>
-        <label for="hide-images" title="hide images for fields, guns, and tech">hide images</label>
+        ${inputLabelText("showImages","hide-images","HideImages","hide images for fields, guns, and tech","hide images")}
         <br>
-        <input onclick="build.setDarkMode('experiment')" type="checkbox" id="dark-mode" name="dark-mode" style="width:12px; height:12px;" ${localSettings.isDarkMode ? "checked" : ""}>
-        <label for="dark-mode" title="Changes document coloring, allowing easier reading">dark mode</label>
+        ${inputLabelText("setDarkMode","dark-mode","DarkMode","Changes document coloring, allowing easier reading","dark mode")}
       </div>
       <div style="grid-column:1;margin-top:-1.25em;grid-row:4;height:30px;">
         <svg class="SVG-button" width="70" height="25" onclick="build.export()" style='cursor:pointer;'>
