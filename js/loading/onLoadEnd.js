@@ -120,7 +120,7 @@ fileLoads.onLoadEnd = function () {
     splashStart.onclick = function () { tryRunning.start() }
     document.body.appendChild(container); //append script loader (created in scriptLoader.js)
     //Matter.Common.setDecomp(decomp) //initialize decomposition of concave vertices
-    build.setDarkMode('spash-start')
+    build.setDarkMode('splash-start')
     Array.from(document.getElementsByClassName("details-collapse")).forEach(node => {
       node.type = "button" 
       node.style.cursor = "pointer"

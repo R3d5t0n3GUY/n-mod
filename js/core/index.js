@@ -424,7 +424,7 @@ const build = {
   },
   setDarkMode(from = "settings") {
     if (localSettings.isDarkMode === undefined) localSettings.isDarkMode = false //default to light mode
-    if (from !== 'spash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
+    if (from !== 'splash-start') localSettings.isDarkMode = !localSettings.isDarkMode //don't toggle on loadup
     document.getElementById("dark-mode").checked = localSettings.isDarkMode
     if (localSettings.isAllowed) localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     let pulseHue = (tech.isPauseEjectTech && (tech.isPauseEjectResearch ? (powerUps.research.count < tech.pauseEjectResearch) : (m[tech.isEnergyHealth ? 'energy' : 'health'] <= tech.pauseEjectTech)) ? 10 : 253)
