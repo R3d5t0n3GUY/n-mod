@@ -1261,9 +1261,11 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
       if (localSettings.difficultyCompleted === undefined) localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
 
-      if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
-      simulation.difficultyMode = localSettings.difficultyMode
-      (() => { lore.setTechGoal() }).tryNoCatch()
+      (() => {
+        if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
+        simulation.difficultyMode = localSettings.difficultyMode
+        lore.setTechGoal()
+      }).tryNoCatch()
 
       if (localSettings.pauseMenuDetailsOpen === undefined) localSettings.pauseMenuDetailsOpen = [true, false, false, true]
       if (localSettings.techHistory === undefined) localSettings.techHistory = []
