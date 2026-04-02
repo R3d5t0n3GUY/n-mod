@@ -1261,11 +1261,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
       if (localSettings.difficultyCompleted === undefined) localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
 
-      (() => {
-        if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
-        simulation.difficultyMode = localSettings.difficultyMode
-        lore.setTechGoal() 
-      }).tryNoCatch()
+      if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
+      simulation.difficultyMode = localSettings.difficultyMode
+      (() => { lore.setTechGoal() }).tryNoCatch()
 
       if (localSettings.pauseMenuDetailsOpen === undefined) localSettings.pauseMenuDetailsOpen = [true, false, false, true]
       if (localSettings.techHistory === undefined) localSettings.techHistory = []
@@ -1314,14 +1312,14 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         } catch (e) {
           console.warn(e)
         }
-        requestAnimFrames(4, () => {
-          build.setDarkMode('splash-start')
-        })
       })
     }
     document.getElementById("control-testing").style.visibility = (localSettings.loreCount < 1) ? "hidden" : "visible"
     // document.getElementById("experiment-button").style.visibility = (localSettings.loreCount === 0) ? "hidden" : "visible"
     input.controlTextUpdate()
+    requestAnimFrames(4, () => {
+      build.setDarkMode('splash-start')
+    })
   },
   hasExperimentalMode: false,
   startExperiment() { //start playing the game after exiting the experiment menu
