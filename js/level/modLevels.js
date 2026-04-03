@@ -265,13 +265,28 @@ const modLevels = {
     powerUps.addResearchToLevel() //needs to run after mobs are spawned
   },
   congregation() {
-    simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
+     simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
             <br>WORK IN PROGRESS`)
     level.setPosToSpawn(0, -100); //normal spawn
     level.exit.x = 1500;
     level.exit.y = 0;
     simulation.fallHeight = 1500
-    spawn.mapRect(level.enter.x, level.enter.y + 20, 100, 20); //bump for level entrance
+    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", {
+      isNotHoldable: true,
+      isInvulnerable: true,
+      inertia: Infinity,
+      isStatic: true,
+      density: 0.01,
+      style: {
+        fillStyle: "#ff5f00",
+        lineWidth: 25,
+        strokeStyle: "#f73",
+        lineJoin: "bevel",
+        composition: {
+          strokeStyle: "lighter"
+        }
+      }
+    }) //starting block
     spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
     level.defaultZoom = 1800
     simulation.zoomTransition(level.defaultZoom)
