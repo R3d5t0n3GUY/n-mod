@@ -6693,7 +6693,7 @@ const m = {
 
           }
           if (isOn) {
-            if (tech.isPilotMapIgnore && !simulation.testing && m.fieldOn) {
+            if (tech.isPilotMapIgnore && !simulation.testing && m.fieldOn && !simulation.isTimeSkipping) {
               level.customTopLayer();
               simulation.draw.drawMapPath();
             } //draw map before drawing field if player has de Broglie–Bohm theory

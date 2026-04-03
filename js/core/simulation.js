@@ -109,7 +109,7 @@ const simulation = {
       m.walk_cycle += m.flipLegs * m.Vx;
       m.hold();
       if (m.cycle < 100 || m.fieldMode !== 8 || !tech.isPilotMapIgnore || !m.fieldOn) {
-        simulation.draw.drawMapPath();
+        //simulation.draw.drawMapPath();
         level.customTopLayer();
       } //don't draw map here first if pilot wave field is used with De Broglie–Bohm theory
       b.fire();
