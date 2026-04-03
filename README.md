@@ -1,7 +1,7 @@
 # n-mod
 <h1>A fan-modded version of Mr. LandGreen's <a href="https://landgreen.github.io/n-gon/index.html">n-gon</a>.</h1>
-<img src="img/favicon.svg" width="250px"><hr>
-I work on this project a lot in my spare time.
+<a href='https://r3d5t0n3guy.github.io/n-mod' target='blank'><img src="img/favicon.svg" width="250px"></a><hr>
+I, <a href='https://r3d5t0n3guy.github.io' target='blank'>R3d5t0n3_GUY</a>, work on this project a lot in my spare time.
 It includes portions of the following games and mods:
 <ul>
   <li><a href="https://github.com/landgreen/n-gon">n-gon (primary directory) by Landgreen</a></li>
