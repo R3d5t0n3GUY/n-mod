@@ -12476,28 +12476,24 @@ const tech = {
         tech.isPilotMapIgnore = true;
         let fieldRadius = m.fieldRadius;
         m.setField(m.fieldMode); //update pilot wave function
-        requestAnimationFrame(() => { //keep field position and radius. Not sure if it actually works
-          requestAnimationFrame(() => {
-            if (m.fieldMode === 8 && m.fieldOn) {
-              Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
-              m.fieldPosition = simulation.mouseInGame
-              m.fieldRadius = fieldRadius;
-            }
-          })
+        requestAnimFrames(2, () => { //keep field position and radius. Not sure if it actually works
+          if (m.fieldMode === 8 && m.fieldOn) {
+            Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
+            m.fieldPosition = simulation.mouseInGame
+            m.fieldRadius = fieldRadius;
+          }
         })
       },
       remove() {
         tech.isPilotMapIgnore = false;
         let fieldRadius = m.fieldRadius;
         m.setField(m.fieldMode); //update pilot wave function
-        requestAnimationFrame(() => { //keep field position and radius. Not sure if it actually works
-          requestAnimationFrame(() => {
-            if (m.fieldMode === 8 && m.fieldOn) {
-              Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
-              m.fieldPosition = simulation.mouseInGame
-              m.fieldRadius = fieldRadius;
-            }
-          })
+        requestAnimFrames(2, () => { //keep field position and radius. Not sure if it actually works
+          if (m.fieldMode === 8 && m.fieldOn) {
+            Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
+            m.fieldPosition = simulation.mouseInGame
+            m.fieldRadius = fieldRadius;
+          }
         })
       }
     },
