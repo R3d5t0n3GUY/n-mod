@@ -6752,7 +6752,7 @@ const m = {
                 ) { //use power up if it is close enough
 
                   simulation.ephemera.push({
-                    name: "pilot grab",
+                    name: `pilot grab id #${simulation.ephemera.length}`,
                     count: 5, //cycles before it self removes
                     PposX: powerUp[i].position.x,
                     PposY: powerUp[i].position.y,

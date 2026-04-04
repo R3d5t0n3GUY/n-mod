@@ -271,13 +271,20 @@ const modLevels = {
     level.exit.x = 1500;
     level.exit.y = 0;
     simulation.fallHeight = 1500
-    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", {
-      isNotHoldable: true,
-      isInvulnerable: true,
-      inertia: Infinity,
-      isStatic: true,
-      density: 0.01,
-      style: {
+    let physicsProp = (style, properties = {}) => {
+      let obj = {
+        isNotHoldable: true,
+        isInvulnerable: true,
+        inertia: Infinity,
+        isStatic: true,
+        density: 0.01,
+        style: style
+      }
+      Object.assign(obj, properties)
+      return obj
+    }
+    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250",
+      physicsProp({
         fillStyle: "#ff5f00",
         lineWidth: 25,
         strokeStyle: "#f73",
@@ -285,8 +292,16 @@ const modLevels = {
         composition: {
           strokeStyle: "lighter"
         }
-      }
-    }) //starting block
+      })
+    ) //starting block
+    spawn.physicsBodyFromShape(level.enter.x + 65, level.enter.y + 120, "0 0 70 0 70 70 0 70",
+      physicsProp({
+        fillStyle: "#5f7fff",
+        lineWidth: 7,
+        strokeStyle: "#3cf",
+        lineJoin: "bevel",
+      })
+    )
     spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
     level.defaultZoom = 1800
     simulation.zoomTransition(level.defaultZoom)
@@ -295,7 +310,7 @@ const modLevels = {
 
     level.custom = () => {
       level.exit.drawAndCheck();
-
+      document.body.style.backgroundColor = "#222"
       level.enter.draw();
     };
     level.customTopLayer = () => {};

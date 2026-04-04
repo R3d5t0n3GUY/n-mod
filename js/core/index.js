@@ -1680,7 +1680,7 @@ window.addEventListener("keydown", function (event) {
       }
     }
   } else {
-    if (event.keyCode == 32) event.preventDefault() //disable spacebar scrolling
+    if (simulation.isChoosing) event.preventDefault() //disable spacebar scrolling
     // input.lastDown = event.code
     // console.log(event.code)
     switch (event.code) {
@@ -1909,8 +1909,14 @@ window.addEventListener("keydown", function (event) {
         const mode = (m.fieldMode === m.fieldUpgrades.length - 1) ? 0 : m.fieldMode + 1;
         m.setField(mode);
       }
-      if (event.key === "Enter" && !simulation.isChatMenuOpen) {
-        simulation.openChatMenu();
+      if (event.key === "Enter") {
+        if (simulation.isChatMenuOpen) {
+          if (event.ctrlKey) { //the idea is that CTRL+Enter executes the command, while Enter simply adds a new line. not sure if it actually works
+            document.getElementById('execute-command').click();
+          }
+        } else {
+          simulation.openChatMenu();
+        }
       }
       if (event.key === "`") {
         powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "coupling");
