@@ -22,10 +22,10 @@ const mainLevels = {
         //powerUps.spawn(2095 + 2 * Math.random(), -1270, "heal", false);
       } else if (!build.isExperimentRun) {
         simulation.trails(70)
-        //bonus power ups for clearing runs in the last game
+        //bonus power ups for clearing levels in the last game
         if (!simulation.isCheating && localSettings.levelsClearedLastGame > 1) {
           let entangled = false
-          for (let i = 0; i < Math.ceil(localSettings.levelsClearedLastGame / 1.5); i++) {
+          for (let i = 0; i < Math.ceil(localSettings.levelsClearedLastGame / Math.PHI); i++) {
             if (Math.random() < 0.25 && localSettings.entanglement && !entangled) {
               if (Math.random() < 0.37) entangled = true
               powerUps.spawn(2095 + 2 * Math.random(), -1270 - 50 * i, "entanglement", false); //chance to spawn entanglement

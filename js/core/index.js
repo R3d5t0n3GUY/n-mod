@@ -441,7 +441,7 @@ const build = {
       { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}`},
       { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}`},
       { name: 'combo-color', col: `#${localSettings.isDarkMode ? "6a6a6a" : "fff"}`},
-      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.3 : 1))}
+      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.22 : 1))}
     ]
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
