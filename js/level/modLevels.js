@@ -271,7 +271,7 @@ const modLevels = {
     level.exit.x = 1500;
     level.exit.y = 0;
     simulation.fallHeight = 1500
-    let physicsProp = (style, properties = {}) => {
+    const physicsProp = (style, properties = {}) => {
       let obj = {
         isNotHoldable: true,
         isInvulnerable: true,
@@ -282,26 +282,25 @@ const modLevels = {
       }
       Object.assign(obj, properties)
       return obj
+    }, blockStyle = {
+      fillStyle: "#ff5f00",
+      lineWidth: 25,
+      strokeStyle: "#f73",
+      lineJoin: "bevel",
+      composition: {
+        strokeStyle: "lighter"
+      }
+    }, noCollision = {
+      collisionFilter: { cat: 0, mask: 0 }
     }
-    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250",
-      physicsProp({
-        fillStyle: "#ff5f00",
-        lineWidth: 25,
-        strokeStyle: "#f73",
-        lineJoin: "bevel",
-        composition: {
-          strokeStyle: "lighter"
-        }
-      })
-    ) //starting block
+    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", physicsProp(blockStyle)) //starting block
     spawn.physicsBodyFromShape(level.enter.x + 65, level.enter.y + 120, "0 0 70 0 70 70 0 70",
       physicsProp({
         fillStyle: "#5f7fff",
         lineWidth: 7,
         strokeStyle: "#3cf",
         lineJoin: "bevel",
-      })
-    )
+      }, noCollision))
     spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
     level.defaultZoom = 1800
     simulation.zoomTransition(level.defaultZoom)
@@ -314,18 +313,7 @@ const modLevels = {
       level.enter.draw();
     };
     level.customTopLayer = () => {};
-    spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200", {
-      restitution: 0.1,
-      isNotHoldable: true,
-      isInvulnerable: true,
-      inertia: Infinity,
-      isStatic: true,
-      friction: 0.1,
-      density: 0.01,
-      style: {
-        fillStyle: "#c70"
-      }
-    })
+    spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200", physicsProp(blockStyle))
   },
   arena() {
     simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>
