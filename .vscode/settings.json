@@ -11,8 +11,7 @@
         "whitespacepp.foreColorEOF",
         "whitespacepp.textEOF",
         "ShortcutMenuBar.beautify",
-        "ShortcutMenuBar.commentLine",
-        "beautify.config"
+        "ShortcutMenuBar.commentLine"
     ],
     "ShortcutMenuBar.openSettings": true,
     "ShortcutMenuBar.showCommands": true,
@@ -63,5 +62,4 @@
     "debug.console.fontFamily": "editor",
     "scm.inputFontFamily": "editor",
     "notebook.markup.fontFamily": "editor",
-    "beautify.config": ".vscode/.jsbeautifyrc"
 }
