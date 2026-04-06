@@ -14904,7 +14904,7 @@ const tech = {
         m.skin.Sleipnir()
       },
       remove() {
-        if (this.count) m.resetSkin();
+        if (this.count) m.drawLeg = m.oldDrawLeg
       }
     },
     {
@@ -14979,7 +14979,7 @@ const tech = {
         m.skin.pareidolia()
       },
       remove() {
-        if (this.count) m.resetSkin();
+        if (this.count) m.draw = m.oldDraw
       }
     },
     {
@@ -15753,141 +15753,6 @@ const tech = {
         if (this.count > 0) removeEventListener('beforeunload', beforeUnloadEventListener);
       }
     },
-    /* {
-        name: "planetesimals",
-        description: `play <strong>planetesimals</strong> <em style = 'font-size:80%;'>(an asteroids-like game)</em>
-        <br>clear <strong>levels</strong> in <strong>planetesimals</strong> to spawn ${powerUps.orb.tech()}
-        <br>if you <strong style="color:red;">die</strong> in <strong>planetesimals</strong> you <strong style="color:red;">die</strong> in <strong>n-gon</strong>`,
-        maxCount: 1,
-        count: 0,
-        frequency: 0,
-        isInstant: true,
-        isJunk: true,
-        allowed() {
-            return true
-        },
-        requires: "",
-        effect() {
-            window.open('lib/planetesimals/planet_index.html', '_blank')
-            // powerUps.spawn(m.pos.x, m.pos.y, "tech");
-
-            // for communicating to other tabs, like planetesimals
-            // Connection to a broadcast channel
-            const bc = new BroadcastChannel('planetesimals');
-            bc.activated = false
-
-            bc.onmessage = function (ev) {
-                if (ev.data === 'tech') powerUps.spawn(m.pos.x, m.pos.y, "tech");
-                if (ev.data === 'death') {
-                    m.death()
-                    bc.close(); //end session
-                }
-                if (ev.data === 'ready' && !bc.activated) {
-                    bc.activated = true //prevents n-gon from activating multiple copies of planetesimals
-                    bc.postMessage("activate");
-                }
-            }
-        },
-        remove() { }
-    },
-    {
-        name: "tamagotchi",
-        description: `you adopt a digital <strong>pet</strong>!!!1!!
-        <br>after each <strong>n-gon</strong> ${powerUps.orb.warp()} your pet brings you <strong>something</strong>
-        <br>if your <strong>pet</strong> <strong style="color:red;">dies</strong> you <strong style="color:red;">die</strong> in <strong>n-gon</strong>`,
-        maxCount: 1,
-        count: 0,
-        frequency: 0,
-        isInstant: true,
-        isJunk: true,
-        allowed() { return true },
-        requires: "",
-        effect() {
-            tech.isDigitalPet = true
-            window.open('../tamagotchi-dog/index.html', '_blank')
-
-            // for communicating to other tabs, like planetesimals
-            // Connection to a broadcast channel
-            const bc = new BroadcastChannel('tamagotchi');
-            bc.activated = false
-
-            bc.onmessage = function (ev) {
-                // if (ev.data === 'tech') {
-                //     powerUps.spawn(m.pos.x, m.pos.y, "tech");
-                // }
-                if (ev.data === 'death') {
-                    simulation.inGameConsole(`your digital pet died!`, 360)
-                    m.death()
-                    bc.activated = false
-                    bc.close(); //end session
-                }
-                if (ev.data === 'ready' && !bc.activated) {
-                    bc.activated = true //prevents n-gon from activating multiple copies of planetesimals
-                    bc.postMessage("activate");
-                }
-                if (ev.data.hunger) {
-                    // console.log(ev.data, 'hi')
-                    for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
-                        if (simulation.ephemera[i].name === 'tamagotchi') {
-                            simulation.ephemera[i].hunger = ev.data.hunger
-                            simulation.ephemera[i].energy = ev.data.energy
-                            simulation.ephemera[i].cleanliness = ev.data.cleanliness
-                            break;
-                        }
-                    }
-                }
-            }
-
-            simulation.ephemera.push({
-                name: "tamagotchi",
-                hunger: 340,
-                energy: 340,
-                cleanliness: 340,
-                report() {
-                    const message = {
-                        hunger: Math.max(1, this.hunger),
-                        energy: Math.max(1, this.energy),
-                        cleanliness: Math.max(1, this.cleanliness),
-                    };
-                    bc.postMessage(message);
-                },
-                do() {
-                    if (this.hunger <= 0 && this.energy <= 0) {
-                        simulation.inGameConsole(`your digital pet died!`, 360)
-                        m.death()
-                        this.report()
-                        bc.activated = false
-                        bc.close(); //end session
-                        simulation.removeEphemera("tamagotchi", true)
-                    }
-                    this.hunger -= 0.06
-                    this.energy -= 0.06
-                    this.cleanliness -= 0.06
-                    if (!(simulation.cycle % 30)) {
-                        this.report()
-                    }
-                },
-            })
-
-            // window.addEventListener('blur', () => {
-            //     for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
-            //         if (simulation.ephemera[i].name === 'tamagotchi') {
-            //             const message = {
-            //                 hunger: simulation.ephemera[i].hunger,
-            //                 energy: simulation.ephemera[i].energy,
-            //                 cleanliness: simulation.ephemera[i].cleanliness,
-            //             };
-            //             bc.postMessage(message);
-            //             break;
-            //         }
-            //     }
-            // });
-
-        },
-        remove() {
-            tech.isDigitalPet = false
-        }
-    }, */
     {
       name: "tinker",
       description: `<strong>permanently</strong> unlock <strong class='color-junk'>JUNK</strong>${powerUps.orb.tech()} in experiment mode<br><em>this effect is stored for future visits</em>`,
@@ -15978,7 +15843,7 @@ const tech = {
               deathCycle(i)
               if (!mob[i].isMobBullet && !mob[i].isBadTarget) {
                 if (mob[i].isBoss) {
-                  spawn.shieldingBoss(mob[i].position.x, mob[i].position.y)
+                  //spawn.shieldingBoss(mob[i].position.x, mob[i].position.y) //didn't end up removing original boss, so just ended up spawning another one. removed for this reason
                 } else {
                   spawn.starter(mob[i].position.x, mob[i].position.y)
                 }
@@ -16047,7 +15912,7 @@ const tech = {
         tech.tech[i].oldFrequency = tech.tech[i].frequency
         tech.tech[i].frequency = 0
       } else {
-        tech.tech[i].frequency = (tech.tech[i].oldFrequency || tech.tech[i].frequencyDefault || 2)
+        tech.tech[i].frequency = (tech.tech[i].oldFrequency + 1 || tech.tech[i].frequencyDefault + 1 || 3) - 1
         tech.tech[i].oldFrequency = 0
       }
     }

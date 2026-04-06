@@ -24,6 +24,7 @@ const cmdList = {
                 <li>JS Prototypes</li>
                 <li>Command Execution</li>
                 <li>Event Listeners</li>
+                <li>Declaring const</li>
               </ul>`]
             } else {
               return [true, ""];
@@ -157,7 +158,12 @@ const cmdList = {
         if (what === "tech") {
           if (cmdConsole.params.length > 1) {
             qnty = Math.max(1, parseInt(eval(cmdConsole.params[2]) || 0))
-            for (let i = 0; i < qnty; i++) tech.giveTech(cmdConsole.params[1].replaceAll("_", " "))
+            let techName = cmdConsole.params[1].replaceAll("_", " ")
+            if (tech.tech.findIndex(i => i.name === techName) > -1) {
+              for (let i = 0; i < qnty; i++) tech.giveTech(techName)
+            } else {
+              throw new ReferenceError(`<strong>${techName}</strong> is not a known <strong class='color-var'>tech</strong> name`)
+            }
           } else {
             throw new ArgumentError(`<strong class='color-var'>give</strong> can have no less than two parameters for this case`)
           }
@@ -166,10 +172,9 @@ const cmdList = {
           if (cmdConsole.params.length < 3) {
             switch (what) {
               case "ammo":
-                let test = [null, Infinity, -Infinity, undefined, NaN, ""]
-                let increaseTarget = (test.includes(b.guns[b.activeGun].durability) ? "ammo" : "durability")
-                if (b.inventory.length > 0 && b.guns[b.activeGun][increaseTarget] !== Infinity) {
-                  b.guns[b.activeGun][increaseTarget] += qnty
+                let munitionType = b.guns[b.activeGun].ammoType
+                if (b.inventory.length > 0 && ((munitionType != "health" && munitionType != "energy") ? (b.guns[b.activeGun][munitionType] !== Infinity) : false)) {
+                  b.guns[b.activeGun][munitionType] += qnty
                 }
                 break;
               case "coupling":
