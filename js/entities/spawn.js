@@ -14637,7 +14637,7 @@ const spawn = {
     Composite.add(engine.world, who); //add to world
     who.classType = "body"
   },
-  physicsBodyFromShape(x, y, vector, properties) { //same as spawn.bodyVertex, except being static doesn't remove restitution or friction
+  physicsBodyFromShape(x, y, vector = "0 0 0 100 100 100 100 0 0 0", properties = {}) { //same as spawn.bodyVertex, except being static doesn't remove restitution or friction
     let static = {
       where: {
         x: x,
@@ -14678,7 +14678,7 @@ const spawn = {
       })
       Composite.add(engine.world, body[body.length - 1].constraint) //apply constraint
     }
-    return body[body.length - 1]
+    return body[body.length - 1] //return if requested
   },
   mapRect(x, y, width, height, properties) { //adds rectangle to map array
     map[map.length] = Bodies.rectangle(x + width / 2, y + height / 2, width, height, properties);
