@@ -14654,8 +14654,8 @@ const spawn = {
         mask: (cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet),
         group: 0
       }),
-      inertia: (properties ? (static.disableRotation ? Infinity : properties.inertia || 0) : 0),
-      angularVelocity: (properties ? (static.disableRotation ? 0 : properties.angularVelocity || 0) : 0),
+      inertia: (properties ? (properties.disableRotation ? Infinity : properties.inertia || 0) : 0),
+      angularVelocity: (properties ? (properties.disableRotation ? 0 : properties.angularVelocity || 0) : 0),
       style: (properties ? properties.style || {} : {})
     }
     delete properties.isStatic //unsets static value, which would otherwise break restitution and friction
