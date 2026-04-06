@@ -1,23 +1,22 @@
 {
-    "indent_size": 1,
+    "indent_size": 2,
     "indent_char": " ",
     "indent_level": 0,
-    "max_preserve_newlines": 5,
+    "indent_with_tabs": false,
     "preserve_newlines": true,
-    "keep_array_indentation": false,
-    "break_chained_methods": false,
-    "indent_scripts": "normal",
-    "brace_style": "collapse",
-    "space_before_conditional": true,
-    "unescape_strings": false,
+    "max_preserve_newlines": 5,
     "jslint_happy": false,
-    "end_with_newline": false,
+    "unformatted": [""],
+    "space_after_anon_function": false,
+    "brace_style": "collapse",
+    "keep_array_indentation": false,
+    "keep_function_indentation": false,
+    "space_before_conditional": true,
+    "break_chained_methods": false,
+    "eval_code": false,
+    "unescape_strings": false,
     "wrap_line_length": 0,
-    "indent_inner_html": true,
-    "comma_first": false,
-    "e4x": false,
-    "indent_empty_lines": false,
-    "[javascript]": {
-        "editor.defaultFormatter": "HookyQR.beautify"
-    }
+    "wrap_attributes": "auto",
+    "wrap_attributes_indent_size": 4,
+    "end_with_newline": false
 }
