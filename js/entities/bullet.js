@@ -291,16 +291,12 @@ const b = {
   fireCDscale: 1,
   setFireCD() {
     b.fireCDscale = tech.fireRate * tech.slowFire * tech.researchHaste * tech.slowFireDamage
+    if (level.isSlowFireRate) b.fireCDscale *= 2
     if (m.fieldMode === 6) b.fireCDscale *= 0.8
-    if (tech.isFireRateForGuns) b.fireCDscale *= Math.pow(0.76923, Math.max(0, b.inventory.length - 1))
+    //if (tech.isGrabFireRate && m.ledgeCoyote !== 0) b.fireCDscale *= 0.33
+    if (tech.isFireRateForGuns) b.fireCDscale *= 1 / (1 + 0.35 * Math.max(0, b.inventory.length - 1)) //CDscale = 1 / (1 + (0.3 * count)); // Math.pow(0.76923, Math.max(0, b.inventory.length - 1))
     if (tech.isFireMoveLock) b.fireCDscale *= 0.25
-    for (let i = 0, len = tech.tech.length; i < len; i++) {
-      if ((tech.tech[i].name === "Lorentz transformation") && tech.isFastTime) {
-        b.fireCDscale *= 0.66;
-        let lvl = tech.tech[i].count;
-        b.fireCDscale *= 0.66 ** lvl;
-      }
-    }
+    if (tech.isFastTime) b.fireCDscale *= Math.pow(0.66, tech.fasterTime);
   },
   fireAttributes(dir, rotate = true) {
     if (rotate) {
@@ -1621,14 +1617,9 @@ const b = {
             if (this.pickUpTarget) {
               if (tech.isReel && this.blockDist > 150) {
                 // console.log(0.0003 * Math.min(this.blockDist, 1000))
-                m.energy += 0.00113 * Math.min(this.blockDist, 800) * level.isReducedRegen //max 0.352 energy
-                simulation.drawList.push({ //add dmg to draw queue
-                  x: m.pos.x,
-                  y: m.pos.y,
-                  radius: 10,
-                  color: m.fieldMeterColor,
-                  time: simulation.drawTime
-                });
+                let regen =  0.00113 * Math.min(this.blockDist, 800) * level.isReducedRegen //max 0.352 energy
+                m.energy += regen
+                for (let i = 0; i < 2; i++) simulation.energyGenGraphic()
               }
               m.holdingTarget = this.pickUpTarget
               // give block to player after it returns
@@ -2590,19 +2581,21 @@ const b = {
     };
     const grabPowerUp = function () {
       if (tech.isLaserGrabPowerUp) {
-          bestPowerUp = vertexCollision(path[path.length - 2], path[path.length - 1], [mob, map, body, powerUp]);
-          if (bestPowerUp.who) {
-              for (let i = 0, len = powerUp.length; i < len; ++i) {
-                  if (powerUp[i] === bestPowerUp.who && !simulation.isChoosing && !simulation.paused && (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal) && !(tech.isEnergyNoAmmo && powerUp[i].name === "ammo")) {
-                      m.energy += 0.8
-                      powerUps.onPickUp(powerUp[i]);
-                      powerUp[i].effect();
-                      queueRemoval('powerUp', i)
-                      return;
-                  }
-              }
+        bestPowerUp = vertexCollision(path[path.length - 2], path[path.length - 1], [mob, map, body, powerUp]);
+        if (bestPowerUp.who) {
+          for (let i = 0, len = powerUp.length; i < len; ++i) {
+            if (powerUp[i] === bestPowerUp.who && !simulation.isChoosing && !simulation.paused && (powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01 || tech.isOverHeal) && !(tech.isEnergyNoAmmo && powerUp[i].name === "ammo")) {
+              m.energy += 0.8
+              powerUps.onPickUp(powerUp[i]);
+              powerUp[i].effect();
+              queueRemoval('powerUp', i)
+              simulation.energyGenGraphic()
+              simulation.energyGenGraphic()
+              return;
+            }
           }
         }
+      }
     }
     checkForCollisions();
     let lastBestOdd
@@ -2988,6 +2981,7 @@ const b = {
           if (tech.isMutualism && this.isMutualismActive) {
             if (tech.isEnergyHealth) {
                 m.energy += 0.02
+                simulation.energyGenGraphic()
             } else {
                 m.health += 0.02
                 if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -3058,6 +3052,7 @@ const b = {
       if (tech.isMutualism && this.isMutualismActive) {
         if (tech.isEnergyHealth) {
             m.energy += 0.02
+            simulation.energyGenGraphic()
         } else {
             m.health += 0.02
             if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -3104,6 +3099,7 @@ const b = {
          if (tech.isMutualism && this.isMutualismActive) {
             if (tech.isEnergyHealth) {
                 m.energy += 0.02
+                simulation.energyGenGraphic()
             } else {
                 m.health += 0.02
                 if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -3162,6 +3158,7 @@ const b = {
       if (tech.isMutualism && this.isMutualismActive) {
           if (tech.isEnergyHealth) {
               m.energy += 0.02
+              simulation.energyGenGraphic()
           } else {
               m.health += 0.02
               if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -3295,7 +3292,11 @@ const b = {
         if (!who.isInvulnerable) {
           if (tech.iceEnergy && !who.shield && !who.isShielded && who.isDropPowerUp && who.alive && m.immuneCycle < m.cycle) {
             setTimeout(() => {
-              if (!who.alive) m.energy += tech.iceEnergy * 0.8 * level.isReducedRegen
+              if (!who.alive) {
+                m.energy += tech.iceEnergy * 0.8 * level.isReducedRegen
+                simulation.energyGenGraphic()
+                simulation.energyGenGraphic()
+              }
             }, 10);
           }
           if (tech.isSounds && !who.isSlowed) audioPlayer.requestSound("Freeze", this.position)
@@ -3401,6 +3402,7 @@ const b = {
         if (tech.isMutualism && this.isMutualismActive) {
           if (tech.isEnergyHealth) {
               m.energy += 0.02
+              simulation.energyGenGraphic()
           } else {
               m.health += 0.02
               if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -3468,6 +3470,7 @@ const b = {
     if (tech.isMutualism && this.isMutualismActive) {
       if (tech.isEnergyHealth) {
           m.energy += 0.02
+          simulation.energyGenGraphic()
       } else {
           m.health += 0.02
           if (m.health > m.maxHealth) m.health = m.maxHealth;
@@ -4973,23 +4976,11 @@ const b = {
             Matter.Body.setAngularVelocity(this, this.spin)
             if (this.isUpgraded) {
               m.energy += 0.12 * level.isReducedRegen
-              simulation.drawList.push({ //add dmg to draw queue
-                x: this.position.x,
-                y: this.position.y,
-                radius: 10,
-                color: m.fieldMeterColor,
-                time: simulation.drawTime
-              });
+              for (let i = 0; i < 2; i++) simulation.energyGenGraphic()
             } else {
               m.energy += 0.04 * level.isReducedRegen
-              simulation.drawList.push({ //add dmg to draw queue
-                x: this.position.x,
-                y: this.position.y,
-                radius: 5,
-                color: m.fieldMeterColor,
-                time: simulation.drawTime
-              });
             }
+            for (let i = 0; i < 2; i++) simulation.energyGenGraphic()
           }
         }
 

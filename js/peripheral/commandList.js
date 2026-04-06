@@ -103,15 +103,9 @@ const cmdList = {
       effect(input) {
         cmdConsole.params = input.split(/\s+/)
         let types = ["mob", "boss", "powerUp"], fullMobList = spawn.tier.flat(),
-          fullBossList = spawn.bossTier.flat(), fullPowerUpList = [], what = cmdConsole.params[1],
-          fullCatalog = [], reference = Object.entries(powerUps);
+          fullBossList = spawn.bossTier.flat().concat(spawn.reactorBossList), fullPowerUpList = powerUps.fullPowerUpList.flat(),
+          what = cmdConsole.params[1], fullCatalog = [fullMobList, fullBossList, fullPowerUpList]
         if (types.includes(cmdConsole.params[0])) {
-          if (cmdConsole.params[0] === "powerUp" ) {reference.forEach(item => {
-            try {
-              if (item[1].name && item[1].effect) fullPowerUpList.push(item[0] || item[1].name)
-            } catch (e) {}
-          })}
-          fullCatalog = [fullMobList, fullBossList, fullPowerUpList]
           if (cmdConsole.params[2].at(0) === "~") {
             cmdConsole.params[2] = m.pos.x + parseFloat(eval(cmdConsole.params[2].slice(1)) || 0)
           } else {

@@ -10,6 +10,6 @@
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
-•TimeSkip for Pair Production
+•TimeSkip for Pair Production. I've implemented immunity duration shortening instead
 •Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 •Bringing back c-gon levels. If you want to play them, try c-gon instead

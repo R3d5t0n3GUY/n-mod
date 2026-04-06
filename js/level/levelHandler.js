@@ -20,7 +20,7 @@ const level = {
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "temple", "dripp", "fortress", "commandeer", "clock",
-    "superNgonBros", "tlinat", "ruins", "ace", "crimsonTowers", "LaunchSite"
+    "superNgonBros", "tlinat", "ruins", "ace", "crimsonTowers", "LaunchSite", "vents"
   ],
   trainingLevels: ["walk", "crouch", "jump", "hold", "throw", "throwAt", "deflect", "heal", "fire",
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
@@ -30,7 +30,7 @@ const level = {
     "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
   ],
-  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago", "vents"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
+  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
   fullLevelList: {},
   populateLevelList() {
     let levelLists = [mainLevels, trainingLevels, communityLevels, removedLevels, modLevels, loreLevels]
@@ -161,6 +161,51 @@ const level = {
     }
     if (tech.isEigenstate) m.eigen.reset()
     level.newLevelOrPhase()
+
+    /* if (tech.isDigitalPet) {
+      for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
+        if (simulation.ephemera[i].name === 'tamagotchi') {
+          simulation.inGameConsole(`digital pet report:`);
+          simulation.inGameConsole(`<strong>hunger</strong> = ${simulation.ephemera[i].hunger.toFixed(0)}`);
+          simulation.inGameConsole(`<strong>energy</strong> = ${simulation.ephemera[i].energy.toFixed(0)}`);
+          simulation.inGameConsole(`<strong>cleanliness</strong> = ${simulation.ephemera[i].cleanliness.toFixed(0)}`);
+          simulation.inGameConsole(`your digital pet has brought you something!`);
+
+          // console.log(simulation.ephemera[i])
+          //I think 340 is max for each stat?
+          if (simulation.ephemera[i].hunger + simulation.ephemera[i].energy + simulation.ephemera[i].cleanliness > 900) {
+            powerUps.spawnDelay("tech", 1);
+          } else if (Math.random() < 0.33) {
+            if (simulation.ephemera[i].hunger > 300) {
+              powerUps.spawnDelay("heal", 20);
+            } else {
+              powerUps.spawnDelay("heal", 3);
+            }
+          } else if (Math.random() < 0.5) {
+            if (simulation.ephemera[i].energy > 300) {
+              powerUps.spawnDelay("research", 9);
+            } else {
+              powerUps.spawnDelay("research", 2);
+            }
+          } else {
+            if (simulation.ephemera[i].cleanliness > 300) {
+              powerUps.spawnDelay("ammo", 15);
+            } else {
+              powerUps.spawnDelay("ammo", 4);
+            }
+          }
+          break;
+        }
+      }
+    } */
+   
+    if (tech.isAusterity && b.inventory.length === 0) {
+      m.damageDone *= 1.4
+    }
+    if (tech.isAmalgam && b.inventory.length > 0) {
+      b.removeGun(b.guns[b.inventory[b.inventory.length - 1]].name)
+      for (let i = 0; i < 3; i++) b.randomBot()
+    }
     if (simulation.isTraining) {
       simulation.difficultyMode = 1
     } else {
@@ -407,6 +452,17 @@ const level = {
   constraintDescription1: "", //used in pause menu and console
   constraintDescription2: "",
   constraint: [{
+      description: "0.5x fire rate",
+      effect() {
+        level.isSlowFireRate = true
+        b.setFireCD()
+      },
+      remove() {
+        level.isSlowFireRate = false
+        b.setFireCD()
+      }
+    },
+    {
       description: "0.5x healing",
       effect() {
         level.isLowHeal = true
@@ -674,6 +730,7 @@ const level = {
   isReducedHealth: false,
   isReducedRegen: 1,
   isHideHealth: false,
+  isSlowFireRate: false,
   isNoPause: false,
   isLowHeal: false,
   levelAnnounce() {

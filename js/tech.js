@@ -6,11 +6,6 @@ const tech = {
   totalCount: null,
   removeCount: 0,
   resetAllTech() {
-    /* try {
-      let keys = Object.keys(tech);
-      for (let i = 0; i < keys.length; i++) delete tech[keys[i]];
-      Object.assign(tech, defaultGameVars.tech);
-    } catch (e) { */
     if (tech.isJunkTechSwap) { //if player has swap meet when opening experiment menu, reset it
       tech.giveTech("swap meet") //trigger effect to undo itself
       tech.removeTech("swap meet") //remove it so it becomes an option again
@@ -51,11 +46,10 @@ const tech = {
         } 
       }
     }
-    /* } */
     m.resetSkin();
     tech.removeCount = 0;
     tech.pauseEjectTech = 1; //used in paradigm shift
-    tech.pauseEjectResearch = 1; //used in paradigm analysis
+    tech.pauseEjectResearch = 1; //used in paradigmatic analysis
     lore.techCount = 0;
     tech.duplication = 0;
     m.damageDone = 1
@@ -165,6 +159,11 @@ const tech = {
         m.damageDone *= 1.3
         // simulation.inGameConsole(`<strong class='color-d'>damage</strong> <span class='color-symbol'>*=</span> ${1.05}`)
         simulation.inGameConsole(`<span class='color-var'>tech</span>.damage *= ${1.1} //hidden-variable theory`);
+      }
+      if (tech.isTechInt && tech.tech[index].isGunTech) {
+        const dmg = 1.5
+        m.damageDone *= dmg
+        simulation.inGameConsole(`<span class='color-var'>tech</span>.<strong class='color-d'>damage</strong> *= ${dmg} //technical intelligence`);
       }
       tech.tech[index].effect(); //give specific tech
       tech.tech[index].count++
@@ -429,6 +428,49 @@ const tech = {
       remove() {
         tech.isNitinol = false;
         if (this.count) m.resetSkin();
+      }
+    },
+    {
+      name: "shape-memory",
+      descriptionFunction() {
+        return `generate <strong>30</strong> <strong class='color-f'>energy</strong> per second<br>while <strong>wall grabbing</strong> with <strong>nitinol</strong>`
+      },
+      maxCount: 3,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed() {
+          return tech.isNitinol
+      },
+      requires: "nitinol",
+      effect() {
+        if (!tech.isGrabEnergy) tech.isGrabEnergy = 0
+        tech.isGrabEnergy++
+      },
+      remove() {
+        tech.isGrabEnergy = 0
+      }
+    },
+    {
+      name: "superelasticity",
+      descriptionFunction() {
+        return `<strong>3x</strong> <em>fire rate</em> while <strong>wall grabbing</strong> with <strong>nitinol</strong>`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed() {
+        return tech.isNitinol
+      },
+      requires: "nitinol",
+      effect() {
+        tech.isGrabFireRate = true
+        b.setFireCD();
+      },
+      remove() {
+        tech.isGrabFireRate = false
+        if (this.count) b.setFireCD();
       }
     },
     {
@@ -895,7 +937,7 @@ const tech = {
       frequencyDefault: 1,
       isSkin: true,
       allowed() {
-        return !m.isAltSkin && m.fieldUpgrades[m.fieldMode].name !== "standing wave" && !tech.isRewindField && !tech.isEnergyHealth
+        return !m.isAltSkin && m.fieldMode !== 1 && !tech.isRewindField && !tech.isEnergyHealth
       },
       requires: "not skinned, standing wave, max energy reduction, retrocausality, mass-energy",
       effect() {
@@ -977,9 +1019,7 @@ const tech = {
         frequency: 0,
         frequencyDefault: 0,
         isSkin: true,
-        allowed() {
-            return (build.isExperimentSelection === true)
-        },
+        allowed: () => build.isExperimentSelection,
         requires: "EXPERIMENT MODE",
         effect() {
             tech.isBuilderMode = 1
@@ -1170,6 +1210,66 @@ const tech = {
       remove() {
         tech.isGunCycle = false; // only set to false if you don't have this tech
       }
+    },
+    {
+      name: "austerity",
+      description: `<strong>1.4x</strong> <strong class='color-d'>damage</strong> on entering a new <strong>level</strong>
+      <br>if you don't have a ${powerUps.orb.gun()} in your inventory`,
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed() {
+        return b.inventory.length === 0
+      },
+      requires: "no guns",
+      effect() {
+        tech.isAusterity = true
+      },
+      remove() {
+        tech.isAusterity = false
+      }
+    },
+    {
+      name: "amalgamation",
+      description: `<span class='color-remove'>remove</span> your most recent ${powerUps.orb.gun()} and build
+      <br><strong>3</strong> <strong class='color-bot'>bots</strong> on entering a new <strong>level</strong>`,
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed() {
+        return b.inventory.length
+      },
+      requires: "at least 1 gun",
+      effect() {
+        tech.isAmalgam = true
+      },
+      remove() {
+        tech.isAmalgam = false
+      }
+    },
+    {
+      name: "sintering",
+      description: `<span class='color-remove'>remove</span> your most recent ${powerUps.orb.gun()} and get
+      <br><strong>1.3x</strong> <strong class='color-d'>damage</strong>, <strong>0.7x</strong> <strong class='color-defense'>damage taken</strong>`,
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isInstant: true,
+      allowed() {
+        return b.inventory.length > 0
+      },
+      requires: "at least 1 gun",
+      effect() {
+        if (b.inventory.length > 0) {
+          b.removeGun(b.guns[b.inventory[b.inventory.length - 1]].name)
+          m.damageDone *= 1.3
+          m.damageReduction *= 0.7
+        }
+      },
+      remove() { }
     },
     {
       name: "ad hoc",
@@ -2908,7 +3008,7 @@ const tech = {
       frequency: 3,
       frequencyDefault: 3,
       allowed() {
-        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isThrowBlocks) && m.fieldUpgrades[m.fieldMode].name !== "pilot wave" && m.fieldUpgrades[m.fieldMode].name !== "wormhole" && !tech.isTokamak
+        return (tech.blockDamage > 0.075 || tech.isPrinter || tech.isThrowBlocks) && ![8,9].includes(m.fieldMode) && !tech.isTokamak
       },
       requires: "mass driver, printer, paramagnetism, not pilot wave, tokamak, wormhole",
       effect() {
@@ -3682,7 +3782,10 @@ const tech = {
       effect() {
         tech.isCrouchRegen = true; //only used to check for requirements
         m.regenEnergy = function () {
-          if (m.immuneCycle < m.cycle && m.crouch && m.fieldCDcycle < m.cycle) m.energy += 7 * m.fieldRegen * level.isReducedRegen;
+          if (m.immuneCycle < m.cycle && m.crouch && m.fieldCDcycle < m.cycle) {
+            m.energy += 7 * m.fieldRegen * level.isReducedRegen;
+            if (!(simulation.cycle % 6)) simulation.energyGenGraphic()
+          }
           if (m.energy < 0) m.energy = 0
         }
       },
@@ -5391,8 +5494,8 @@ const tech = {
     {
       name: "vacuum energy",
       descriptionFunction() {
-        return `after using ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;${powerUps.orb.Casimir(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)}
-        <br>randomly set your <strong class='color-f'>energy</strong> to <strong>0</strong> or <strong>${(100 * m.maxEnergy).toFixed(0)}`
+        return `after using ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.boost(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;${powerUps.orb.Casimir(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)}
+        <br>set <strong class='color-f'>energy</strong> to <strong>${(300 * m.maxEnergy).toFixed(0)}</strong>, or <strong>33%</strong> of the time set it to <strong>0</strong>`
       },
       maxCount: 1,
       count: 0,
@@ -8109,7 +8212,7 @@ const tech = {
     {
       name: "water shielding",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Radiation_protection#Radiation_shielding' class="link">water shielding</a>`,
-      description: "reduce <strong class='color-p'>radioactive</strong> effects on you by <strong>0.2x</strong><br><em>neutron bomb, drones, explosions, slime</em>",
+      description: "you take <strong>0.2x</strong> <strong class='color-p'>radioactive</strong> damage <br><em>from neutron bomb, drones, explosions, slime</em>",
       isGunTech: true,
       maxCount: 1,
       count: 0,
@@ -11216,7 +11319,7 @@ const tech = {
     },
     {
       name: "surface plasmons",
-      description: `if <strong>deflecting</strong> drains all your <strong class='color-f'>energy</strong>
+      description: `after <strong>deflecting</strong> a mob drains all your <strong class='color-f'>energy</strong>
         	<br>emit <strong class='color-laser'>laser</strong> beams that scale with max <strong class='color-f'>energy</strong>`,
       isFieldTech: true,
       maxCount: 1,
@@ -11226,7 +11329,7 @@ const tech = {
       allowed() {
         return m.fieldMode === 1 && tech.harmonics === 2
       },
-      requires: "standing wave",
+      requires: "standing wave, not spherical harmonics",
       effect() {
         tech.isLaserField = true
       },
@@ -11843,6 +11946,25 @@ const tech = {
       }
     },
     {
+      name: "technical intelligence",
+      description: `<strong>1.5x</strong> <strong class='color-d'>damage</strong> after you <strong class='color-choice'><span>ch</span><span>oo</span><span>se</span></strong> ${powerUps.orb.gunTech()}`,
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return [4,8,10].includes(m.fieldMode)
+      },
+      requires: "molecular assembler, grappling hook, pilot wave",
+      effect() {
+        tech.isTechInt = true
+      },
+      remove() {
+        tech.isTechInt = false
+      }
+    },
+    {
       name: "tokamak",
       description: "<strong class='color-tokamak'>tokamak</strong> converts thrown <strong class='color-block'>blocks</strong> into <strong class='color-f'>energy</strong><br>and a pulsed fusion <strong class='color-e'>explosion</strong>",
       isFieldTech: true,
@@ -12422,8 +12544,8 @@ const tech = {
       isFieldTech: true,
       maxCount: 1,
       count: 0,
-      frequency: 4,
-      frequencyDefault: 4,
+      frequency: 3,
+      frequencyDefault: 3,
       allowed() {
         return m.fieldMode === 8
       },
@@ -12661,6 +12783,28 @@ const tech = {
         if (this.count) powerUps.research.changeRerolls(this.cost)
       }
     },
+    /* {
+      name: "conformal infinity",
+      descriptionFunction() {
+        return `after a <strong class='color-worm'>wormhole</strong> dissipates regenerate <strong>50%</strong>
+        <br>of the <strong class='color-f'>energy</strong> you had when it was <strong>made</strong>`
+      },
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return m.fieldMode === 9
+      },
+      requires: "wormhole",
+      effect() {
+        tech.isWormEnergy = true
+      },
+      remove() {
+        tech.isWormEnergy = false
+      }
+    }, */
     {
       name: "manifold",
       descriptionFunction() {
@@ -12730,6 +12874,25 @@ const tech = {
         tech.isWormholeDamage = false
       }
     },
+    /* {
+      name: "rip",
+      description: "after a <strong class='color-worm'>wormhole</strong> goes away it leaves behind a rip in spacetime that <strong class='color-d'>damages</strong> mobs and also you",
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return m.fieldMode === 9
+      },
+      requires: "wormhole",
+      effect() {
+        tech.isWormholeRip = true
+      },
+      remove() {
+        tech.isWormholeRip = false
+      }
+    }, */
     {
       name: "invariant",
       cost: 1,
@@ -13205,7 +13368,8 @@ const tech = {
               requestAnimationFrame(() => {
                 if ((simulation.cycle % 1440) > 720) { //kinda alternate between each option
                   m.rewind(60)
-                  m.energy += 0.4 * level.isReducedRegen//to make up for lost energy
+                  m.energy += 0.4 * level.isReducedRegen //to make up for lost energy
+                  for (let i = 0; i < 6; i++) simulation.energyGenGraphic()
                 } else {
                   simulation.timePlayerSkip(60)
                 }
@@ -14643,6 +14807,7 @@ const tech = {
             m.energy = 0
             setTimeout(() => { //return energy
               m.energy += 2 * energy
+              for (let i = 0; i < 6; i++) simulation.energyGenGraphic()
             }, 5000);
           }
         }, 10000);
@@ -14962,7 +15127,7 @@ const tech = {
       isSkin: true,
       isJunk: true,
       allowed() {
-        return !m.isShipMode && !m.isAltSkin && m.fieldUpgrades[m.fieldMode].name !== "negative mass"
+        return !m.isShipMode && !m.isAltSkin && m.fieldMode !== 3
       },
       requires: "",
       effect() {

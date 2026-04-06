@@ -38,6 +38,9 @@ const spawn = {
   bannedMobs: [ //list of mobs that shouldn't spawn during pacifist runs
     "exploder", "pitcher", "sucker", "pitcher3", "bigSucker", "quadLaser", "pitcher4"
   ],
+  reactorBossList: [ //bosses spawned in level.reactor
+    "sprayBoss", "mineBoss", "bounceBoss", "laserScanBoss", "timeBoss"
+  ],
   isAllowedPacifist(name = null) {
     return (typeof(name) === "string") && (localSettings.loreCount < 6 || !spawn.bannedMobs.includes(name))
   },
@@ -50,7 +53,7 @@ const spawn = {
     `This battle would be a lot better, finalBoss, if you weren't shaped like a freaking Ferris Wheel.`,
     `finalBoss is so fat, he sends flutters to greet the floor for him.`,
   ], 
-  // tier-n bosses: suckerBoss, laserBoss, tetherBoss, bounceBoss, sprayBoss, mineBoss, hopMotherBoss,     //these need a particular level to work so they scale with level.levelsCleared
+  // tier-n bosses: suckerBoss, laserBoss, tetherBoss, hopMotherBoss     //these need a particular level to work so they scale with level.levelsCleared
   bossTierIndex: [0, 0, 0, 0, 0], //tracks which boss just spawned to avoid duplicates in random bosses
   randomBossList: [
     "orbitalBoss", "historyBoss", "shooterBoss", "cellBossCulture", "bomberBoss", "spiderBoss", "launcherBoss", "laserTargetingBoss",
@@ -309,7 +312,7 @@ const spawn = {
     me.isDarkMatter = true;
     me.frictionAir = 0.006
     me.onDeath = function () {
-      requestAnimationFrame(() => {
+      requestAnimFrames(5, () => {
         spawn.darkMatter(this.position.x, this.position.y)
       })
       //tech.isHarmDarkMatter = false;
@@ -372,7 +375,8 @@ const spawn = {
           //damage mobs
           for (let i = 0, len = mob.length; i < len; ++i) {
             if (mob[i].alive && !mob[i].isShielded) {
-              if (Vector.magnitude(Vector.sub(this.position, mob[i].position)) - mob[i].radius < this.radius) {
+              let distanceToTarget = Vector.magnitude(Vector.sub(this.position, mob[i].position)) - mob[i].radius
+              if (tech.isNotDarkMatter ? (distanceToTarget > this.radius) : (distanceToTarget < this.radius)) {
                 const dmg = 0.035 * scale
                 mob[i].damage(dmg);
                 simulation.drawList.push({ //add dmg to draw queue
@@ -10157,6 +10161,7 @@ const spawn = {
   laserScanBoss(x, y, radius = 80, isSpawnBossPowerUp = true) {
     mobs.spawn(x, y, 0, radius, "rgb(255,255,255)") // "rgb(201,202,225)");
     let me = mob[mob.length - 1];
+    me.name = "laserScanBoss"
     Matter.Body.rotate(me, 2 * Math.PI * Math.random());
     me.isBoss = true;
     me.isReactorBoss = true;

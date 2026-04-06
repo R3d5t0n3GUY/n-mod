@@ -161,6 +161,12 @@ const powerUps = {
       return text
     },
   },
+  fullPowerUpList: [
+    ["Casimir", "coupling", "boost", "research", "heal", "ammo"],
+    ["gun", "field", "tech"],
+    ["instructions", "settings", "levelList"],
+    ["difficulty", "warp", "entanglement"]
+  ],
   totalPowerUps: 0, //used for tech that count power ups at the end of a level
   do() { },
   setPowerUpMode() {
@@ -1013,10 +1019,11 @@ const powerUps = {
     },
     random() {
       if (tech.isCasimirRandom) {
-        if (Math.random() < 0.5) {
+        if (Math.random() < 0.33) {
           m.energy = 0.001
         } else if (m.energy < m.maxEnergy) {
-          m.energy = m.maxEnergy
+          m.energy = m.maxEnergy * 3
+          for (let i = 0; i < 4; i++) simulation.energyGenGraphic()
         }
       }
     },
@@ -2028,6 +2035,7 @@ const powerUps = {
     if (tech.isPairProduction) {
       m.energy += 2 * level.isReducedRegen;
       m.immuneCycle -= 30
+      for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
     }
     if (tech.isMineDrop && bullet.length < 150 && Math.random() < 0.5) {
       if (tech.isLaserMine && input.down) {
@@ -2367,12 +2375,18 @@ const powerUps = {
         for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance()), 0); i++) { //for dupe chance higher than 100%
           powerUps.directSpawn(x, y, name, moving, size, true)
           powerUp[powerUp.length - 1].isDuplicated = true
-          if (tech.isDupEnergy) m.energy *= 2
+          if (tech.isDupEnergy) {
+            m.energy *= 2
+            for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
+          }
         }
         if (Math.random() < (tech.duplicationChance() % 1)) {
           powerUps.directSpawn(x, y, name, moving, size, true)
           powerUp[powerUp.length - 1].isDuplicated = true
-          if (tech.isDupEnergy) m.energy *= 2
+          if (tech.isDupEnergy) {
+            m.energy *= 2
+            for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
+          }
         }
       }
     }

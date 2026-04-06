@@ -813,6 +813,29 @@ const simulation = {
   restoreCamera() {
     ctx.restore();
   },
+  energyGenGraphic(totalCycles = 10 + Math.floor(Math.random() * 20)) {
+    //energy generation animation
+    if (!localSettings.isHideHUD) {
+      simulation.ephemera.push({
+        name: `energyGraphic id #${simulation.ephemera.length}`,
+        where: { 
+          x: m.pos.x + 45 * (Math.random() - 0.5),
+          y: m.pos.y + Math.random() * 100
+        },
+        count: totalCycles,
+        r: 1.5 + 3 * Math.random(),
+        do() {
+          this.count--
+          if (this.count < 0) simulation.removeEphemera(this.name)
+          this.where.y -= 3
+          ctx.beginPath();
+          ctx.arc(this.where.x, this.where.y, this.r, 0, 2 * Math.PI);
+          ctx.fillStyle = m.fieldMeterColor
+          ctx.fill();
+        },
+      })
+    }
+  },
   trails(swapPeriod = 150) {
     // const swapPeriod = 150
     const len = 30

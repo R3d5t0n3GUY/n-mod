@@ -162,7 +162,7 @@ fileLoads.onLoadEnd = function () {
           throw new HttpError(res.status);
         } else {
           const READMEtext = await res.text();
-          document.getElementById('README-div').innerHTML = READMEtext.replaceAll(/\n/g, '<br>');
+          document.getElementById('README-div').innerHTML = READMEtext
         }
       } catch (err) {
         console.warn(`Uncaught ${err.name || "HttpError"} loading README.md: ${err.message}`);
