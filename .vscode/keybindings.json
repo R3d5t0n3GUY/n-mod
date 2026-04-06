@@ -4,16 +4,6 @@
         "key": "shift+tab",
         "command": "ShortcutMenuBar.beautify"
     },
-    /* {
-        "key": "shift+tab",
-        "command": "beautify.beautifySelection",
-        "when": "editorFocus && !editorReadonly"
-    },
-    {
-        "key": "meta+tab",
-        "command": "beautify.beautifyFile",
-        "when": "editorFocus && !editorReadonly"
-    }, */
     {
         "key": "shift+backspace",
         "command": "keybindings.editor.resetKeybinding"
