@@ -63,25 +63,5 @@
     "debug.console.fontFamily": "editor",
     "scm.inputFontFamily": "editor",
     "notebook.markup.fontFamily": "editor",
-    "beautify.config": ".vscode/.jsbeautifyrc",
-    "beautify.language": {
-        "js": {
-            "type": [
-                "javascript",
-                "json"
-            ],
-            "filename": [
-                ".jsbeautifyrc"
-            ]
-        },
-        "css": [
-            "css",
-            "scss"
-        ],
-        "html": [
-            "htm",
-            "html",
-            "vue"
-        ]
-    },
+    "beautify.config": ".vscode/.jsbeautifyrc"
 }
