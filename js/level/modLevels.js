@@ -292,6 +292,18 @@ const modLevels = {
       }
     }, noCollision = {
       collisionFilter: { cat: 0, mask: 0 }
+    }, applyInertia = () => {
+      body.forEach(who => {
+        if (who.static ? who.static.isRequested : false) {
+          Matter.Body.setVelocity(who, {x: 0, y: 0})
+          Matter.Body.setPosition(who, who.static.where)
+        } else {
+          who.force.y += who.mass * magnitude;
+        }
+        if (who.inertia === Infinity) {
+          Matter.Body.setAngularVelocity(who, 0)
+        }
+      })
     }
     spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", physicsProp(blockStyle)) //starting block
     spawn.physicsBodyFromShape(level.enter.x + 65, level.enter.y + 120, "0 0 70 0 70 70 0 70",
@@ -314,6 +326,8 @@ const modLevels = {
     };
     level.customTopLayer = () => {};
     spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200", physicsProp(blockStyle))
+
+    requestAnimationFrame(applyInertia)
   },
   arena() {
     simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>
