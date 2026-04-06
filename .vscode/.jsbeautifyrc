@@ -1,7 +1,6 @@
 {
     "indent_size": 2,
     "indent_char": " ",
-    "indent_with_tabs": false,
     "indent_level": 0,
     "max_preserve_newlines": 5,
     "preserve_newlines": true,

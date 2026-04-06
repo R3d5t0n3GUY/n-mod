@@ -74,4 +74,5 @@
     "debug.console.fontFamily": "editor",
     "scm.inputFontFamily": "editor",
     "notebook.markup.fontFamily": "editor",
+    "beautify.config": ".vscode/.jsbeautifyrc"
 }
