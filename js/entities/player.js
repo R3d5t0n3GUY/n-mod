@@ -4785,7 +4785,7 @@ const m = {
     m.setHoldDefaults();
     m.fieldUpgrades[index].effect();
     if (index !== oldIndex) {
-      simulation.inGameConsole(`<div class="circle-grid field"></div> &nbsp; <span class='color-var'>m</span>.setField("<strong class='color-text'>${m.fieldUpgrades[m.fieldMode].name}</strong>")<br>input.key.field<span class='color-symbol'>:</span> ["<span class='color-text'>MouseRight</span>"]`);
+      simulation.inGameConsole(`<div class="circle-grid field"></div> &nbsp; <span class='color-var'>m</span>.setField("<strong>${m.fieldUpgrades[m.fieldMode].name}</strong>")<br>input.key.field<span class='color-symbol'>:</span> ["<strong>MouseRight</strong>"]`);
       if (m.fieldMode === 0) {
         simulation.inGameConsole(`powerUps<span class='color-symbol'>.</span>directSpawn<span class='color-symbol'>(</span>
       	m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span> 

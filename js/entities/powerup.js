@@ -280,10 +280,10 @@ const powerUps = {
       }
       b.giveGuns(index)
       let text = `<div class="circle-grid gun"></div> &nbsp; b.giveGuns("<strong class='color-g'>${b.guns[index].name}</strong>")`
-      if (b.inventory.length === 1) text += `<br>input.key.gun<span class='color-symbol'>:</span> ["<span class='color-text'>MouseLeft</span>"]`
+      if (b.inventory.length === 1) text += `<br>input.key.gun<span class='color-symbol'>:</span> ["<strong>MouseLeft</strong>"]`
       if (b.inventory.length === 2) text += `
-            <br>input.key.nextGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.nextGun}</span>","<span class='color-text'>MouseWheel</span>"]
-            <br>input.key.previousGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.previousGun}</span>","<span class='color-text'>MouseWheel</span>"]`
+            <br>input.key.nextGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.nextGun}</span>","<strong'>MouseWheel</strong>"]
+            <br>input.key.previousGun<span class='color-symbol'>:</span> ["<span class='color-g'>${input.key.previousGun}</span>","<strong>MouseWheel</strong>"]`
       simulation.inGameConsole(text);
       if (tech.isExtraGunTech && b.inventory.length) {
         //find guntech that matches most recent gun in inventory
