@@ -275,6 +275,7 @@ const modLevels = {
       let obj = {
         isNotHoldable: true,
         isInvulnerable: true,
+        disableRotation: true,
         inertia: Infinity,
         isStatic: true,
         density: 0.01,
@@ -328,7 +329,7 @@ const modLevels = {
       friction: -0.1
     }))
 
-    for (let i = 0; i < 10; i++) requestAnimFrames(i, applyInertia)
+    for (let i = 0; i < 5; i++) requestAnimFrames(i, applyInertia)
   },
   arena() {
     simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>
