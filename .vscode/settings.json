@@ -11,7 +11,8 @@
         "whitespacepp.foreColorEOF",
         "whitespacepp.textEOF",
         "ShortcutMenuBar.beautify",
-        "ShortcutMenuBar.commentLine"
+        "ShortcutMenuBar.commentLine",
+        "beautify.config"
     ],
     "ShortcutMenuBar.openSettings": true,
     "ShortcutMenuBar.showCommands": true,
@@ -37,20 +38,8 @@
         "&"
     ],
     "debug.javascript.automaticallyTunnelRemoteServer": false,
-    "powermode.enabled": true,
-    "powermode.combo.counterEnabled": "hide",
-    "powermode.combo.timerEnabled": "hide",
-    "powermode.shake.enabled": false,
-    "powermode.explosions.maxExplosions": 128,
-    "powermode.explosions.backgroundMode": "image",
-    "powermode.combo.location": "editor",
-    "powermode.presets": "exploding-rift",
-    "powermode.explosions.frequency": 1,
     "explorer.confirmDragAndDrop": false,
     "workbench.iconTheme": "vscode-icons",
-    "workbench.editorAssociations": {
-        "*.gif": "gifPlayer.player"
-    },
     "workbench.colorTheme": "2077",
     "editor.fontFamily": "'Minecraft Extended', 'Chakra Petch', monospace",
     "editor.fontLigatures": true,
