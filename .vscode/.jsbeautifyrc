@@ -1,5 +1,5 @@
 {
-    "indent_size": 2,
+    "indent_size": 1,
     "indent_char": " ",
     "indent_level": 0,
     "max_preserve_newlines": 5,
@@ -16,5 +16,8 @@
     "indent_inner_html": true,
     "comma_first": false,
     "e4x": false,
-    "indent_empty_lines": false
+    "indent_empty_lines": false,
+    "[javascript]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    }
 }
