@@ -981,7 +981,7 @@ const mobs = {
                 if (tech.isMobFullHealthCloak) {
                   dmg *= 2.11
                   simulation.ephemera.push({
-                    name: "damage outline",
+                    name: `damage outline ${simulation.newEphemeraID()}`,
                     count: 7, //cycles before it self removes
                     vertices: this.vertices,
                     do() {
@@ -1054,7 +1054,7 @@ const mobs = {
               } else if (tech.isMobLowHealth && this.health < 0.25) {
                 dmg *= 3
                 simulation.ephemera.push({
-                  name: "damage outline",
+                  name: `damage outline ${simulation.newEphemeraID()}`,
                   count: 2, //cycles before it self removes
                   vertices: this.vertices,
                   do() {
