@@ -137,11 +137,11 @@ const simulation = {
     simulation.isTimeSkipping = false;
   },
   newEphemeraID() {
-    let key = 16384 * Math.PHI * Math.pow(Math.PI, Math.E)
-    let tag = key / Math.random()
-    tag += key / Math.random()
-    tag = btoa(tag).shuffle()
-    `(id: ${simulation.ephemera.length}, hash: ${tag})`
+    let key = 16384 * Math.PHI * Math.pow(Math.PI, Math.E);
+    let tag = key / Math.random();
+    tag += key / Math.random();
+    tag = btoa(tag).shuffle();
+    return `(id: ${simulation.ephemera.length}, hash: ${tag})`
   },
   ephemera: [], //array that is used to store ephemera objects
   removeEphemera: function (name) {
