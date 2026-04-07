@@ -408,6 +408,27 @@ const tech = {
       }
     },
     {
+      name: "seismic wave",
+      descriptionFunction() {
+        return `<strong>tungsten's</strong> hard <strong>landings</strong> generate isotropic
+        <br><strong>phonon</strong> waves that <strong>stun</strong> and <strong class='color-d'>damage</strong> mobs`
+      },
+      maxCount: 3,
+      count: 0,
+      frequency: 3,
+      frequencyDefault: 3,
+      allowed() {
+        return tech.isFallingDamage
+      },
+      requires: "tungsten carbide",
+      effect() {
+        tech.isFallWave = true
+      },
+      remove() {
+        tech.isFallWave = false
+      }
+    },
+    {
       name: "nitinol",
       description: `<strong>1.3x</strong> <strong class="color-speed">movement</strong> and <strong>jumping</strong>
         	<br><strong>0.17</strong> seconds of <strong>coyote time</strong> <em style ='float: right;'>(jumping after falling)</em>`,
@@ -452,7 +473,7 @@ const tech = {
       }
     },
     {
-      name: "superelasticity",
+      name: "pseudoelasticity",
       descriptionFunction() {
         return `<strong>3x</strong> <em>fire rate</em> while <strong>wall grabbing</strong> with <strong>nitinol</strong>`
       },
@@ -1238,6 +1259,7 @@ const tech = {
       count: 0,
       frequency: 1,
       frequencyDefault: 1,
+      isBotTech: true,
       allowed() {
         return b.inventory.length
       },
@@ -7387,7 +7409,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
+        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || tech.isFirstHarmonic || tech.isFallWave
       },
       requires: "wave",
       effect() {
@@ -7408,7 +7430,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
+        return tech.haveGunCheck("wave") || tech.isSoundBotUpgrade || tech.isFirstHarmonic || tech.isFallWave
       },
       requires: "wave",
       effect() {
@@ -7534,7 +7556,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
+        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || tech.isFirstHarmonic || tech.isFallWave
       },
       requires: "wave, phonon",
       effect() {
@@ -7553,7 +7575,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || (tech.isFirstHarmonic)
+        return (tech.isLongitudinal && tech.haveGunCheck("wave")) || tech.isSoundBotUpgrade || tech.isFirstHarmonic || tech.isFallWave
       },
       requires: "wave, phonon",
       effect() {

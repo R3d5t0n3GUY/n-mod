@@ -467,7 +467,7 @@ const powerUps = {
   },
   animatePowerUpGrab(color) {
     simulation.ephemera.push({
-      // name: "",
+      name: `powerUpGramAnimation id#${simulation.newEphemeraID()}`,
       count: 25, //cycles before it self removes
       do() {
         this.count -= 2
@@ -651,7 +651,7 @@ const powerUps = {
     let returnText = ""
     for (let i = 0; i < levelSubList.length; i++) {
         let what = levelSubList[i]
-        let style = localSettings.isHideImages ? powerUps.hideStyle : `style="max-height: 8rem; font-size: 1rem;padding-left:5px; background-image: url('img/level/${what}.webp'), url('img/junk.webp');"`
+        let style = localSettings.isHideImages ? powerUps.hideStyle : `style='max-height: 8rem; font-size: 1rem;padding-left:5px; background-image: ${build.getBackgroundImageURL(what, 'level')};'`
         let tagClass = localSettings.isHideImages ? `<div class="choose-grid-module grid-title" style="font-size:1rem">${what}</div>` : what
         returnText += `${openTag + what}')" ${style}>${tagClass}</div>`
       }
@@ -1041,13 +1041,14 @@ const powerUps = {
 
       if (tech.mergedList.length) {
         simulation.ephemera.push({ //call each power up that's been merged with a delay
+          name: `CasimirMergedPowerUpCall id#${simulation.newEphemeraID()}`,
           index: tech.mergedList.length,
           cycleStart: m.cycle,
           do() {
             if (!((m.cycle + this.cycleStart) % 10)) {
               this.index--
               powerUps[tech.mergedList[this.index]].effect()
-              if (this.index === 0) simulation.removeEphemera(this)
+              if (this.index === 0) simulation.removeEphemera(this.name)
             }
           },
         })
@@ -1236,7 +1237,7 @@ const powerUps = {
             }
             if (!foundActiveEffect) {
               simulation.ephemera.push({
-                name: "healPush",
+                name: `healPush id#${simulation.newEphemeraID()}`,
                 count: totalTime, //cycles before it self removes
                 range: 0,
                 scale: Math.min(Math.max(0.7, heal * 4), 2.2), //typically heal is 0.35
@@ -1429,7 +1430,7 @@ const powerUps = {
   },
   gunText(choose, click) {
     if (choose > b.guns.length > 1) choose = Math.floor(Math.random() * b.guns.length) //reroll if invalid
-    const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/gun/${b.guns[choose].name}.webp'), url('img/junk.webp');"`
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "gun")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}" ${style}>
             <div class="card-text">
             <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${b.guns[choose].name}</div>
@@ -1437,7 +1438,7 @@ const powerUps = {
   },
   fieldText(choose, click) {
     if (choose > m.fieldUpgrades.length - 1) choose = Math.floor(Math.random() * (m.fieldUpgrades.length - 1)) + 1 //reroll if invalid (don't pick field emitter)
-    const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/field/${m.fieldUpgrades[choose].name}.webp'), url('img/junk.webp');"`
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "field")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
         <div class="card-text">
         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[choose].name}</div>
@@ -1446,7 +1447,7 @@ const powerUps = {
   techText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
                 <div class="grid-title"><div class="circle-grid tech"></div> &nbsp; ${tech.tech[choose].name + techCountText}</div>
@@ -1455,7 +1456,7 @@ const powerUps = {
   instantTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages || tech.tech[choose].isLore ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     // <div class="circle-grid tech"></div>
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
@@ -1465,7 +1466,7 @@ const powerUps = {
   skinTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
                 <div class="grid-title">         
@@ -1479,7 +1480,7 @@ const powerUps = {
   fieldTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
                 <div class="grid-title">
@@ -1493,7 +1494,7 @@ const powerUps = {
   gunTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
                 <div class="grid-title">         
@@ -1507,7 +1508,7 @@ const powerUps = {
   junkTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-    const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
     if (!localSettings.isHideImages) {
       // setTimeout(() => { //delay so that the html element exists
       //     if (tech.tech[choose].url === undefined) { //if on url has been set yet
@@ -1537,7 +1538,7 @@ const powerUps = {
   incoherentTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     // text += `<div class="choose-grid-module" style = "background-color: #efeff5; border: 0px; opacity:0.5; font-size: 60%; line-height: 130%; margin: 1px; padding-top: 6px; padding-bottom: 6px;"><div class="grid-title">${tech.tech[choose].name} <span style = "color: #aaa;font-weight: normal;font-size:80%;">- incoherent</span></div></div>`
-    const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style = 'background-image: ${build.getBackgroundImageURL(choose, 'tech')};'`
     return `<div class="choose-grid-module card-background" ${style}>
                 <div class="card-text" style = "background-color: #efeff5;">
                 <div class="grid-title" style = "color: #ddd;font-weight: normal;">incoherent</div> <br> <br>
@@ -1602,7 +1603,7 @@ const powerUps = {
             if (botTech.length > 0) { //pick random bot tech
               const choose = botTech[Math.floor(Math.random() * botTech.length)];
               const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
               text += `<div class="choose-grid-module card-background" onclick="powerUps.choose('tech',${choose})" ${style}>
                                     <div class="card-text">
                                     <div class="grid-title"><span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span> &nbsp; ${tech.tech[choose].name + techCountText}</div>
@@ -1675,7 +1676,7 @@ const powerUps = {
             if (botTech.length > 0) { //pick random bot tech
               const choose = botTech[Math.floor(Math.random() * botTech.length)];
               const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
               text += `<div class="choose-grid-module card-background" onclick="powerUps.choose('tech',${choose})" ${style}>
                                     <div class="card-text">
                                     <div class="grid-title"><span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span> &nbsp; ${tech.tech[choose].name + techCountText}</div>
@@ -1822,7 +1823,7 @@ const powerUps = {
               // text += `<div class="choose-grid-module" onclick="powerUps.choose('tech',${choose})"><div class="grid-title">          <span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span>  &nbsp; ${tech.tech[choose].name} ${isCount}</div>          ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div>`
               const choose = botTech[Math.floor(Math.random() * botTech.length)];
               const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
               text += `<div class="choose-grid-module card-background" onclick="powerUps.choose('tech',${choose})" ${style}>
                                     <div class="card-text">
                                     <div class="grid-title"><span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span> &nbsp; ${tech.tech[choose].name + techCountText}</div>
@@ -1832,7 +1833,7 @@ const powerUps = {
           if (tech.isMassProduction) {
             for (let i = 0, len = tech.tech.length; i < len; i++) {
               if (tech.tech[i].isMassProduction) {
-                const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/tech/${tech.tech[i].name}.webp');"`
+                const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
                 text += `<div class="choose-grid-module card-background" onclick="powerUps.choose('tech',${i})" ${style}>
                                         <div class="card-text">
                                         <div class="grid-title">${tech.tech[i].name}</div>
@@ -1868,7 +1869,7 @@ const powerUps = {
             for (let j = 0, len = (tech.isMicroTransactions || 1); j < len; j++) {
               const choose = skins[Math.floor(Math.seededRandom(0, skins.length))] //pick an element from the array of options
               const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (!tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
               text += `<div class="choose-grid-module card-background" onclick="
               				tech.giveTech(${choose});
                             powerUps.research.changeRerolls(-1);
@@ -1894,7 +1895,7 @@ const powerUps = {
             for (let j = 0, len = (tech.isCompositions || 1); j < len; j++) {
               const choose = comps[Math.floor(Math.seededRandom(0, comps.length))] //pick an element from the array of options
               const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
-              const style = localSettings.isHideImages ? powerUps.hideStyle : (tech.tech[choose].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (!tech.tech[choose].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[choose].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[choose].name}.webp"), url("img/junk.webp")'`)
+              const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
               text += `<div class="choose-grid-module card-background" onclick="
               				tech.giveTech(${choose});
                             powerUps.research.changeRerolls(-1);

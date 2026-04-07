@@ -5,75 +5,73 @@ setTimeout(() =>{
 const files = [
   {
     name: 'Death Prevented',
-    src: 'SFX/DeathAvoid.ogg',
+    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/DeathAvoid.ogg',
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Explosion',
-    src: null, /* ["SFX/Explosions/Explosion1.ogg", "SFX/Explosions/Explosion2.ogg", "SFX/Explosions/Explosion3.ogg",
-      "SFX/Explosions/Explosion4.ogg"], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Step',
-    src: null, /* ["SFX/Footsteps/Footstep1.mp3", "SFX/Footsteps/Footstep2.mp3", "SFX/Footsteps/Footstep3.mp3", 
-      "SFX/Footsteps/Footstep4.mp3", "SFX/Footsteps/Footstep5.mp3", "SFX/Footsteps/Footstep6.mp3"], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Jump',
-    src: null, /* ["SFX/Jumps/Jump1.mp3", "SFX/Jumps/Jump2.mp3", "SFX/Jumps/Jump3.mp3", "SFX/Jumps/Jump4.mp3"], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'NailGun',
-    src: null, /* ["SFX/Nail Gun/NailGun1.ogg", "SFX/Nail Gun/NailGun2.ogg", "SFX/Nail Gun/NailGun3.ogg"], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'FallDamage',
-    src: 'SFX/Joke/FallDamage.mp3',
+    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Joke/FallDamage.mp3',
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Fire in the hole',
-    src: 'SFX/Joke/fire.mp3',
+    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Joke/fire.mp3',
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'Teleport',
-    src: null, /* ['SFX/Teleports/Teleport1.mp3', 'SFX/Teleports/Teleport2.mp3'], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: 'finalBossDeath',
-    src: "SFX/finalBossDeath.mp3",
+    src: "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/finalBossDeath.mp3",
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: "SpearUse",
-    src: "SFX/Spear/SpearUse.ogg",
+    src: "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Spear/SpearUse.ogg",
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: "SpearHit",
-    src: null, /* ["SFX/Spear/SpearHit1.ogg", "SFX/Spear/SpearHit2.ogg", "SFX/Spear/SpearHit3.ogg"], */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: "Freeze",
-    src: null, /* ["SFX/Freezes/Freeze1.ogg", "SFX/Freezes/Freeze2.ogg", "SFX/Freezes/Freeze3.ogg"] */
+    src: null,
     playCDcycle: 0,
     loadAttempt: 0
   }
@@ -111,31 +109,31 @@ const audioPlayer = {
               volume = 0.5; // Fixed volume for these sounds, as they play at the player's position
             }
           }
-          if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01)
-          {
+          if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01) {
+            let rootURL = "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/"
             if (currentMonth === 3 && currentDay === 1 &&
               ["Explosion", "Teleport"].includes(name)) { //Every April 1st
               if (name === "Explosion") {
-                listItem.src = "SFX/Joke/ExplosionFools.mp3"
+                listItem.src = `${rootURL}Joke/ExplosionFools.mp3`
               } else if (name === "Teleport") {
-                listItem.src = "SFX/Joke/Teleport3.mp3"
+                listItem.src = `"${rootURL}Joke/Teleport3.mp3"`
               }
             } else {
               if (name === 'Explosion') {
-                listItem.src = `SFX/Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
+                listItem.src = `${rootURL}Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
               } else if (name === 'Step') {
-                listItem.src = `SFX/Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
+                listItem.src = `${rootURL}Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
               } else if (name === 'Jump') {
-                listItem.src = `SFX/Jumps/Jump${Math.ceil(Math.random() * 4)}.mp3`
+                listItem.src = `${rootURL}Jumps/Jump${Math.ceil(Math.random() * 4)}.mp3`
               } else if (name === "SpearHit") {
-                listItem.src = `SFX/Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `${rootURL}Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
               } else if (name === "nailGun") {
-                listItem.src = `SFX/Nail Gun/nailGun${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `${rootURL}Nail Gun/nailGun${Math.ceil(Math.random() * 3)}.ogg`
                 volume *= 0.5
               } else if (name === 'Freeze') {
-                listItem.src = `SFX/Freezes/Freeze${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `${rootURL}Freezes/Freeze${Math.ceil(Math.random() * 3)}.ogg`
               } else if (name === 'Teleport') {
-                listItem.src = `SFX/Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
+                listItem.src = `${rootURL}Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
               }
             }
             try {

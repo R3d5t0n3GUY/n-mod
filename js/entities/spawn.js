@@ -1696,6 +1696,7 @@ const spawn = {
       } else if (!(simulation.cycle % 30)) {
         if (!(simulation.cycle % 210)) {
           simulation.ephemera.push({
+            name: `iceBlockBoss freezeAura id#${simulation.newEphemeraID()}`,
             count: 210,
             position: {
               x: this.position.x,
@@ -1705,7 +1706,7 @@ const spawn = {
             radius: 120,
             do() {
               this.count--
-              if (this.count < 0 || this.level !== level.levelsCleared) simulation.removeEphemera(this);
+              if (this.count < 0 || this.level !== level.levelsCleared) simulation.removeEphemera(this.name);
               this.radius *= 0.99
 
               if (Vector.magnitude(Vector.sub(player.position, this.position)) < this.radius + 40) {
@@ -7797,7 +7798,7 @@ const spawn = {
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
       simulation.ephemera.push({
-        name: "snakeBossTailFix",
+        name: ` snakeBossTailFix id#${simulation.newEphemeraID()}`,
         cycle: 30,
         do() {
           this.cycle--
@@ -8034,7 +8035,7 @@ const spawn = {
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
       simulation.ephemera.push({
-        name: "kingSnakeBossTailFix",
+        name: `kingSnakeBossTailFix id#${simulation.newEphemeraID()}`,
         cycle: 30,
         do() {
           this.cycle--
@@ -8282,6 +8283,7 @@ const spawn = {
             }
 
             simulation.ephemera.push({
+              name: `quasarBlast id#${simulation.newEphemeraID()}`,
               count: 360,
               position: this.fireTarget,
               level: level.levelsCleared,
@@ -12904,7 +12906,7 @@ const spawn = {
     me.isMobBullet = true;
     me.onDeath = function () {
       simulation.ephemera.push({
-        name: "liquid nitrogen (id: " + mob.length + ")",
+        name: `freezeGrenade id#${simulation.newEphemeraID()} with mob tag#${mob.length}`,
         count: 210 + 10 * tier,
         position: {
           x: me.position.x,
@@ -13570,7 +13572,7 @@ const spawn = {
     const tail = new Scarf()
     me.onDeath = function () {
         simulation.ephemera.push({
-        name: `disintegratingTail#${simulation.ephemera.length}`,
+        name: `disintegratingTail#${simulation.newEphemeraID()}`,
         cycle: 60,
         do() {
           this.cycle--

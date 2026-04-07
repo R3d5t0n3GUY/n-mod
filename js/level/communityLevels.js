@@ -10651,7 +10651,7 @@ const communityLevels = {
     for (let i = 0, len = mob.length; i < len; i++) {
       if (mob[i].isSlashBoss) {
         simulation.ephemera.push({
-          name: "bossBar",
+          name: "aceBossBar",
           do() {
             if (level.levels[level.onLevel] == "ace" && !isDestroyed) {
               ctx.save();
@@ -10664,8 +10664,11 @@ const communityLevels = {
               } catch (error) {
                 ctx.fillRect(canvas.width2 / 2, canvas.height2 / 10, 0, 30);
                 simulation.inGameConsole(`<strong style="color: red;">ERROR: SCRIPT ERROR: </strong><span style="color:red">${error}</span>`);
+                simulation.removeEphemera(this.name)
               }
               ctx.restore();
+            } else {
+              simulation.removeEphemera(this.name)
             }
           },
         })
@@ -11738,7 +11741,7 @@ const communityLevels = {
     }
     checkVid();
     simulation.ephemera.push({
-      name: "vid",
+      name: "crimsonTowersVideo",
       do() {
         if (level.levels[level.onLevel] !== "crimsonTowers") simulation.removeEphemera(this.name);
         try {

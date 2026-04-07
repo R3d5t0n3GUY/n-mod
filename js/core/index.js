@@ -489,6 +489,26 @@ const build = {
     //show in game console
     simulation.lastLogTime = m.cycle //hide in game console
   },
+  getBackgroundImageURL(index, type = 'tech') {
+    let urlRoot = "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/img/", fallback = 'url("img/junk.webp")'
+    switch (type) {
+      case 'level':
+        return `url("${urlRoot}level/${index}.webp"), ${fallback}`
+      case 'gun':
+        return `url("${urlRoot}gun/${b.guns[index].name}.webp"), ${fallback}`
+      case 'field':
+        return `url("${urlRoot}field/${m.fieldUpgrades[index].name}.webp"), ${fallback}`
+      case 'tech':
+        if(tech.tech[index].isWIP) {
+          return `url("img/WIP.webp")`
+        } else {
+          let j = (tech.tech[index].isJunk ? 1 : 0), k = [fallback, `url("${urlRoot}tech/${tech.tech[index].name}.webp")`]
+          return `${k[1 - j]}, ${k[j]}`
+        }
+      default:
+        return fallback
+    }
+  },
   generatePauseLeft() {
     //left side
     let botText = "", addBotText = (type) => {
@@ -585,7 +605,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       text += `<div class="pause-grid-module" id ="pause-field-previous" style="animation: fieldColorCycle 3s linear infinite alternate; border-top: 1px solid var(--text-color);border-bottom: 1px solid var(--text-color);">
                            <div class="grid-title" style="text-align: center;">↑ <div class="circle-grid field"></div> ↑</div></div>`
       //button for current
-      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: url("img/field/${m.fieldUpgrades[m.fieldMode].name}.webp"), url("img/junk.webp")'`
+      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(m.fieldMode, "field")};'`
       text += `<div class="pause-grid-module card-background" id="pause-field" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
@@ -596,7 +616,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
 
     } else {
-      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: url("img/field/${m.fieldUpgrades[m.fieldMode].name}.webp"), url("img/junk.webp")'`
+      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(m.fieldMode, "field")};'`
       text += `<div class="pause-grid-module card-background" id="pause-field" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
@@ -606,7 +626,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     //     text += `<div class="pause-grid-module"><div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div> ${b.guns[b.inventory[i]].description}</div>`
     // }
     for (let i = 0, len = b.inventory.length; i < len; i++) {
-      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: url("img/gun/${b.guns[b.inventory[i]].name}.webp"), url("img/junk.webp")'`
+      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(i, "gun")};'`
       text += `<div class="pause-grid-module card-background" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div>
@@ -640,7 +660,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     const ejectClass = (tech.isPauseEjectTech && !simulation.isChoosing) ? 'pause-eject' : ''
     for (let i = 0, len = tech.tech.length; i < len; i++) {
       if (tech.tech[i].count > 0) {
-        const style = (localSettings.isHideImages || tech.tech[i].isLore) ? `style="height:auto;"` : (tech.tech[i].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[i].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[i].name}.webp")'` : `style = 'background-image: url("img/tech/${tech.tech[i].name}.webp"), url("img/junk.webp")'`)
+        const style = (localSettings.isHideImages || tech.tech[i].isLore) ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(i, "tech")};'`
         const techCountText = tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : "";
         if (tech.tech[i].isInstant) {
           // text += `<div class="pause-grid-module" id ="${i}-pause-tech"  style = "border: 0px; opacity:0.5; font-size: 60%; line-height: 130%; margin: 1px; padding: 6px;"><div class="grid-title">${tech.tech[i].link} ${techCountText}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
@@ -1029,22 +1049,22 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 </div>`
     const hideStyle = `style="height:auto; border: none; background-color: transparent;"`
     for (let i = 0, len = m.fieldUpgrades.length; i < len; i++) {
-      const style = localSettings.isHideImages ? hideStyle : `style='background-image: url("img/field/${m.fieldUpgrades[i].name}.webp"), url("img/junk.webp")'`
+      const style = localSettings.isHideImages ? hideStyle : `style='background-image: ${build.getBackgroundImageURL(i, "field")};'`
       text += `<div id="field-${i}" class="experiment-grid-module card-background ${m.fieldMode === i ? " build-field-selected" : ""}" onclick="build.choosePowerUp(${i},'field')" ${style} >
                             <div class="card-text">
                                 <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
                                 ${m.fieldUpgrades[i].description}</div> </div>`
     }
     for (let i = 0, len = b.guns.length; i < len; i++) {
-      const style = localSettings.isHideImages ? hideStyle : `style='background-image: url("img/gun/${b.guns[i].name}.webp"), url("img/junk.webp")'`
+      const style = localSettings.isHideImages ? hideStyle : `style='background-image: ${build.getBackgroundImageURL(i, "gun")};'`
       text += `<div id="gun-${i}" class="experiment-grid-module card-background ${b.guns[i].have ? " build-gun-selected" : ""}" onclick="build.choosePowerUp(${i},'gun')" ${style} >
                         <div class="card-text">
                             <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[i].name)}</div>
                             ${b.guns[i].descriptionFunction()}</div> </div>`
     }
     for (let i = 0, len = tech.tech.length; i < len; i++) {
-      if ((!tech.tech[i].isJunk || localSettings.isJunkExperiment) && !tech.tech[i].isLore) {
-        const style = localSettings.isHideImages ? hideStyle : (tech.tech[i].isWIP ? `style = 'background-image: url("img/WIP.webp")'` : (tech.tech[i].isJunk) ? `style = 'background-image: url("img/junk.webp"), url("img/tech/${tech.tech[i].name}.webp")'` : `style = "background-image: url('img/tech/${tech.tech[i].name}.webp'), url('img/junk.webp')"`)
+      if ((!tech.tech[i].isJunk || localSettings.isJunkExperiment) && !tech.tech[i].isLore) { //&& !tech.tech[i].isExperimentHide
+        const style = localSettings.isHideImages ? hideStyle : `style='background-image: ${build.getBackgroundImageURL(i, "tech")};'`
         if ((tech.tech[i].allowed() || tech.tech[i].count > 0) && (!tech.tech[i].isInstant || localSettings.isJunkExperiment)) { // || tech.tech[i].name === "+1 cardinality") { //|| tech.tech[i].name === "leveraged investment"
           text += `<div id="tech-${i}" class="experiment-grid-module card-background ${tech.tech[i].count ? "build-tech-selected" : ""}" onclick="build.choosePowerUp(${i},'tech')" ${style}>`
         } else { //disabled
@@ -1748,7 +1768,7 @@ window.addEventListener("keydown", function (event) {
                   }
                 }
                 m.energy = energy //return to current energy
-                document.getElementById("pause-field").style.backgroundImage = `url("img/field/${m.fieldUpgrades[m.fieldMode].name}.webp"), url("img/junk.webp")`
+                document.getElementById("pause-field").style.backgroundImage = `style='background-image: ${build.getBackgroundImageURL(m.fieldMode, "field")};'`
                 document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>${m.fieldUpgrades[m.fieldMode].description}</div>`
               });
 
@@ -1766,7 +1786,7 @@ window.addEventListener("keydown", function (event) {
                 }
                 m.energy = energy //return to current energy
                 // document.getElementById("pause-field").innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[m.fieldMode].name}</div> ${m.fieldUpgrades[m.fieldMode].description}`
-                document.getElementById("pause-field").style.backgroundImage = `url("img/field/${m.fieldUpgrades[m.fieldMode].name}.webp"), url("img/junk.webp")`
+                document.getElementById("pause-field").style.backgroundImage = build.getBackgroundImageURL(m.fieldMode, 'field')
                 document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div> ${m.fieldUpgrades[m.fieldMode].description}</div>`
               });
             }

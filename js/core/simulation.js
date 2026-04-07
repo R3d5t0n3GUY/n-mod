@@ -136,6 +136,9 @@ const simulation = {
     }
     simulation.isTimeSkipping = false;
   },
+  newEphemeraID() {
+    return simulation.ephemera.length
+  },
   ephemera: [], //array that is used to store ephemera objects
   removeEphemera: function (name) {
     for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
@@ -449,6 +452,7 @@ const simulation = {
   },
   lastLogTime: 0,
   isTextLogOpen: true,
+  consoleLength: 0,
   isChatMenuOpen: false,
   lastTextLog: null,
   openChatMenu() {
@@ -520,13 +524,15 @@ const simulation = {
   inGameConsole(text, time = 240) {
     //text = text.replaceAll("<script", "&lt;script").replaceAll("</script>", "&lt;/script&gt;") //didn't work properly
     if (!localSettings.isHideHUD && simulation.isTextLogOpen && !build.isExperimentSelection) {
-      if (simulation.lastLogTime > m.cycle) { //if there is an older message
+      if (simulation.lastLogTime > m.cycle && simulation.consoleLength < 30) { //if there is an older message
         document.getElementById("text-log").innerHTML = document.getElementById("text-log").innerHTML + '<br>' + text;
         simulation.lastLogTime = m.cycle + time;
+        simulation.consoleLength++
       } else {
         document.getElementById("text-log").innerHTML = text;
         document.getElementById("text-log").style.display = "inline";
         simulation.lastLogTime = m.cycle + time;
+        simulation.consoleLength = 0
       }
     }
   },
@@ -817,7 +823,7 @@ const simulation = {
     //energy generation animation
     if (!localSettings.isHideHUD) {
       simulation.ephemera.push({
-        name: `energyGraphic id #${simulation.ephemera.length}`,
+        name: `energyGraphic id #${simulation.newEphemeraID()}`,
         where: { 
           x: m.pos.x + 45 * (Math.random() - 0.5),
           y: m.pos.y + Math.random() * 100
