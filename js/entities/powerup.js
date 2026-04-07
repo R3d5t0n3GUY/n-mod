@@ -467,7 +467,7 @@ const powerUps = {
   },
   animatePowerUpGrab(color) {
     simulation.ephemera.push({
-      name: `powerUpGramAnimation id#${simulation.newEphemeraID()}`,
+      name: `powerUpGramAnimation ${simulation.newEphemeraID()}`,
       count: 25, //cycles before it self removes
       do() {
         this.count -= 2
@@ -1041,7 +1041,7 @@ const powerUps = {
 
       if (tech.mergedList.length) {
         simulation.ephemera.push({ //call each power up that's been merged with a delay
-          name: `CasimirMergedPowerUpCall id#${simulation.newEphemeraID()}`,
+          name: `CasimirMergedPowerUpCall ${simulation.newEphemeraID()}`,
           index: tech.mergedList.length,
           cycleStart: m.cycle,
           do() {
@@ -1237,7 +1237,7 @@ const powerUps = {
             }
             if (!foundActiveEffect) {
               simulation.ephemera.push({
-                name: `healPush id#${simulation.newEphemeraID()}`,
+                name: `healPush ${simulation.newEphemeraID()}`,
                 count: totalTime, //cycles before it self removes
                 range: 0,
                 scale: Math.min(Math.max(0.7, heal * 4), 2.2), //typically heal is 0.35

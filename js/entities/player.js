@@ -6740,7 +6740,7 @@ const m = {
                 ) { //use power up if it is close enough
 
                   simulation.ephemera.push({
-                    name: `pilot grab id #${simulation.newEphemeraID()}`,
+                    name: `pilot grab ${simulation.newEphemeraID()}`,
                     count: 5, //cycles before it self removes
                     PposX: powerUp[i].position.x,
                     PposY: powerUp[i].position.y,
@@ -7283,7 +7283,7 @@ const m = {
                 }
                 /* if (tech.isWormholeRip) {
                   simulation.ephemera.push({
-                    name: `spacetime tear id# ${simulation.newEphemeraID()}`,
+                    name: `spacetime tear ${simulation.newEphemeraID()}`,
                     count: 600, //cycles before it self removes
                     do() {
                       this.count--

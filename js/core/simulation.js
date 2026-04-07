@@ -137,7 +137,11 @@ const simulation = {
     simulation.isTimeSkipping = false;
   },
   newEphemeraID() {
-    return simulation.ephemera.length
+    let key = 16384 * Math.PHI * Math.pow(Math.PI, Math.E)
+    let tag = key / Math.random()
+    tag += key / Math.random()
+    tag = btoa(tag).shuffle()
+    `(id: ${simulation.ephemera.length}, hash: ${tag})`
   },
   ephemera: [], //array that is used to store ephemera objects
   removeEphemera: function (name) {
@@ -406,32 +410,6 @@ const simulation = {
     }
     simulation.boldActiveGunHUD();
   },
-  // updateTechHUD() {
-  //     let text = ""
-  //     for (let i = 0, len = tech.tech.length; i < len; i++) { //add tech
-  //         if (tech.tech[i].isLost) {
-  //             if (text) text += "<br>" //add a new line, but not on the first line
-  //             text += `<span style="text-decoration: line-through;">${tech.tech[i].name}</span>`
-  //         } else if (tech.tech[i].count > 0 && !tech.tech[i].isInstant) {
-  //             if (text) text += "<br>" //add a new line, but not on the first line
-  //             text += `<span id = "${tech.tech[i].name}">${tech.tech[i].name}${tech.tech[i].count > 1 ? ` (${tech.tech[i].count}x)` : ""}</span>`
-
-  //             // document.getElementById(tech.tech[i].name).style.fontWeight = 'bold';
-  //             // simulation.ephemera.push({
-  //             //     name: "bold",
-  //             //     count: 180,
-  //             //     do() {
-  //             //         this.count--
-  //             //         if (this.count < 0) {
-  //             //             simulation.removeEphemera(this.name)
-  //             //             if (document.getElementById(tech.tech[i].name)) document.getElementById(tech.tech[i].name).style.fontWeight = 'normal';
-  //             //         }
-  //             //     }
-  //             // })
-  //         }
-  //     }
-  //     document.getElementById("right-HUD").innerHTML = text
-  // },
   updateTechHUD() {
     let text = ""
     for (let i = 0, len = tech.tech.length; i < len; i++) { //add tech
@@ -588,36 +566,6 @@ const simulation = {
     simulation.zoom = canvas.height / zoomScale; //sets starting zoom scale
   },
   zoomTransition(newZoomScale, step = 2) {
-    //old version
-    // if (simulation.isAutoZoom) {
-    //     const isBigger = (newZoomScale - simulation.zoomScale > 0) ? true : false;
-    //     requestAnimationFrame(zLoop);
-    //     const currentLevel = level.onLevel
-
-    //     function zLoop() {
-    //         if (currentLevel !== level.onLevel || simulation.isAutoZoom === false) return //stop the zoom if player goes to a new level
-
-    //         if (isBigger) {
-    //             simulation.zoomScale += step
-    //             if (simulation.zoomScale >= newZoomScale) {
-    //                 simulation.setZoom(newZoomScale);
-    //                 return
-    //             }
-    //         } else {
-    //             simulation.zoomScale -= step
-    //             if (simulation.zoomScale <= newZoomScale) {
-    //                 simulation.setZoom(newZoomScale);
-    //                 return
-    //             }
-    //         }
-
-    //         simulation.setZoom();
-    //         requestAnimationFrame(zLoop);
-    //     }
-    // }
-
-
-    //rewrite using the ephemera system
     if (simulation.isAutoZoom) {
       simulation.ephemera.push({
         name: "zoom",
@@ -823,7 +771,7 @@ const simulation = {
     //energy generation animation
     if (!localSettings.isHideHUD) {
       simulation.ephemera.push({
-        name: `energyGraphic id #${simulation.newEphemeraID()}`,
+        name: `energyGraphic ${simulation.newEphemeraID()}`,
         where: { 
           x: m.pos.x + 45 * (Math.random() - 0.5),
           y: m.pos.y + Math.random() * 100
@@ -1310,12 +1258,11 @@ const simulation = {
             if (Matter.Query.point(map, m.pos).length > 0 || Matter.Query.point(map, player.position).length > 0) {
               //check for the next few seconds to see if being stuck continues
               simulation.ephemera.push({
-                name: "stuck",
+                name: `stuck ${simulation.newEphemeraID()}`,
                 count: 240, //cycles before it self removes
                 do() {
                   if (Matter.Query.point(map, m.pos).length > 0 || Matter.Query.point(map, player.position).length > 0) {
                     this.count--
-
                     if (this.count < 0) {
                       simulation.removeEphemera(this.name)
                       Matter.Body.setVelocity(player, { x: 0, y: 0 });

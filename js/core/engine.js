@@ -123,7 +123,7 @@ function playerOnGroundCheck(event) {
           m.doCrouch();
           m.yOff = m.yOffWhen.jump;
           m.hardLandCD = m.cycle + m.hardLandCDScale * Math.min(momentum / 6.5 - 6, 40)
-          if (tech.isFallWave && momentum < 150) {
+          /* if (tech.isFallWave && momentum < 150) {
             simulation.ephemera.push({
               count: Math.floor(0.13 * m.hardLandCDScale * (momentum / 6.5 - 6)), //cycles before it self removes
               where: { x: m.pos.x, y: m.pos.y + 140 },
@@ -133,7 +133,7 @@ function playerOnGroundCheck(event) {
                 b.isoWave360Solo(this.where, 400 * Math.sqrt(tech.bulletsLastLonger))
               },
             })
-          }
+          } */
 
           //falling damage
           if (tech.isFallingDamage && m.immuneCycle < m.cycle && momentum > 150) {
@@ -141,11 +141,12 @@ function playerOnGroundCheck(event) {
               m.takeDamage(dmg);
               if (tech.isFallWave) {
                 simulation.ephemera.push({
+                  name: `hardLandWave ${simulation.newEphemeraID()}`,
                   count: Math.floor(0.13 * m.hardLandCDScale * (momentum / 6.5 - 6)), //cycles before it self removes
                   where: { x: m.pos.x, y: m.pos.y + 140 },
                   do() {
                     this.count--
-                    if (this.count < 0) simulation.removeEphemera(this)
+                    if (this.count < 0) simulation.removeEphemera(this.name)
                     b.isoWave360Solo(this.where, 4000 * Math.sqrt(tech.bulletsLastLonger))
                   },
                 })

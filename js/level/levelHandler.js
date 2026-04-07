@@ -436,7 +436,7 @@ const level = {
     simulation.draw.font.word = new Path2D()
     simulation.draw.font.drawString(text, xAdjusted, y)
     simulation.ephemera.push({
-      name: "in game text",
+      name: `in game text ${simulation.newEphemeraID()}`,
       onLevel: level.levels[level.onLevel],
       count: count,
       do() {

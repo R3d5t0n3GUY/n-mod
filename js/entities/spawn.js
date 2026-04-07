@@ -1696,7 +1696,7 @@ const spawn = {
       } else if (!(simulation.cycle % 30)) {
         if (!(simulation.cycle % 210)) {
           simulation.ephemera.push({
-            name: `iceBlockBoss freezeAura id#${simulation.newEphemeraID()}`,
+            name: `iceBlockBoss freezeAura ${simulation.newEphemeraID()}`,
             count: 210,
             position: {
               x: this.position.x,
@@ -7798,7 +7798,7 @@ const spawn = {
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
       simulation.ephemera.push({
-        name: ` snakeBossTailFix id#${simulation.newEphemeraID()}`,
+        name: ` snakeBossTailFix ${simulation.newEphemeraID()}`,
         cycle: 30,
         do() {
           this.cycle--
@@ -8035,7 +8035,7 @@ const spawn = {
       ctx.strokeStyle = color //"rgba(0,235,255,0.5)";
       ctx.stroke();
       simulation.ephemera.push({
-        name: `kingSnakeBossTailFix id#${simulation.newEphemeraID()}`,
+        name: `kingSnakeBossTailFix ${simulation.newEphemeraID()}`,
         cycle: 30,
         do() {
           this.cycle--
@@ -8283,7 +8283,7 @@ const spawn = {
             }
 
             simulation.ephemera.push({
-              name: `quasarBlast id#${simulation.newEphemeraID()}`,
+              name: `quasarBlast ${simulation.newEphemeraID()}`,
               count: 360,
               position: this.fireTarget,
               level: level.levelsCleared,
@@ -12906,7 +12906,7 @@ const spawn = {
     me.isMobBullet = true;
     me.onDeath = function () {
       simulation.ephemera.push({
-        name: `freezeGrenade id#${simulation.newEphemeraID()} with mob tag#${mob.length}`,
+        name: `freezeGrenade ${simulation.newEphemeraID()} with mob tag#${mob.length}`,
         count: 210 + 10 * tier,
         position: {
           x: me.position.x,
@@ -13572,7 +13572,7 @@ const spawn = {
     const tail = new Scarf()
     me.onDeath = function () {
         simulation.ephemera.push({
-        name: `disintegratingTail#${simulation.newEphemeraID()}`,
+        name: `disintegratingTail ${simulation.newEphemeraID()}`,
         cycle: 60,
         do() {
           this.cycle--
