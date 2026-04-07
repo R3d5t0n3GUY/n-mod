@@ -2294,6 +2294,7 @@ const powerUps = {
     for (let i = 0; i < powerUp.length; i++) {
       //let isLorePowerUp = ignoredIndexes.includes(powerUp[i].name)
       if (!powerUp[i].isLorePowerUp) {
+        powerUp[i].cycle = 1
         if (powerUp[i].name === "tech" || powerUp[i].name === "gun" || powerUp[i].name === "field") {
           bigIndexes.push(i)
         } else {
@@ -2442,6 +2443,7 @@ const powerUps = {
     if (tech.isBoostPowerUps) smallNames.push("boost")
 
     powerUp[index] = Matter.Bodies.polygon(x, y, polygonSides, size, properties);
+    powerUp[index].cycle = 0
     if (powerUp.length > 256 && smallNames.includes(name)) { //when trying to spawn a small powerup when there's too many
       simulation.clearConsole();
       powerUp[index].effect() //invoke its effect instead of spawning it
