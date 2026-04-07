@@ -209,8 +209,9 @@ const powerUps = {
   drawCircle() {
     ctx.globalAlpha = 0.4 * Math.sin(simulation.cycle * 0.15) + 0.6;
     for (let i = 0, len = powerUp.length; i < len; ++i) {
+      powerUp[i].cycle++
       ctx.beginPath();
-      ctx.arc(powerUp[i].position.x, powerUp[i].position.y, powerUp[i].size, 0, 2 * Math.PI);
+      ctx.arc(powerUp[i].position.x, powerUp[i].position.y, Math.min(powerUp[i].cycle, powerUp[i].size), 0, 2 * Math.PI);
       ctx.fillStyle = powerUp[i].color;
       ctx.fill();
     }
@@ -219,6 +220,7 @@ const powerUps = {
   drawDup() {
     ctx.globalAlpha = 0.4 * Math.sin(simulation.cycle * 0.15) + 0.6;
     for (let i = 0, len = powerUp.length; i < len; ++i) {
+      powerUp[i].cycle++
       ctx.beginPath();
       if (powerUp[i].isDuplicated) {
         let vertices = powerUp[i].vertices;
