@@ -896,7 +896,7 @@ const simulation = {
         } else {
           who.force.y += who.mass * magnitude;
         }
-        if (who.inertia === Infinity) {
+        if (who.static ? (who.static.disableRotation || who.static.inertia === Infinity || who.static.angularVelocity === 0) : who.inertia === Infinity) {
           Matter.Body.setAngularVelocity(who, 0)
         }
       })

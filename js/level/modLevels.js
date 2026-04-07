@@ -293,17 +293,6 @@ const modLevels = {
       }
     }, noCollision = {
       collisionFilter: { cat: 0, mask: 0 }
-    }, applyInertia = () => {
-      body.forEach(who => {
-        if (who.static ? who.static.isRequested : false) {
-          Matter.Body.setVelocity(who, {x: 0, y: 0})
-          Matter.Body.setPosition(who, who.static.where)
-        }
-        if (who.inertia === Infinity) {
-          Matter.Body.setAngularVelocity(who, 0)
-          Matter.Body.setAngle(who, 0)
-        }
-      })
     }
     spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", physicsProp(blockStyle)) //starting block
     spawn.physicsBodyFromShape(level.enter.x + 65, level.enter.y + 120, "0 0 70 0 70 70 0 70",
@@ -323,13 +312,21 @@ const modLevels = {
       level.exit.drawAndCheck();
       document.body.style.backgroundColor = "#222"
       level.enter.draw();
+      body.forEach(who => {
+        if (who.static ? who.static.isRequested : false) {
+          Matter.Body.setVelocity(who, {x: 0, y: 0})
+          Matter.Body.setPosition(who, who.static.where)
+        }
+        if (who.static ? (who.static.disableRotation || who.static.inertia === Infinity || who.static.angularVelocity === 0) : who.inertia === Infinity) {
+          Matter.Body.setAngularVelocity(who, 0)
+          Matter.Body.setAngle(who, 0)
+        }
+      })
     };
     level.customTopLayer = () => {};
     spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200", physicsProp(blockStyle, {
       friction: -0.1
     }))
-
-    for (let i = 0; i < 5; i++) requestAnimFrames(i, applyInertia)
   },
   arena() {
     simulation.inGameConsole(`<strong>arena</strong> by <span class='color-var'>Whyisthisnotavalable</span>
