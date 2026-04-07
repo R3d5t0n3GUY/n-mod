@@ -2409,6 +2409,7 @@ const powerUps = {
     }
     let index = powerUp.length;
     let properties = {
+      cycle: 0, //for spawn animation
       density: 0.001,
       frictionAir: 0.03,
       restitution: 0.85,
