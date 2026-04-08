@@ -6750,7 +6750,7 @@ const m = {
                       this.count--
                       if (this.count < 0) simulation.removeEphemera(this.name)
                       ctx.beginPath();
-                      ctx.arc(this.PposX, this.PposY, this.size * (this.count + 2) / 7, 0, 2 * Math.PI);
+                      ctx.arc(this.PposX, this.PposY, Math.max(0, this.size * (this.count + 2) / 7), 0, 2 * Math.PI);
                       ctx.fillStyle = this.color
                       ctx.fill();
                     },
