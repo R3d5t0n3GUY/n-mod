@@ -5938,7 +5938,7 @@ const tech = {
                         ctx.lineTo(this.wireArray[this.wireArray.length - 1].x, this.wireArray[this.wireArray.length - 1].y);
                         ctx.stroke();
                         //shorten the length of the array
-                        this.cycle -= (([0,6].includes(m.fieldMode) && m.coupling > 0) ? 1 / (1 + 0.03 * m.coupling) : 1) //time dilation coupling effects
+                        this.cycle -= (([0,6].includes(m.fieldMode) && m.coupling > 0) ? (1 + 0.003 * m.coupling) / (1 + 0.03 * m.coupling) : 1) //time dilation coupling effects. 
                         if (this.cycle < 1 && (this.cycle % 2 === 0)) {
                           this.wireArray.pop()
                           if (this.wireArray.length <= 0 || !tech.wire || !tech.isCutTimeStop) {
