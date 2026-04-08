@@ -230,7 +230,7 @@ const powerUps = {
         }
         ctx.lineTo(vertices[0].x, vertices[0].y);
       } else {
-        ctx.arc(powerUp[i].position.x, powerUp[i].position.y, powerUp[i].size, 0, 2 * Math.PI);
+        ctx.arc(powerUp[i].position.x, powerUp[i].position.y, Math.min(powerUp[i].cycle, powerUp[i].size), 0, 2 * Math.PI);
       }
       ctx.fillStyle = powerUp[i].color;
       ctx.fill();
@@ -2283,7 +2283,8 @@ const powerUps = {
     let isExcessiveHeals = (tech.isHealAttract || m.health > m.maxHealth - 0.01 || (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) //if player has accretion, or mass-energy without 1st ionization
     //count big power ups and small power ups
     let options = [] //["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
-    if (!isExcessiveHeals || Math.random() < 0.13) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
+    if ((!isExcessiveHeals || Math.random() < 0.13) && !powerUps.healGiveMaxEnergy) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
+    if (powerUps.healGiveMaxEnergy) options.push("Casimir")
     if (!tech.isSuperDeterminism || Math.random() < 0.37) options.push("research")
     if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) options.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
     if (m.coupling > 0) options.push("coupling")
