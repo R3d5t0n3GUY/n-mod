@@ -146,7 +146,7 @@ const simulation = {
   ephemera: [], //array that is used to store ephemera objects
   removeEphemera: function (name) {
     for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
-      if (simulation.ephemera[i].name === name) {//(typeof(name) === "object" && simulation.ephemera[i] === name)
+      if (simulation.ephemera[i].name === name || i === simulation.ephemera.indexOf(name)) {
         simulation.ephemera.splice(i, 1);
         break;
       }

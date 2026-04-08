@@ -4852,13 +4852,13 @@ const m = {
       keyLog: [null, null, null, null, null, null, null, null],
       effect: () => {
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[m.fieldMode].keyLog.shift() //remove first element
-          m.fieldUpgrades[m.fieldMode].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[0].keyLog.shift() //remove first element
+          m.fieldUpgrades[0].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
           const patternB = [input.key.up, input.key.down, input.key.left, input.key.right, input.key.up, input.key.down, input.key.left, input.key.right]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
-            m.fieldUpgrades[m.fieldMode].keyLog = [null, null, null, null, null, null, null, null]
+          if (arraysEqual(m.fieldUpgrades[0].keyLog, patternA) || arraysEqual(m.fieldUpgrades[0].keyLog, patternB)) {
+            m.fieldUpgrades[0].keyLog = [null, null, null, null, null, null, null, null]
             simulation.inGameConsole(`powerUps<span class='color-symbol'>.</span>directSpawn<span class='color-symbol'>(</span>
             	m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span>
                 m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>y<span class='color-symbol'>, </span>
@@ -4904,12 +4904,12 @@ const m = {
       effect: () => {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[m.fieldMode].keyLog.shift() //remove first element
-          m.fieldUpgrades[m.fieldMode].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[1].keyLog.shift() //remove first element
+          m.fieldUpgrades[1].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowLeft", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowRight", "ArrowDown"]
           const patternB = [input.key.left, input.key.left, input.key.down, input.key.right, input.key.right, input.key.down]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
+          if (arraysEqual(m.fieldUpgrades[1].keyLog, patternA) || arraysEqual(m.fieldUpgrades[1].keyLog, patternB)) {
 
 
             // m.maxHealth = m.health = 1//10000000
@@ -5040,12 +5040,12 @@ const m = {
       effect: () => {
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[m.fieldMode].keyLog.shift() //remove first element
-          m.fieldUpgrades[m.fieldMode].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[2].keyLog.shift() //remove first element
+          m.fieldUpgrades[2].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "ArrowDown"]
           const patternB = [input.key.left, input.key.right, input.key.left, input.key.right, input.key.down]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
+          if (arraysEqual(m.fieldUpgrades[2].keyLog, patternA) || arraysEqual(m.fieldUpgrades[2].keyLog, patternB)) {
             simulation.ephemera.push({
               name: "perfect field push",
               do() {
@@ -6594,8 +6594,8 @@ const m = {
 
         //store event function so it can be found and removed in m.setField()
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[4].keyLog.shift() //remove first element
-          m.fieldUpgrades[4].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[8].keyLog.shift() //remove first element
+          m.fieldUpgrades[8].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowDown", "ArrowDown", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowDown"]
           const patternB = [input.key.down, input.key.down, input.key.right, input.key.down, input.key.left, input.key.down, input.key.down]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
@@ -6614,7 +6614,7 @@ const m = {
             }
           }
           if (
-            (arraysEqual(m.fieldUpgrades[4].keyLog, patternA) || arraysEqual(m.fieldUpgrades[4].keyLog, patternB))
+            (arraysEqual(m.fieldUpgrades[8].keyLog, patternA) || arraysEqual(m.fieldUpgrades[8].keyLog, patternB))
             && (tech.isPilotMapIgnore || !Matter.Query.region(map, blockRegion).length)
             && !m.crouch
           ) {
@@ -7503,13 +7503,13 @@ const m = {
       haveEphemera: false,
       effect() {
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[m.fieldMode].keyLog.shift() //remove first element
-          m.fieldUpgrades[m.fieldMode].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[11].keyLog.shift() //remove first element
+          m.fieldUpgrades[11].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown", "ArrowDown"]
           const patternB = [input.key.left, input.key.up, input.key.right, input.key.down, input.key.down]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
-            m.fieldUpgrades[m.fieldMode].canMove = true;
+          if (arraysEqual(m.fieldUpgrades[11].keyLog, patternA) || arraysEqual(m.fieldUpgrades[11].keyLog, patternB)) {
+            m.fieldUpgrades[11].canMove = true;
             if (m.energy < m.maxEnergy) {
               m.energy = m.maxEnergy;
               m.drawRegenEnergy();
@@ -7782,12 +7782,12 @@ const m = {
       keyLog: [null, null, null, null, null],
       effect: () => {
         m.fieldEvent = function (event) {
-          m.fieldUpgrades[m.fieldMode].keyLog.shift() //remove first element
-          m.fieldUpgrades[m.fieldMode].keyLog.push(event.code) //add new key to end
+          m.fieldUpgrades[13].keyLog.shift() //remove first element
+          m.fieldUpgrades[13].keyLog.push(event.code) //add new key to end
           const patternA = ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowDown"]
           const patternB = [input.key.up, input.key.left, input.key.down, input.key.right, input.key.down]
           const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternA) || arraysEqual(m.fieldUpgrades[m.fieldMode].keyLog, patternB)) {
+          if (arraysEqual(m.fieldUpgrades[13].keyLog, patternA) || arraysEqual(m.fieldUpgrades[13].keyLog, patternB)) {
             let diffAngle = Vector.angle(m.pos, m.fieldPosition),
               speedDir = Math.sign(diffAngle - m.angle),
               fieldDist = Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))
