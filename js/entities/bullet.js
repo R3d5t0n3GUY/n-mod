@@ -2307,7 +2307,7 @@ const b = {
     Composite.add(engine.world, bullet[me]); //add bullet to world
     if (tech.isMissileFast) {
       simulation.ephemera.push({
-        name: Math.random(),
+        name: `missileAccelerate ${simulation.newEphemeraID()}`,
         count: 40, //cycles before it self removes
         who: bullet[me],
         do() {
@@ -2315,7 +2315,7 @@ const b = {
             const mag = 0.07 * this.who.mass
             this.count--
             if (this.count < 0 || !this.who) {
-              simulation.removeEphemera(this)
+              simulation.removeEphemera(this.name)
             } else if (this.count < 3) {
               if (this.count === 2) this.who.tryToLockOn();
               if (this.who.lockedOn) {
@@ -6788,7 +6788,7 @@ const b = {
         const chooseBulletType = function () {
           if (tech.isLaserShot) {
             simulation.ephemera.push({
-              name: "energy crystal (id: " + simulation.ephemera.length + ")",
+              name: `energy crystal ${simulation.newEphemeraID()}`,
               count: 150 * tech.bulletsLastLonger, //cycles before it self removes
               where: { x: m.pos.x + 15 * Math.cos(m.angle), y: m.pos.y + 15 * Math.sin(m.angle) },
               end: {

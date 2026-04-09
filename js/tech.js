@@ -5867,19 +5867,47 @@ const tech = {
             //fiber optic
             if (tech.isLaserWire && this.segments.length > 4) {
               const ultimate = this.segments[this.segments.length - 1], penultimate = this.segments[this.segments.length - 2]
-              const unit = Vector.normalise(Vector.sub(ultimate, penultimate))
+              const sub = Vector.sub(ultimate, penultimate)
+              const unit = Vector.normalise(sub)
               const exit = {
                 x: ultimate.x - 10 * unit.x,
                 y: ultimate.y - 10 * unit.y
               }
               //if exit in inside map or blocks dont' fire
-              if (Matter.Query.ray([...map, ...body], exit, ultimate).length === 0) {
-                b.laser(exit, {
-                    x: ultimate.x + 5000 * unit.x,
-                    y: ultimate.y + 5000 * unit.y
-                }, tech.laserDamage, tech.laserReflections, false, 1, tech.laserColor || "#f00");
+              if (Matter.Query.ray([...map, ...body], exit, ultimate).length === 0 && !simulation.testing) {
+                const angle = Math.atan2(sub.y, sub.x)
+                if (tech.beamCollimator) {
+                  const freq = 0.037
+                  const len = tech.beamSplitter + 1
+                  const phase = 2 * Math.PI / len
+                  for (let i = 0; i < len; i++) {
+                    if (Math.sin(m.cycle * freq + phase * (i) + Math.PI / 2) > 0 || !(m.cycle % 3)) ctx.globalAlpha = 0.35
+                    const sweep = angle + Math.sin(m.cycle * freq + phase * (i))
+                    const where = {
+                      x: exit.x + 7.5 * Math.cos(sweep),
+                      y: exit.y + 7.5 * Math.sin(sweep)
+                    }
+                    b.laser(where, {
+                      x: ultimate.x + 5000 * Math.cos(angle),
+                      y: ultimate.y + 5000 * Math.sin(angle)
+                    }, dmg, tech.laserReflections, false, 1, tech.laserColor || "#f20")
+                    ctx.globalAlpha = 1
+                  }
+                } else if (tech.beamSplitter) {
+                  const divergence = 0.1
+                  for (let i = 0; i <= tech.beamSplitter; i++) {
+                    b.laser(exit, {
+                      x: ultimate.x + 5000 * Math.cos(angle + i * divergence),
+                      y: ultimate.y + 5000 * Math.sin(angle + i * divergence)
+                    }, dmg, tech.laserReflections, false, 1, tech.laserColor || "#f20")
+                  }
+                } else {
+                  b.laser(exit, {
+                      x: ultimate.x + 5000 * unit.x,
+                      y: ultimate.y + 5000 * unit.y
+                  }, dmg, tech.laserReflections, false, 1, tech.laserColor || "#f20");
+                }
 
-                // laser(where, whereEnd, damage = tech.laserDamage, reflections = tech.laserReflections, isThickBeam = false, push = 1, laserColor = tech.laserColor) {
               }
             }
 
@@ -5899,7 +5927,7 @@ const tech = {
                     const cutIndex = Math.min(Math.max(2, i), this.segments.length - 1)
                     const long = this.segments.length - cutIndex
                     simulation.ephemera.push({
-                      name: `wireTimer#${simulation.ephemera.length}`,
+                      name: `wireTimer`,
                       wireArray: tech.wire.segments.slice(cutIndex), //this should be the part of the wire that is recently cut
                       cycle: 10 + 2 * Math.min(100, long),
                       do() {
@@ -9861,9 +9889,9 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         return (tech.haveGunCheck("laser") && !tech.isWideLaser && !tech.historyLaser) ||
-          (tech.isLaserShot && tech.haveGunCheck("shotgun"))
+          (tech.isLaserShot && tech.haveGunCheck("shotgun") || tech.isLaserWire)
       },
-      requires: "laser gun, not diffuse beam, slow light",
+      requires: "laser gun or wire, not diffuse beam, slow light",
       effect() {
         tech.beamSplitter++
         b.guns[11].chooseFireMethod()
@@ -9884,9 +9912,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return tech.haveGunCheck("laser") && !tech.isWideLaser && !tech.historyLaser && tech.beamSplitter > 0 && !tech.isPulseLaser
+        return (tech.haveGunCheck("laser") || tech.isLaserWire) && !tech.isWideLaser && !tech.historyLaser && tech.beamSplitter > 0 && !tech.isPulseLaser
       },
-      requires: "laser gun, diffraction, not diffuse beam, slow light, pulse",
+      requires: "laser gun or wire, diffraction, not diffuse beam, slow light, pulse",
       effect() {
         tech.beamSplitter++
         tech.beamCollimator = true
@@ -9982,8 +10010,8 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         return (tech.haveGunCheck("laser") || tech.isLaserBotUpgrade || tech.isLaserMine ||
-          tech.isLaserField) && !(tech.isPulseLaser || tech.isDyeLaser || tech.isFreeElectron ||
-            tech.isRadioLaser)
+          tech.isLaserField || tech.isLaserWire) && !(tech.isPulseLaser || tech.isDyeLaser ||
+            tech.isFreeElectron || tech.isRadioLaser)
       },
       requires: "laser, not free-electron, pulse",
       effect() {
@@ -10009,8 +10037,8 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         return (tech.haveGunCheck("laser") || tech.isLaserMine || tech.isLaserBotUpgrade ||
-          tech.isLaserField) && !(tech.isPulseLaser || tech.isIRdiode || tech.isFreeElectron ||
-            tech.isRadioLaser)
+          tech.isLaserField || tech.isLaserWire) && !(tech.isPulseLaser || tech.isIRdiode ||
+            tech.isFreeElectron || tech.isRadioLaser)
       },
       requires: "laser, not pulse, infrared diode",
       effect() {
@@ -10038,8 +10066,8 @@ const tech = {
       frequencyDefault: 1,
       allowed() {
         return (tech.haveGunCheck("laser") || tech.isLaserMine || tech.isLaserBotUpgrade ||
-          tech.isLaserField) && !(tech.isPulseLaser || tech.isIRdiode || tech.isDyeLaser ||
-            tech.isRadioLaser)
+          tech.isLaserField || tech.isLaserWire) && !(tech.isPulseLaser || tech.isIRdiode ||
+            tech.isDyeLaser || tech.isRadioLaser)
       },
       requires: "laser, not pulse, infrared diode",
       effect() {
@@ -10102,8 +10130,8 @@ const tech = {
       isNGUTech: true,
       allowed() {
         return (tech.haveGunCheck("laser") || tech.isLaserMine || tech.isLaserBotUpgrade ||
-          tech.isLaserField) && !(tech.isPulseLaser || tech.isIRdiode || tech.isDyeLaser ||
-            tech.isFreeElectron)
+          tech.isLaserField || tech.isLaserWire) && !(tech.isPulseLaser || tech.isIRdiode ||
+            tech.isDyeLaser || tech.isFreeElectron)
       },
       effect() {
         tech.isRadioLaser = true;
@@ -10116,40 +10144,6 @@ const tech = {
         tech.laserDrain *= 0.8;
         tech.laserColor = "#f00"
         tech.laserColorAlpha = "rgba(255, 0, 0, 0.5)"
-      }
-    },
-    {
-      name: "photonic resonance",
-      descriptionFunction() {
-        return `<strong class='color-laser'>laser</strong> damage and <strong class='color-f'>energy</strong> drain increases the longer you fire`
-      },
-      maxCount: 1,
-      count: 0,
-      frequency: 1,
-      requires: "laser, not pulse",
-      isNGUTech: true,
-      isGunTech: true,
-      allowed() {
-        return tech.haveGunCheck("laser") && !tech.isPulseLaser;
-      },
-      effect() {
-        tech.isPhotonicResonance = true;
-        let timeMult = 0;
-        setInterval(() => {
-          if (input.fire && tech.isPhotonicResonance) {
-            tech.laserDamage += 0.02;
-            tech.laserDrain += 0.001;
-            timeMult += 1;
-          } else if (!input.fire && tech.isPhotonicResonance) {
-            tech.laserDamage -= (0.02 * timeMult);
-            tech.laserDrain -= (0.001 * timeMult);
-            timeMult = 0;
-          }
-          //simulation.inGameConsole(tech.laserDrain);
-        }, 500);
-      },
-      remove() {
-        tech.isPhotonicResonance = false;
       }
     },
     {

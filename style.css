@@ -102,16 +102,6 @@ a {
   text-decoration: none;
 }
 
-a:link {
-  color: #007fff;
-}
-a:visited {
-  color: #00ff7f;
-}
-a:hover {
-  color: #00ffff;
-}
-
 em {
   opacity: 0.7;
 }
@@ -699,6 +689,15 @@ summary {
   border-radius: 8px;
   border: 2px var(--border-color) solid;
   background-color: var(--card-color);
+  a:link {
+    color: #007fff;
+  }
+  a:visited {
+    color: #00ff7f;
+  }
+  a:hover {
+    color: #00ffff;
+  }
 }
 
 
