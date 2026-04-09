@@ -100,7 +100,16 @@ input {
 
 a {
   text-decoration: none;
-  color: #08c;
+}
+
+a:link {
+  color: #007fff;
+}
+a:visited {
+  color: #00ff7f;
+}
+a:hover {
+  color: #00ffff;
 }
 
 em {
