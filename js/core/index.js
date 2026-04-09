@@ -1339,9 +1339,6 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     document.getElementById("control-testing").style.visibility = (localSettings.loreCount < 1) ? "hidden" : "visible"
     // document.getElementById("experiment-button").style.visibility = (localSettings.loreCount === 0) ? "hidden" : "visible"
     input.controlTextUpdate()
-    /* requestAnimFrames(4, () => {
-      build.setDarkMode('splash-start')
-    }) */
   },
   hasExperimentalMode: false,
   startExperiment() { //start playing the game after exiting the experiment menu

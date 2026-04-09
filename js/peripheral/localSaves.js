@@ -55,6 +55,9 @@ const localSaves = {
             //throw new Error("localSettings is not allowed");
           }
           fileStatusDiv.innerHTML = "<strong style='color:#00bf00;'>File imported successfully!</strong>"
+          requestAnimFrames(4, () => {
+            build.setDarkMode('splash-start')
+          }) 
         } catch (error) {
           let errorMsg = "Failed to import settings: " + error.message
           fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR IMPORTING FILE</strong>"
@@ -81,13 +84,18 @@ const localSaves = {
     localSaves.defaultMenu()
     let oldSettings = localSettings; //in case something goes wrong during erase, keep current settings
     try {
-      localSettings = {}; //since localSettings is declared with "let" instead of "const", this will not error
+      localSettings = { //since localSettings is declared with "let" instead of "const", this will not error
+        isAllowed: oldSettings.isAllowed || false
+      };
       build.resetStorage(true); //force reset. restore to defaults
       if (localSettings.isAllowed) {
         localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
       } else {
         console.warn("localSettings is not allowed");
       }
+      requestAnimFrames(4, () => {
+        build.setDarkMode('splash-start')
+      }) 
     } catch (error) {
       let errorMsg = "Failed to wipe save file: " + error.message
       console.warn(errorMsg);
