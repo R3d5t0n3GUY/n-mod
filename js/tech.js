@@ -1447,8 +1447,8 @@ const tech = {
         return b.guns.indexOf(pickList[idx]);
       },
       descriptionFunction() {
-        if (this.count === 0) this.gun = this.gunSelect() //don't pick laser
-        return `<strong>2x</strong> <strong class='color-ammo'>ammo</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`
+        if (this.count === 0) tech.marginalGunIndex = this.gunSelect() //don't pick laser
+        return `<strong>2x</strong> <strong class='color-ammo'>ammo</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
       },
       maxCount: 9,
       count: 0,
@@ -1462,21 +1462,20 @@ const tech = {
         return limited && !tech.isEnergyNoAmmo && !tech.isBoostReplaceAmmo
       },
       requires: "At least 1 weapon with finite ammo/durability, not non-renewables, quasiparticles",
-      gun: undefined, //the gun's index in the catalog
       effect() {
         tech.isMoreGunAmmo = true;
         if (!tech.moreGunAmmo) tech.moreGunAmmo = 0
         tech.moreGunAmmo++
-        if (this.gun === undefined) this.gun = this.gunSelect() //don't pick laser
-        simulation.inGameConsole(`${b.guns[this.gun].ammoPack.toFixed(2)} → ${(2 * b.guns[this.gun].ammoPack).toFixed(2)} average <strong class='color-ammo'>${b.guns[this.gun].ammoType == 'durability' ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[this.gun].name}</strong>`)
-        let i = b.guns[this.gun], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
-        if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[this.gun].ammoPack *= 2
+        if (tech.marginalGunIndex === undefined) tech.marginalGunIndex = this.gunSelect() //don't pick laser
+        simulation.inGameConsole(`${b.guns[tech.marginalGunIndex].ammoPack.toFixed(2)} → ${(2 * b.guns[tech.marginalGunIndex].ammoPack).toFixed(2)} average <strong class='color-ammo'>${b.guns[tech.marginalGunIndex].ammoType == 'durability' ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`)
+        let i = b.guns[tech.marginalGunIndex], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
+        if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[tech.marginalGunIndex].ammoPack *= 2
       },
       remove() {
         if (this.count) {
           tech.isMoreGunAmmo = false;
-          let i = b.guns[this.gun], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
-          if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[this.gun].ammoPack *= Math.pow(0.5, tech.moreGunAmmo)
+          let i = b.guns[tech.marginalGunIndex], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
+          if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[tech.marginalGunIndex].ammoPack *= Math.pow(0.5, tech.moreGunAmmo)
           tech.moreGunAmmo = 0
         }
       }
@@ -1490,9 +1489,10 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return tech.isMoreGunAmmo
+        let gunIDX = (build.isExperimentSelection ? b.inventory[0] : b.activeGun)
+        return tech.isMoreGunAmmo && (tech.marginalGunIndex !== gunIDX || (build.isExperimentSelection && b.inventory.length > 1))
       },
-      requires: "marginal utility",
+      requires: "marginal utility, NOT actively using the boosted gun",
       effect() {
         tech.isRerollGunAmmo = true;
       },
@@ -10114,9 +10114,10 @@ const tech = {
     {
       name: "tritiated medium",
       descriptionFunction() {
-        let pluralize = "beam is";
-        if (tech.beamSplitter || tech.beamCollimator || tech.historyLaser || tech.isLaserMine || tech.isLaserField ||
-          tech.laserBotCount > (tech.haveGunCheck("laser", false) ? 0 : 1)) {
+        let pluralize = "beam is", valSum=(a)=>{
+          let y=0;a.split(",").forEach(i=>{y+=Math.max((tech[i]||0),0)});return y;
+        }
+        if (valSum("beamSplitter,beamCollimator,historyLaser,isLaserMine,isLaserField,laserBotCount,isLaserWire") > (tech.haveGunCheck("laser", false) ? 0 : 1)) {
           pluralize = "beams are";
         }
         return `<strong>1.33x</strong> <strong class='color-laser'>laser</strong> <strong class="color-f">energy</strong> cost

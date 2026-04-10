@@ -1296,7 +1296,6 @@ const powerUps = {
       const couplingExtraAmmo = (m.fieldMode === 10 || m.fieldMode === 0) ? 1 + 0.04 * m.coupling : 1
       if (b.inventory.length > 0) {
         powerUps.animatePowerUpGrab('rgba(68, 102, 119,0.25)')
-        let j = tech.tech.find(i => i.name === 'marginal utility')
         for (let i = 0, len = b.inventory.length; i < len; i++) {
           const k = b.inventory[i], name = b.guns[k], boostTarget = (name.ammoType == 'durability' ? 'durability' : 'ammo')
           if (b.activeGun === k  || !tech.isAmmoForGun) { //if logistics, only give ammo to current gun. otherwise, give ammo to all inventory guns
@@ -2235,12 +2234,12 @@ const powerUps = {
   pauseEjectTech(index) {
     if ((tech.isPauseEjectTech || simulation.testing) && !(simulation.isChoosing || tech.tech[index].isInstant)) {
       if ((tech.tech[index].name === "marginal utility") && tech.isRerollGunAmmo) { //if player has cardinal utility, reroll marginal utility instead of ejecting it
-        let oldGun = tech.tech[index].gun;
-        tech.tech[index].gun = tech.tech[index].gunSelect();
-        let gunName = tech.tech[index].gun;
+        let oldGun = tech.marginalGunIndex;
+        tech.marginalGunIndex = tech.tech[index].gunSelect();
+        let gunName = tech.marginalGunIndex;
         while (gunName === oldGun) { //don't pick the same gun as before
-          tech.tech[index].gun = tech.tech[index].gunSelect();
-          gunName = tech.tech[index].gun;
+          tech.marginalGunIndex = tech.tech[index].gunSelect();
+          gunName = tech.marginalGunIndex;
         }
         build.generatePauseLeft();
         build.generatePauseRight();
