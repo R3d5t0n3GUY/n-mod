@@ -10257,11 +10257,9 @@ const tech = {
       },
       remove() {
         tech.greatSword = false;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "sword" && !m.alive) {
-            b.guns[b.inventory[i]].cycle = 0;
-            b.guns[b.inventory[i]].haveEphemera = false;
-          }
+        if (!m.alive) {
+          b.guns[12].cycle = 0;
+          b.guns[12].haveEphemera = false;
         }
       }
     },
@@ -10522,26 +10520,15 @@ const tech = {
       requires: "scythe, Ti-6Al-4V, not genetic drift, quasiparticles",
       effect() {
         tech.isAmmoScythe = true;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "scythe") {
-            b.guns[b.inventory[i]].ammoType = 'ammo';
-          }
-        }
-        simulation.updateGunHUD();
+        b.guns[13].ammoType = 'ammo';
+        requestAnimationFrame(build.isExperimentSelection ? build.populateGrid : simulation.updateGunHUD);
         this.refundAmount += tech.addJunkTechToPool(0.24);
       },
       refundAmount: 0,
       remove() {
-        if (tech.isAmmoScythe) {
-          tech.isAmmoScythe = false;
-          for (let i = 0, len = b.inventory.length; i < len; ++i) {
-            if (b.guns[b.inventory[i]].name === "scythe") {
-              b.guns[b.inventory[i]].ammoType = (tech.durabilityScythe ? 'durability' : 'health')
-            }
-          }
-          simulation.updateGunHUD();
-        }
         tech.isAmmoScythe = false;
+        if (this.count) b.guns[13].ammoType = (tech.durabilityScythe ? 'durability' : 'health')
+        requestAnimationFrame(build.isExperimentSelection ? build.populateGrid : simulation.updateGunHUD);
         if (this.count > 0 && this.refundAmount > 0) {
           tech.removeJunkTechFromPool(this.refundAmount);
           this.refundAmount = 0;
@@ -10603,6 +10590,7 @@ const tech = {
       },
       isGunTech: true,
       isNScytheTech: true,
+      isCorrupted : true,
       maxCount: 1,
       count: 0,
       frequency: 2,
@@ -10614,21 +10602,21 @@ const tech = {
       requires: "scythe, not titanium nitride, duality, reaping, quasiparticles",
       effect() {
         tech.durabilityScythe = true;
-        for (let i = 0, len = b.guns.length; i < len; ++i) {
-          if (b.guns[i].name === "scythe") {
-            b.guns[i].ammoType = 'durability'
-          }
+        b.guns[13].ammoType = 'durability'
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
         }
-        simulation.updateGunHUD();
       },
       remove() {
         tech.durabilityScythe = false;
-        for (let i = 0, len = b.guns.length; i < len; ++i) {
-          if (b.guns[i].name === "scythe") {
-            b.guns[i].ammoType = (tech.isAmmoScythe ? 'ammo' : 'health')
-          }
+        if (this.count) b.guns[13].ammoType = (tech.isAmmoScythe ? 'ammo' : 'health')
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
         }
-        simulation.updateGunHUD();
       }
     },
     {
@@ -10652,17 +10640,13 @@ const tech = {
         simulation.ephemera.push({
           name: "healthSpear",
           do() {
-            for (let i = 0, len = b.inventory.length; i < len; ++i) {
-              if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].durability == 0) {
-                if (tech.isEnergyHealth) {
-                  m.energy -= 0.1;
-                  b.guns[b.inventory[i]].durability += 100;
-                } else {
-                  m.health -= 0.1;
-                  b.guns[b.inventory[i]].durability += 100;
-                  m.displayHealth();
-                }
-              }
+            if (tech.isEnergyHealth) {
+              m.energy -= 0.1;
+              b.guns[14].durability += 100;
+            } else {
+              m.health -= 0.1;
+              b.guns[14].durability += 100;
+              m.displayHealth();
             }
           }
         })
@@ -10689,27 +10673,16 @@ const tech = {
       },
       requires: "spear",
       effect() {
-        tech.tempering = this.count;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "spear") {
-            b.guns[b.inventory[i]].maxDurability += 100;
-          }
-        }
+        if (!tech.tempering) tech.tempering = 0
+        tech.tempering++;
+        b.guns[14].maxDurability += 100;
       },
       remove() { //reset code here because it doesn't work anywhere else :/
-        tech.tempering = this.count;
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].maxDurability > 300) {
-            b.guns[b.inventory[i]].maxDurability -= 100;
-          } else {
-            if (b.guns[b.inventory[i]].name === "spear" && !m.alive) {
-              b.guns[b.inventory[i]].cycle = 0;
-              b.guns[b.inventory[i]].haveEphemera = false;
-              b.guns[b.inventory[i]].durability = 300;
-              b.guns[b.inventory[i]].maxDurability = 300;
-            }
-          }
-        }
+        tech.tempering = 0;
+        b.guns[14].cycle = 0;
+        b.guns[14].haveEphemera = false;
+        b.guns[14].durability = 300;
+        b.guns[14].maxDurability = 300;
       }
     },
     {
@@ -10725,9 +10698,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("spear") && !tech.spearEye
+        return tech.haveGunCheck("spear") // && !tech.spearEye
       },
-      requires: "spear, not blood transfusion",
+      requires: "spear", //not blood transfusion
       effect() {
         tech.shockSpear = true;
       },
@@ -11033,7 +11006,7 @@ const tech = {
         tech.spearRadioactive = false;
       }
     },
-    {
+    /* {
       name: "blood transfusion",
       descriptionFunction() {
         return `sacrifice <strong class="color-h">health</strong> onto your spear
@@ -11139,7 +11112,7 @@ const tech = {
       remove() {
         tech.spearHeart = false;
       }
-    },
+    }, */
     {
       name: "pyroflux",
       descriptionFunction() {
@@ -11151,9 +11124,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("spear") && !tech.spearEye
+        return tech.haveGunCheck("spear") // && !tech.spearEye
       },
-      requires: "spear, not blood transfusion",
+      requires: "spear", //not blood transfusion
       effect() {
         tech.pyroSpear = true;
       },
@@ -15939,4 +15912,5 @@ const tech = {
       simulation.updateTechHUD();
     }
   },
+  pauseEjectTech: 1
 }

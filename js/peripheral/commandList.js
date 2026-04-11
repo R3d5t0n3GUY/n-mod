@@ -7,24 +7,17 @@ const cmdList = {
       checkSyntax(input) {
         let pos = [input.indexOf("{"), input.lastIndexOf("}")];
         if (input.replace(/\s/g, "").startsWith("function(){")) {
-          let trailing = input.slice(pos[1] + 1)
-          if (trailing.replace(/\s/g, "") === "" || trailing.replace(/\s/g, "").startsWith("//")) {
+          let trailing = input.slice(pos[1] + 1), evalString = trailing.replace(/\s/g, "")
+          if (evalString === "" || evalString.startsWith("//") || trailing.trim().startsWith("/*")) {
             let invalidPhrases = ["document", "EventListener", "innerHTML", "outerHTML", "getElementsBy", "getElementBy", "prototype", "createElement",
-              "appendChild", "removeChild", "eval", "runTemp", "console.", "const ", "commandList", "resetStorage", "defaultGameVars", "resetGame"], isInvalid = false, regExpTest = /cmdConsole(?!\.history)/;
+              "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "defaultGameVars", "resetGame", "eruda", "localSaves",
+            ], isInvalid = false, regExpTest = /cmdConsole(?!\.history)/;
             //this command should NOT access or alter HTML DOM, nor should it alter JS prototypes or request other commands, for security reasons
-            isInvalid = regExpTest.test(input);
-            for (let i = 0, len = invalidPhrases.length; i < len; i++) {
-              let item = invalidPhrases[i]
-              if (input.includes(item)) isInvalid = true
-            }
+            isInvalid = regExpTest.test(input) || invalidPhrases.some(i => input.includes(i))
             if (isInvalid) {
               return [false, `<strong class='color-var'>/run</strong> should NOT access any of the following:
               <ul>
-              	<li>HTML DOM</li>
-                <li>JS Prototypes</li>
-                <li>Command Execution</li>
-                <li>Event Listeners</li>
-                <li>Declaring const</li>
+              	<li>HTML DOM</li> <li>JS Prototypes</li> <li>Command Execution</li> <li>Event Listeners</li> <li>Declaring const</li>
               </ul>`]
             } else {
               return [true, ""];
@@ -38,20 +31,9 @@ const cmdList = {
         }
       },
       effect(input) {
-        let pos = [input.indexOf("{"), input.lastIndexOf("}")];
-        let runTemp = () => {
-          eval(input.substring(pos[0] + 1, pos[1]));
-        };
-        /*
-        Executing JS code from a string is an EXTREME SECURITY RISK;
-        With eval(), malicious code can be executed without your consent,
-        and third-party code can see the scope of your application, which can possibly lead to attacks.
-            -warning from W3schools.com
-
-        I have put a trust system in place, so, HANDLE eval() WITH CARE HERE, AND DO NOT USE IT IN YOUR WEBSITES!
-            -R3d5t0n3_GUY
-      */
-        runTemp();
+        ((f, x1, x2) => {
+          return eval(f.substring(x1, x2));
+        })(input, input.indexOf("{") + 1, input.lastIndexOf("}"));
       },
       description: `Allows the user to run JavaScript without needing to open their Dev Tools.
       <br><strong>SYNTAX:</strong> /run function() {<br><em>//input code to run here</em><br>}
@@ -72,7 +54,7 @@ const cmdList = {
           list.forEach(item => {
             result += `<li><em class='color-var help' onclick='cmdConsole.requestCmd("/help ${item}")'>${item}</em></li>`
           });
-          result += "</ul><br>Click each of the command names above to view their info (must be in pause menu)"
+          result += "</ul><br>Click each of the command names above to view their info (must be in pause menu to do this)"
           simulation.inGameConsole(result, 600)
         } else {
           let item = cmdList[input] || cmdList.help
@@ -202,7 +184,7 @@ const cmdList = {
         if (cmdConsole.params.length < 2) {
           return [true, ""]
         } else {
-          return [false, "<strong class='color-var'>war</strong> requires less than two parameters"]
+          return [false, "<strong class='color-var'>warp</strong> requires no more than one parameter"]
         }
       },
       effect(input) {

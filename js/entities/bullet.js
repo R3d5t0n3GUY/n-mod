@@ -98,21 +98,23 @@ const b = {
     }
   },
   outOfAmmo() { //triggers after firing when you have NO ammo
-    simulation.inGameConsole(`${b.guns[b.activeGun].name}.<span class='color-g'>ammo</span><span class='color-symbol'>:</span> 0`);
-    m.fireCDcycle = m.cycle + 30; //fire cooldown       
-    if (tech.isAmmoFromHealth) {
-      const amount = 0.02
-      if (tech.isEnergyHealth) {
-        if (m.maxEnergy > amount * 2) {
-          tech.healMaxEnergyBonus -= amount * 2
-          m.setMaxEnergy();
-          for (let i = 0; i < 4; i++) powerUps.spawn(m.pos.x + 50 * (Math.random() - 0.5), m.pos.y + 50 * (Math.random() - 0.5), "ammo");
-        }
-      } else {
-        if (m.health > amount) {
-          tech.extraMaxHealth -= amount //decrease max health
-          m.setMaxHealth();
-          for (let i = 0; i < 4; i++) powerUps.spawn(m.pos.x + 50 * (Math.random() - 0.5), m.pos.y + 50 * (Math.random() - 0.5), "ammo");
+    if (b.inventory.length > 0) {
+      simulation.inGameConsole(`${b.guns[b.activeGun].name}.<span class='color-g'>ammo</span><span class='color-symbol'>:</span> 0`);
+      m.fireCDcycle = m.cycle + 30; //fire cooldown       
+      if (tech.isAmmoFromHealth) {
+        const amount = 0.02
+        if (tech.isEnergyHealth) {
+          if (m.maxEnergy > amount * 2) {
+            tech.healMaxEnergyBonus -= amount * 2
+            m.setMaxEnergy();
+            for (let i = 0; i < 4; i++) powerUps.spawn(m.pos.x + 50 * (Math.random() - 0.5), m.pos.y + 50 * (Math.random() - 0.5), "ammo");
+          }
+        } else {
+          if (m.health > amount) {
+            tech.extraMaxHealth -= amount //decrease max health
+            m.setMaxHealth();
+            for (let i = 0; i < 4; i++) powerUps.spawn(m.pos.x + 50 * (Math.random() - 0.5), m.pos.y + 50 * (Math.random() - 0.5), "ammo");
+          }
         }
       }
     }
@@ -8769,7 +8771,7 @@ const b = {
           simulation.ephemera.push({
             name: "sword",
             do() {
-              if (b.guns[b.activeGun].name !== 'sword') {
+              if (b.activeGun !== 12) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
                   if (b.guns[b.inventory[i]].name === "sword" && b.guns[b.inventory[i]].sword) {
                     b.guns[b.inventory[i]].cycle = 0;
@@ -8794,7 +8796,7 @@ const b = {
                   }
                 }
               }
-              if (b.guns[b.activeGun].name == 'sword' && tech.greatSword && b.guns[b.activeGun].sword) {
+              if (b.activeGun === 12 && tech.greatSword && b.guns[b.activeGun].sword) {
                 let bladeSegments = b.guns[b.activeGun].bladeSegments;
                 for (let i = 0; i < bladeSegments.length; i++) {
                   ctx.beginPath();
@@ -8880,7 +8882,7 @@ const b = {
           }
         }
         if (input.fire && (tech.isEnergyHealth ? m.energy >= 0.11 : m.health >= 0.11)) {
-          if (!this.sword && b.guns[b.activeGun].name === 'sword') {
+          if (!this.sword && b.activeGun === 12) {
             if (tech.greatSword) {
               ({ sword: this.sword, bladeSegments: this.bladeSegments } = this.greatSword());
             } else if (tech.longSword) {
@@ -9110,7 +9112,7 @@ const b = {
           }
         }
         if (input.fire && (tech.isEnergyHealth ? m.energy >= 0.11 : m.health >= 0.11)) {
-          if (!this.sword && b.guns[b.activeGun].name === 'sword') {
+          if (!this.sword && b.activeGun === 12) {
             if (tech.greatSword) {
               ({ sword: this.sword, bladeSegments: this.bladeSegments } = this.greatSword());
             } else if (tech.longSword) {
@@ -10500,7 +10502,7 @@ const b = {
           simulation.ephemera.push({
             name: "scythe",
             do() {
-              if (b.guns[b.activeGun].name !== 'scythe') {
+              if (b.activeGun !== 13) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
                   if (b.guns[b.inventory[i]].name === "scythe" && b.guns[b.inventory[i]].scythe) {
                     b.guns[b.inventory[i]].cycle = 0;
@@ -10519,11 +10521,6 @@ const b = {
                     b.guns[b.inventory[i]].scythe = undefined;
                     b.guns[b.inventory[i]].bladeTrails = [];
                   }
-                }
-              }
-              for (let i = 0, len = b.inventory.length; i < len; ++i) {
-                if (b.guns[b.inventory[i]].name === "scythe" && tech.durabilityScythe) {
-                  document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].durability}/${b.guns[b.inventory[i]].maxDurability} <em style="font-size: 20px;">durability</em>`
                 }
               }
             },
@@ -10547,7 +10544,7 @@ const b = {
         }
         if (b.activeGun !== null && input.fire && ((tech.durabilityScythe && this.durability > 0) ||
         ((tech.isEnergyHealth ? m.energy : m.health) >= (drain + 0.01)))) {
-          if (!this.scythe && b.guns[b.activeGun].name === 'scythe') {
+          if (!this.scythe && b.activeGun === 13) {
             this.angle = m.angle;
             if (tech.durabilityScythe) {
               if (!(this.angle > -Math.PI / 2 && this.angle < Math.PI / 2)) {
@@ -10913,12 +10910,10 @@ const b = {
           { x: x + 3, y: y },
         ];
         const handle2 = Bodies.fromVertices(x + 50, y - handleHeight / 2 - 70, handle2Vertices, spawn.propsIsNotHoldable);
-
-        const joint = Bodies.polygon(x + 100, y - handleHeight - 20, 5, 30, spawn.propsIsNotHoldable);
-
+        const joint = Bodies.polygon(x + 100, y - handleHeight - 20, 5, 30, spawn.propsIsNotHoldable);	
         const joint2 = Bodies.polygon(x, y - handleHeight / 2, 3, 20, spawn.propsIsNotHoldable);
         Body.rotate(joint2, Math.PI / 2)
-
+        
         const blade1Vertices = [
           { x: x - 5, y: y - 10 },
           { x: x - 15, y: y + 10 },
@@ -10933,7 +10928,7 @@ const b = {
           { x: x - 100, y: y - 30 },
           { x: x - 60, y: y },
         ];
-        const blade2 = Bodies.fromVertices(x + 100, y - handleHeight / 2 - 150, blade2Vertices, spawn.propsIsNotHoldable);
+        const blade2 = Bodies.fromVertices(x + 100, y - handleHeight / 2 - 150, blade2Vertices, spawn.propsIsNotHoldable);		
 
         const blade3Vertices = [
           { x: x - 10, y: y - 10 },
@@ -10941,7 +10936,7 @@ const b = {
           { x: x - 90, y: y - 30 },
           { x: x - 60, y: y },
         ];
-        const blade3 = Bodies.fromVertices(x + 150, y - handleHeight / 2 - 130, blade3Vertices, spawn.propsIsNotHoldable);
+        const blade3 = Bodies.fromVertices(x + 150, y - handleHeight / 2 - 130, blade3Vertices, spawn.propsIsNotHoldable);		
 
         const blade4Vertices = [
           { x: x, y: y - 10 },
@@ -11015,53 +11010,38 @@ const b = {
           simulation.ephemera.push({
             name: "spear",
             do() {
-              try {
-                if (b.guns[b.activeGun].name !== 'spear') {
-                  for (let i = 0, len = b.inventory.length; i < len; ++i) {
-                    if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].spear) {
-                      b.guns[b.inventory[i]].cycle = 0;
-                      if (b.guns[b.inventory[i]].constraint1) {
-                        Composite.remove(engine.world, b.guns[b.inventory[i]].constraint1);
-                        b.guns[b.inventory[i]].constraint1 = undefined;
-                      }
-                      if (b.guns[b.inventory[i]].constraint2) {
-                        Composite.remove(engine.world, b.guns[b.inventory[i]].constraint2);
-                        b.guns[b.inventory[i]].constraint2 = undefined;
-                      }
-                      Composite.remove(engine.world, b.guns[b.inventory[i]].spear);
-                      b.guns[b.inventory[i]].spear.parts.forEach(part => {
-                        Composite.remove(engine.world, part);
-                        const index = bullet.indexOf(part);
-                        if (index !== -1) {
-                          bullet.splice(index, 1);
-                        }
-                      });
-                      b.guns[b.inventory[i]].spear = undefined;
-                      b.guns[b.inventory[i]].bladeTrails = [];
-                    }
-                  }
-                }
+              if (b.activeGun !== 14) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
-                  if (b.guns[b.inventory[i]].name === "spear") {
-                    document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].durability}/${b.guns[b.inventory[i]].maxDurability} <em style="font-size: 20px;">durability</em>`
+                  if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].spear) {
+                    b.guns[b.inventory[i]].cycle = 0;
+                    if (b.guns[b.inventory[i]].constraint1) {
+                      Composite.remove(engine.world, b.guns[b.inventory[i]].constraint1);
+                      b.guns[b.inventory[i]].constraint1 = undefined;
+                    }
+                    if (b.guns[b.inventory[i]].constraint2) {
+                      Composite.remove(engine.world, b.guns[b.inventory[i]].constraint2);
+                      b.guns[b.inventory[i]].constraint2 = undefined;
+                    }
+                    Composite.remove(engine.world, b.guns[b.inventory[i]].spear);
+                    b.guns[b.inventory[i]].spear.parts.forEach(part => {
+                      Composite.remove(engine.world, part);
+                      const index = bullet.indexOf(part);
+                      if (index !== -1) {
+                        bullet.splice(index, 1);
+                      }
+                    });
+                    b.guns[b.inventory[i]].spear = undefined;
+                    b.guns[b.inventory[i]].bladeTrails = [];
                   }
                 }
-              } catch (err) {
-                console.warn(err)
-                simulation.removeEphemera(this.name)
               }
             },
           })
         }
         this.cycle++;
         this.durability = Math.min(this.maxDurability, Math.max(0, this.durability));
-        for (let i = 0, len = b.inventory.length; i < len; ++i) {
-          if (b.guns[b.inventory[i]].name === "spear") {
-            document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${this.durability}/${this.maxDurability} <em style="font-size: 20px;">durability</em>`
-          }
-        }
         if (input.fire && this.durability > 0 && m.fireCDcycle < m.cycle) {
-          if (!this.spear && b.guns[b.activeGun].name === 'spear') {
+          if (!this.spear && b.activeGun === 14) {
             ({ spear: this.spear, bladeSegments: this.bladeSegments } = this.createSpear(player.position));
             this.angle = m.angle;
           }

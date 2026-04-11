@@ -146,7 +146,7 @@ const simulation = {
   ephemera: [], //array that is used to store ephemera objects
   removeEphemera: function (name) {
     for (let i = 0, len = simulation.ephemera.length; i < len; i++) {
-      if (simulation.ephemera[i].name === name || i === simulation.ephemera.indexOf(name)) {
+      if (simulation.ephemera[i].name === name) {//(typeof(name) === "object" && simulation.ephemera[i] === name)
         simulation.ephemera.splice(i, 1);
         break;
       }
@@ -154,7 +154,15 @@ const simulation = {
   },
   runEphemera() {
     for (let i = 0; i < simulation.ephemera.length; i++) {
-      simulation.ephemera[i].do();
+      try {
+        simulation.ephemera[i].do();
+      } catch (err) {
+        let msg = err.message || err || "Unknown Error. (Error details were not captured)"
+        simulation.inGameConsole(`<strong style='color:red'>Error:</strong> ${err.name || "Error"}. <u>EphemeraError: ${msg}</u>`, 480)
+        console.error(`Uncaught ${err.name || "Error"} running simulation.ephemera[${i}]:${msg}\nat:`, simulation.ephemera[i])
+        simulation.ephemera.splice(i, 1)
+        break; //because the array order is messed up after splice
+      }
     }
   },
   mouse: {
@@ -391,7 +399,9 @@ const simulation = {
   },
   updateGunHUD() {
     for (let i = 0, len = b.inventory.length; i < len; ++i) {
-      document.getElementById(b.inventory[i]).innerHTML = `${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].ammo}`
+      let what = b.guns[b.inventory[i]], ammoType = what.ammoType || 'ammo',
+      dispText = (ammoType == 'durability' ? `${what.durability}/${what.maxDurability} <em style="font-size: 20px;">durability</em>` : ammoType == 'ammo' ? what.ammo : Infinity)
+      document.getElementById(b.inventory[i]).innerHTML = `${what.name} - ${dispText}`
     }
   },
   makeGunHUD() {
@@ -404,7 +414,9 @@ const simulation = {
     for (let i = 0, len = b.inventory.length; i < len; ++i) {
       const node = document.createElement("div");
       node.setAttribute("id", b.inventory[i]);
-      const textNode = document.createTextNode(`${b.guns[b.inventory[i]].name} - ${b.guns[b.inventory[i]].ammo}`); //b.guns[b.inventory[i]].name + " - " + b.guns[b.inventory[i]].ammo);
+      let what = b.guns[b.inventory[i]], ammoType = what.ammoType || 'ammo',
+      dispText = (ammoType == 'durability' ? `${what.durability}/${what.maxDurability} <em style="font-size: 20px;">durability</em>` : ammoType == 'ammo' ? what.ammo : Infinity)
+      const textNode = document.createTextNode(`${what.name} - ${dispText}`)
       node.appendChild(textNode);
       document.getElementById("guns").appendChild(node);
     }
@@ -844,14 +856,16 @@ const simulation = {
   gravity() {
     function addGravity(itms, magnitude) {
       itms.forEach(who => {
-        if (who.static ? who.static.isRequested : false) {
-          Matter.Body.setVelocity(who, {x: 0, y: 0})
-          Matter.Body.setPosition(who, who.static.where)
-        } else {
-          who.force.y += who.mass * magnitude;
-        }
-        if (who.static ? (who.static.disableRotation || who.static.inertia === Infinity || who.static.angularVelocity === 0) : who.inertia === Infinity) {
-          Matter.Body.setAngularVelocity(who, 0)
+        if (who) {
+          if (who.static ? who.static.isRequested : false) {
+            Matter.Body.setVelocity(who, {x: 0, y: 0})
+            Matter.Body.setPosition(who, who.static.where)
+          } else {
+            who.force.y += who.mass * magnitude;
+          }
+          if (who.static ? (who.static.disableRotation || who.static.inertia === Infinity || who.static.angularVelocity === 0) : who.inertia === Infinity) {
+            Matter.Body.setAngularVelocity(who, 0)
+          }
         }
       })
     }
