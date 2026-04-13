@@ -170,7 +170,7 @@ const powerUps = {
   totalPowerUps: 0, //used for tech that count power ups at the end of a level
   do() { },
   setPowerUpMode() {
-    if (tech.duplicationChance() > 0 || tech.isAnthropicTech) {
+    if (tech.duplicationChance() > 0 || tech.isAnthropicTech || tech.isGUT) {
       powerUps.draw = powerUps.drawDup
       if (tech.isPowerUpsVanish) {
         if (tech.isHealAttract) {
@@ -1702,7 +1702,7 @@ const powerUps = {
         let options = [], weights = []; //generate all options
         optionLengthNoDuplicates = 0
         for (let i = 0; i < tech.tech.length; i++) {
-          if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isBanished) {
+          if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isBanished && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) {
             if (tech.tech[i].frequency > 0) optionLengthNoDuplicates++
             options.push(i);
             weights.push(Math.max(tech.tech[i].frequency, Math.pow(10, -16)))
@@ -1792,7 +1792,7 @@ const powerUps = {
             if (Math.random() < tech.junkChance + level.junkAdded) { // choose is set to a random JUNK tech
               const list = []
               for (let i = 0; i < tech.tech.length; i++) {
-                if (tech.tech[i].isJunk) list.push(i)
+                if (tech.tech[i].isJunk && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) list.push(i)
               }
               chooseJUNK = list[Math.floor(Math.random() * list.length)]
               if (tech.isRetain) powerUps.retainList.push(tech.tech[chooseJUNK].name)
@@ -1816,7 +1816,7 @@ const powerUps = {
           if (tech.isExtraBotOption) {
             const botTech = [] //make an array of bot options
             for (let i = 0, len = tech.tech.length; i < len; i++) {
-              if (tech.tech[i].isBotTech && tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isRecentlyShown) botTech.push(i)
+              if (tech.tech[i].isBotTech && tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isRecentlyShown && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) botTech.push(i)
             }
             if (botTech.length > 0) { //pick random bot tech
               // const choose = botTech[Math.floor(Math.random() * botTech.length)];
@@ -1864,7 +1864,7 @@ const powerUps = {
           if (tech.isMicroTransactions && powerUps.research.count > 0) {
             const skins = [] //find skins
             for (let i = 0; i < tech.tech.length; i++) {
-              if (tech.tech[i].isSkin && tech.tech[i].allowed() && tech.tech[i].name !== "microtransactions") skins.push(i)
+              if (tech.tech[i].isSkin && tech.tech[i].allowed() && tech.tech[i].name !== "microtransactions" && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) skins.push(i)
               if (tech.tech[i].name === "microtransactions" && Math.random() < 0.37) skins.push(i)
             }
             for (let j = 0, len = (tech.isMicroTransactions || 1); j < len; j++) {
@@ -1890,7 +1890,7 @@ const powerUps = {
           if (tech.isCompositions && powerUps.research.count > 0) {
             const comps = [] //find compositions
             for (let i = 0; i < tech.tech.length; i++) {
-              if (tech.tech[i].isComposite && tech.tech[i].allowed() && tech.tech[i].name !== "compositioning") comps.push(i)
+              if (tech.tech[i].isComposite && tech.tech[i].allowed() && tech.tech[i].name !== "compositioning" && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) comps.push(i)
               if (tech.tech[i].name === "compositioning" && Math.random() < 0.37) comps.push(i)
             }
             for (let j = 0, len = (tech.isCompositions || 1); j < len; j++) {
@@ -2033,7 +2033,28 @@ const powerUps = {
   onPickUp(who) {
     powerUps.totalUsed++
     powerUps.research.currentRerollCount = 0
-    if (tech.isTechDamage && who.name === "tech") m.takeDamage(0.1)
+    if (tech.isTechDamage && who.name === "tech") {
+      if ((!tech.isEnergyHealth && m.health < 0.1 * m.defense()) || (tech.isEnergyHealth && m.energy < 0.1 * Math.pow(m.defense(), 0.6))) {
+        for (let i = 0; i < tech.tech.length; i++) {
+          if (tech.tech[i].name === "antiscience") {
+            powerUps.ejectTech(i)
+            if (tech.isEnergyHealth) {
+              simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-f'>energy</span> = ${(100 * m.energy).toFixed(1)} <em>//ejecting antiscience to prevent m.death()</em>`)
+            } else {
+              simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-h'>health</span> = ${(100 * m.health).toFixed(1)} <em>//ejecting antiscience to prevent m.death()</em>`)
+            }
+            break
+          }
+        }
+      } else {
+        m.takeDamage(0.1)
+        if (tech.isEnergyHealth) {
+          simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-f'>energy</span> <span class='color-symbol'>-=</span> ${(10 * Math.pow(m.defense(), 0.6)).toFixed(1)} <em>//antiscience</em>`)
+        } else {
+          simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-h'>health</span> <span class='color-symbol'>-=</span> ${(10 * m.defense()).toFixed(1)} <em>//antiscience</em>`)
+        }
+      }
+    }
     if (tech.isPairProduction) {
       m.energy += 2 * level.isReducedRegen;
       m.immuneCycle -= 30
@@ -2374,23 +2395,44 @@ const powerUps = {
         name = "Casimir"
         size = powerUps[name].size()
       }
-      powerUps.directSpawn(x, y, name, moving, size, false)
-      if (!level.isNextLevelPowerUps) {
-        for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance()), 0); i++) { //for dupe chance higher than 100%
-          powerUps.directSpawn(x, y, name, moving, size, true)
-          powerUp[powerUp.length - 1].isDuplicated = true
-          if (tech.isDupEnergy) {
-            m.energy *= 2
-            for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
-          }
+      if (tech.isGUT && ["coupling", "field", "gun"].includes(name)) {
+        if (name === "coupling") {
+            powerUps.directSpawn(x + 15, y, "coupling", moving, size, false)
+            powerUps.directSpawn(x - 15, y, "coupling", moving, size, true)
+        } else {
+          size = powerUps.coupling.size()
+          powerUps.directSpawn(x - 10, y + 10, "coupling", moving, size, true)
+          powerUps.directSpawn(x + 10, y + 10, "coupling", moving, size, true)
+          powerUps.directSpawn(x - 10, y - 10, "coupling", moving, size, true)
+          powerUps.directSpawn(x + 10, y - 10, "coupling", moving, size, true) 
         }
-        if (Math.random() < (tech.duplicationChance() % 1)) {
-          powerUps.directSpawn(x, y, name, moving, size, true)
-          powerUp[powerUp.length - 1].isDuplicated = true
-          if (tech.isDupEnergy) {
-            m.energy *= 2
-            for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
-          }
+        if (tech.isDupEnergy) {
+          m.energy *= 2
+          for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
+        }
+      } else {
+        powerUps.dupSpawn(x, y, name, moving, size)
+      }
+    }
+  },
+  dupSpawn(x, y, name, moving = true, size = powerUps[name].size()) {
+    powerUps.setPowerUpMode()
+    powerUps.directSpawn(x, y, name, moving, size, false)
+    if (!level.isNextLevelPowerUps) {
+      for (let i = 0; i < Math.max(Math.floor(tech.duplicationChance()), 0); i++) { //for dupe chance higher than 100%
+        powerUps.directSpawn(x, y, name, moving, size, true)
+        powerUp[powerUp.length - 1].isDuplicated = true
+        if (tech.isDupEnergy) {
+          m.energy *= 2
+          for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
+        }
+      }
+      if (Math.random() < (tech.duplicationChance() % 1)) {
+        powerUps.directSpawn(x, y, name, moving, size, true)
+        powerUp[powerUp.length - 1].isDuplicated = true
+        if (tech.isDupEnergy) {
+          m.energy *= 2
+          for (let i = 0; i < 3; i++) simulation.energyGenGraphic()
         }
       }
     }
@@ -2429,10 +2471,9 @@ const powerUps = {
       polygonSides = tech.isPowerUpsVanish ? 3 : Math.floor(4 + 2 * Math.random())
       properties.isDuplicated = true
     } else {
-      properties.inertia = Infinity //prevents rotation for circles only
       polygonSides = 12
+      properties.inertia = Infinity //prevents rotation for circles only
     }
-
     let smallNames = ["Casimir"] //["heal", "research", "ammo","coupling", "boost"]
     let healing = Math.pow((size / 40 / (simulation.healScale ** 0.25)), 2)
     let healOutput = (healing > 0 ? Math.min(m.maxHealth - m.health, healing) : -1) 

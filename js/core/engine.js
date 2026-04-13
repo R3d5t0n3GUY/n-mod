@@ -139,7 +139,7 @@ function playerOnGroundCheck(event) {
           if (tech.isFallingDamage && m.immuneCycle < m.cycle && momentum > 150) {
              const dmg = Math.min(Math.sqrt(momentum - 100) * 0.04, 0.8)
               m.takeDamage(dmg);
-              if (tech.isFallWave) {
+              if (tech.isFallWave && tech.isFallingDamage && momentum < 150) {
                 simulation.ephemera.push({
                   name: `hardLandWave ${simulation.newEphemeraID()}`,
                   count: Math.floor(0.13 * m.hardLandCDScale * (momentum / 6.5 - 6)), //cycles before it self removes
@@ -236,6 +236,10 @@ function collisionChecks(event) {
               for (let i = 0; i < 9; i++) simulation.energyGenGraphic()
             }
             if (tech.isExplodeContact) b.explosion(m.pos, 450);
+            if (tech.isConchoidal) {
+              m.damageDone /= tech.conchoidalDamage
+              tech.conchoidalDamage = 1
+            }
             if (tech.isCouplingNoHit && m.coupling > 0) {
               m.couplingChange(-3)
 

@@ -295,7 +295,7 @@ const b = {
     b.fireCDscale = tech.fireRate * tech.slowFire * tech.researchHaste * tech.slowFireDamage
     if (level.isSlowFireRate) b.fireCDscale *= 2
     if (m.fieldMode === 6) b.fireCDscale *= 0.8
-    //if (tech.isGrabFireRate && m.ledgeCoyote !== 0) b.fireCDscale *= 0.33
+    if (tech.isGrabFireRate && m.ledgeCoyote !== 0) b.fireCDscale *= 0.33
     if (tech.isFireRateForGuns) b.fireCDscale *= 1 / (1 + 0.35 * Math.max(0, b.inventory.length - 1)) //CDscale = 1 / (1 + (0.3 * count)); // Math.pow(0.76923, Math.max(0, b.inventory.length - 1))
     if (tech.isFireMoveLock) b.fireCDscale *= 0.25
     if (tech.isFastTime) b.fireCDscale *= Math.pow(0.66, tech.fasterTime);
@@ -10904,61 +10904,63 @@ const b = {
         ];
         const pommel = Bodies.fromVertices(x, y + handleHeight / 2, pommelVertices, spawn.propsIsNotHoldable);
         const handle2Vertices = [
-          { x: x + 120, y: y - 140 },
           { x: x + 100, y: y - 140 },
+          { x: x + 120, y: y - 140 },
           { x: x + 23, y: y },
           { x: x + 3, y: y },
         ];
         const handle2 = Bodies.fromVertices(x + 50, y - handleHeight / 2 - 70, handle2Vertices, spawn.propsIsNotHoldable);
-        const joint = Bodies.polygon(x + 100, y - handleHeight - 20, 5, 30, spawn.propsIsNotHoldable);	
+        
+        const joint = Bodies.polygon(x + 100, y - handleHeight - 20, 5, 30, spawn.propsIsNotHoldable);
+
         const joint2 = Bodies.polygon(x, y - handleHeight / 2, 3, 20, spawn.propsIsNotHoldable);
         Body.rotate(joint2, Math.PI / 2)
-        
+
         const blade1Vertices = [
           { x: x - 5, y: y - 10 },
           { x: x - 15, y: y + 10 },
-          { x: x - 100, y: y - 35 },
           { x: x - 60, y: y },
+          { x: x - 100, y: y - 35 },
         ];
         const blade1 = Bodies.fromVertices(x + 50, y - handleHeight / 2 - 150, blade1Vertices, spawn.propsIsNotHoldable);
 
         const blade2Vertices = [
           { x: x - 10, y: y - 10 },
           { x: x + 15, y: y + 10 },
-          { x: x - 100, y: y - 30 },
           { x: x - 60, y: y },
+          { x: x - 100, y: y - 30 },
         ];
-        const blade2 = Bodies.fromVertices(x + 100, y - handleHeight / 2 - 150, blade2Vertices, spawn.propsIsNotHoldable);		
+        const blade2 = Bodies.fromVertices(x + 100, y - handleHeight / 2 - 150, blade2Vertices, spawn.propsIsNotHoldable);
 
         const blade3Vertices = [
           { x: x - 10, y: y - 10 },
           { x: x + 15, y: y + 10 },
-          { x: x - 90, y: y - 30 },
           { x: x - 60, y: y },
+          { x: x - 90, y: y - 30 },
         ];
-        const blade3 = Bodies.fromVertices(x + 150, y - handleHeight / 2 - 130, blade3Vertices, spawn.propsIsNotHoldable);		
+        const blade3 = Bodies.fromVertices(x + 150, y - handleHeight / 2 - 130, blade3Vertices, spawn.propsIsNotHoldable);
 
         const blade4Vertices = [
           { x: x, y: y - 10 },
           { x: x + 15, y: y + 10 },
-          { x: x - 90, y: y - 25 },
           { x: x - 60, y: y + 5 },
+          { x: x - 90, y: y - 25 },
         ];
         const blade4 = Bodies.fromVertices(x - 20, y - handleHeight / 2 - 160, blade4Vertices, spawn.propsIsNotHoldable);
 
         const blade5Vertices = [
           { x: x, y: y - 30 },
           { x: x + 15, y: y - 10 },
-          { x: x - 90, y: y - 25 },
           { x: x - 60, y: y },
+          { x: x - 90, y: y - 25 },
         ];
         const blade5 = Bodies.fromVertices(x - 90, y - handleHeight / 2 - 160, blade5Vertices, spawn.propsIsNotHoldable);
 
         const blade6Vertices = [
           { x: x + 10, y: y - 15 },
           { x: x + 30, y: y + 4 },
-          { x: x - 90, y: y + 10 },
           { x: x - 30, y: y + 20 },
+          { x: x - 90, y: y + 10 },
         ];
         const blade6 = Bodies.fromVertices(x - 150, y - handleHeight / 2 - 150, blade6Vertices, spawn.propsIsNotHoldable);
 

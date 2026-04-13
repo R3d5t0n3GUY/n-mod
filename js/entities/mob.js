@@ -1251,6 +1251,10 @@ const mobs = {
           }
 
           if (tech.isVerlet && !m.isTimeDilated) {
+            if (tech.isBarycenter) {
+              b.orbitBot(player.position, false);
+              bullet[bullet.length - 1].endCycle = simulation.cycle + 1320 //15 seconds
+            }
             requestAnimationFrame(() => {
               simulation.timePlayerSkip(this.isBoss ? 60 : 30)
               simulation.loop(); //ending with a wipe and normal loop fixes some very minor graphical issues where things are draw in the wrong locations
@@ -1320,6 +1324,11 @@ const mobs = {
                 });
               }
             }
+          }
+          if (tech.isConchoidal) {
+            const dmg = 1.04
+            m.damageDone *= dmg
+            tech.conchoidalDamage *= dmg
           }
           if (tech.isExplodeMob) {
             b.explosion(this.position, Math.min(700, Math.sqrt(this.mass + 6) * (30 + 60 * Math.random())))

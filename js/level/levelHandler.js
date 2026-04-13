@@ -279,6 +279,25 @@ const level = {
       // if (h > healPerOrb) powerUps.spawnDelay("heal", h);
       // simulation.inGameConsole(`${(Math.ceil(tech.interestRate * 100)).toFixed(0)}<span class='color-symbol'>%</span> <span class='color-m'>interest</span> on <span class='color-h'>health</span> <span class='color-symbol'>=</span> ${h > 20 ? h + powerUps.orb.heal(1) : powerUps.orb.heal(h)}`)
     }
+    if (tech.interestRateGuns) {
+      let rate = tech.interestRateGuns
+      if (level.onLevel < level.levels.length - 1) {//make sure it's not on the lore level which has an undefined name
+        const levelName = level.levels[level.onLevel]
+        if (levelName === "final") rate *= 1 / 5
+      }
+      if (rate > 0) {
+        let a = 0
+        for (let i = 0; i < b.inventory.length; i++) {
+          const gun = b.guns[b.inventory[i]]
+          let ratio = gun.ammo / gun.ammoPack
+          if (Number.isFinite(ratio)) a += ratio
+        }
+        a *= rate / b.inventory.length / 2
+        a = Math.ceil(a)
+        simulation.inGameConsole(`${(rate * 100).toFixed(0)}<span class='color-symbol'>%</span> <span class='color-m'>interest</span> on <span class='color-ammo'>ammo</span> <span class='color-symbol'>=</span> ${powerUps.orb.ammo(1)}`)
+        powerUps.spawnDelay("ammo", a, 4);
+      }
+    }
     if (tech.isEjectOld) {
       let index = null //find oldest tech that you have
       for (let i = 0; i < tech.tech.length; i++) {
