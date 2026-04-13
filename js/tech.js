@@ -54,6 +54,11 @@ const tech = {
     tech.duplication = 0;
     m.damageDone = 1
     m.damageReduction = 1
+    tech.pauseEjectTech = 1
+    tech.fireRate = 1
+    tech.slowFire = 1
+    tech.researchHaste = 1
+    tech.slowFireDamage =1
     powerUps.difficulty.setDamageAndDefense()
     tech.junkChance = 0;
     tech.extraMaxHealth = 0;
@@ -4921,6 +4926,8 @@ const tech = {
       requires: "no research",
       effect() {
         tech.isRerollHaste = true;
+        if (!tech.researchHaste) tech.researchHaste = 1
+        tech.researchHaste *= 0.5
         powerUps.research.changeRerolls(0)
         b.setFireCD();
       },
@@ -16055,5 +16062,9 @@ const tech = {
       simulation.updateTechHUD();
     }
   },
-  pauseEjectTech: 1
+  pauseEjectTech: 1,
+  fireRate: 1,
+  slowFire: 1,
+  researchHaste: 1,
+  slowFireDamage: 1,
 }
