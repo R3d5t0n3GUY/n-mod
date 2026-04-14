@@ -1462,42 +1462,28 @@ const tech = {
       gunSelect() {
         let pickList = b.guns;
         if (b.inventory.length > 0) { //prioritize guns in the player's inventory
-          for (let j = 0; j < 1; j++) {
+          for (let j = 0; j < 2; j++) {
             pickList = pickList.concat(b.inventory);
-            for (let i = 0; i < 3; i++) {
+            if (tech.marginalGunIndex != b.activeGun) for (let i = 0; i < 4; i++) {
               pickList.push(b.guns[b.activeGun]);
             }
           }
         }
-        pickList = pickList.filter(function (item) {
-          try {
-            return item.ammo != undefined;
-          } catch (e) {
-            return false
-          }
-        });
         let idx = Math.floor(Math.random() * (pickList.length - 1));
         let isGunInfinite = false;
-        if (pickList[idx].name === "scythe") {
-          isGunInfinite = !(tech.isAmmoScythe || tech.durabilityScythe);
-        } else {
-          isGunInfinite = (pickList[idx].ammo === Infinity || pickList[idx].name === "laser") &&
-            (pickList[idx].durability === undefined);
+        if (pickList[idx].ammoType) {
+          isGunInfinite = pickList[idx] == 'health' || pickList[idx] == 'energy' || [Infinity, NaN, null, undefined].includes(pickList[idx].ammoType == 'durability' ? pickList[idx].durability : pickList[idx].ammo) 
         }
         while (isGunInfinite) {//keep rerolling gun pick until selection has finite ammo/durability
           idx = Math.floor(Math.random() * (pickList.length - 1));
-          if (pickList[idx].name === "scythe") {
-            isGunInfinite = !(tech.isAmmoScythe || tech.durabilityScythe);
-          } else {
-            isGunInfinite = (pickList[idx].ammo === Infinity || pickList[idx].name === "laser") &&
-              (pickList[idx].durability === undefined);
-          }
+          isGunInfinite = pickList[idx] == 'health' || pickList[idx] == 'energy' || [Infinity, NaN, null, undefined].includes(pickList[idx].ammoType == 'durability' ? pickList[idx].durability : pickList[idx].ammo) 
         }
         return b.guns.indexOf(pickList[idx]);
       },
       descriptionFunction() {
         if (this.count === 0) tech.marginalGunIndex = this.gunSelect() //don't pick laser
-        return `<strong>2x</strong> <strong class='color-ammo'>ammo</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
+        let tag = (b.guns[tech.marginalGunIndex].ammoType == 'durability' ? 'em' : 'strong'), name = (b.guns[tech.marginalGunIndex].ammoType == 'durability' ? 'durability' : 'ammo')
+        return `<strong>2x</strong> <${tag} class='color-ammo'>${name}</${tag}> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
       },
       maxCount: 9,
       count: 0,
@@ -5002,7 +4988,7 @@ const tech = {
     {
       name: "unified field theory",
       description: `when <strong>paused</strong> you can click to <strong>change</strong> your ${powerUps.orb.field()}
-      <br><strong>2x</strong> frequency for <em class='flicker'>${powerUps.orb.fieldTech()}</em>`,
+      <br><strong>2x</strong> <em class='flicker'>frequency</em> for ${powerUps.orb.fieldTech()}`,
       isPacifist: true,
       maxCount: 1,
       count: 0,
