@@ -1107,7 +1107,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       }
     }
 
-    requestAnimFrames(5, () => {document.getElementById("sort-input").focus()});
+    requestAnimFrames(2, () => {document.getElementById("sort-input").focus()});
   },
   nameLink(text) { //converts text into a clickable wikipedia search
     return `<a target="_blank" href='https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(text).replace(/' /g, '%27')}&title=Special:Search' class="link">${text}</a>`
@@ -1115,6 +1115,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   getExperimentBuild() {
     let experimentBuild = {
       fieldIndex: m.fieldMode,
+      molecularMode: simulation.molecularMode || 0,
       gunIndexes: b.inventory,
       techIndexes: []
     }
@@ -1133,7 +1134,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       reader.onload = function (e) {
         let importedBuild = e.target.result
         importedBuild = importedBuild.parseAsJSON();
+        build.reset(true);
         m.fieldMode = importedBuild.fieldIndex || 0
+        simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
         b.inventory = importedBuild.gunIndexes || []
         let newTech = importedBuild.techIndexes || []
         for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
@@ -1151,7 +1154,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                   }
                   break;
                 case 'object':
-                  if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++){
+                  if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++) {
                     tech.tech[j].effect()
                     tech.tech[j].count++
                     if (!tech.tech[j].isInstant) tech.totalCount++
@@ -1166,8 +1169,10 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
           }
         })
         for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
-        requestAnimFrames(3, build.populateGrid);
+        build.populateGrid();
         simulation.isTextLogOpen = oldTexlLogStatus
+        console.clear()
+        console.log('build imported!')
       }
       reader.readAsText(file)
     }
@@ -1184,12 +1189,14 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
   },
-  reset() {
+  reset(isOnImport = false) {
     build.isExperimentSelection = true;
     build.isExperimentRun = true;
-    simulation.startGame(true); //starts game, but pauses it
-    build.isExperimentSelection = true;
-    build.isExperimentRun = true;
+    if (!isOnImport) {
+      simulation.startGame(true); //starts game, but pauses it
+      build.isExperimentSelection = true;
+      build.isExperimentRun = true;
+    }
     simulation.paused = true;
     b.inventory = []; //removes guns and ammo
     for (let i = 0, len = b.guns.length; i < len; ++i) {
@@ -1201,8 +1208,10 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     b.inventoryGun = 0;
     simulation.makeGunHUD();
     tech.resetAllTech();
-    build.populateGrid();
-    document.getElementById("field-0").classList.add("build-field-selected");
+    if (!isOnImport) {
+      build.populateGrid();
+      document.getElementById("field-0").classList.add("build-field-selected");
+    }
     document.getElementById("experiment-grid").style.display = "grid"
     setTimeout(() => { document.body.style.cursor = "auto" }, 100)
   },
