@@ -11736,8 +11736,10 @@ const communityLevels = {
           videoContainer.paused = false;
           video.play();
         }
-      } catch (e) {}
-      requestAnimationFrame(checkVid);
+        requestAnimationFrame(checkVid);
+      } catch (e) {
+        console.warn(e)
+      }
     }
     checkVid();
     simulation.ephemera.push({
