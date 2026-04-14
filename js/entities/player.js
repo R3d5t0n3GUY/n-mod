@@ -746,6 +746,9 @@ const m = {
       id.style.backgroundColor = "hsl(160, 93%, 50%)";
     }
   },
+  get healthString() {
+    return `<strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>`
+  },
   addHealth(heal) {
     if (!tech.isEnergyHealth) {
       m.health += heal * simulation.healScale * (level.isLowHeal ? 0.5 : 1);

@@ -8718,9 +8718,9 @@ const b = {
     {
       name: "sword",
       descriptionFunction() { 
-        return `swing a <b>sword</b> that <b style="color: indigo;">lifesteals</b> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>
-        <br>drains <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> instead of ammunition
-        <br>doesn't use <b>ammo</b>` },
+        return `swing a <b>sword</b> that <b style="color: indigo;">lifesteals</b> ${m.healthString}
+        <br>drains ${tech.isEnergyHealth ? 40 : 10} ${m.healthString} per second
+        <br>and <strong>0</strong> <strong class='color-ammo'>ammo</strong>` },
       get ammoType() { //sword never uses durability or ammo
         return 'health'
       },
@@ -10477,7 +10477,11 @@ const b = {
     },
     {
       name: "scythe",
-      descriptionFunction() { return `throw a <b>scythe</b> that keeps velocity upon collisions<br>drains <strong class='color-h'>health</strong> instead of ammunition<br>doesn't use <b>ammo</b>` },
+      descriptionFunction() {
+        return `throw a <b>scythe</b> that keeps velocity upon collisions
+        <br>drains ${m.healthString} instead of ammunition
+        <br>doesn't use <b>ammo</b>`
+      },
       ammoType: "health",
       ammo: 17,
       ammoPack: 1,

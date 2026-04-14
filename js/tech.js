@@ -3217,7 +3217,7 @@ const tech = {
       name: "NOR gate",
       descriptionFunction() {
         return `if <strong>flip-flop</strong> is <strong class='color-flop'>OFF</strong>
-      	<br>your next <strong>collision</strong> won't reduce <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>`
+      	<br>your next <strong>collision</strong> won't reduce ${m.healthString}`
       },
       isPacifist: true,
       maxCount: 1,
@@ -3239,7 +3239,7 @@ const tech = {
       name: "shape-memory alloy",
       descriptionFunction() {
         return `if <strong>flip-flop</strong> is <strong class='color-flop'>ON</strong>
-      	<br><strong>+400</strong> maximum <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> and <strong>2x</strong> <strong class='color-h'>healing</strong> from ${powerUps.orb.heal()}`
+      	<br><strong>+400</strong> maximum ${m.healthString} and <strong>2x</strong> ${m.healthString} from ${powerUps.orb.heal()}`
       },
       isPacifist: true,
       maxCount: 1,
@@ -3708,7 +3708,7 @@ const tech = {
     {
       name: "refrigerant",
       descriptionFunction() {
-        return `after losing at least <strong>5</strong> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>
+        return `after losing at least <strong>5</strong> ${m.healthString}
         <br><strong class='color-s'>freeze</strong> all mobs for <strong>7</strong> seconds`
       },
       isPacifist: true,
@@ -3940,7 +3940,7 @@ const tech = {
     {
       name: "recycling",
       descriptionFunction() {
-        return `if a mob has <strong>died</strong> in the last <strong>5</strong> seconds<br>recover <strong>0.005x</strong> maximum <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> every second`
+        return `if a mob has <strong>died</strong> in the last <strong>5</strong> seconds<br>recover <strong>0.005x</strong> maximum ${m.healthString} every second`
       },
       maxCount: 1,
       count: 0,
@@ -3959,7 +3959,7 @@ const tech = {
     {
       name: "fluoroantimonic acid",
       descriptionFunction() {
-        return `if your <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> is above <strong>100</strong>
+        return `if your ${m.healthString} is above <strong>100</strong>
         <br><strong>1.35x</strong> <strong class='color-d'>damage</strong>`
       },
       maxCount: 1,
@@ -3980,7 +3980,7 @@ const tech = {
     {
       name: "control theory",
       descriptionFunction() {
-        return `<strong>2x</strong> <strong class='color-d'>damage</strong><br>while your <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> is at maximum`
+        return `<strong>2x</strong> <strong class='color-d'>damage</strong><br>while your ${m.healthString} is at maximum`
       },
       maxCount: 1,
       count: 0,
@@ -3999,7 +3999,7 @@ const tech = {
       name: "stability",
       descriptionFunction() {
         return `<strong>0.1x</strong> <strong class='color-defense'>damage taken</strong>
-        <br>while your <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> is full`
+        <br>while your ${m.healthString} is full`
       },
       maxCount: 1,
       count: 0,
@@ -4054,8 +4054,8 @@ const tech = {
       descriptionFunction() {
         // return `<strong>0.9x</strong> <strong class='color-defense'>damage taken</strong> for each ${name} missing<br><em>(${(Math.pow(0.1 * max, Math.max(0, max - h))).toFixed(2)}x)</em>`
         const scale = 0.2 //adjust this to control the strength of this effect
-        return `missing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> reduces <strong class='color-defense'>damage taken</strong>
-        <br>down to <strong>${scale}x</strong> at <strong>0</strong> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong><em style ="float: right;">(${(Math.pow(scale, Math.max(0, 1 - (tech.isEnergyHealth ? m.energy / m.maxEnergy : m.health / m.maxHealth)))).toFixed(2)}x)</em>`
+        return `missing ${m.healthString} reduces <strong class='color-defense'>damage taken</strong>
+        <br>down to <strong>${scale}x</strong> at <strong>0</strong> ${m.healthString}<em style ="float: right;">(${(Math.pow(scale, Math.max(0, 1 - (tech.isEnergyHealth ? m.energy / m.maxEnergy : m.health / m.maxHealth)))).toFixed(2)}x)</em>`
       },
       isPacifist: true,
       maxCount: 1,
@@ -4076,7 +4076,7 @@ const tech = {
     {
       name: "negative feedback",
       descriptionFunction() {
-        return `<strong>1.006x</strong> <strong class='color-d'>damage</strong> for each missing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>
+        return `<strong>1.006x</strong> <strong class='color-d'>damage</strong> for each missing ${m.healthString}
         <br><em style ="float: right;">(${(1 + 0.6 * Math.max(0, (tech.isEnergyHealth ? m.maxEnergy - m.energy : m.maxHealth - m.health))).toFixed(2)}x)</em>` //1 + 0.6 * Math.max(0, (tech.isEnergyHealth ? m.maxEnergy - m.energy : m.maxHealth - m.health))
       },
       maxCount: 1,
@@ -4098,7 +4098,7 @@ const tech = {
       name: "Zenos paradox",
       descriptionFunction() {
         return `<strong>0.3x</strong> <strong class='color-defense'>damage taken</strong>
-        <br><strong>–5%</strong> of current <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> every <strong>5</strong> seconds`
+        <br><strong>–5%</strong> of current ${m.healthString} every <strong>5</strong> seconds`
       },
       maxCount: 1,
       count: 0,
@@ -4434,7 +4434,7 @@ const tech = {
       name: "self-assembly",
       descriptionFunction() {
         return `at the start of each ${powerUps.orb.warp()}
-        <br>for every <strong>20</strong> missing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> spawn ${powerUps.orb.heal()}`
+        <br>for every <strong>20</strong> missing ${m.healthString} spawn ${powerUps.orb.heal()}`
       },
       isPacifist: true,
       maxCount: 1,
@@ -6548,7 +6548,7 @@ const tech = {
       name: "paradigm shift",
       descriptionFunction() {
         return `when <strong>paused</strong> clicking your ${powerUps.orb.tech()} <span class='color-remove'>ejects</span> them
-        <br>costs <strong>${tech.pauseEjectTech.toFixed(1)}</strong> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> <em style ="float: right;">(1.3x cost each use)</em>`
+        <br>costs <strong>${tech.pauseEjectTech.toFixed(1)}</strong> ${m.healthString} <em style ="float: right;">(1.3x cost each use)</em>`
       },
       maxCount: 1,
       count: 0,
@@ -6569,7 +6569,7 @@ const tech = {
       name: "paradigmatic analysis",
       descriptionFunction(){
         return `<span class='color-remove'>ejecting</span> ${powerUps.orb.tech()} costs ${tech.pauseEjectResearch > 9 ? `<strong>${tech.pauseEjectResearch}</strong> ${powerUps.orb.research()}` : powerUps.orb.research(tech.pauseEjectResearch)}
-          <br>instead of <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> <em style ="float: right;">(+1 cost each use)</em>`
+          <br>instead of ${m.healthString} <em style ="float: right;">(+1 cost each use)</em>`
       },
       maxCount: 1,
       count: 0,
@@ -8132,7 +8132,7 @@ const tech = {
       name: "shaped charge",
       descriptionFunction(){
         return `use ${powerUps.orb.research(2)} to dynamically <strong>reduce</strong>
-        <br>all <strong class='color-e'>explosions</strong> to prevent <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> loss`
+        <br>all <strong class='color-e'>explosions</strong> to prevent ${m.healthString} loss`
       },
       isGunTech: true,
       maxCount: 1,
@@ -8710,7 +8710,7 @@ const tech = {
       name: "mutualism",
       descriptionFunction() {
         return `<strong>3x</strong> ${b.guns[6].nameString()} <strong class='color-d'>damage</strong>
-        <br>${b.guns[6].nameString('s')} borrow <strong>${tech.isSporeWorm || tech.isSporeFlea ? 2 : 1}</strong> <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> until they <strong>die</strong>`
+        <br>${b.guns[6].nameString('s')} borrow <strong>${tech.isSporeWorm || tech.isSporeFlea ? 2 : 1}</strong> ${m.healthString} until they <strong>die</strong>`
       },
       isGunTech: true,
       maxCount: 1,
@@ -8928,7 +8928,7 @@ const tech = {
     {
       name: "ablative drones",
       descriptionFunction() {
-        return `after losing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> there is a chance
+        return `after losing ${m.healthString} there is a chance
         <br>to rebuild your broken parts as <strong>drones</strong>`
       },
       isGunTech: true,
@@ -11670,7 +11670,7 @@ const tech = {
     {
       name: "radiative equilibrium",
       descriptionFunction() {
-        return `after losing <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> ${tech.isEnergyHealth ? "from collisions" : ""}
+        return `after losing ${m.healthString} ${tech.isEnergyHealth ? "from collisions" : ""}
             	<br><strong>4x</strong> <strong class='color-d'>damage</strong> for <strong>4</strong> seconds`
       },
       isFieldTech: true,
@@ -11692,7 +11692,7 @@ const tech = {
     {
       name: "dynamic equilibrium",
       descriptionFunction() {
-        return `increase <strong class='color-d'>damage</strong> by your most recent <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong> loss
+        return `increase <strong class='color-d'>damage</strong> by your most recent ${m.healthString} loss
             	<br> <em style ="float: right;">(${(1 + (tech.lastHitDamage === 0 ? 6 : tech.lastHitDamage) * m.lastHit).toFixed(2)}x)</em>`
       },
       isFieldTech: true,
@@ -12565,7 +12565,7 @@ const tech = {
       name: "symbiosis",
       descriptionFunction() {
         return `after a <strong>boss</strong> <strong>dies</strong> spawn ${powerUps.orb.research(4)}${powerUps.orb.heal(3)}${powerUps.orb.tech()}
-        <br>after a <strong>mob</strong> <strong>dies</strong> <strong>–0.25</strong> maximum <strong class='color-${tech.isEnergyHealth ? "f'>energy" : "h'>health"}</strong>`
+        <br>after a <strong>mob</strong> <strong>dies</strong> <strong>–0.25</strong> maximum ${m.healthString}`
       },
       isFieldTech: true,
       maxCount: 1,
