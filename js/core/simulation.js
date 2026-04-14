@@ -1055,7 +1055,7 @@ const simulation = {
 
     //set to default field
     tech.healMaxEnergyBonus = 0
-    m.energy = 0
+    m.energy = 0.1
     m.immuneCycle = 0;
     m.coupling = 0
     m.setField(0) //this calls m.couplingChange(), which sets max health and max energy
