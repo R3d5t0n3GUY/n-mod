@@ -1107,7 +1107,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       }
     }
 
-    requestAnimFrames(2, () => {document.getElementById("sort-input").focus()});
+    setTimeout(() => { document.getElementById("sort-input").focus() }, 100)
   },
   nameLink(text) { //converts text into a clickable wikipedia search
     return `<a target="_blank" href='https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(text).replace(/' /g, '%27')}&title=Special:Search' class="link">${text}</a>`
@@ -1697,6 +1697,9 @@ window.addEventListener("keydown", function (event) {
     } else {
       if (event.key === "Escape") { //keypress to close chat window
         simulation.closeChatWindow();
+      } else if (event.key === "Enter" && event.ctrlKey) { //the idea is that CTRL+Enter executes the command, while Enter simply adds a new line
+        let chatInput = document.getElementById('chat-input')
+        cmdConsole.requestCmd(chatInput.value);
       } else if (cmdConsole.isUpDnSwitch) {
         if (event.key === "ArrowUp") {
           cmdConsole.switchCmd(-1)
@@ -1936,13 +1939,7 @@ window.addEventListener("keydown", function (event) {
         m.setField(mode);
       }
       if (event.key === "Enter") {
-        if (simulation.isChatMenuOpen) {
-          if (event.ctrlKey) { //the idea is that CTRL+Enter executes the command, while Enter simply adds a new line. not sure if it actually works
-            document.getElementById('execute-command').click();
-          }
-        } else {
-          simulation.openChatMenu();
-        }
+        simulation.openChatMenu();
       }
       if (event.key === "`") {
         powerUps.directSpawn(simulation.mouseInGame.x, simulation.mouseInGame.y, "coupling");
