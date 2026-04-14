@@ -571,7 +571,7 @@ const powerUps = {
       return 30
     },
     load(name) {
-      level.levels[level.onLevel + 1] = name
+      if (name) level.levels[level.onLevel + 1] = name
       powerUps.warp.exit()
       level.nextLevel();
       // simulation.clearNow = true
@@ -605,7 +605,7 @@ const powerUps = {
       //build level info
       /* document.getElementById("choose-grid").classList.add('choose-grid-no-images');
       document.getElementById("choose-grid").classList.remove('choose-grid');*/
-      let text = `<div class="choose-grid-module" style="font-size: 1.5rem;color:rgb(110,155,160);text-align:center;" onclick="powerUps.warp.load('${level.levels[level.onLevel + 1]}')" title="Warp to the next level"><strong>WARP</strong></div>`,
+      let text = `<div class="choose-grid-module warp-header" style="font-size: 1.5rem;color:rgb(110,155,160);text-align:center;" onclick="powerUps.warp.load()" title="Warp to the next level"><strong>WARP</strong></div>`,
       width, tag1 = `<div class="${localSettings.isHideImages ? "choose-grid-module" : "choose-grid-module card-background"}" onclick="powerUps.warp.load('`,
       tag2 = function(list){
         return `</div><div ${list ? `id="${list}"`: "class='warp-grid-column'"}><div class="choose-grid-module" style="color:rgb(110,155,160);background-color:#444;text-align:center;">level.${list}</div>`
@@ -624,7 +624,7 @@ const powerUps = {
         text += "<div></div>"
       } */
 
-      text += `<div class="choose-grid-module" id="exit" style="font-size: 1rem;color:rgb(110,155,160);text-align:right;padding-right:5px;"><strong>cancel</strong></div>`
+      text += `<div class="choose-grid-module warp-header" onclick="powerUps.warp.exit()" style="font-size: 1rem;color:rgb(110,155,160);text-align:right;padding-right:5px;"><strong>cancel</strong></div>`
       text += `<div id="warp-choose-grid"><div id="uniqueLevels"><div class="choose-grid-module" style="font-size: 1rem;color:rgb(110,155,160);background-color:#444;text-align:center;">level.uniqueLevels</div>`
       text += powerUps.warpText(level.uniqueLevels, tag1);
       text += tag2("playableLevels");
@@ -643,10 +643,6 @@ const powerUps = {
       document.getElementById("choose-grid").style.opacity = "1"
       document.getElementById("choose-grid").style.transitionDuration = "0.3s"; //how long is the fade in on
       document.getElementById("choose-grid").style.visibility = "visible"
-
-      document.getElementById("exit").addEventListener("click", () => {
-        powerUps.warp.exit()
-      });
     },
   },
   warpText (levelSubList, openTag) {

@@ -1525,6 +1525,15 @@ summary {
   background-color: var(--card-color);
 }
 
+.warp-header {
+  background-color: var(--bg-color);
+  cursor: pointer;
+}
+
+.warp-header:hover {
+  background-color: var(--bg-color-hover);
+}
+
 #warp-choose-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
