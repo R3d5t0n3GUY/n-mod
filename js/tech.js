@@ -1471,17 +1471,20 @@ const tech = {
         }
         let idx = Math.floor(Math.random() * (pickList.length - 1));
         let isGunInfinite = false;
+        let type = pickList[idx].ammoType || 'ammo'
         if (pickList[idx].ammoType) {
-          isGunInfinite = pickList[idx] == 'health' || pickList[idx] == 'energy' || [Infinity, NaN, null, undefined].includes(pickList[idx].ammoType == 'durability' ? pickList[idx].durability : pickList[idx].ammo) 
+          isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
         }
         while (isGunInfinite) {//keep rerolling gun pick until selection has finite ammo/durability
           idx = Math.floor(Math.random() * (pickList.length - 1));
-          isGunInfinite = pickList[idx] == 'health' || pickList[idx] == 'energy' || [Infinity, NaN, null, undefined].includes(pickList[idx].ammoType == 'durability' ? pickList[idx].durability : pickList[idx].ammo) 
+          type = pickList[idx].ammoType || 'ammo'
+          isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
         }
-        return b.guns.indexOf(pickList[idx]);
+        tech.marginalGunIndex = b.guns.indexOf(pickList[idx])
+        return tech.marginalGunIndex;
       },
       descriptionFunction() {
-        if (this.count === 0) tech.marginalGunIndex = this.gunSelect() //don't pick laser
+        if (this.count < 1) this.gunSelect() //don't pick laser
         let type = b.guns[tech.marginalGunIndex].ammoType || 'ammo'
         let tag = (type == 'durability' ? 'em' : 'strong'), name = (type == 'durability' ? 'durability' : 'ammo')
         return `<strong>2x</strong> <${tag} class='color-ammo'>${name}</${tag}> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
