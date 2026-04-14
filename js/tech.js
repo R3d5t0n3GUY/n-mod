@@ -1482,7 +1482,8 @@ const tech = {
       },
       descriptionFunction() {
         if (this.count === 0) tech.marginalGunIndex = this.gunSelect() //don't pick laser
-        let tag = (b.guns[tech.marginalGunIndex].ammoType == 'durability' ? 'em' : 'strong'), name = (b.guns[tech.marginalGunIndex].ammoType == 'durability' ? 'durability' : 'ammo')
+        let type = b.guns[tech.marginalGunIndex].ammoType || 'ammo'
+        let tag = (type == 'durability' ? 'em' : 'strong'), name = (type == 'durability' ? 'durability' : 'ammo')
         return `<strong>2x</strong> <${tag} class='color-ammo'>${name}</${tag}> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
       },
       maxCount: 9,
