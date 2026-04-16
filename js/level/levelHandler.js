@@ -27,7 +27,7 @@ const level = {
     "harpoon"
   ],
   removedCommunityLevels: ["lock", "reservoir", "interferometer", "diamagnetism", "run", "biohazard", "stereoMadness",
-    "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
+    "crimsonTowers", "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
   ],
   modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
