@@ -40,20 +40,15 @@ const localSaves = {
           localSettings = {}
           build.resetStorage();
           Object.assign(localSettings, importedSettings);
-          // Update UI elements based on imported settings
-          communityMaps.checked = localSettings.isCommunityMaps;
-          hideHUD.checked = localSettings.isHideHUD;
-          hideImages.checked = localSettings.isHideImages;
-          healthBarMode.checked = localSettings.isDynamicHealthBar;
-          bannedLevels.value = localSettings.banList;
           if (localSettings.isAllowed) {
             localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
-            e.target.value = ""; // Clear the file input
-            console.log("Settings imported successfully!");
           } else {
-            window.alert("localSettings is not allowed");
+            console.warn("localSettings is not allowed");
             //throw new Error("localSettings is not allowed");
           }
+          e.target.value = ""; // Clear the file input
+          localSaves.updateUI()
+          console.log("Settings imported successfully!");
           fileStatusDiv.innerHTML = "<strong style='color:#00bf00;'>File imported successfully!</strong>"
           requestAnimFrames(4, () => {
             build.setDarkMode('splash-start')
@@ -61,9 +56,10 @@ const localSaves = {
         } catch (error) {
           let errorMsg = "Failed to import settings: " + error.message
           fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR IMPORTING FILE</strong>"
-          console.warn(errorMsg);
+          console.error(errorMsg);
           e.target.value = "";
           localSettings = oldSettings
+          localSaves.updateUI()
           window.alert(errorMsg)
         }
       };
@@ -79,6 +75,14 @@ const localSaves = {
 <input type="button" value="Cancel" class="custom-file-button" onclick='localSaves.defaultMenu()'>
 `
     localSaveDiv.innerHTML = text
+  },
+  updateUI() { // Update UI elements based on imported settings
+    simulation.isCommunityMaps = localSettings.isCommunityMaps
+    communityMaps.checked = localSettings.isCommunityMaps;
+    hideHUD.checked = localSettings.isHideHUD;
+    hideImages.checked = localSettings.isHideImages;
+    healthBarMode.checked = localSettings.isDynamicHealthBar;
+    bannedLevels.value = localSettings.banList;
   },
   wipeSave() {
     localSaves.defaultMenu()
