@@ -4601,7 +4601,7 @@ const tech = {
     },
     {
       name: "extended anthropic principle",
-      description: `<strong>anthropic principle</strong> prevents your <strong>death +1</strong> time per ${powerUps.orb.warp}
+      description: `<strong>anthropic principle</strong> prevents your <strong>death +1</strong> time per ${powerUps.orb.warp()}
         	<br>but spawns ${powerUps.orb.heal(3)} <strong>less</strong>`,
       isPacifist: true,
       maxCount: 3,
