@@ -1114,7 +1114,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   },
   getExperimentBuild() {
     let experimentBuild = {
-      fieldIndex: m.fieldMode,
+      fieldIndex: m.fieldMode || 0,
+      marginalGunIndex: tech.marginalGunIndex,
       molecularMode: simulation.molecularMode || 0,
       gunIndexes: b.inventory,
       techIndexes: []
@@ -1137,6 +1138,16 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         build.reset(true);
         m.fieldMode = importedBuild.fieldIndex || 0
         simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
+        if (importedBuild.marginalGunIndex) {
+          build.importedGunIndex = true
+          tech.marginalGunIndex = importedBuild.marginalGunIndex
+        } else {
+          try {
+            tech.marginalGunIndex = tech.tech.find(i => i.name === 'marginal utility').gunSelect()
+          } catch (e) {
+            tech.marginalGunIndex = Math.floor(Math.random() * b.guns.length)
+          }
+        }
         b.inventory = importedBuild.gunIndexes || []
         let newTech = importedBuild.techIndexes || []
         for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
@@ -1177,6 +1188,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       reader.readAsText(file)
     }
   },
+  importedGunIndex: false,
   export() {
     let experimentBuild = build.getExperimentBuild()
     let jsonString = JSON.stringify(experimentBuild, null, 2);

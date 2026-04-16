@@ -24,6 +24,7 @@ const tech = {
         what.frequency = 1
       }
       if (["heals", "ammo", "research"].includes(what.name)) what.value = what.defaultValue
+      if (what.name === 'marginal utility') what.gunSelect()
       try {
         if (localSettings.isAllowed) {
           if (localSettings.loreCount > 5) { /*if it's a pacifist run, increase the frequency of finding tech
@@ -1484,7 +1485,7 @@ const tech = {
         return tech.marginalGunIndex;
       },
       descriptionFunction() {
-        if (this.count < 1) this.gunSelect() //don't pick laser
+        if (this.count < 1 && !build.importedGunIndex) this.gunSelect() //don't pick laser
         let type = b.guns[tech.marginalGunIndex].ammoType || 'ammo'
         let tag = (type == 'durability' ? 'em' : 'strong'), name = (type == 'durability' ? 'durability' : 'ammo')
         return `<strong>2x</strong> <${tag} class='color-ammo'>${name}</${tag}> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
