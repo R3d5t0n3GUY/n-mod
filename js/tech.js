@@ -5,6 +5,11 @@ setTimeout(() => {
 const tech = {
   totalCount: null,
   removeCount: 0,
+  /* incrementValue(key, min = 0, step = 1) {
+    if (!tech[key]) tech[key] = (min || 0)
+    if (tech[key] < (min || 0)) tech[key] = (min || 0)
+    tech[key] += step
+  }, */
   resetAllTech() {
     if (tech.isJunkTechSwap) { //if player has swap meet when opening experiment menu, reset it
       tech.giveTech("swap meet") //trigger effect to undo itself
@@ -606,11 +611,11 @@ const tech = {
       },
       requires: "nitinol, not working mass",
       effect() {
-        if (!tech.isBlockJump) {
+        //if (!tech.isBlockJump) {
           tech.isCoyote = true
           m.coyoteCycles += 120 //adjust this 120 value in mech() skin
           m.damageReduction *= 0.7
-        }
+        //}
       },
       remove() {
         tech.isCoyote = false
@@ -1035,6 +1040,7 @@ const tech = {
       },
       requires: "CPT, retrocausality",
       effect() {
+        if (!tech.isRewindBot) tech.isRewindBot = 0
         tech.isRewindBot++;
       },
       remove() {
@@ -1464,7 +1470,7 @@ const tech = {
         let pickList = b.guns;
         if (b.inventory.length > 0) { //prioritize guns in the player's inventory
           for (let j = 0; j < 2; j++) {
-            pickList = pickList.concat(b.inventory);
+            pickList = pickList.concat(b.guns.getValues(...b.inventory));
             if (tech.marginalGunIndex != b.activeGun) for (let i = 0; i < 4; i++) {
               pickList.push(b.guns[b.activeGun]);
             }
@@ -2034,6 +2040,7 @@ const tech = {
       },
       requires: "no other mob death tech",
       effect() {
+        if (!tech.nailsDeathMob) tech.nailsDeathMob = 0
         tech.nailsDeathMob++
       },
       remove() {
@@ -2235,6 +2242,7 @@ const tech = {
       },
       requires: "not topological defect",
       effect() {
+        if (!tech.mobSpawnWithHealth) tech.mobSpawnWithHealth = 0
         tech.mobSpawnWithHealth++
         mobs.setMobSpawnHealth()
         for (let i = 0; i < mob.length; i++) {
@@ -2302,6 +2310,7 @@ const tech = {
       allowed: () => true,
       requires: "",
       effect() {
+        if (!tech.nailBotCount) tech.nailBotCount = 0
         tech.nailBotCount++;
         b.nailBot();
       },
@@ -2359,6 +2368,7 @@ const tech = {
       allowed: () => true,
       requires: "",
       effect() {
+        if (!tech.foamBotCount) tech.foamBotCount = 0
         tech.foamBotCount++;
         b.foamBot();
       },
@@ -2416,6 +2426,7 @@ const tech = {
       allowed() { return true },
       requires: "",
       effect() {
+        if (!tech.soundBotCount) tech.soundBotCount = 0
         tech.soundBotCount++;
         b.soundBot();
       },
@@ -2473,6 +2484,7 @@ const tech = {
       allowed: () => true,
       requires: "",
       effect() {
+        if (!tech.boomBotCount) tech.boomBotCount = 0
         tech.boomBotCount++;
         b.boomBot();
       },
@@ -2533,6 +2545,7 @@ const tech = {
       },
       requires: "maximum energy above 50",
       effect() {
+        if (!tech.laserBotCount) tech.laserBotCount = 0
         tech.laserBotCount++;
         b.laserBot();
       },
@@ -2591,6 +2604,7 @@ const tech = {
       allowed: () => true,
       requires: "",
       effect() {
+        if (!tech.orbitBotCount) tech.orbitBotCount = 0
         b.orbitBot();
         tech.orbitBotCount++;
       },
@@ -2657,6 +2671,7 @@ const tech = {
       allowed: () => true,
       requires: "",
       effect() {
+        if (!tech.dynamoBotCount) tech.dynamoBotCount = 0
         tech.dynamoBotCount++;
         b.dynamoBot();
       },
@@ -2900,6 +2915,7 @@ const tech = {
       },
       requires: "",
       effect() {
+        if (!tech.orbitBotCount) tech.orbitBotCount = 0
         for (let i = 0; i < 3; i++) {
           b.orbitBot();
           tech.orbitBotCount++;
@@ -3313,11 +3329,8 @@ const tech = {
       requires: "ON/OFF tech, not determinism",
       effect() {
         tech.isFlipFlopChoices = true //do you have this tech
-        if (!tech.flipFlopChoices) { //in case of swap meet
-          tech.flipFlopChoices = 1
-        } else {
-          tech.flipFlopChoices++
-        }
+        if (!tech.flipFlopChoices) tech.flipFlopChoices = 0
+        tech.flipFlopChoices++
       },
       remove() {
         tech.isFlipFlopChoices = false
@@ -3425,6 +3438,7 @@ const tech = {
       },
       requires: "relay switch",
       effect() {
+        if (!tech.relayIce) tech.relayIce = 0
         tech.relayIce++
       },
       remove() {
@@ -4307,8 +4321,9 @@ const tech = {
       allowed() {
         return (!tech.isEnergyHealth || powerUps.healGiveMaxEnergy) //&& tech.junkChance < 1
       },
-      requires: "not mass-energy if no 1st-ionization",
+      requires: "not mass-energy if not 1st-ionization",
       effect() {
+        if (!tech.largerHeals) tech.largerHeals = 1
         tech.largerHeals++;
         for (let i = 0; i < powerUp.length; i++) {
           if (powerUp[i].name === "heal") {
@@ -4586,7 +4601,7 @@ const tech = {
     },
     {
       name: "extended anthropic principle",
-      description: `<strong>anthropic principle</strong> prevents your <strong>death +1</strong> time
+      description: `<strong>anthropic principle</strong> prevents your <strong>death +1</strong> time per ${powerUps.orb.warp}
         	<br>but spawns ${powerUps.orb.heal(3)} <strong>less</strong>`,
       isPacifist: true,
       maxCount: 3,
@@ -7163,6 +7178,7 @@ const tech = {
       },
       requires: "shotgun, not Newtons 3rd law",
       effect() {
+        if (!tech.shotgunExtraShots) tech.shotgunExtraShots = 0
         tech.shotgunExtraShots++;
       },
       remove() {
@@ -7325,6 +7341,7 @@ const tech = {
       },
       requires: "a localized freeze effect, no other mob death tech",
       effect() {
+        if (!tech.iceIXOnDeath) tech.iceIXOnDeath = 0
         tech.iceIXOnDeath++
       },
       remove() {
@@ -7344,6 +7361,7 @@ const tech = {
       },
       requires: "ice IX",
       effect() {
+        if (!tech.iceEnergy) tech.iceEnergy = 0
         tech.iceEnergy++
       },
       remove() {
@@ -7778,6 +7796,7 @@ const tech = {
       },
       requires: "missiles",
       effect() {
+        if (!tech.missileBotCount) tech.missileBotCount = 0
         tech.missileBotCount++;
         b.missileBot();
         if (tech.haveGunCheck("missiles", false)) b.removeGun("missiles") //remove your last gun
@@ -8050,6 +8069,7 @@ const tech = {
       },
       requires: "grenades, missiles, rivets, harpoon, or mass driver, not iridium-192, not polyurethane foam",
       effect() {
+        if (!tech.fragments) tech.fragments = 0
         tech.fragments++
       },
       remove() {
@@ -8176,6 +8196,7 @@ const tech = {
       },
       requires: "missiles, grenades",
       effect() {
+        if (!tech.missileCount) tech.missileCount = 0
         tech.missileCount++;
       },
       remove() {
@@ -8420,11 +8441,8 @@ const tech = {
       requires: "neutron bomb, irradiated drones, iridium-192",
       effect() {
         tech.isRadioactiveResistance = true
-        if (!tech.radioactiveDefense) {
-          tech.radioactiveDefense = 1
-        } else {
+        if (!tech.radioactiveDefense) tech.radioactiveDefense = 0
           tech.radioactiveDefense++
-        }
       },
       remove() {
         tech.isRadioactiveResistance = false
@@ -8833,6 +8851,7 @@ const tech = {
       },
       requires: "spores, shotgun, worms, fleas",
       effect() {
+        if (!tech.wormSize) tech.wormSize = 0
         tech.wormSize++
       },
       remove() {
@@ -9645,6 +9664,7 @@ const tech = {
       },
       requires: "harpoon",
       effect() {
+        if (!tech.extraHarpoons) tech.extraHarpoons = 0
         for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
           if (b.guns[i].name === "harpoon") {
             const removeAmmo = this.removeAmmo()
@@ -9753,7 +9773,7 @@ const tech = {
       effect() {
         b.harpoonBot();
         if (!tech.harpoonBotCount) tech.harpoonBotCount = 0
-        tech.harpoonBotCount += 1;
+        tech.harpoonBotCount ++;
         if (tech.haveGunCheck("harpoon", false)) b.removeGun("harpoon") //remove your last gun
         if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
       },
@@ -9873,7 +9893,7 @@ const tech = {
           for (let j = 0; j < 3; j++) {
             const names = ["lens", "compound lens", "arc length", "infrared diode", "free-electron laser", //"quasiparticles"
               "dye laser", "relativistic momentum", "specular reflection", "diffraction grating", "diffuse beam",
-              "output coupler", "slow light", "laser-bot", "laser-bot upgrade", "collimator", "optical tweezers"]
+              "output coupler", "delayed-choice", "laser-bot", "laser-bot upgrade", "collimator", "optical tweezers"]
             //convert names into indexes
             const options = []
             for (let i = 0; i < names.length; i++) {
@@ -10015,9 +10035,9 @@ const tech = {
       allowed() {
         return (tech.haveGunCheck("laser") || tech.isLaserMine || tech.isLaserBotUpgrade || tech.isLaserField || (tech.isLaserShot && tech.haveGunCheck("shotgun"))
         ) &&
-          !tech.isWideLaser && !tech.isPulseLaser && !tech.historyLaser
+          !tech.isWideLaser && !tech.isPulseLaser && !tech.isHistoryLaser
       },
-      requires: "laser, not diffuse beam, pulse, slow light",
+      requires: "laser, not diffuse beam, pulse, delayed-choice",
       effect() {
         tech.laserReflections += 2;
       },
@@ -10034,16 +10054,17 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return (tech.haveGunCheck("laser") && !tech.isWideLaser && !tech.historyLaser) ||
+        return (tech.haveGunCheck("laser") && !tech.isWideLaser && !tech.isHistoryLaser) ||
           (tech.isLaserShot && tech.haveGunCheck("shotgun") || tech.isLaserWire)
       },
-      requires: "laser gun or wire, not diffuse beam, slow light",
+      requires: "laser gun or wire, not diffuse beam, delayed-choice",
       effect() {
+        if (!tech.beamSplitter) tech.beamSplitter = 0
         tech.beamSplitter++
         b.guns[11].chooseFireMethod()
       },
       remove() {
-        if (tech.beamSplitter !== 0) {
+        if (this.count > 0) {
           tech.beamSplitter = 0
           b.guns[11].chooseFireMethod()
         }
@@ -10058,10 +10079,11 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return (tech.haveGunCheck("laser") || tech.isLaserWire) && !tech.isWideLaser && !tech.historyLaser && tech.beamSplitter > 0 && !tech.isPulseLaser
+        return (tech.haveGunCheck("laser") || tech.isLaserWire) && !tech.isWideLaser && !tech.isHistoryLaser && tech.beamSplitter > 0 && !tech.isPulseLaser
       },
-      requires: "laser gun or wire, diffraction, not diffuse beam, slow light, pulse",
+      requires: "laser gun or wire, diffraction, not diffuse beam, delayed-choice, pulse",
       effect() {
+        if (!tech.beamSplitter) tech.beamSplitter = 0
         tech.beamSplitter++
         tech.beamCollimator = true
         b.guns[11].chooseFireMethod()
@@ -10082,9 +10104,9 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       allowed() {
-        return tech.haveGunCheck("laser") && tech.laserReflections < 3 && !tech.beamSplitter && !tech.isPulseLaser && !tech.historyLaser
+        return tech.haveGunCheck("laser") && tech.laserReflections < 3 && !tech.beamSplitter && !tech.isPulseLaser && !tech.isHistoryLaser
       },
-      requires: "laser gun, not specular reflection, diffraction grating, slow light, pulse",
+      requires: "laser gun, not specular reflection, diffraction grating, delayed-choice, pulse",
       effect() {
         if (tech.wideLaser === 0) tech.wideLaser = 3
         tech.isWideLaser = true;
@@ -10136,10 +10158,13 @@ const tech = {
       },
       requires: "laser gun, not diffraction grating, diffuse beam",
       effect() {
+        tech.isHistoryLaser = true
+        if (!tech.historyLaser) tech.historyLaser = 0
         tech.historyLaser++
         b.guns[11].chooseFireMethod()
       },
       remove() {
+        tech.isHistoryLaser = false
         if (tech.historyLaser) {
           tech.historyLaser = 0
           b.guns[11].chooseFireMethod()
@@ -11419,6 +11444,7 @@ const tech = {
       },
       requires: "standing wave, not surface plasmons",
       effect() {
+        if (!tech.harmonics) tech.harmonics = 0
         tech.harmonics++
         m.fieldShieldingScale = 1.6 * Math.pow(0.5, (tech.harmonics - 2))
         m.harmonicShield = m.harmonicAtomic
@@ -11543,6 +11569,7 @@ const tech = {
       },
       requires: "standing wave, wormhole, pilot wave, Einsteins shield",
       effect() {
+        if (!tech.energyDamage) tech.energyDamage = 0
         tech.energyDamage++
       },
       remove() {
@@ -11783,6 +11810,7 @@ const tech = {
       },
       requires: "negative mass, grappling hook",
       effect() {
+        if (!tech.offGroundDamage) tech.offGroundDamage = 0
         tech.offGroundDamage++
       },
       remove() {
@@ -12197,6 +12225,7 @@ const tech = {
       },
       requires: "plasma torch, not extruder, plasma ball",
       effect() {
+        if (!tech.plasmaBotCount) tech.plasmaBotCount = 0
         tech.plasmaBotCount++;
         b.plasmaBot();
         if (build.isExperimentSelection) {
@@ -12306,6 +12335,7 @@ const tech = {
       },
       requires: "plasma torch, polonium-210",
       effect() {
+        if (!tech.isPlasmaRange) tech.isPlasmaRange = 1
         tech.isPlasmaRange += 0.5;
         for (let i = 0; i < 1; i++) {
           if (powerUps.research.count > 0) powerUps.research.changeRerolls(-1)
@@ -12788,6 +12818,7 @@ const tech = {
       },
       requires: "wormhole, pilot wave",
       effect() {
+        if (!tech.wimpCount) tech.wimpCount = 0
         tech.wimpCount++
         spawn.WIMP()
         for (let j = 0, len = 7; j < len; j++) powerUps.spawn(level.exit.x + 100 * (Math.random() - 0.5), level.exit.y - 100 + 100 * (Math.random() - 0.5), "research", false)
@@ -14784,11 +14815,8 @@ const tech = {
       allowed() { return true },
       requires: "",
       effect() {
-        if (!tech.isCompositions) {
-          tech.isCompositions = 1
-        } else {
-          tech.isCompositions++
-        }
+        if (!tech.isCompositions) tech.isCompositions = 0
+        tech.isCompositions++
       },
       remove() {
         tech.isCompositions = 0
@@ -15342,11 +15370,8 @@ const tech = {
       allowed() { return true },
       requires: "",
       effect() {
-        if (!tech.isMicroTransactions) {
-          tech.isMicroTransactions = 1
-        } else {
-          tech.isMicroTransactions++
-        }
+        if (!tech.isMicroTransactions) tech.isMicroTransactions = 0
+        tech.isMicroTransactions++
       },
       remove() {
         tech.isMicroTransactions = 0
@@ -15650,151 +15675,6 @@ const tech = {
       },
       remove() { }
     },
-    /* {
-      name: "rule 30",
-      maxCount: 1,
-      count: 0,
-      frequency: 0,
-      isJunk: true,
-      allowed() {
-        return !build.isExperimentSelection
-      },
-      requires: "NOT EXPERIMENT MODE",
-      effect() { },
-      remove() { },
-      state: [
-        [false, false, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, false, false, false, false, false, true, false, false, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, Math.random() > 0.8, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, false, false, false, false, false]
-      ],
-      rule(state, a, b, c) {
-        //30
-        if (state[a] && state[b] && state[c]) return false; // TTT => F
-        if (state[a] && state[b] && !state[c]) return false; // TTF => F
-        if (state[a] && !state[b] && state[c]) return false; //TFT => F 
-        if (state[a] && !state[b] && !state[c]) return true; //TFF => T
-        if (!state[a] && state[b] && state[c]) return true; //FTT => T
-        if (!state[a] && state[b] && !state[c]) return true; //FTF => T
-        if (!state[a] && !state[b] && state[c]) return true; //FFT => T
-        if (!state[a] && !state[b] && !state[c]) return false; //FFF => F
-      },
-      id: 0,
-      researchSpawned: 0,
-      descriptionFunction() {
-        const loop = () => {
-          if ((simulation.paused || simulation.isChoosing) && m.alive && !build.isExperimentSelection) { //&& (!simulation.isChoosing || this.count === 0)
-            let b = []; //produce next row
-            b.push(this.rule(this.state[this.state.length - 1], this.state[this.state.length - 1].length - 1, 0, 1)); //left edge wrap around
-            for (let i = 1; i < this.state[this.state.length - 1].length - 1; i++) { //apply rule to the rest of the array
-              b.push(this.rule(this.state[this.state.length - 1], i - 1, i, i + 1));
-            }
-            b.push(this.rule(this.state[this.state.length - 1], this.state[this.state.length - 1].length - 2, this.state[this.state.length - 1].length - 1, 0)); //right edge wrap around
-            this.state.push(b)
-            if (document.getElementById(`cellular-rule-id${this.id}`)) document.getElementById(`cellular-rule-id${this.id}`).innerHTML = this.outputText() //convert to squares and send HTML
-            if (this.count && this.researchSpawned < 12 && !(this.state.length % 10)) {
-              this.researchSpawned++
-              powerUps.spawn(m.pos.x - 50 + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "research");
-              build.sound.portamento(300, 600, 100, 0.03)//portamento(frequency, end = 1000, shiftRate = 10, gain = 0.05) {
-            }
-            setTimeout(() => {
-              loop()
-            }, 300 + 5 * this.state.length);
-          }
-        }
-        setTimeout(() => {
-          loop()
-        }, 300);
-        this.id++
-        return `<span id = "cellular-rule-id${this.id}" style = "letter-spacing: -0.5px;font-size: 100%;line-height: normal;font-family: "Chakra Petch", 'Courier New', monospace;">${this.outputText()}</span>`
-      },
-      outputText() {
-        let text = "<pre>"
-        for (let j = 0; j < this.state.length; j++) {
-          // text += "<p style = 'margin-bottom: -12px;'>"
-          text += "<p style = 'margin-top: -7px;margin-bottom: -7px;'>"
-          for (let i = 0; i < this.state[j].length; i++) {
-            if (this.state[j][i]) {
-              text += "■" //"☻" //"⬛" //"█" //"■"
-            } else {
-              text += " " //"□" //"☺" //"⬜" //"&nbsp;&nbsp;&nbsp;&nbsp;" //"□"
-            }
-          }
-          text += "</p>"
-        }
-        text += "</pre>"
-        return text
-      },
-    },
-    {
-      name: "rule 90",
-      maxCount: 1,
-      count: 0,
-      frequency: 0,
-      isJunk: true,
-      allowed() {
-        return !build.isExperimentSelection
-      },
-      requires: "NOT EXPERIMENT MODE",
-      effect() { },
-      remove() { },
-      state: [
-        [false, false, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, false, false, false, false, false, true, true, false, false, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, Math.random() > 0.8, false, Math.random() > 0.8, false, false, false, Math.random() > 0.8, false, false, false, false, false, false, false, false]
-      ],
-      rule(state, a, b, c) { //90
-        if (state[a] && state[b] && state[c]) return false; // TTT => F
-        if (state[a] && state[b] && !state[c]) return true; // TTF => T
-        if (state[a] && !state[b] && state[c]) return false; //TFT => F 
-        if (state[a] && !state[b] && !state[c]) return true; //TFF => T
-        if (!state[a] && state[b] && state[c]) return true; //FTT => T
-        if (!state[a] && state[b] && !state[c]) return false; //FTF => F
-        if (!state[a] && !state[b] && state[c]) return true; //FFT => T
-        if (!state[a] && !state[b] && !state[c]) return false; //FFF => F
-      },
-      id: 90,
-      researchSpawned: 0,
-      descriptionFunction() {
-        const loop = () => {
-          if ((simulation.paused || simulation.isChoosing) && m.alive && !build.isExperimentSelection) { //&& (!simulation.isChoosing || this.count === 0)
-            let b = []; //produce next row
-            b.push(this.rule(this.state[this.state.length - 1], this.state[this.state.length - 1].length - 1, 0, 1)); //left edge wrap around
-            for (let i = 1; i < this.state[this.state.length - 1].length - 1; i++) { //apply rule to the rest of the array
-              b.push(this.rule(this.state[this.state.length - 1], i - 1, i, i + 1));
-            }
-            b.push(this.rule(this.state[this.state.length - 1], this.state[this.state.length - 1].length - 2, this.state[this.state.length - 1].length - 1, 0)); //right edge wrap around
-            this.state.push(b)
-            if (document.getElementById(`cellular-rule-id${this.id}`)) document.getElementById(`cellular-rule-id${this.id}`).innerHTML = this.outputText() //convert to squares and send HTML
-            if (this.count && this.researchSpawned < 12 && !(this.state.length % 10)) {
-              this.researchSpawned++
-              powerUps.spawn(m.pos.x - 50 + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "research");
-              build.sound.portamento(300, 600, 100, 0.03)//portamento(frequency, end = 1000, shiftRate = 10, gain = 0.05) {
-            }
-            setTimeout(() => {
-              loop()
-            }, 300 + 5 * this.state.length);
-          }
-        }
-        setTimeout(() => {
-          loop()
-        }, 300);
-        this.id++
-        return `<span id = "cellular-rule-id${this.id}" style = "letter-spacing: -0.5px;font-size: 100%;line-height: normal;font-family: "Chakra Petch", 'Courier New', monospace;">${this.outputText()}</span>`
-      },
-      outputText() {
-        let text = "<pre>"
-        for (let j = 0; j < this.state.length; j++) {
-          // text += "<p style = 'margin-bottom: -12px;'>"
-          text += "<p style = 'margin-top: -7px;margin-bottom: -7px;'>"
-          for (let i = 0; i < this.state[j].length; i++) {
-            if (this.state[j][i]) {
-              text += "■" //"☻" //"⬛" //"█" //"■"
-            } else {
-              text += " " //"□" //"☺" //"⬜" //"&nbsp;&nbsp;&nbsp;&nbsp;" //"□"
-            }
-          }
-          text += "</p>"
-        }
-        text += "</pre>"
-        return text
-      },
-    }, */
     {
       name: "wikipedia",
       description: `After you get ${powerUps.orb.tech()} you have 7 seconds to study for a quiz.  If you ace the quiz you get ${powerUps.orb.research(4)}`,

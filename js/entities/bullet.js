@@ -8467,7 +8467,7 @@ const b = {
                 const mag = 4.1 * Math.sqrt(this.charge)
                 ctx.beginPath();
                 for (let i = 0; i < len; i++) {
-                  const history = m.history[(m.cycle - i * spacing) % 600]
+                  const history = m.history[(simulation.cycle - i * spacing) % 600]
                   const off = history.yOff - 24.2859
                   ctx.moveTo(history.position.x, history.position.y - off);
                   ctx.ellipse(history.position.x, history.position.y - off, mag, mag * 0.65, history.angle, 0, 2 * Math.PI)
@@ -8479,7 +8479,7 @@ const b = {
                   if (this.charge > 5) {
                     m.fireCDcycle = m.cycle + Math.floor(35 * b.fireCDscale); // cool down
                     for (let i = 0; i < len; i++) {
-                      const history = m.history[(m.cycle - i * spacing) % 600]
+                      const history = m.history[(simulation.cycle - i * spacing) % 600]
                       const off = history.yOff - 24.2859
                       b.pulse(1.65 * this.charge * this.lensDamage, history.angle, {
                         x: history.position.x,
@@ -8682,20 +8682,20 @@ const b = {
           ctx.beginPath();
           const r = 20 * player.scale
           b.laser({
-              x: m.pos.x + r * Math.cos(m.angle),
-              y: m.pos.y + r * Math.sin(m.angle)
+            x: m.pos.x + r * Math.cos(m.angle),
+            y: m.pos.y + r * Math.sin(m.angle)
           }, {
             x: m.pos.x + 3000 * Math.cos(m.angle),
             y: m.pos.y + 3000 * Math.sin(m.angle)
           }, dmg);
 
           for (let i = 1, len = 1 + tech.historyLaser; i < len; i++) {
-            const history = m.history[(m.cycle - i * spacing) % 600]
+            const history = m.history[(simulation.cycle - i * spacing) % 600]
             const off = history.yOff - 24.2859 + 2 * i
             // ctx.globalAlpha = 0.13
             b.laser({
-                x: history.position.x + r * Math.cos(history.angle),
-                y: history.position.y + r * Math.sin(history.angle) - off
+              x: history.position.x + r * Math.cos(history.angle),
+              y: history.position.y + r * Math.sin(history.angle) - off
             }, {
               x: history.position.x + 3000 * Math.cos(history.angle),
               y: history.position.y + 3000 * Math.sin(history.angle) - off
