@@ -1093,7 +1093,6 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     //add event listener for pressing enter key when in sort
     function pressEnterSort(event) {
       if (event.key === 'Enter') {
-        // event.preventDefault(); // Prevent the default action to avoid form submission or any other default action
         build.sortTech('input', true)
       }
     }
@@ -1103,7 +1102,6 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     for (let i = 0, len = tech.tech.length; i < len; i++) {
       if (document.getElementById(`tech-${i}`)) {
         document.getElementById(`tech-${i}`).setAttribute('data-descr', tech.tech[i].requires); //add tooltip
-        // document.getElementById(`tech-${i}`).setAttribute('title', tech.tech[i].requires); //add tooltip
       }
     }
 
@@ -1313,6 +1311,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       
       localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     } else {
+      console.clear()
       console.log('forced reset triggered')
       console.log('setting default localSettings')
       const isAllowed = localSettings.isAllowed //don't overwrite isAllowed value
