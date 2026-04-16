@@ -20,7 +20,7 @@ const level = {
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "dripp", "fortress", "commandeer", "clock", "superNgonBros",
-    "tlinat", "ruins", "ace", "crimsonTowers", "LaunchSite", "vents"
+    "tlinat", "ruins", "ace", "LaunchSite", "vents"
   ],
   trainingLevels: ["walk", "crouch", "jump", "hold", "throw", "throwAt", "deflect", "heal", "fire",
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
