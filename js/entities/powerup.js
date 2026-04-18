@@ -2292,14 +2292,16 @@ const powerUps = {
     //put 10 power ups close together
     const len = Math.min(10, powerUp.length)
     for (let i = 0; i < len; i++) { //collide the first 10 power ups
-      const unit = Vector.rotate({ x: 1, y: 0 }, 2 * Math.PI * Math.random())
-      Matter.Body.setPosition(powerUp[i], Vector.add(where, Vector.mult(unit, 20 + 25 * Math.random())));
-      Matter.Body.setVelocity(powerUp[i], Vector.mult(unit, 20));
+      if (!powerUp[i].isLorePowerUp) {
+        const unit = Vector.rotate({ x: 1, y: 0 }, 2 * Math.PI * Math.random())
+        Matter.Body.setPosition(powerUp[i], Vector.add(where, Vector.mult(unit, 20 + 25 * Math.random())));
+        Matter.Body.setVelocity(powerUp[i], Vector.mult(unit, 20));
+      }
     }
     let isExcessiveHeals = (tech.isHealAttract || m.health > m.maxHealth - 0.01 || (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) //if player has accretion, or mass-energy without 1st ionization
     //count big power ups and small power ups
     let options = [] //["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
-    if ((!isExcessiveHeals || Math.random() < 0.13) && !powerUps.healGiveMaxEnergy) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
+    if ((!isExcessiveHeals || Math.random() < 0.2) && !powerUps.healGiveMaxEnergy) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
     if (powerUps.healGiveMaxEnergy) options.push("Casimir")
     if (!tech.isSuperDeterminism || Math.random() < 0.37) options.push("research")
     if (tech.isBoostReplaceAmmo || !tech.isEnergyNoAmmo) options.push(tech.isBoostReplaceAmmo ? "boost" : "ammo")
@@ -2307,12 +2309,11 @@ const powerUps = {
     if (tech.isBoostPowerUps) options.push("boost")
 
 
-    let bigIndexes = [], smallIndexes = [] //, ignoredIndexes = ["settings", "instructions", "warp", "difficulty", "entanglement", "levelList"]
+    let bigIndexes = [], smallIndexes = []
     for (let i = 0; i < powerUp.length; i++) {
-      //let isLorePowerUp = ignoredIndexes.includes(powerUp[i].name)
       if (!powerUp[i].isLorePowerUp) {
         powerUp[i].cycle = 1
-        if (powerUp[i].name === "tech" || powerUp[i].name === "gun" || powerUp[i].name === "field") {
+        if (['tech', 'field', 'gun'].includes(powerUp[i].name)) {
           bigIndexes.push(i)
         } else {
           smallIndexes.push(i)
@@ -2320,7 +2321,7 @@ const powerUps = {
       }
     }
 
-    if (smallIndexes.length > 2 && Math.random() < (isExcessiveHeals ? 0.9 : 0.66)) { //higher likelyhood to collide heals with accretion
+    if (smallIndexes.length > 2 && Math.random() < (isExcessiveHeals ? 0.8 : 0.66)) { //higher likelyhood to collide heals with accretion
       // console.log("no big, at least 3 small can combine")
       for (let j = 0; j < 3; j++) {
         for (let i = 0; i < powerUp.length; i++) {

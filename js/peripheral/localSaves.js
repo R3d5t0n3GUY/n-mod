@@ -107,6 +107,7 @@ const localSaves = {
       fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR RESETTING FILE</strong>"
       setTimeout(() =>{window.alert(errorMsg)}, 100);
     }
+    localSaves.updateUI()
   }
 }
 Object.freeze(localSaves) //since localSaves only stores functions

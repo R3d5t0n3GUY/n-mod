@@ -4601,7 +4601,7 @@ const tech = {
     },
     {
       name: "extended anthropic principle",
-      description: `<strong>anthropic principle</strong> prevents your <strong>death +1</strong> time per ${powerUps.orb.warp()}
+      description: `<strong>anthropic principle</strong> prevents your <strong>death</strong> <strong>+1</strong> time per ${powerUps.orb.warp()}
         	<br>but spawns ${powerUps.orb.heal(3)} <strong>less</strong>`,
       isPacifist: true,
       maxCount: 3,
@@ -10286,13 +10286,12 @@ const tech = {
       name: "tritiated medium",
       descriptionFunction() {
         let pluralize = "beam is", valSum=(a)=>{
-          let y=0;a.split(",").forEach(i=>{y+=Math.max((tech[i]||0),0)});return y;
-        }
-        if (valSum("beamSplitter,beamCollimator,historyLaser,isLaserMine,isLaserField,laserBotCount,isLaserWire") > (tech.haveGunCheck("laser", false) ? 0 : 1)) {
-          pluralize = "beams are";
-        }
+          let y=0;a.forEach(i=>{y+=Math.max((tech[i]||0),0)});return y;
+        }, keys = ['beamSplitter', 'beamCollimator', 'historyLaser', 'isLaserMine', 'isLaserField', 'laserBotCount',
+          'isLaserWire']
+        if (valSum(keys) > (tech.haveGunCheck("laser", false) ? 0 : 1)) pluralize = "beams are";
         return `<strong>1.33x</strong> <strong class='color-laser'>laser</strong> <strong class="color-f">energy</strong> cost
-            	<br><strong class='color-laser'>laser</strong> <span>${pluralize}</span> <strong class="color-p">radioactive</strong>`
+            	<br><strong class='color-laser'>laser</strong> ${pluralize} <strong class="color-p">radioactive</strong>`
       },
       maxCount: 1,
       count: 0,
