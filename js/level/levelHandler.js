@@ -20,14 +20,14 @@ const level = {
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "dripp", "fortress", "commandeer", "clock", "superNgonBros",
-    "tlinat", "ruins", "LaunchSite", "vents"
+    "tlinat", "ruins", "ace", "LaunchSite", "vents"
   ],
   trainingLevels: ["walk", "crouch", "jump", "hold", "throw", "throwAt", "deflect", "heal", "fire",
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
     "harpoon"
   ],
   removedCommunityLevels: ["lock", "reservoir", "interferometer", "diamagnetism", "run", "biohazard", "stereoMadness",
-    "ace", "crimsonTowers", "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
+    "crimsonTowers", "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
   ],
   modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
