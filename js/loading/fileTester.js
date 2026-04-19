@@ -198,9 +198,7 @@ try {
           tag.onerror = () => { //check for syntax errors
             errors.push(obj)
           }
-          setTimeout(() => {
-            if (!hasFileTesterFailed) document.body.append(tag);
-          }, 100)
+          if (!hasFileTesterFailed) document.body.append(tag);
         } else {
           setTimeout(() => {
             let validities = Object.values(fileLoads)
@@ -255,7 +253,7 @@ try {
                 }, 100);
               }
             }
-          }, 400 * Object.values(fileLoads).length + 100); //ensure .js files are loaded BEFORE attempting error check
+          }, 100 * Object.values(fileLoads).length + 100); //ensure .js files are loaded BEFORE attempting error check
         }
       }
     }

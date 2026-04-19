@@ -286,7 +286,7 @@ function setupCanvas() {
     ctx.scale(1, -1); // Flip vertically
   }
 }
-setupCanvas();
+setTimeout(setupCanvas, 100)
 window.onresize = () => {
   setupCanvas();
 };
@@ -2188,7 +2188,7 @@ document.body.addEventListener("wheel", (e) => {
 //**********************************************************************
 let localSettings //, experimentBuild //should I make this a separate var..?
 
-build.resetStorage(false);
+setTimeout(build.resetStorage, 100, false);
 
 
 //**********************************************************************
@@ -2226,35 +2226,37 @@ build.resetStorage(false);
 
 
 //preload images early
-if (!localSettings.isHideImages) {
-  addEventListener("load", () => {
-    let urls = new Array()
-    for (let i = 0, len = b.guns.length; i < len; i++) urls.push("img/gun/" + b.guns[i].name + ".webp")
-    for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" + m.fieldUpgrades[i].name + ".webp")
-    for (let i = 0, len = tech.tech.length; i < len; i++) {
-      if (!tech.tech[i].isLore) urls.push("img/tech/" + tech.tech[i].name + ".webp")
-    }
-    let images = new Array()
-    for (let i = 0; i < urls.length; i++) {
-      images[i] = new Image()
-      images[i].onerror = function () {
-        this.onerror = null; // Prevent infinite loop if fallback also fails
-        this.src = 'img/junk.webp';
-      };
-      images[i].src = urls[i]
-    }
-    // console.log(urls, images)
-  });
-  document.getElementById("choose-grid").classList.add('choose-grid');
-} else {
-  document.getElementById("choose-grid").classList.add('choose-grid-no-images');
-}
+setTimeout(() => {
+  if (localSettings.isHideImages) {
+    addEventListener("load", () => {
+      let urls = new Array()
+      for (let i = 0, len = b.guns.length; i < len; i++) urls.push("img/gun/" + b.guns[i].name + ".webp")
+      for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" + m.fieldUpgrades[i].name + ".webp")
+      for (let i = 0, len = tech.tech.length; i < len; i++) {
+        if (!tech.tech[i].isLore) urls.push("img/tech/" + tech.tech[i].name + ".webp")
+      }
+      let images = new Array()
+      for (let i = 0; i < urls.length; i++) {
+        images[i] = new Image()
+        images[i].onerror = function () {
+          this.onerror = null; // Prevent infinite loop if fallback also fails
+          this.src = 'img/junk.webp';
+        };
+        images[i].src = urls[i]
+      }
+      // console.log(urls, images)
+    });
+    document.getElementById("choose-grid").classList.add('choose-grid');
+  } else {
+    document.getElementById("choose-grid").classList.add('choose-grid-no-images');
+  }
+}, 100);
 
 
 //**********************************************************************
 // main loop 
 //**********************************************************************
-simulation.loop = simulation.normalLoop;
+setTimeout(() => {simulation.loop = simulation.normalLoop}, 100);
 
 function cycle() {
   if (!simulation.paused) requestAnimationFrame(cycle);
