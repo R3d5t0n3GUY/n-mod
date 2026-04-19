@@ -85,7 +85,7 @@ function seededShuffle(array) {
   return array;
 }
 
-window.addEventListener('load', () => {
+setTimeout(window.addEventListener, 100, 'load', () => {
   const set = getUrlVars()
   if (Object.keys(set).length !== 0) {
     // build.populateGrid() //trying to solve a bug with this, but maybe it doesn't help
