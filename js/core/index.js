@@ -45,7 +45,7 @@ window.addEventListener('error', event => {
       errorMessage = `${errName + (filename ? ` in ${filename}` : "")}:<u>${lineno ? lineno + ":" : ""}${colno ? colno + ": -" : ""}</u><br>${errMsg}`;
     }
 
-    console.log(errorMessage);
+    //console.log(errorMessage);
     simulation.clearConsole(); //prevent spamming by clearing console
     simulation.inGameConsole(`<strong style='color:red;'>ERROR:</strong> ${errName}. <u>${errMsg}</u>`, 480); //show for 8 seconds
   } catch (err) {
