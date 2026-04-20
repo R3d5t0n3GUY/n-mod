@@ -9062,9 +9062,9 @@ const communityLevels = {
               ctx.fillStyle = "rgba(0,0,0,0.7)";
               try {
                 ctx.fillRect(canvas.width2 / 2, canvas.height2 / 10, canvas.width2 * mob[i].health, 30);
-              } catch (error) {
+              } catch (err) {
                 ctx.fillRect(canvas.width2 / 2, canvas.height2 / 10, 0, 30);
-                simulation.inGameConsole(`<strong style="color: red;">ERROR: SCRIPT ERROR: </strong><span style="color:red">${error}</span>`);
+                simulation.inGameConsole(`<strong style="color: red;">ERROR: </strong> ${err.name || "Script Error"}. <u>${err.message || err || "Unknown Error."}</u>`);
                 simulation.removeEphemera(this.name)
               }
               ctx.restore();
