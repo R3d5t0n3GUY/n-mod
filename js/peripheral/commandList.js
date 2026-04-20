@@ -155,9 +155,9 @@ const cmdList = {
           if (cmdConsole.params.length < 3) {
             switch (what) {
               case "ammo":
-                let munitionType = b.guns[b.activeGun].ammoType
-                if (b.inventory.length > 0 && ((munitionType != "health" && munitionType != "energy") ? (b.guns[b.activeGun][munitionType] !== Infinity) : false)) {
-                  b.guns[b.activeGun][munitionType] += qnty
+                if (b.inventory.length > 0) { 
+                  let munitionType = b.guns[b.activeGun].ammoType
+                  if ((munitionType != "health" && munitionType != "energy") ? (b.guns[b.activeGun][munitionType] != Infinity) : false) b.guns[b.activeGun][munitionType] += qnty
                 }
                 break;
               case "coupling":
