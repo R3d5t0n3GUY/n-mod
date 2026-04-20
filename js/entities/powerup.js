@@ -2252,12 +2252,14 @@ const powerUps = {
     if ((tech.isPauseEjectTech || simulation.testing) && !(simulation.isChoosing || tech.tech[index].isInstant)) {
       if ((tech.tech[index].name === "marginal utility") && tech.isRerollGunAmmo) { //if player has cardinal utility, reroll marginal utility instead of ejecting it
         let oldGun = tech.marginalGunIndex;
+        b.guns[oldGun].ammoPack *= Math.pow(0.5, tech.moreGunAmmo)
         tech.marginalGunIndex = tech.tech[index].gunSelect();
         let gunName = tech.marginalGunIndex;
         while (gunName === oldGun) { //don't pick the same gun as before
           tech.marginalGunIndex = tech.tech[index].gunSelect();
           gunName = tech.marginalGunIndex;
         }
+        b.guns[tech.marginalGunIndex].ammoPack *= Math.pow(2, tech.moreGunAmmo)
         build.generatePauseLeft();
         build.generatePauseRight();
         simulation.updateTechHUD();
