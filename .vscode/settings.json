@@ -26,6 +26,12 @@
     "htmlcharacterconverter.overrides": {
         "\n": "<br>"
     },
+    "workbench.editorAssociations": {
+        "*.gif": "gifPlayer.player",
+        "*.sb3": "zipViewer.ZipEdit",
+        "*.jar": "zipViewer.ZipEdit",
+        "*.zip": "zipViewer.ZipEdit"
+    },
     "workbench.editor.editorActionsLocation": "titleBar",
     "mc-color.delimiters": [
         "`",
