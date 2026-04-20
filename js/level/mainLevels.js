@@ -18,19 +18,18 @@ const mainLevels = {
         simulation.isCheating = true;
       }
 
-      if (localSettings.levelsClearedLastGame < 3) {
-        //powerUps.spawn(2095 + 2 * Math.random(), -1270, "heal", false);
-      } else if (!build.isExperimentRun) {
+      if (localSettings.levelsClearedLastGame > 2 && !build.isExperimentRun) {
         simulation.trails(70)
         //bonus power ups for clearing levels in the last game
         if (!simulation.isCheating && localSettings.levelsClearedLastGame > 1) {
           let entangled = false
-          for (let i = 0; i < Math.ceil(localSettings.levelsClearedLastGame / Math.PHI); i++) {
+          for (let i = 0; i < Math.floor(localSettings.levelsClearedLastGame / Math.PHI); i++) {
+            let method = (Math.random() * Math.PHI) < 1 ? "directSpawn" : "spawn"
             if (Math.random() < 0.25 && localSettings.entanglement && !entangled) {
-              if (Math.random() < 0.37) entangled = true
-              powerUps.spawn(2095 + 2 * Math.random(), -1270 - 50 * i, "entanglement", false); //chance to spawn entanglement
+              if (Math.random() < 0.45) entangled = true
+              powerUps[method](2095 + 2 * Math.random(), -1270 - 50 * i, "entanglement", false); //chance to spawn entanglement
             } else {
-              powerUps.spawn(2095 + 2 * Math.random(), -1270 - 50 * i, "tech", false); //spawn a tech for levels cleared in last game
+              powerUps[method](2095 + 2 * Math.random(), -1270 - 50 * i, "tech", false); //spawn a tech for levels cleared in last game
             }
           }
           simulation.inGameConsole(`for (let i <span class='color-symbol'>=</span> 0; i <span class='color-symbol'><</span> localSettings.levelsClearedLastGame <span class='color-symbol'>/</span> 2; i<span class='color-symbol'>++</span>)`);
@@ -132,13 +131,7 @@ const mainLevels = {
     wires.lineTo(2355, -690)
     wires.lineTo(2600, -690)
 
-    //let isSpawnedWarp = false
     level.custom = () => {
-      /* if (!isSpawnedWarp && simulation.testing) {
-          isSpawnedWarp = true
-          powerUps.directSpawn(m.pos.x, -900, "warp")
-          // powerUps.directSpawn(2100, -1200, "warp")
-      } */
 
       //push around power ups stuck in the tube wall
       if (!(simulation.cycle % 30) && level.onLevel === 0) {
