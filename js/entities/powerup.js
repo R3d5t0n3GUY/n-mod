@@ -2221,7 +2221,7 @@ const powerUps = {
           tech.totalCount -= tech.tech[choose].count
           tech.tech[choose].count = 0;
           tech.tech[choose].isBadRandomOption = true;
-          tech.tech[choose].frequency = Math.ceil(tech.tech[choose].frequency / 2);
+          tech.tech[choose].frequency *= 0.5
           simulation.updateTechHUD();
           m.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
           return true
@@ -2239,7 +2239,7 @@ const powerUps = {
         tech.totalCount -= tech.tech[choose].count
         tech.removeCount += tech.tech[choose].count
         tech.tech[choose].count = 0;
-        tech.tech[choose].isLost = true;
+        tech.tech[choose].frequency *= 0.5 //isLost = true;
         simulation.updateTechHUD();
         m.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
         return true
