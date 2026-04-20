@@ -11,9 +11,10 @@ const cmdList = {
           if (evalString === "" || evalString.startsWith("//") || trailing.trim().startsWith("/*")) {
             let invalidPhrases = ["document", "EventListener", "innerHTML", "outerHTML", "getElementsBy", "getElementBy", "prototype", "createElement",
               "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "defaultGameVars", "resetGame", "eruda", "localSaves",
-            ], isInvalid = false, regExpTest = /cmdConsole(?!\.history)/;
+            ], isInvalid = false, cleanInput = input.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
             //this command should NOT access or alter HTML DOM, nor should it alter JS prototypes or request other commands, for security reasons
-            isInvalid = regExpTest.test(input) || invalidPhrases.some(i => input.includes(i))
+            isInvalid = invalidPhrases.some(i => (new RegExp(`\\b${i}\\s\\+`, 'g')).test(cleanInput)) || 
+            (/cmdConsole(?!\.history)/).test(cleanInput)
             if (isInvalid) {
               return [false, `<strong class='color-var'>/run</strong> should NOT access any of the following:
               <ul>
