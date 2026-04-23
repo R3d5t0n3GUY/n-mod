@@ -5943,13 +5943,11 @@ const tech = {
           }
           setPhysics() {
             this.friction = 0.5;
-            this.color = "#000"
             this.gravity = 0.6;
             // this.spacing = 30
 
             if (tech.isLaserWire) {
               this.gravity = 0
-              this.color = "rgba(255,0,0,1)"
             }
             if (tech.isMycelium) {
               this.gravity = -0.1
@@ -5969,6 +5967,11 @@ const tech = {
             if (tech.isMycelium && Matter.Query.point(map, this.segments[this.segments.length - 1]).length === 0) b.spore(this.segments[this.segments.length - 1])
           }
           update(anchorX, anchorY) {
+            if (tech.isLaserWire) {
+              this.color = (tech.isIRdiode ? "rgba(255,63,63,0.1)" : tech.laserColor || "rgb(255,0,0)")
+            } else {
+              this.color = "#000"
+            }
             if (powerUps.totalUsed > this.totalPowerUpsUsed) {
               this.totalPowerUpsUsed++
               if (this.segments.length < 200) { //cap max length at 200 for performance
