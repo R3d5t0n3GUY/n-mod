@@ -658,7 +658,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       if (localSettings.isAllowed) {
         document.getElementById("simulation-variables-details").open = localSettings.pauseMenuDetailsOpen[0]
         document.getElementById("difficulty-parameters-details").open = localSettings.pauseMenuDetailsOpen[1]
-        document.getElementById("console-log-details").open = localSettings.pauseMenuDetailsOpen[2]
+        if (!localSettings.isHideHUD) document.getElementById("console-log-details").open = localSettings.pauseMenuDetailsOpen[2]
         if (document.getElementById("constraints-details")) document.getElementById("constraints-details").open = localSettings.pauseMenuDetailsOpen[3]
       }
     });
