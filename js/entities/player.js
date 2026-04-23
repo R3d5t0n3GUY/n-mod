@@ -5653,16 +5653,13 @@ const m = {
         return `use <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs
       				<br>excess <strong class='color-f'>energy</strong> used to <strong class='color-print'>print</strong> <strong${((molMode) => {
                 switch (molMode) {
-                  case 1: return " class='color-p' style='letter-spacing: 2px;'>spores";
-                  case 2: return ">missiles";
-                  case 3: return " class='color-s'>ice IX";
-                  default: return ">drones";
+                  case 1: return ">missiles";
+                  case 2: return " class='color-s'>ice IX";
+                  case 3: return ">drones";
+                  default: return " class='color-p' style='letter-spacing: 2px;'>spores";
                 }})(simulation ? simulation.molecularMode : 0)
               }</strong><br><strong>12</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↓→↓←↑↑↓</em>`
-      },
-      setDescription() {
-        return `use <strong class='color-f'>energy</strong> to <strong>deflect</strong> mobs<br>excess <strong class='color-f'>energy</strong> used to <strong class='color-print'>print</strong> ${simulation.molecularMode === 0 ? "<strong class='color-p' style='letter-spacing: 2px;'>spores" : simulation.molecularMode === 1 ? "<strong>missiles" : simulation.molecularMode === 2 ? "<strong class='color-s'>ice IX" : "<strong>drones"}</strong><br><strong>12</strong> <strong class='color-f'>energy</strong> per second <em class='color-combo'>↓→↓←↑↑↓</em>`
       },
       endoThermic(drain) {
         if (tech.isEndothermic) {

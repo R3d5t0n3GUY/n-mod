@@ -27,7 +27,7 @@ window.addEventListener('error', event => {
     // Chrome file:// often sets event.error to null
     if (event.error instanceof Error) {
       errName = event.error.name || errName;
-      errMsg  = event.error.message || errMsg;
+      errMsg = event.error.message || errMsg;
     } else {
       // Fallback for Chrome local file security restriction
       errMsg = event.message || errMsg;
@@ -129,11 +129,9 @@ setTimeout(window.addEventListener, 50, 'load', () => {
       }
       if (property === "molMode") {
         simulation.molecularMode = Number(set[property])
-        const i = 4 //update experiment text
-        m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
-        document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
-                <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
-                ${build.getDescription('field', i)}</div>`
+        document.getElementById(`field-4`).innerHTML = `<div class="card-text">
+                <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[4].name)}</div>
+                ${build.getDescription('field', 4)}</div>`
       }
       requestAnimationFrame(() => { build.sortTech('have', true) });
 
@@ -438,10 +436,10 @@ const build = {
       { name: 'text-color', col: `#${localSettings.isDarkMode ? 'fff' : '000'}` },
       { name: 'border-color', col: `#${localSettings.isDarkMode ? 'ccc' : '333'}` },
       { name: 'tooltip-color', col: `#${localSettings.isDarkMode ? '333' : 'ccc'}` },
-      { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}`},
-      { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}`},
-      { name: 'combo-color', col: `#${localSettings.isDarkMode ? "6a6a6a" : "fff"}`},
-      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.22 : 1))}
+      { name: 'bounce-color', col: `#${localSettings.isDarkMode ? '555' : 'aaa'}` },
+      { name: 'rest-color', col: `#${localSettings.isDarkMode ? 'aaa' : '555'}` },
+      { name: 'combo-color', col: `#${localSettings.isDarkMode ? "6a6a6a" : "fff"}` },
+      { name: 'tech-color', col: hsvo(pulseHue, (localSettings.isDarkMode ? 1 : 0.2), (localSettings.isDarkMode ? 0.22 : 1)) }
     ]
     styles.forEach(i => {
       document.querySelector(':root').style.setProperty(`--${i.name}`, i.col)
@@ -499,7 +497,7 @@ const build = {
       case 'field':
         return `url("${urlRoot}field/${m.fieldUpgrades[index].name}.webp"), ${fallback}`
       case 'tech':
-        if(tech.tech[index].isWIP) {
+        if (tech.tech[index].isWIP) {
           return `url("img/WIP.webp")`
         } else {
           let j = (tech.tech[index].isJunk ? 1 : 0), k = [fallback, `url("${urlRoot}tech/${tech.tech[index].name}.webp")`]
@@ -515,7 +513,7 @@ const build = {
         case 'gun':
           index = Math.floor(((index % b.guns.length) + b.guns.length) % b.guns.length)
           return (b.guns[index].descriptionFunction ? b.guns[index].descriptionFunction() : b.guns[index].description)
-        case 'field' :
+        case 'field':
           index = Math.floor(((index % m.fieldUpgrades.length) + m.fieldUpgrades.length) % m.fieldUpgrades.length)
           return (m.fieldUpgrades[index].descriptionFunction ? m.fieldUpgrades[index].descriptionFunction() : m.fieldUpgrades[index].description)
         case 'tech':
@@ -555,10 +553,10 @@ const build = {
     let text = `<div class="pause-grid-module" style="padding: 8px;">
 <span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
 <em style="float: right;color:var(--tooltip-color);">press ${input.key.pause} to resume</em>
-${inputLabelText("hideHUD",'settings',"hide-hud",0,"HideHUD","hide: tech, damage taken, damage, in game console","minimal HUD")}
-${inputLabelText("setHealthBarMode",'pause',"health-bar-mode",0,"DynamicHealthBar","proportionally-colored health bar","dynamic health bar")}
-${inputLabelText("setDarkMode",'pause',"dark-mode",0,"DarkMode","Changes document coloring, allowing easier reading","dark mode")}
-${inputLabelText("showImages",'pause',"hide-images",0,"HideImages","hide images for fields, guns, and tech","hide images")}
+${inputLabelText("hideHUD", 'settings', "hide-hud", 0, "HideHUD", "hide: tech, damage taken, damage, in game console", "minimal HUD")}
+${inputLabelText("setHealthBarMode", 'pause', "health-bar-mode", 0, "DynamicHealthBar", "proportionally-colored health bar", "dynamic health bar")}
+${inputLabelText("setDarkMode", 'pause', "dark-mode", 0, "DarkMode", "Changes document coloring, allowing easier reading", "dark mode")}
+${inputLabelText("showImages", 'pause', "hide-images", 0, "HideImages", "hide images for fields, guns, and tech", "hide images")}
 </div>
 
 <div class="pause-grid-module">
@@ -927,16 +925,13 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         document.getElementById("field-" + index).classList.add("build-field-selected");
         document.getElementById("tech-150").focus();
       } else if (m.fieldMode === 4) {
-        const i = 4 //update experiment text
         simulation.molecularMode++
-        if (simulation.molecularMode > i - 1) simulation.molecularMode = 0
-        m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
+        if (simulation.molecularMode > 3) simulation.molecularMode = 0
         // document.getElementById(`field-${i}`).innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div> ${m.fieldUpgrades[i].description}`
-
-        document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
-                                <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
-                                ${build.getDescription('field', i)}</div>`
       }
+      document.getElementById(`field-4`).innerHTML = `<div class="card-text">
+        <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[4].name)}</div>
+        ${build.getDescription('field', 4)}</div>`
     } else if (type === "tech") {
       if (tech.tech[index].count < tech.tech[index].maxCount) {
         // if (!tech.tech[index].isLore && !tech.tech[index].isInstant && !who.classList.contains("build-tech-selected")) who.classList.add("build-tech-selected");
@@ -1046,9 +1041,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         </svg>
       </div>
       <div style="grid-column: 2;grid-row: 3;font-size:10px;width:100px;height:56px;margin-top:-58px;margin-bottom:5px;">
-        ${inputLabelText("showImages","hide-images","HideImages","hide images for fields, guns, and tech","hide images")}
+        ${inputLabelText("showImages", "hide-images", "HideImages", "hide images for fields, guns, and tech", "hide images")}
         <br>
-        ${inputLabelText("setDarkMode","dark-mode","DarkMode","Changes document coloring, allowing easier reading","dark mode")}
+        ${inputLabelText("setDarkMode", "dark-mode", "DarkMode", "Changes document coloring, allowing easier reading", "dark mode")}
       </div>
       <div style="grid-column:1;margin-top:-1.25em;grid-row:4;height:30px;">
         <svg class="SVG-button" width="70" height="25" onclick="build.export()" style='cursor:pointer;'>
@@ -1173,7 +1168,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         newTech.forEach(i => {
           for (let j = 0, len = tech.tech.length; j < len; j++) {
             if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
-              switch (typeof(i)) {
+              switch (typeof (i)) {
                 case 'string':
                   if (i === tech.tech[j].name) {
                     tech.tech[j].effect()
@@ -1319,15 +1314,15 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
       if (localSettings.difficultyCompleted === undefined) localSettings.difficultyCompleted = [null, false, false, false, false, false, false, false] //null because there isn't a difficulty zero
 
-      (() => {
-        if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
-        simulation.difficultyMode = localSettings.difficultyMode
-        lore.setTechGoal()
-      }).tryNoCatch()
+        (() => {
+          if (localSettings.difficultyMode === undefined) localSettings.difficultyMode = "2"
+          simulation.difficultyMode = localSettings.difficultyMode
+          lore.setTechGoal()
+        }).tryNoCatch()
 
       if (localSettings.pauseMenuDetailsOpen === undefined) localSettings.pauseMenuDetailsOpen = [true, false, false, true]
       if (localSettings.techHistory === undefined) localSettings.techHistory = []
-      
+
       localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
     } else {
       console.clear()
@@ -1798,13 +1793,9 @@ window.addEventListener("keydown", function (event) {
                 const energy = m.energy //save current energy
                 if (m.fieldMode === 4 && simulation.molecularMode > 0) {
                   simulation.molecularMode--
-                  m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
                 } else {
                   m.setField((m.fieldMode < 2) ? m.fieldUpgrades.length - 1 : m.fieldMode - 1) //cycle to previous field, skip field emitter
-                  if (m.fieldMode === 4) {
-                    simulation.molecularMode = 3
-                    m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
-                  }
+                  if (m.fieldMode === 4) simulation.molecularMode = 3
                 }
                 m.energy = energy //return to current energy
                 document.getElementById("pause-field").style.backgroundImage = `style='background-image: ${build.getBackgroundImageURL(m.fieldMode, "field")};'`
@@ -1815,13 +1806,9 @@ window.addEventListener("keydown", function (event) {
                 const energy = m.energy //save current energy
                 if (m.fieldMode === 4 && simulation.molecularMode < 3) {
                   simulation.molecularMode++
-                  m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
                 } else {
                   m.setField((m.fieldMode === m.fieldUpgrades.length - 1) ? 1 : m.fieldMode + 1) //cycle to next field, skip field emitter
-                  if (m.fieldMode === 4) {
-                    simulation.molecularMode = 0
-                    m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
-                  }
+                  if (m.fieldMode === 4) simulation.molecularMode = 0
                 }
                 m.energy = energy //return to current energy
                 // document.getElementById("pause-field").innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[m.fieldMode].name}</div> ${m.fieldUpgrades[m.fieldMode].description}`
@@ -2275,7 +2262,7 @@ setTimeout(() => {
 //**********************************************************************
 // main loop 
 //**********************************************************************
-setTimeout(() => {simulation.loop = simulation.normalLoop}, 100);
+setTimeout(() => { simulation.loop = simulation.normalLoop }, 100);
 
 function cycle() {
   if (!simulation.paused) requestAnimationFrame(cycle);
