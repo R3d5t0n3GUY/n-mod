@@ -133,7 +133,7 @@ setTimeout(window.addEventListener, 50, 'load', () => {
         m.fieldUpgrades[i].description = m.fieldUpgrades[i].setDescription()
         document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
                 <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
-                ${m.fieldUpgrades[i].description}</div>`
+                ${build.getDescription('field', i)}</div>`
       }
       requestAnimationFrame(() => { build.sortTech('have', true) });
 
@@ -509,6 +509,25 @@ const build = {
         return fallback
     }
   },
+  getDescription(type, index) {
+    try {
+      switch (type) {
+        case 'gun':
+          index = Math.floor(((index % b.guns.length) + b.guns.length) % b.guns.length)
+          return (b.guns[index].descriptionFunction ? b.guns[index].descriptionFunction() : b.guns[index].description)
+        case 'field' :
+          index = Math.floor(((index % m.fieldUpgrades.length) + m.fieldUpgrades.length) % m.fieldUpgrades.length)
+          return (m.fieldUpgrades[index].descriptionFunction ? m.fieldUpgrades[index].descriptionFunction() : m.fieldUpgrades[index].description)
+        case 'tech':
+          index = Math.floor(((index % tech.tech.length) + tech.tech.length) % tech.tech.length)
+          return (tech.tech[index].descriptionFunction ? tech.tech[index].descriptionFunction() : tech.tech[index].description)
+        default:
+          return `<strong style='color:red'>Uncaught Error:</strong> <ins class='color-censored'><span class='color-var'>${type}</span> is not defined</ins>`
+      }
+    } catch (e) {
+      return `<strong style='color:red'>Uncaught ${e.name}:</strong> <ins>${e.message}</ins>`
+    }
+  },
   generatePauseLeft() {
     //left side
     let botText = "", addBotText = (type) => {
@@ -609,7 +628,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       text += `<div class="pause-grid-module card-background" id="pause-field" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
-                                                        ${m.fieldUpgrades[m.fieldMode].description}</div> </div>`
+                                                        ${build.getDescription('field', m.fieldMode)}</div> </div>`
       //button below for next
       text += `<div class="pause-grid-module" id="pause-field-next" style="animation: fieldColorCycle 3s linear infinite alternate;border-bottom: 1px solid var(--text-color);">
                                                     <div class="grid-title" style="text-align: center;">↓ <div class="circle-grid field"></div> ↓</div></div>`
@@ -620,7 +639,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       text += `<div class="pause-grid-module card-background" id="pause-field" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>
-                                                        ${m.fieldUpgrades[m.fieldMode].description}</div> </div>`
+                                                        ${build.getDescription('field', m.fieldMode)}</div> </div>`
     }
     // for (let i = 0, len = b.inventory.length; i < len; i++) {
     //     text += `<div class="pause-grid-module"><div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div> ${b.guns[b.inventory[i]].description}</div>`
@@ -630,7 +649,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       text += `<div class="pause-grid-module card-background" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div>
-                                                        ${b.guns[b.inventory[i]].descriptionFunction()}</div> </div>`
+                                                        ${build.getDescription('gun', b.inventory[i])}</div> </div>`
     }
     let el = document.getElementById("pause-grid-left")
     el.style.display = "grid"
@@ -840,13 +859,13 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   techText(i) {
     return `<div class="card-text" >
                                 <div class="grid-title" ><div class="circle-grid tech"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   instantTechText(i) {
     // 
     return `<div class="card-text" >
                                 <div class="grid-title" > <div class="circle-grid-instant"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   skinTechText(i) {
     return `<div class="card-text"> <div class="grid-title">
@@ -854,7 +873,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                                     <div class="circle-grid-skin"></div>
                                     <div class="circle-grid-skin-eye"></div>
                                 </span> &nbsp; &nbsp; &nbsp; &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   gunTechText(i) {
     return `<div class="card-text"> <div class="grid-title">
@@ -862,7 +881,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                                     <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
                                     <div class="circle-grid gun" style="position:absolute; top:0; left:10px; opacity:0.65;"></div>
                                 </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   fieldTechText(i) {
     return `<div class="card-text"><div class="grid-title">
@@ -870,12 +889,12 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
                                     <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
                                     <div class="circle-grid field" style="position:absolute; top:0; left:10px;opacity:0.65;"></div>
                                 </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   junkTechText(i) {
     return `<div class="card-text">
                                 <div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+                                ${build.getDescription('tech', i)}</div>`
   },
   choosePowerUp(index, type, isAllowed = false) {
     if (type === "gun") {
@@ -916,7 +935,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
 
         document.getElementById(`field-${i}`).innerHTML = `<div class="card-text">
                                 <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
-                                ${m.fieldUpgrades[i].description}</div>`
+                                ${build.getDescription('field', i)}</div>`
       }
     } else if (type === "tech") {
       if (tech.tech[index].count < tech.tech[index].maxCount) {
@@ -964,7 +983,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
             techID.setAttribute("onClick", `javascript: build.choosePowerUp(${i},'tech')`);
           }
         } else { //disabled color for disabled tech
-          techID.innerHTML = `<div class="grid-title">${tech.tech[i].name}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
+          techID.innerHTML = `<div class="grid-title">${tech.tech[i].name}</div>${build.getDescription('tech', i)}</div>`
           if (!techID.classList.contains("experiment-grid-disabled")) {
             techID.classList.add("experiment-grid-disabled");
             techID.onclick = null
@@ -1053,14 +1072,14 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       text += `<div id="field-${i}" class="experiment-grid-module card-background ${m.fieldMode === i ? " build-field-selected" : ""}" onclick="build.choosePowerUp(${i},'field')" ${style} >
                             <div class="card-text">
                                 <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[i].name)}</div>
-                                ${m.fieldUpgrades[i].description}</div> </div>`
+                                ${build.getDescription('field', i)}</div> </div>`
     }
     for (let i = 0, len = b.guns.length; i < len; i++) {
       const style = localSettings.isHideImages ? hideStyle : `style='background-image: ${build.getBackgroundImageURL(i, "gun")};'`
       text += `<div id="gun-${i}" class="experiment-grid-module card-background ${b.guns[i].have ? " build-gun-selected" : ""}" onclick="build.choosePowerUp(${i},'gun')" ${style} >
                         <div class="card-text">
                             <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[i].name)}</div>
-                            ${b.guns[i].descriptionFunction()}</div> </div>`
+                            ${build.getDescription('gun', i)}</div> </div>`
     }
     for (let i = 0, len = tech.tech.length; i < len; i++) {
       if ((!tech.tech[i].isJunk || localSettings.isJunkExperiment) && !tech.tech[i].isLore) { //&& !tech.tech[i].isExperimentHide
@@ -1789,7 +1808,7 @@ window.addEventListener("keydown", function (event) {
                 }
                 m.energy = energy //return to current energy
                 document.getElementById("pause-field").style.backgroundImage = `style='background-image: ${build.getBackgroundImageURL(m.fieldMode, "field")};'`
-                document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>${m.fieldUpgrades[m.fieldMode].description}</div>`
+                document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div>${build.getDescription('field', m.fieldMode)}</div>`
               });
 
               document.getElementById("pause-field-next").addEventListener("click", () => {
@@ -1807,7 +1826,7 @@ window.addEventListener("keydown", function (event) {
                 m.energy = energy //return to current energy
                 // document.getElementById("pause-field").innerHTML = `<div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[m.fieldMode].name}</div> ${m.fieldUpgrades[m.fieldMode].description}`
                 document.getElementById("pause-field").style.backgroundImage = build.getBackgroundImageURL(m.fieldMode, 'field')
-                document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div> ${m.fieldUpgrades[m.fieldMode].description}</div>`
+                document.getElementById("pause-field").innerHTML = `<div class="card-text"> <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${build.nameLink(m.fieldUpgrades[m.fieldMode].name)}</div> ${build.getDescription('field', m.fieldMode)}</div>`
               });
             }
           }

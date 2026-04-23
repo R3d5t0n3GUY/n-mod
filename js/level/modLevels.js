@@ -265,13 +265,27 @@ const modLevels = {
     powerUps.addResearchToLevel() //needs to run after mobs are spawned
   },
   congregation() {
-     simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
+    simulation.inGameConsole(`<strong>congregation</strong> adaptation by <em>R3d5t0n3GUY</em>
             <br>WORK IN PROGRESS`)
     level.setPosToSpawn(0, -100); //normal spawn
     level.exit.x = 1500;
     level.exit.y = 0;
     simulation.fallHeight = 1500
-    const physicsProp = (style, properties = {}) => {
+    let decoDrawList = []
+    const blockStyle = {
+      fillStyle: "#ff5f00",
+      lineWidth: 25,
+      strokeStyle: "#f73",
+      lineJoin: "bevel",
+      composition: {
+        strokeStyle: "lighter"
+      }
+    }, decoStyle = {
+      fillStyle: "#5f7fff",
+      lineWidth: 7,
+      strokeStyle: "#3cf",
+      lineJoin: "bevel",
+    }, physicsProp = (style = blockStyle, properties = {}) => {
       let obj = {
         isNotHoldable: true,
         isInvulnerable: true,
@@ -283,47 +297,79 @@ const modLevels = {
       }
       Object.assign(obj, properties)
       return obj
-    }, blockStyle = {
-      fillStyle: "#ff5f00",
-      lineWidth: 25,
-      strokeStyle: "#f73",
-      lineJoin: "bevel",
-      composition: {
-        strokeStyle: "lighter"
+    }, addRect = (x, y, w, h, style = blockStyle) => {
+      let who = {
+        vertices: [
+          { x: x - Math.abs(w / 2), y: y - Math.abs(h / 2) },
+          { x: x - Math.abs(w / 2), y: y + Math.abs(h / 2) },
+          { x: x + Math.abs(w / 2), y: y + Math.abs(h / 2) },
+          { x: x + Math.abs(w / 2), y: y - Math.abs(h / 2) },
+        ],
+        style: style
       }
-    }, noCollision = {
-      collisionFilter: { cat: 0, mask: 0 }
+      decoDrawList.push(who)
+      return who
     }
-    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", physicsProp(blockStyle)) //starting block
-    spawn.physicsBodyFromShape(level.enter.x + 65, level.enter.y + 120, "0 0 70 0 70 70 0 70",
-      physicsProp({
-        fillStyle: "#5f7fff",
-        lineWidth: 7,
-        strokeStyle: "#3cf",
-        lineJoin: "bevel",
-      }, noCollision))
+    spawn.physicsBodyFromShape(level.enter.x + 120, level.enter.y + 172.5, "0 0 250 0 250 250 0 250", physicsProp()) //starting block
+    addRect(level.enter.x + 65, level.enter.y + 120, 70, 70, decoStyle)
     spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
     level.defaultZoom = 1800
     simulation.zoomTransition(level.defaultZoom)
-    document.body.style.backgroundColor = "#d8dadf";
+    //document.body.style.backgroundColor = "#d8dadf";
     // color.map = "#444" //custom map color
 
     level.custom = () => {
       level.exit.drawAndCheck();
       document.body.style.backgroundColor = "#222"
       level.enter.draw();
-      body.forEach(who => {
-        if (who.static ? who.static.isRequested : false) {
-          Matter.Body.setVelocity(who, {x: 0, y: 0})
-          Matter.Body.setPosition(who, who.static.where)
+    };
+    level.customTopLayer = () => {
+      decoDrawList.forEach(who => { //just stole my own code from simulation.draw.body() lol
+        let oldCtx = {
+          globalCompositeOperation: ctx.globalCompositeOperation,
+          lineJoin: ctx.lineJoin,
+          miterLimit: ctx.miterLimit
+        }, vertices = who.vertices, defineBounds = (invisible = false) => {
+          ctx.beginPath();
+          ctx.moveTo(vertices[0].x, vertices[0].y);
+          for (let j = 1; j < vertices.length; j++) {
+            ctx.lineTo(vertices[j].x, vertices[j].y);
+          }
+          ctx.lineTo(vertices[0].x, vertices[0].y);
+          if (invisible) {
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0)'
+            ctx.lineWidth = 0
+          }
         }
-        if (who.static ? (who.static.disableRotation || who.static.inertia === Infinity || who.static.angularVelocity === 0) : who.inertia === Infinity) {
-          Matter.Body.setAngularVelocity(who, 0)
-          Matter.Body.setAngle(who, 0)
+        if (!simulation.testing) {
+          defineBounds(true)
+          if (who.style) {
+            ctx.fillStyle = who.style.fillStyle || color.block
+            ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.fillStyle || 'source-over' : 'source-over')
+          } else {
+            ctx.fillStyle = color.block
+            ctx.globalCompositeOperation = 'source-over'
+          }
+          ctx.fill();
+          ctx.stroke();
+          Object.assign(ctx, oldCtx)
         }
+        defineBounds()
+        if (who.style && !simulation.testing) {
+          ctx.lineWidth = (Math.max(who.style.lineWidth + 1, 1) || 3) - 1;
+          ctx.lineJoin = who.style.lineJoin || "miter"
+          ctx.miterLimit = (Math.max(who.style.miterLimit + 1, 1) || 11) - 1;
+          ctx.strokeStyle = who.style.strokeStyle || color.blockS
+          ctx.globalCompositeOperation = (who.style.composition ? who.style.composition.strokeStyle || 'source-over' : 'source-over' )
+        } else { //fallback
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = color.blockS
+          ctx.globalCompositeOperation = 'source-over'
+        }
+        ctx.stroke()
+        Object.assign(ctx, oldCtx)
       })
     };
-    level.customTopLayer = () => {};
     spawn.physicsBodyFromShape(600, -100, "0 0 -400 200 0 200", physicsProp(blockStyle, {
       friction: -0.1
     }))
