@@ -21,6 +21,7 @@ const tech = {
       what.isBanished = false
       what.remove();
       what.count = 0
+      what.isLost = false
       if (what.isJunk) {
         what.frequency = 0
       } else if (what.frequencyDefault) {
