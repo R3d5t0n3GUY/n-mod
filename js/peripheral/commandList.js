@@ -10,7 +10,7 @@ const cmdList = {
           let trailing = input.slice(pos[1] + 1), evalString = trailing.replace(/\s/g, "")
           if (evalString === "" || evalString.startsWith("//") || trailing.trim().startsWith("/*")) {
             let invalidPhrases = ["document", "EventListener", "innerHTML", "outerHTML", "getElementsBy", "getElementBy", "prototype", "createElement",
-              "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "defaultGameVars", "resetGame", "eruda", "localSaves",
+              "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "eruda", "localSaves",
             ], isInvalid = false, cleanInput = input.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
             //this command should NOT access or alter HTML DOM, nor should it alter JS prototypes or request other commands, for security reasons
             isInvalid = invalidPhrases.some(i => (new RegExp(`\\b${i}\\s\\+`, 'g')).test(cleanInput)) || 

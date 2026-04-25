@@ -4894,25 +4894,23 @@ const m = {
           <br><strong>4</strong> <strong class='color-f'>energy</strong> per second
           <em class='color-combo'>↑↓ ← → ↑↓ ← →</em>`, //            <br><strong>100</strong> max <strong class='color-f'>energy</strong>
       keyLog: [null, null, null, null, null, null, null, null],
-      effect: () => {
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[0].keyLog.shift() //remove first element
-          m.fieldUpgrades[0].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
-          const patternB = [input.key.up, input.key.down, input.key.left, input.key.right, input.key.up, input.key.down, input.key.left, input.key.right]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[0].keyLog, patternA) || arraysEqual(m.fieldUpgrades[0].keyLog, patternB)) {
-            m.fieldUpgrades[0].keyLog = [null, null, null, null, null, null, null, null]
-            simulation.inGameConsole(`powerUps<span class='color-symbol'>.</span>directSpawn<span class='color-symbol'>(</span>
-            	m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span>
-                m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>y<span class='color-symbol'>, </span>
-                "settings"<span class='color-symbol'>)</span>
-                &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↓ ← → ↑↓ ← →</em>`)
-            powerUps.directSpawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "settings")
-          }
+      fieldEvent (event) {
+        m.fieldUpgrades[0].keyLog.shift() //remove first element
+        m.fieldUpgrades[0].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
+        const patternB = [input.key.up, input.key.down, input.key.left, input.key.right, input.key.up, input.key.down, input.key.left, input.key.right]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[0].keyLog, patternA) || arraysEqual(m.fieldUpgrades[0].keyLog, patternB)) {
+          m.fieldUpgrades[0].keyLog = [null, null, null, null, null, null, null, null]
+          simulation.inGameConsole(`powerUps<span class='color-symbol'>.</span>directSpawn<span class='color-symbol'>(</span>
+            m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>x<span class='color-symbol'>, </span>
+              m<span class='color-symbol'>.</span>pos<span class='color-symbol'>.</span>y<span class='color-symbol'>, </span>
+              "settings"<span class='color-symbol'>)</span>
+              &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↓ ← → ↑↓ ← →</em>`)
+          powerUps.directSpawn(m.pos.x + 100 * (Math.random() - 0.5), m.pos.y + 100 * (Math.random() - 0.5), "settings")
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      effect: () => {
         m.hold = function () {
           if (m.isHolding) {
             m.drawHold(m.holdingTarget);
@@ -4943,40 +4941,33 @@ const m = {
               <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
               <em class='color-combo'>←←↓→→↓</em>`,
       keyLog: [null, null, null, null, null, null],
+      fieldEvent (event) {
+        m.fieldUpgrades[1].keyLog.shift() //remove first element
+        m.fieldUpgrades[1].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowRight", "ArrowDown"]
+        const patternB = [input.key.left, input.key.left, input.key.down, input.key.right, input.key.right, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[1].keyLog, patternA) || arraysEqual(m.fieldUpgrades[1].keyLog, patternB)) {
+          // m.maxHealth = m.health = 1//10000000
+          // m.displayHealth();
+          // m.immuneCycle = Infinity //you can't take damage
+          // m.maxEnergy = m.energy = 10000000
+          if (m.fieldUpgrades[1].energyHealthRatio === 1) {
+            m.fieldUpgrades[1].energyHealthRatio = 2
+          } else if (m.fieldUpgrades[1].energyHealthRatio === 2) {
+            m.fieldUpgrades[1].energyHealthRatio = 0.5
+          } else {
+            m.fieldUpgrades[1].energyHealthRatio = 1
+          }
+          m.setMaxEnergy()
+          m.setMaxHealth()
+          m.displayHealth()
+          simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades<span class='color-symbol'>[1]</span>energyHealthRatio <span class='color-symbol'>=</span> ${m.fieldUpgrades[1].energyHealthRatio} &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←←↓→→↓</em>`);
+        }
+      },
       energyHealthRatio: 1,
       drainCD: 0,
       effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[1].keyLog.shift() //remove first element
-          m.fieldUpgrades[1].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowRight", "ArrowDown"]
-          const patternB = [input.key.left, input.key.left, input.key.down, input.key.right, input.key.right, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[1].keyLog, patternA) || arraysEqual(m.fieldUpgrades[1].keyLog, patternB)) {
-
-
-            // m.maxHealth = m.health = 1//10000000
-            // m.displayHealth();
-            // m.immuneCycle = Infinity //you can't take damage
-            // m.maxEnergy = m.energy = 10000000
-
-            if (m.fieldUpgrades[1].energyHealthRatio === 1) {
-              m.fieldUpgrades[1].energyHealthRatio = 2
-            } else if (m.fieldUpgrades[1].energyHealthRatio === 2) {
-              m.fieldUpgrades[1].energyHealthRatio = 0.5
-            } else {
-              m.fieldUpgrades[1].energyHealthRatio = 1
-
-            }
-            m.setMaxEnergy()
-            m.setMaxHealth()
-            m.displayHealth()
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades<span class='color-symbol'>[1]</span>energyHealthRatio <span class='color-symbol'>=</span> ${m.fieldUpgrades[1].energyHealthRatio} &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←←↓→→↓</em>`);
-          }
-        }
-        window.addEventListener("keydown", m.fieldEvent);
-
         m.fieldBlockCD = 0;
         m.blockingRecoil = 1 //4 is normal
         m.fieldRange = 185
@@ -5081,47 +5072,41 @@ const m = {
                     <br><strong>5</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>← → ← → ↧</em>`,
       keyLog: [null, null, null, null, null],
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[2].keyLog.shift() //remove first element
-          m.fieldUpgrades[2].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "ArrowDown"]
-          const patternB = [input.key.left, input.key.right, input.key.left, input.key.right, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[2].keyLog, patternA) || arraysEqual(m.fieldUpgrades[2].keyLog, patternB)) {
-            simulation.ephemera.push({
-              name: "perfect field push",
-              do() {
-                //check if touching map
-                const a = 0.5  //reduces arc to put collision line in middle of field
-                const upper = {
-                  x: m.fieldPosition.x + m.fieldRange * Math.cos(m.fieldAngle + a * Math.PI * m.fieldArc),
-                  y: m.fieldPosition.y + m.fieldRange * Math.sin(m.fieldAngle + a * Math.PI * m.fieldArc)
-                }
-                const lower = {
-                  x: m.fieldPosition.x + m.fieldRange * Math.cos(m.fieldAngle - a * Math.PI * m.fieldArc),
-                  y: m.fieldPosition.y + m.fieldRange * Math.sin(m.fieldAngle - a * Math.PI * m.fieldArc)
-                }
-                // ctx.beginPath();
-                // ctx.moveTo(upper.x, upper.y);
-                // ctx.lineTo(lower.x, lower.y);
-                // ctx.lineWidth = 1;
-                // ctx.strokeStyle = "#f0f";
-                // ctx.stroke();
-                const rayResults = Matter.Query.ray(map, upper, lower, 35);
-                if (!input.down || rayResults.length) simulation.removeEphemera(this.name)
-                const unit = { x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }
-                m.fieldPosition = Vector.add(m.fieldPosition, Vector.mult(unit, 10))
-              },
-            })
-
-
-            }
+      fieldEvent (event) {
+        m.fieldUpgrades[2].keyLog.shift() //remove first element
+        m.fieldUpgrades[2].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "ArrowDown"]
+        const patternB = [input.key.left, input.key.right, input.key.left, input.key.right, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[2].keyLog, patternA) || arraysEqual(m.fieldUpgrades[2].keyLog, patternB)) {
+          simulation.ephemera.push({
+            name: "perfect field push",
+            do() {
+              //check if touching map
+              const a = 0.5  //reduces arc to put collision line in middle of field
+              const upper = {
+                x: m.fieldPosition.x + m.fieldRange * Math.cos(m.fieldAngle + a * Math.PI * m.fieldArc),
+                y: m.fieldPosition.y + m.fieldRange * Math.sin(m.fieldAngle + a * Math.PI * m.fieldArc)
+              }
+              const lower = {
+                x: m.fieldPosition.x + m.fieldRange * Math.cos(m.fieldAngle - a * Math.PI * m.fieldArc),
+                y: m.fieldPosition.y + m.fieldRange * Math.sin(m.fieldAngle - a * Math.PI * m.fieldArc)
+              }
+              // ctx.beginPath();
+              // ctx.moveTo(upper.x, upper.y);
+              // ctx.lineTo(lower.x, lower.y);
+              // ctx.lineWidth = 1;
+              // ctx.strokeStyle = "#f0f";
+              // ctx.stroke();
+              const rayResults = Matter.Query.ray(map, upper, lower, 35);
+              if (!input.down || rayResults.length) simulation.removeEphemera(this.name)
+              const unit = { x: Math.cos(m.fieldAngle), y: Math.sin(m.fieldAngle) }
+              m.fieldPosition = Vector.add(m.fieldPosition, Vector.mult(unit, 10))
+            },
+          })
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
-
+      },
+      effect: () => {
         m.fieldMeterColor = "#48f" //"#0c5"
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
@@ -5432,64 +5417,43 @@ const m = {
                     <em class='color-combo'>←↑→↑↑</em>`,
       fieldDrawRadius: 0,
       keyLog: [null, null, null, null, null],
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[3].keyLog.shift() //remove first element
-          m.fieldUpgrades[3].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowUp", "ArrowUp"]
-          const patternB = [input.key.left, input.key.up, input.key.right, input.key.up, input.key.up]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          const drain = tech.negativeMassCost ? 0.13 : 0
-          if (input.field && m.energy > drain && (arraysEqual(m.fieldUpgrades[3].keyLog, patternA) || arraysEqual(m.fieldUpgrades[3].keyLog, patternB))) {
-            m.energy -= drain
-            simulation.ephemera.push({
-              name: "negative masses",
-              count: 60,
-              range: 1700,
-              do() {
-                this.count--
-                if (this.count < 0) simulation.removeEphemera(this.name)
-                // if (this.count < 0) {
-                //     this.count = 20
-                //     this.do = this.pushDo
-                // }
-                for (let i = 0, len = body.length; i < len; ++i) {
-                  sub = Vector.sub(body[i].position, m.pos);
-                  dist = Vector.magnitude(sub);
-                  if (dist < this.range) {
-                    const push = Vector.mult(Vector.normalise(sub), 0.012 * dist / 1000 * body[i].mass)
-                    body[i].force.x -= push.x
-                    body[i].force.y -= push.y + 1.1 * body[i].mass * simulation.g
+      fieldEvent (event) {
+        m.fieldUpgrades[3].keyLog.shift() //remove first element
+        m.fieldUpgrades[3].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowUp", "ArrowUp"]
+        const patternB = [input.key.left, input.key.up, input.key.right, input.key.up, input.key.up]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        const drain = tech.negativeMassCost ? 0.13 : 0
+        if (input.field && m.energy > drain && (arraysEqual(m.fieldUpgrades[3].keyLog, patternA) || arraysEqual(m.fieldUpgrades[3].keyLog, patternB))) {
+          m.energy -= drain
+          simulation.ephemera.push({
+            name: "negative masses",
+            count: 60,
+            range: 1700,
+            do() {
+              this.count--
+              if (this.count < 0) simulation.removeEphemera(this.name)
+              // if (this.count < 0) {
+              //     this.count = 20
+              //     this.do = this.pushDo
+              // }
+              for (let i = 0, len = body.length; i < len; ++i) {
+                sub = Vector.sub(body[i].position, m.pos);
+                dist = Vector.magnitude(sub);
+                if (dist < this.range) {
+                  const push = Vector.mult(Vector.normalise(sub), 0.012 * dist / 1000 * body[i].mass)
+                  body[i].force.x -= push.x
+                  body[i].force.y -= push.y + 1.1 * body[i].mass * simulation.g
 
-                    Matter.Body.setVelocity(body[i], { x: body[i].velocity.x * 0.9, y: body[i].velocity.y * 0.9 });
-
-                  }
+                  Matter.Body.setVelocity(body[i], { x: body[i].velocity.x * 0.9, y: body[i].velocity.y * 0.9 });
                 }
-
-              },
-              // pushDo() {
-              //     this.count--
-              //     if (this.count < 0) simulation.removeEphemera(this)
-              //     for (let i = 0, len = body.length; i < len; ++i) {
-              //         sub = Vector.sub(body[i].position, m.pos);
-              //         dist = Vector.magnitude(sub);
-              //         if (dist < this.range) {
-              //             const push = Vector.mult(Vector.normalise(sub), 0.01 * body[i].mass)
-              //             body[i].force.x += push.x
-              //             body[i].force.y += push.y - 1.1 * body[i].mass * simulation.g
-
-              //             Matter.Body.setVelocity(body[i], { x: body[i].velocity.x * 0.99, y: body[i].velocity.y * 0.99 });
-
-              //         }
-              //     }
-              // },
-            })
-            simulation.inGameConsole(`body<span class='color-symbol'>[i].</span>force <span class='color-symbol'>=</span> push &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↑→↑↑</em>`);
-          }
+              }
+            },
+          })
+          simulation.inGameConsole(`body<span class='color-symbol'>[i].</span>force <span class='color-symbol'>=</span> push &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↑→↑↑</em>`);
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      effect: () => {
         m.fieldFire = true;
         m.holdingMassScale = 0.01; //can hold heavier blocks with lower cost to jumping
         m.fieldMeterColor = "#333"
@@ -5672,25 +5636,22 @@ const m = {
         }
       },
       keyLog: [null, null, null, null, null, null, null],
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[4].keyLog.shift() //remove first element
-          m.fieldUpgrades[4].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowDown", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp", "ArrowUp", "ArrowDown"]
-          const patternB = [input.key.down, input.key.right, input.key.down, input.key.left, input.key.up, input.key.up, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[4].keyLog, patternA) || arraysEqual(m.fieldUpgrades[4].keyLog, patternB)) {
-            //cycle to next molecular mode
-            simulation.molecularMode = simulation.molecularMode < 3 ? simulation.molecularMode + 1 : 0
-            m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
-            const name = `${simulation.molecularMode === 0 ? "<em class='color-p' style='letter-spacing: 2px;'>spores" : simulation.molecularMode === 1 ? "<em>missiles" : simulation.molecularMode === 2 ? "<em class='color-s'>ice IX" : "<em>drones"}</em>`
-            simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>molecularMode <span class='color-symbol'>=</span> ${simulation.molecularMode} // ${name} &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">↓→↓←↑↑↓</em>`);
-          }
-          // console.log(event.code, m.fieldUpgrades[4].keyLog)
+      fieldEvent (event) {
+        m.fieldUpgrades[4].keyLog.shift() //remove first element
+        m.fieldUpgrades[4].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowDown", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp", "ArrowUp", "ArrowDown"]
+        const patternB = [input.key.down, input.key.right, input.key.down, input.key.left, input.key.up, input.key.up, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[4].keyLog, patternA) || arraysEqual(m.fieldUpgrades[4].keyLog, patternB)) {
+          //cycle to next molecular mode
+          simulation.molecularMode = simulation.molecularMode < 3 ? simulation.molecularMode + 1 : 0
+          m.fieldUpgrades[4].description = m.fieldUpgrades[4].setDescription()
+          const name = `${simulation.molecularMode === 0 ? "<em class='color-p' style='letter-spacing: 2px;'>spores" : simulation.molecularMode === 1 ? "<em>missiles" : simulation.molecularMode === 2 ? "<em class='color-s'>ice IX" : "<em>drones"}</em>`
+          simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>molecularMode <span class='color-symbol'>=</span> ${simulation.molecularMode} // ${name} &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">↓→↓←↑↑↓</em>`);
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+        // console.log(event.code, m.fieldUpgrades[4].keyLog)
+      },
+      effect: () => {
         m.fieldMeterColor = "#ff0"
         m.eyeFillColor = m.fieldMeterColor
         m.hold = function () {
@@ -5838,121 +5799,117 @@ const m = {
                     <br><strong>10</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>←↓→→↧</em>`,
       keyLog: [null, null, null, null, null],
-      set() {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[5].keyLog.shift() //remove first element
-          m.fieldUpgrades[5].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowRight", "ArrowDown"]
-          const patternB = [input.key.left, input.key.down, input.key.right, input.key.right, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[5].keyLog, patternA) || arraysEqual(m.fieldUpgrades[5].keyLog, patternB)) {
-            simulation.ephemera.push({
-              name: "plasma zap combo",
-              range: 800,
-              do() {
-                if (!input.down || input.field || input.fire) {
-                  simulation.removeEphemera(this.name);
-                } else {
-                  if (!(simulation.cycle % 6)) {
-                    //look for closest mob in player's LoS
-                    const closest = { distance: this.range + 300, target: null }
-                    if (tech.isPlasmaRange > 1) {
-                      closest.distance *= tech.isPlasmaRange
-                    }
-                    const dir = { x: Math.cos(m.angle), y: Math.sin(m.angle) };
-                    for (let i = 0, len = mob.length; i < len; ++i) {
-                      if (!mob[i].isInvulnerable && mob[i].alive && Matter.Query.ray(map, m.pos, mob[i].position).length === 0) { //&& !mob[i].isDarkMatter
-                        const dot = Vector.dot(dir, Vector.normalise(Vector.sub(mob[i].position, m.pos))) //the dot product of diff and dir will return how much over lap between the vectors
-                        const dist = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
-                        if (dist < closest.distance && dot > 0.65) { //target closest mob that player is looking at and isn't too close to target
-                          closest.distance = dist
-                          if (closest.target === null || Math.random() < 0.5) closest.target = mob[i]
-                        }
+      fieldEvent (event) {
+        m.fieldUpgrades[5].keyLog.shift() //remove first element
+        m.fieldUpgrades[5].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowRight", "ArrowDown"]
+        const patternB = [input.key.left, input.key.down, input.key.right, input.key.right, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[5].keyLog, patternA) || arraysEqual(m.fieldUpgrades[5].keyLog, patternB)) {
+          simulation.ephemera.push({
+            name: "plasma zap combo",
+            range: 800,
+            do() {
+              if (!input.down || input.field || input.fire) {
+                simulation.removeEphemera(this.name);
+              } else {
+                if (!(simulation.cycle % 6)) {
+                  //look for closest mob in player's LoS
+                  const closest = { distance: this.range + 300, target: null }
+                  if (tech.isPlasmaRange > 1) {
+                    closest.distance *= tech.isPlasmaRange
+                  }
+                  const dir = { x: Math.cos(m.angle), y: Math.sin(m.angle) };
+                  for (let i = 0, len = mob.length; i < len; ++i) {
+                    if (!mob[i].isInvulnerable && mob[i].alive && Matter.Query.ray(map, m.pos, mob[i].position).length === 0) { //&& !mob[i].isDarkMatter
+                      const dot = Vector.dot(dir, Vector.normalise(Vector.sub(mob[i].position, m.pos))) //the dot product of diff and dir will return how much over lap between the vectors
+                      const dist = Vector.magnitude(Vector.sub(m.pos, mob[i].position))
+                      if (dist < closest.distance && dot > 0.65) { //target closest mob that player is looking at and isn't too close to target
+                        closest.distance = dist
+                        if (closest.target === null || Math.random() < 0.5) closest.target = mob[i]
                       }
                     }
+                  }
+                  let where
+                  if (closest.target) {
+                    where = closest.target.vertices[Math.floor(closest.target.vertices.length * Math.random())]
+                  } else {
+                    // where = Vector.add(m.pos, Vector.rotate(Vector.mult(dir, Math.floor(300 + 800 * Math.random())), 2 * Math.PI * Math.random()))
+                    where = Vector.add(m.pos, Vector.rotate(Vector.mult(dir, Math.floor(300 + this.range * Math.random())), (Math.random() - 0.5)))
+                  }
+                  simulation.ephemera.push({
+                    name: "plasma zap streak",
+                    count: 50,
+                    who: closest.target,
+                    where: where,
+                    isReady: true,
+                    path: [where],
+                    do() {
+                      this.count--
+                      if (this.count < 0) {
+                        simulation.removeEphemera(this.name)
+                      } else {
+                        if (this.isReady) {
+                          for (let i = 0; i < 1; i++) {
+                            if (Vector.magnitudeSquared(Vector.sub(m.pos, this.where)) > 1000) {
+                              const v = Vector.mult(Vector.normalise(Vector.sub(m.pos, this.where)), 20 + Math.floor(60 * Math.random()))
+                              this.path.push(this.where)
+                              this.where = Vector.add(this.where, Vector.rotate(v, 1 * (Math.random() - 0.5)))
+                            } else if (this.who) {
+                              this.isReady = false
+                              // requestAnimationFrame(() => {
+                              m.energy += 0.08
+                              let dmg = 0.45
+                              if (this.who.isShielded) dmg *= 8
+                              this.who.damage(dmg);
 
-                    let where
-                    if (closest.target) {
-                      where = closest.target.vertices[Math.floor(closest.target.vertices.length * Math.random())]
-                    } else {
-                      // where = Vector.add(m.pos, Vector.rotate(Vector.mult(dir, Math.floor(300 + 800 * Math.random())), 2 * Math.PI * Math.random()))
-                      where = Vector.add(m.pos, Vector.rotate(Vector.mult(dir, Math.floor(300 + this.range * Math.random())), (Math.random() - 0.5)))
-                    }
-                    simulation.ephemera.push({
-                      name: "plasma zap streak",
-                      count: 50,
-                      who: closest.target,
-                      where: where,
-                      isReady: true,
-                      path: [where],
-                      do() {
-                        this.count--
-                        if (this.count < 0) {
-                          simulation.removeEphemera(this.name)
-                        } else {
-                          if (this.isReady) {
-                            for (let i = 0; i < 1; i++) {
-                              if (Vector.magnitudeSquared(Vector.sub(m.pos, this.where)) > 1000) {
-                                const v = Vector.mult(Vector.normalise(Vector.sub(m.pos, this.where)), 20 + Math.floor(60 * Math.random()))
-                                this.path.push(this.where)
-                                this.where = Vector.add(this.where, Vector.rotate(v, 1 * (Math.random() - 0.5)))
-                              } else if (this.who) {
-                                this.isReady = false
-                                // requestAnimationFrame(() => {
-                                m.energy += 0.08
-                                let dmg = 0.45
-                                if (this.who.isShielded) dmg *= 8
-                                this.who.damage(dmg);
+                              //mob vertex
+                              simulation.drawList.push({
+                                x: this.path[0].x,
+                                y: this.path[0].y,
+                                radius: 8,
+                                color: "rgba(136,136,255,0.9)",
+                                time: simulation.drawTime
+                              });
+                              //near player
+                              simulation.drawList.push({
+                                x: this.path[this.path.length - 1].x,
+                                y: this.path[this.path.length - 1].y,
+                                radius: 6 + Math.floor(5 * Math.random()),
+                                color: "rgba(136,136,255,0.9)",
+                                time: simulation.drawTime
+                              });
 
-                                //mob vertex
-                                simulation.drawList.push({
-                                  x: this.path[0].x,
-                                  y: this.path[0].y,
-                                  radius: 8,
-                                  color: "rgba(136,136,255,0.9)",
-                                  time: simulation.drawTime
-                                });
-                                //near player
-                                simulation.drawList.push({
-                                  x: this.path[this.path.length - 1].x,
-                                  y: this.path[this.path.length - 1].y,
-                                  radius: 6 + Math.floor(5 * Math.random()),
-                                  color: "rgba(136,136,255,0.9)",
-                                  time: simulation.drawTime
-                                });
-
-                                if (this.who.speed > 1) {
-                                  Matter.Body.setVelocity(this.who, { x: this.who.velocity.x * 0.1, y: this.who.velocity.y * 0.1 });
-                                } else {
-                                  Matter.Body.setVelocity(this.who, { x: this.who.velocity.x * 0.3, y: this.who.velocity.y * 0.3 });
-                                }
-                                // });
-                                break
+                              if (this.who.speed > 1) {
+                                Matter.Body.setVelocity(this.who, { x: this.who.velocity.x * 0.1, y: this.who.velocity.y * 0.1 });
+                              } else {
+                                Matter.Body.setVelocity(this.who, { x: this.who.velocity.x * 0.3, y: this.who.velocity.y * 0.3 });
                               }
+                              // });
+                              break
                             }
                           }
-                          ctx.beginPath();
-                          ctx.moveTo(this.path[0].x, this.path[0].y);
-                          for (let i = 0, len = this.path.length; i < len; i++) ctx.lineTo(this.path[i].x, this.path[i].y);
-                          ctx.strokeStyle = "#ff7fff";
-                          ctx.lineWidth = 1 + 1 * Math.random();
-                          ctx.stroke();
-                          ctx.strokeStyle = "rgba(127,95,255,0.15)";
-                          ctx.lineWidth = 15 + 10 * Math.random();
-                          ctx.stroke();
                         }
-                      },
-                    })
-                  }
+                        ctx.beginPath();
+                        ctx.moveTo(this.path[0].x, this.path[0].y);
+                        for (let i = 0, len = this.path.length; i < len; i++) ctx.lineTo(this.path[i].x, this.path[i].y);
+                        ctx.strokeStyle = "#ff7fff";
+                        ctx.lineWidth = 1 + 1 * Math.random();
+                        ctx.stroke();
+                        ctx.strokeStyle = "rgba(127,95,255,0.15)";
+                        ctx.lineWidth = 15 + 10 * Math.random();
+                        ctx.stroke();
+                      }
+                    },
+                  })
                 }
-              },
-            })
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↓→→↧</em>`);
-          }
+              }
+            },
+          })
+          simulation.inGameConsole(`m<span class='color-symbol'>.</span>energy <span class='color-symbol'>+=</span> 0.05 &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//←↓→→↧</em>`);
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      set() {
         b.isExtruderOn = false
         m.fieldDamage = 1.5
         if (m.plasmaBall) {
@@ -6315,32 +6272,28 @@ const m = {
                     <br><strong>12</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo' style="font-size:0.8rem;">←↓→↑←↓→↑</em>`,
       keyLog: [null, null, null, null, null, null, null, null],
+      fieldEvent (event) {
+        m.fieldUpgrades[6].keyLog.shift() //remove first element
+        m.fieldUpgrades[6].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp",]
+        const patternB = [input.key.left, input.key.down, input.key.right, input.key.up, input.key.left, input.key.down, input.key.right, input.key.up]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[6].keyLog, patternA) || arraysEqual(m.fieldUpgrades[6].keyLog, patternB)) {
+          m.fieldUpgrades[6].keyLog = [null, null, null, null, null, null, null, null]
+          if (m.fieldUpgrades[6].isFreeCameraMode) {
+            m.fieldUpgrades[6].isFreeCameraMode = false
+          } else {
+            m.fieldUpgrades[6].isFreeCameraMode = true
+          }
+          m.fieldUpgrades[6].set()
+          m.wakeCheck();
+
+          simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
+          &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//←↓→↑←↓→↑</em>`);
+        }
+      },
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
       set() {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[6].keyLog.shift() //remove first element
-          m.fieldUpgrades[6].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp",]
-          const patternB = [input.key.left, input.key.down, input.key.right, input.key.up, input.key.left, input.key.down, input.key.right, input.key.up]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[6].keyLog, patternA) || arraysEqual(m.fieldUpgrades[6].keyLog, patternB)) {
-            m.fieldUpgrades[6].keyLog = [null, null, null, null, null, null, null, null]
-            if (m.fieldUpgrades[6].isFreeCameraMode) {
-              m.fieldUpgrades[6].isFreeCameraMode = false
-            } else {
-              m.fieldUpgrades[6].isFreeCameraMode = true
-            }
-            window.removeEventListener("keydown", m.fieldEvent);
-            m.fieldUpgrades[6].set()
-            m.wakeCheck();
-
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldUpgrades[6]<span class='color-symbol'>.</span>isFreeCameraMode <span class='color-symbol'>=</span> ${m.fieldUpgrades[6].isFreeCameraMode} 
-            &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//←↓→↑←↓→↑</em>`);
-          }
-        }
-        window.addEventListener("keydown", m.fieldEvent);
-
         // m.fieldMeterColor = "#0fc"
         // m.fieldMeterColor = "#ff0"
         m.fieldMeterColor = "#3fe"
@@ -6438,28 +6391,24 @@ const m = {
                     <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↑↓←↓→</em>`,
       keyLog: [null, null, null, null, null],
-      smallFieldRadius: 130,
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[7].keyLog.shift() //remove first element
-          m.fieldUpgrades[7].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowRight"]
-          const patternB = [input.key.up, input.key.down, input.key.left, input.key.down, input.key.right]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[7].keyLog, patternA) || arraysEqual(m.fieldUpgrades[7].keyLog, patternB)) {
-            if (m.fieldUpgrades[7].smallFieldRadius === 130) {
-              m.fieldUpgrades[7].smallFieldRadius = 70
-              simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
-            } else {
-              m.fieldUpgrades[7].smallFieldRadius = 130
-              simulation.inGameConsole(`<strong>6</strong><span class='color-symbol'>→</span><strong>4.5x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
-            }
+      fieldEvent (event) {
+        m.fieldUpgrades[7].keyLog.shift() //remove first element
+        m.fieldUpgrades[7].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowRight"]
+        const patternB = [input.key.up, input.key.down, input.key.left, input.key.down, input.key.right]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[7].keyLog, patternA) || arraysEqual(m.fieldUpgrades[7].keyLog, patternB)) {
+          if (m.fieldUpgrades[7].smallFieldRadius === 130) {
+            m.fieldUpgrades[7].smallFieldRadius = 70
+            simulation.inGameConsole(`<strong>4.5</strong><span class='color-symbol'>→</span><strong>6x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
+          } else {
+            m.fieldUpgrades[7].smallFieldRadius = 130
+            simulation.inGameConsole(`<strong>6</strong><span class='color-symbol'>→</span><strong>4.5x</strong> <strong class='color-cloaked'>decloaking</strong> <strong class='color-d'>damage</strong> &nbsp; &nbsp; <em style="float: right;font-family: monospace;font-size: 1rem;color: #055;">//↑↓←↓→</em>`);
           }
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
-
+      },
+      smallFieldRadius: 130,
+      effect: () => {
         m.fieldFire = true;
         m.fieldMeterColor = "#333";
         m.eyeFillColor = m.fieldMeterColor
@@ -6624,6 +6573,49 @@ const m = {
                     <br><div class="circle-grid tech"></div>, <div class="circle-grid gun"></div>, and <div class="circle-grid field"></div> have <strong>+3</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ces</span></strong>
                     <br><strong>10</strong> <strong class='color-f'>energy</strong> per second`,
       keyLog: [null, null, null, null, null, null, null],
+      fieldEvent (event) {
+        m.fieldUpgrades[8].keyLog.shift() //remove first element
+        m.fieldUpgrades[8].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowDown", "ArrowDown", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowDown"]
+        const patternB = [input.key.down, input.key.down, input.key.right, input.key.down, input.key.left, input.key.down, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+
+        const width = 90 + Math.floor(30 * Math.random())
+        const height = 11 + Math.floor(7 * Math.random())
+        const yOff = 60
+        const blockRegion = {
+          min: {
+            x: m.pos.x - width,
+            y: m.pos.y + yOff - height
+          },
+          max: {
+            x: m.pos.x + width,
+            y: m.pos.y + yOff + height
+          }
+        }
+        if (
+          (arraysEqual(m.fieldUpgrades[8].keyLog, patternA) || arraysEqual(m.fieldUpgrades[8].keyLog, patternB))
+          && (tech.isPilotMapIgnore || !Matter.Query.region(map, blockRegion).length)
+          && !m.crouch
+        ) {
+          //move player up away from block
+          Matter.Body.setPosition(player, { x: player.position.x, y: player.position.y - height })
+
+          //spawn a block
+          body[body.length] = Matter.Bodies.rectangle(m.pos.x, blockRegion.max.y, width * 2, height * 2, {
+            friction: 0.05,
+            frictionAir: 0.001,
+            collisionFilter: {
+              category: cat.body,
+              mask: cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet
+            },
+            classType: "body",
+            isPilotWave: true,
+          });
+          Composite.add(engine.world, body[body.length - 1]); //add to world
+          simulation.inGameConsole(`Composite<span class='color-symbol'>.</span>add<span class='color-symbol'>(</span>engine.world<span class='color-symbol'>,</span> block<span class='color-symbol'>)</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓→↓←↓↓</em>`);
+        }
+      },
       collider: null,
       fieldMass: 1,
       drain: 1,
@@ -6636,52 +6628,6 @@ const m = {
           lastSpeed: 0,
         });
         Composite.add(engine.world, m.fieldUpgrades[8].collider); //add to world
-
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[8].keyLog.shift() //remove first element
-          m.fieldUpgrades[8].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowDown", "ArrowDown", "ArrowRight", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowDown"]
-          const patternB = [input.key.down, input.key.down, input.key.right, input.key.down, input.key.left, input.key.down, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-
-          const width = 90 + Math.floor(30 * Math.random())
-          const height = 11 + Math.floor(7 * Math.random())
-          const yOff = 60
-          const blockRegion = {
-            min: {
-              x: m.pos.x - width,
-              y: m.pos.y + yOff - height
-            },
-            max: {
-              x: m.pos.x + width,
-              y: m.pos.y + yOff + height
-            }
-          }
-          if (
-            (arraysEqual(m.fieldUpgrades[8].keyLog, patternA) || arraysEqual(m.fieldUpgrades[8].keyLog, patternB))
-            && (tech.isPilotMapIgnore || !Matter.Query.region(map, blockRegion).length)
-            && !m.crouch
-          ) {
-            //move player up away from block
-            Matter.Body.setPosition(player, { x: player.position.x, y: player.position.y - height })
-
-            //spawn a block
-            body[body.length] = Matter.Bodies.rectangle(m.pos.x, blockRegion.max.y, width * 2, height * 2, {
-              friction: 0.05,
-              frictionAir: 0.001,
-              collisionFilter: {
-                category: cat.body,
-                mask: cat.player | cat.map | cat.body | cat.bullet | cat.mob | cat.mobBullet
-              },
-              classType: "body",
-              isPilotWave: true,
-            });
-            Composite.add(engine.world, body[body.length - 1]); //add to world
-            simulation.inGameConsole(`Composite<span class='color-symbol'>.</span>add<span class='color-symbol'>(</span>engine.world<span class='color-symbol'>,</span> block<span class='color-symbol'>)</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↓↓→↓←↓↓</em>`);
-          }
-        }
-        window.addEventListener("keydown", m.fieldEvent);
 
         m.fieldMeterColor = "#333"
         m.eyeFillColor = m.fieldMeterColor
@@ -6941,71 +6887,68 @@ const m = {
                     <br><strong>8</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↓↓↓↑↓</em>`,
       keyLog: [null, null, null, null, null],
-      drain: 0,
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[9].keyLog.shift() //remove first element
-          m.fieldUpgrades[9].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowDown", "ArrowDown", "ArrowDown", "ArrowUp", "ArrowDown"]
-          const patternB = [input.key.down, input.key.down, input.key.down, input.key.up, input.key.down,]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          const drain = tech.isFreeWormHole ? 0.02 : 0.16
-          if (m.energy > drain && arraysEqual(m.fieldUpgrades[9].keyLog, patternA) || arraysEqual(m.fieldUpgrades[9].keyLog, patternB)) {
-            m.energy -= drain
-            const rayResults = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y - 10000 }, 50)
-            let hasTeleported = false
-            if (rayResults.length) {
-              rayResults.sort((a, b) => {
+      fieldEvent (event) {
+        m.fieldUpgrades[9].keyLog.shift() //remove first element
+        m.fieldUpgrades[9].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowDown", "ArrowDown", "ArrowDown", "ArrowUp", "ArrowDown"]
+        const patternB = [input.key.down, input.key.down, input.key.down, input.key.up, input.key.down,]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        const drain = tech.isFreeWormHole ? 0.02 : 0.16
+        if (m.energy > drain && arraysEqual(m.fieldUpgrades[9].keyLog, patternA) || arraysEqual(m.fieldUpgrades[9].keyLog, patternB)) {
+          m.energy -= drain
+          const rayResults = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y - 10000 }, 50)
+          let hasTeleported = false
+          if (rayResults.length) {
+            rayResults.sort((a, b) => {
+              const yA = a.body.position.y;
+              const yB = b.body.position.y;
+              return yB - yA;
+            });
+
+            for (let i = 0, len = Math.min(10, rayResults.length); i < len; i++) {
+              const h = rayResults[i].body.bounds.min.y
+              if (Matter.Query.ray(map, { x: m.pos.x, y: h }, { x: m.pos.x, y: h - 150 }, 50).length === 0) {
+                simulation.translatePlayerAndCamera({ x: m.pos.x, y: h - 90 }) //too jerky 
+                // Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
+                requestAnimationFrame(() => {
+                  Matter.Body.setVelocity(player, { x: 0, y: 0 });
+                  // requestAnimationFrame(() => { Matter.Body.setVelocity(player, { x: 0, y: 0 }); });
+                });
+
+                // simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; <em style="font-family:monospace;font-size:1rem;color:#055;">//↓↓↓↑↓</em>`);
+                hasTeleported = true
+                break
+              }
+            }
+          } else {
+            const rayResultsDown = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y + 10000 }, 50)
+            if (rayResultsDown.length) {
+              rayResultsDown.sort((a, b) => {
                 const yA = a.body.position.y;
                 const yB = b.body.position.y;
                 return yB - yA;
               });
-
-              for (let i = 0, len = Math.min(10, rayResults.length); i < len; i++) {
-                const h = rayResults[i].body.bounds.min.y
+              for (let i = 0, len = Math.min(10, rayResultsDown.length); i < len; i++) {
+                const h = rayResultsDown[i].body.bounds.min.y
                 if (Matter.Query.ray(map, { x: m.pos.x, y: h }, { x: m.pos.x, y: h - 150 }, 50).length === 0) {
                   simulation.translatePlayerAndCamera({ x: m.pos.x, y: h - 90 }) //too jerky 
-                  // Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
-                  requestAnimationFrame(() => {
-                    Matter.Body.setVelocity(player, { x: 0, y: 0 });
-                    // requestAnimationFrame(() => { Matter.Body.setVelocity(player, { x: 0, y: 0 }); });
-                  });
-
-                  // simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; <em style="font-family:monospace;font-size:1rem;color:#055;">//↓↓↓↑↓</em>`);
+                  Matter.Body.setVelocity(player, { x: 0, y: 0 });
+                  // simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; <em style ="font-family: monospace;font-size:1rem;color:#055;">//↓↓↓↑↓</em>`);
                   hasTeleported = true
                   break
                 }
               }
-            } else {
-              const rayResultsDown = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y + 10000 }, 50)
-              if (rayResultsDown.length) {
-                rayResultsDown.sort((a, b) => {
-                  const yA = a.body.position.y;
-                  const yB = b.body.position.y;
-                  return yB - yA;
-                });
-                for (let i = 0, len = Math.min(10, rayResultsDown.length); i < len; i++) {
-                  const h = rayResultsDown[i].body.bounds.min.y
-                  if (Matter.Query.ray(map, { x: m.pos.x, y: h }, { x: m.pos.x, y: h - 150 }, 50).length === 0) {
-                    simulation.translatePlayerAndCamera({ x: m.pos.x, y: h - 90 }) //too jerky 
-                    Matter.Body.setVelocity(player, { x: 0, y: 0 });
-                    // simulation.inGameConsole(`simulation<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>({</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; <em style ="font-family: monospace;font-size:1rem;color:#055;">//↓↓↓↑↓</em>`);
-                    hasTeleported = true
-                    break
-                  }
-                }
-              }
-            }
-            if (!hasTeleported) { //show failure as a short teleport
-              simulation.translatePlayerAndCamera({ x: m.pos.x, y: player.position.y - 20 }) //too jerky 
-              // Matter.Body.setPosition(player, { x: m.pos.x, y: m.pos.y - 20 });
-              // Matter.Body.setVelocity(player, { x: 0, y: 0 });
             }
           }
+          if (!hasTeleported) { //show failure as a short teleport
+            simulation.translatePlayerAndCamera({ x: m.pos.x, y: player.position.y - 20 }) //too jerky 
+            // Matter.Body.setPosition(player, { x: m.pos.x, y: m.pos.y - 20 });
+            // Matter.Body.setVelocity(player, { x: 0, y: 0 });
+          }
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      drain: 0,
+      effect: () => {
         m.fieldMeterColor = "#bbf" //"#0c5"
         m.eyeFillColor = m.fieldMeterColor
 
@@ -7390,95 +7333,92 @@ const m = {
                     <br><strong>9</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↑↑↓↓</em>`,
       keyLog: [null, null, null, null],
-      effect: () => {
-        //store event function so it can be found and removed in m.setField()
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[10].keyLog.shift() //remove first element
-          m.fieldUpgrades[10].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown"]
-          const patternB = [input.key.up, input.key.up, input.key.down, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          const drain = 0.13
-          if (m.energy > drain && arraysEqual(m.fieldUpgrades[10].keyLog, patternA) || arraysEqual(m.fieldUpgrades[10].keyLog, patternB)) {
-            // const rayResults = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y + 5000 }, 50)
-            const combinedElements = [...map, ...body];
-            const rayResults = Matter.Query.ray(combinedElements, m.pos, { x: m.pos.x, y: m.pos.y + 5000 }, 40);
+      fieldEvent  (event) {
+        m.fieldUpgrades[10].keyLog.shift() //remove first element
+        m.fieldUpgrades[10].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown"]
+        const patternB = [input.key.up, input.key.up, input.key.down, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        const drain = 0.13
+        if (m.energy > drain && arraysEqual(m.fieldUpgrades[10].keyLog, patternA) || arraysEqual(m.fieldUpgrades[10].keyLog, patternB)) {
+          // const rayResults = Matter.Query.ray(map, m.pos, { x: m.pos.x, y: m.pos.y + 5000 }, 50)
+          const combinedElements = [...map, ...body];
+          const rayResults = Matter.Query.ray(combinedElements, m.pos, { x: m.pos.x, y: m.pos.y + 5000 }, 40);
 
-            if (rayResults.length) {
-              rayResults.sort((a, b) => {
-                const yA = a.body.position.y;
-                const yB = b.body.position.y;
-                return yA - yB;
-              });
-              const h = rayResults[0].body.bounds.min.y
-              if (h - m.pos.y > 400) { //check if at least 500 above the ground
-                m.energy -= drain
-                const hLast = player.position.y
-                const range = 0.05 * Math.min(h - hLast, 1500)
-                const range2 = Math.min(h - hLast, 1500) * Math.min(h - hLast, 1500)
-                simulation.ephemera.push({
-                  name: "grapple ground smash",
-                  count: 0, //cycles before it self removes
-                  do() {
-                    this.count++
-                    if (this.count > 6) simulation.removeEphemera(this.name)
+          if (rayResults.length) {
+            rayResults.sort((a, b) => {
+              const yA = a.body.position.y;
+              const yB = b.body.position.y;
+              return yA - yB;
+            });
+            const h = rayResults[0].body.bounds.min.y
+            if (h - m.pos.y > 400) { //check if at least 500 above the ground
+              m.energy -= drain
+              const hLast = player.position.y
+              const range = 0.05 * Math.min(h - hLast, 1500)
+              const range2 = Math.min(h - hLast, 1500) * Math.min(h - hLast, 1500)
+              simulation.ephemera.push({
+                name: "grapple ground smash",
+                count: 0, //cycles before it self removes
+                do() {
+                  this.count++
+                  if (this.count > 6) simulation.removeEphemera(this.name)
 
-                    ctx.fillStyle = 'rgba(255,255,255,0.5)'
-                    ctx.beginPath();
+                  ctx.fillStyle = 'rgba(255,255,255,0.5)'
+                  ctx.beginPath();
 
-                    ctx.arc(m.pos.x, m.pos.y, range * this.count, 0, 2 * Math.PI);
-                    ctx.lineWidth = 10;
-                    ctx.fill();
+                  ctx.arc(m.pos.x, m.pos.y, range * this.count, 0, 2 * Math.PI);
+                  ctx.lineWidth = 10;
+                  ctx.fill();
 
-                    ctx.beginPath();
-                    ctx.moveTo(m.pos.x, hLast);
-                    ctx.lineTo(m.pos.x, h - 90);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.15)'
-                    ctx.lineWidth = 40;
-                    ctx.stroke();
-                  },
-                })
-                Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
-                Matter.Body.setVelocity(player, { x: player.velocity.x, y: 0 });
-                input.field = false //force release grapple
-                const immunity = Math.min(Math.floor(0.06 * (h - hLast)), 180)
-                if (m.immuneCycle < m.cycle + immunity) m.immuneCycle = m.cycle + immunity; //player is immune to damage for 30 cycles
+                  ctx.beginPath();
+                  ctx.moveTo(m.pos.x, hLast);
+                  ctx.lineTo(m.pos.x, h - 90);
+                  ctx.strokeStyle = 'rgba(255,255,255,0.15)'
+                  ctx.lineWidth = 40;
+                  ctx.stroke();
+                },
+              })
+              Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
+              Matter.Body.setVelocity(player, { x: player.velocity.x, y: 0 });
+              input.field = false //force release grapple
+              const immunity = Math.min(Math.floor(0.06 * (h - hLast)), 180)
+              if (m.immuneCycle < m.cycle + immunity) m.immuneCycle = m.cycle + immunity; //player is immune to damage for 30 cycles
 
-                m.doCrouch()
-                m.yOff = m.yOffWhen.jump;
-                m.hardLandCD = m.cycle + m.hardLandCDScale * Math.min(2 * m.hardLanding / 6.5 - 6, 40)
+              m.doCrouch()
+              m.yOff = m.yOffWhen.jump;
+              m.hardLandCD = m.cycle + m.hardLandCDScale * Math.min(2 * m.hardLanding / 6.5 - 6, 40)
 
-                //push away blocks, mobs
-                const magX = 0.0015 * range
-                const magY = 0.001 * range
-                for (let i = 0, len = body.length; i < len; ++i) {
-                  if (Vector.magnitudeSquared(Vector.sub(body[i].position, player.position)) < range2) {
-                    body[i].force.x += magX * body[i].mass * (body[i].position.x > player.position.x ? 1 : -1)
-                    body[i].force.y -= magY * body[i].mass
-                  }
+              //push away blocks, mobs
+              const magX = 0.0015 * range
+              const magY = 0.001 * range
+              for (let i = 0, len = body.length; i < len; ++i) {
+                if (Vector.magnitudeSquared(Vector.sub(body[i].position, player.position)) < range2) {
+                  body[i].force.x += magX * body[i].mass * (body[i].position.x > player.position.x ? 1 : -1)
+                  body[i].force.y -= magY * body[i].mass
                 }
-                for (let i = 0, len = mob.length; i < len; ++i) {
-                  if (Vector.magnitudeSquared(Vector.sub(mob[i].position, player.position)) < range2) {
-                    mob[i].force.x += magX * mob[i].mass * (mob[i].position.x > player.position.x ? 1 : -1)
-                    mob[i].force.y -= magY * mob[i].mass
-                  }
-                }
-                //pull power ups in
-                for (let i = 0, len = powerUp.length; i < len; ++i) {
-                  if (Vector.magnitudeSquared(Vector.sub(powerUp[i].position, player.position)) < range2) {
-                    powerUp[i].force.x -= magX * powerUp[i].mass * (powerUp[i].position.x > player.position.x ? 1 : -1)
-                    powerUp[i].force.y += magY * powerUp[i].mass
-                  }
-                }
-                // simulation.inGameConsole(`Matter<span class='color-symbol'>.</span>Body<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>(</span>player<span class='color-symbol'>, {</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↑↓↓</em>`);
               }
+              for (let i = 0, len = mob.length; i < len; ++i) {
+                if (Vector.magnitudeSquared(Vector.sub(mob[i].position, player.position)) < range2) {
+                  mob[i].force.x += magX * mob[i].mass * (mob[i].position.x > player.position.x ? 1 : -1)
+                  mob[i].force.y -= magY * mob[i].mass
+                }
+              }
+              //pull power ups in
+              for (let i = 0, len = powerUp.length; i < len; ++i) {
+                if (Vector.magnitudeSquared(Vector.sub(powerUp[i].position, player.position)) < range2) {
+                  powerUp[i].force.x -= magX * powerUp[i].mass * (powerUp[i].position.x > player.position.x ? 1 : -1)
+                  powerUp[i].force.y += magY * powerUp[i].mass
+                }
+              }
+              // simulation.inGameConsole(`Matter<span class='color-symbol'>.</span>Body<span class='color-symbol'>.</span>setPosition<span class='color-symbol'>(</span>player<span class='color-symbol'>, {</span> x<span class='color-symbol'>:</span> 0<span class='color-symbol'>,</span> y<span class='color-symbol'>:</span> 0 <span class='color-symbol'>})</span> &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑↑↓↓</em>`);
             }
-            //  AoE stun mobs?
-            //  damage mobs?
           }
+          //  AoE stun mobs?
+          //  damage mobs?
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      effect: () => {
         m.fieldFire = true;
         // m.holdingMassScale = 0.01; //can hold heavier blocks with lower cost to jumping
         // m.fieldMeterColor = "#789"//"#456"
@@ -7540,32 +7480,29 @@ const m = {
     {
       name: "tachyonic field",
       description: `use <strong class="color-f">energy</strong> to gain a <strong>burst</strong> of <strong class='color-speed'>speed</strong>
-              <em class='color-combo'>←↑→↓↓</em>
       				<br>multiply <strong class='color-speed'>momentum</strong> <strong>exponentially</strong>
-                    <br>16 <strong class="color-f">energy</strong> per second`,
+              <br>16 <strong class="color-f">energy</strong> per second <em class='color-combo'>←↑→↓↓</em>`,
       canMove: false,
       keyLog: [null, null, null, null, null],
-      haveEphemera: false,
-      effect() {
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[11].keyLog.shift() //remove first element
-          m.fieldUpgrades[11].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown", "ArrowDown"]
-          const patternB = [input.key.left, input.key.up, input.key.right, input.key.down, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[11].keyLog, patternA) || arraysEqual(m.fieldUpgrades[11].keyLog, patternB)) {
-            m.fieldUpgrades[11].canMove = true;
-            if (m.energy < m.maxEnergy) {
-              m.energy = m.maxEnergy;
-              m.drawRegenEnergy();
-              simulation.inGameConsole(`<span class='color-var'>m</span>.<strong class='color-f'>energy</strong> <span class='color-symbol'>=</span> 
-              	<span class='color-var'>m</span>.<strong class='color-f'>maxEnergy</strong>
-              	<em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//←↑→↓↓</em>`)
-            }
+      fieldEvent (event) {
+        m.fieldUpgrades[11].keyLog.shift() //remove first element
+        m.fieldUpgrades[11].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown", "ArrowDown"]
+        const patternB = [input.key.left, input.key.up, input.key.right, input.key.down, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[11].keyLog, patternA) || arraysEqual(m.fieldUpgrades[11].keyLog, patternB)) {
+          m.fieldUpgrades[11].canMove = true;
+          if (m.energy < m.maxEnergy) {
+            m.energy = m.maxEnergy;
+            m.drawRegenEnergy();
+            simulation.inGameConsole(`<span class='color-var'>m</span>.<strong class='color-f'>energy</strong> <span class='color-symbol'>=</span> 
+              <span class='color-var'>m</span>.<strong class='color-f'>maxEnergy</strong>
+              <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//←↑→↓↓</em>`)
           }
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      haveEphemera: false,
+      effect() {
         m.fieldMeterColor = "#D12";
         m.hold = () => {
           m.fieldFx = 1 + Math.abs(Math.log(m.coupling + 1)) / 5;
@@ -7741,36 +7678,33 @@ const m = {
       name: "energy condenser",
       //<br>hold <strong class='color-block'>blocks</strong> as if they have a lower <strong>mass</strong>
       description: `use <strong class='color-f'>energy</strong> to recover <strong class='color-h'>health</strong>
-      				<em class='color-combo'>→↓←↓↓</em>
       				<br>must be <strong>crouching</strong> to use this effect
-            		<br><strong>6</strong> <strong class='color-f'>energy</strong> per second`,
+            		<br><strong>6</strong> <strong class='color-f'>energy</strong> per second <em class='color-combo'>→↓←↓↓</em>`,
       keyLog: [null, null, null, null, null],
-      loggingCDcycle: 0,
-      effect() {
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[12].keyLog.shift() //remove first element
-          m.fieldUpgrades[12].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowDown"],
-            patternB = [input.key.right, input.key.down, input.key.left, input.key.down, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[12].keyLog, patternA) ||
-            arraysEqual(m.fieldUpgrades[12].keyLog, patternB)) {
-            if (m.energy > m.maxEnergy * 0.9) {
-              simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> 
-              	<span class='color-var'>m</span>.maxHealth
-              	&nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
-              m.energy = 0.01
-              m.health = m.maxHealth
-              m.displayHealth();
-            } else {
-              simulation.inGameConsole(`<strong style='color:red'>Uncaught Error:</strong> <u>not enough <span class='color-f'>energy</span></u>`) /*
-              	<br>m<span class='color-symbol'>.</span><span class='color-f'>energy</span> <span class='color-symbol'>&lt;</span> 
-              	m<span class='color-symbol'>.</span><span class='color-f'>maxEnergy</span>`*/
-            }
+      fieldEvent (event) {
+        m.fieldUpgrades[12].keyLog.shift() //remove first element
+        m.fieldUpgrades[12].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowDown", "ArrowDown"],
+          patternB = [input.key.right, input.key.down, input.key.left, input.key.down, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[12].keyLog, patternA) ||
+          arraysEqual(m.fieldUpgrades[12].keyLog, patternB)) {
+          if (m.energy > m.maxEnergy * 0.9) {
+            simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> 
+              <span class='color-var'>m</span>.maxHealth
+              &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
+            m.energy = 0.01
+            m.health = m.maxHealth
+            m.displayHealth();
+          } else {
+            simulation.inGameConsole(`<strong style='color:red'>Uncaught Error:</strong> <u>not enough <span class='color-f'>energy</span></u>`) /*
+              <br>m<span class='color-symbol'>.</span><span class='color-f'>energy</span> <span class='color-symbol'>&lt;</span> 
+              m<span class='color-symbol'>.</span><span class='color-f'>maxEnergy</span>`*/
           }
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      loggingCDcycle: 0,
+      effect() {
         m.fieldMeterColor = "#4c4";
         m.hold = () => {
           let DRAIN = 0.005, HEAL = 0.0025;
@@ -7825,39 +7759,37 @@ const m = {
             		<br><strong>4</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↑←↓→↧</em>`,
       keyLog: [null, null, null, null, null],
-      effect: () => {
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[13].keyLog.shift() //remove first element
-          m.fieldUpgrades[13].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowDown"]
-          const patternB = [input.key.up, input.key.left, input.key.down, input.key.right, input.key.down]
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          if (arraysEqual(m.fieldUpgrades[13].keyLog, patternA) || arraysEqual(m.fieldUpgrades[13].keyLog, patternB)) {
-            let diffAngle = Vector.angle(m.pos, m.fieldPosition),
-              speedDir = Math.sign(diffAngle - m.angle),
-              fieldDist = Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))
-            simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldAngle <span class='color-symbol'>±=</span>
-            ${Math.sqrt(4 / Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))).toFixed(3)} &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑←↓→↧`)
-            simulation.ephemera.push({
-              name: "Einstein shield orbit",
-              speedCalc: Matter.Bodies.circle(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange),
-              dist: fieldDist,
-              speed: 0,
-              angle: diffAngle,
-              dir: speedDir,
-              do() {
-                if (input.field || !input.down) simulation.removeEphemera(this.name)
-                this.speed = Math.sqrt(4 / this.dist)
-                this.angle += this.speed * this.dir
-                let mult = Vector.mult({ x: Math.cos(this.angle), y: Math.sin(this.angle) }, this.dist)
-                Matter.Body.setPosition(this.speedCalc, Vector.add(m.pos, mult))
-                m.fieldPosition = this.speedCalc.position
-              }
-            })
-          }
+      fieldEvent (event) {
+        m.fieldUpgrades[13].keyLog.shift() //remove first element
+        m.fieldUpgrades[13].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight", "ArrowDown"]
+        const patternB = [input.key.up, input.key.left, input.key.down, input.key.right, input.key.down]
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        if (arraysEqual(m.fieldUpgrades[13].keyLog, patternA) || arraysEqual(m.fieldUpgrades[13].keyLog, patternB)) {
+          let diffAngle = Vector.angle(m.pos, m.fieldPosition),
+            speedDir = Math.sign(diffAngle - m.angle),
+            fieldDist = Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))
+          simulation.inGameConsole(`m<span class='color-symbol'>.</span>fieldAngle <span class='color-symbol'>±=</span>
+          ${Math.sqrt(4 / Vector.magnitude(Vector.sub(m.pos, m.fieldPosition))).toFixed(3)} &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//↑←↓→↧`)
+          simulation.ephemera.push({
+            name: "Einstein shield orbit",
+            speedCalc: Matter.Bodies.circle(m.fieldPosition.x, m.fieldPosition.y, m.fieldRange),
+            dist: fieldDist,
+            speed: 0,
+            angle: diffAngle,
+            dir: speedDir,
+            do() {
+              if (input.field || !input.down) simulation.removeEphemera(this.name)
+              this.speed = Math.sqrt(4 / this.dist)
+              this.angle += this.speed * this.dir
+              let mult = Vector.mult({ x: Math.cos(this.angle), y: Math.sin(this.angle) }, this.dist)
+              Matter.Body.setPosition(this.speedCalc, Vector.add(m.pos, mult))
+              m.fieldPosition = this.speedCalc.position
+            }
+          })
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      effect: () => {
         m.fieldMeterColor = "#ff8a1f" //"#0c5"
         m.eyeFillColor = m.fieldMeterColor
         m.fieldShieldingScale = 0;
@@ -8096,92 +8028,90 @@ const m = {
                     <br><strong>6</strong> <strong class='color-f'>energy</strong> per second
                     <em class='color-combo'>↓↓↑↑↓</em>`,
       keyLog: [null, null, null, null, null],
-      teleportCDcycle: 0,
-      effect: () => {
-        m.fieldEvent = function (event) {
-          m.fieldUpgrades[14].keyLog.shift() //remove first element
-          m.fieldUpgrades[14].keyLog.push(event.code) //add new key to end
-          const patternA = ["ArrowDown", "ArrowDown", "ArrowUp", "ArrowUp", "ArrowDown"],
-            patternB = [input.key.down, input.key.down, input.key.up, input.key.up, input.key.down,],
-            scanResults = []
-          const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
-          const drain = 0.16, maxRange = 10000, scannerYrange = m.height * 10
-          const scanner = Matter.Bodies.rectangle(m.pos.x, m.pos.y + m.height, m.width * 3 - 1, 10);
-          if (m.energy > drain && arraysEqual(m.fieldUpgrades[14].keyLog, patternA) || arraysEqual(m.fieldUpgrades[14].keyLog, patternB)) {
-            try {
-              m.energy -= drain
-              Composite.add(engine.world, scanner);
+      fieldEvent (event) {
+        m.fieldUpgrades[14].keyLog.shift() //remove first element
+        m.fieldUpgrades[14].keyLog.push(event.code) //add new key to end
+        const patternA = ["ArrowDown", "ArrowDown", "ArrowUp", "ArrowUp", "ArrowDown"],
+          patternB = [input.key.down, input.key.down, input.key.up, input.key.up, input.key.down,],
+          scanResults = []
+        const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
+        const drain = 0.16, maxRange = 10000, scannerYrange = m.height * 10
+        const scanner = Matter.Bodies.rectangle(m.pos.x, m.pos.y + m.height, m.width * 3 - 1, 10);
+        if (m.energy > drain && arraysEqual(m.fieldUpgrades[14].keyLog, patternA) || arraysEqual(m.fieldUpgrades[14].keyLog, patternB)) {
+          try {
+            m.energy -= drain
+            Composite.add(engine.world, scanner);
+            Matter.Body.setPosition(scanner, {
+              x: m.pos.x,
+              y: m.pos.y + m.height
+            })
+            for (let i = 0, dist = maxRange / m.width; i < dist; i += 3) {
               Matter.Body.setPosition(scanner, {
-                x: m.pos.x,
-                y: m.pos.y + m.height
-              })
-              for (let i = 0, dist = maxRange / m.width; i < dist; i += 3) {
-                Matter.Body.setPosition(scanner, {
-                  x: scanner.position.x - m.width * 3,
-                  y: scanner.position.y
-                });
-                //simulation.inGameConsole(scanner.position.y);
-                if (
-                  (Matter.Query.ray(map, scanner.position,
-                    {
-                      x: scanner.position.x,
-                      y: scanner.position.y + scannerYrange
-                    }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, map).length === 0) ||
-                  (Matter.Query.ray(body, scanner.position,
-                    {
-                      x: scanner.position.x,
-                      y: scanner.position.y + scannerYrange
-                    }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, body).length === 0)
-                ) {
-                  scanResults.push(scanner.position.x)
-                }
+                x: scanner.position.x - m.width * 3,
+                y: scanner.position.y
+              });
+              //simulation.inGameConsole(scanner.position.y);
+              if (
+                (Matter.Query.ray(map, scanner.position,
+                  {
+                    x: scanner.position.x,
+                    y: scanner.position.y + scannerYrange
+                  }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, map).length === 0) ||
+                (Matter.Query.ray(body, scanner.position,
+                  {
+                    x: scanner.position.x,
+                    y: scanner.position.y + scannerYrange
+                  }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, body).length === 0)
+              ) {
+                scanResults.push(scanner.position.x)
               }
-              ///simulation.inGameConsole("Reset scanner to M's x position.");
-              Matter.Body.setPosition(scanner, {
-                x: m.pos.x,
-                y: m.pos.y + m.height
-              })
-              for (let i = 0, dist = maxRange / m.width; i < dist; i += 3) {
-                Matter.Body.setPosition(scanner, {
-                  x: scanner.position.x + m.width * 3,
-                  y: scanner.position.y
-                });
-                ///simulation.inGameConsole(scanner.position.y);
-                if (
-                  (Matter.Query.ray(map, scanner.position,
-                    {
-                      x: scanner.position.x,
-                      y: scanner.position.y + scannerYrange
-                    }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, map).length === 0) ||
-                  (Matter.Query.ray(body, scanner.position,
-                    {
-                      x: scanner.position.x,
-                      y: scanner.position.y + scannerYrange
-                    }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, body).length === 0)
-                ) {
-                  scanResults.push(scanner.position.x)
-                }
-              }
-              Composite.remove(engine.world, scanner)
-              if (scanResults.length > 0) {
-                let idx = Math.floor(Math.random() * scanResults.length), h = scanResults[idx]
-                simulation.translatePlayerAndCamera({ x: h - 150, y: m.pos.y - 30 }) //too jerky 
-                //Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
-                requestAnimationFrame(() => {
-                  Matter.Body.setVelocity(player, { x: 0, y: 0 });
-                });
-              } else {
-                simulation.translatePlayerAndCamera({ x: m.pos.x - 20, y: player.position.y }) //too jerky 
-                simulation.inGameConsole(`Failed to teleport.`)
-              }
-            } catch (err) {
-              simulation.inGameConsole(`<strong style='color:red'>ERROR:</strong> 
-                ${err.name || "Script Error"}. <u>${err.message || err}</u>`)
             }
+            ///simulation.inGameConsole("Reset scanner to M's x position.");
+            Matter.Body.setPosition(scanner, {
+              x: m.pos.x,
+              y: m.pos.y + m.height
+            })
+            for (let i = 0, dist = maxRange / m.width; i < dist; i += 3) {
+              Matter.Body.setPosition(scanner, {
+                x: scanner.position.x + m.width * 3,
+                y: scanner.position.y
+              });
+              ///simulation.inGameConsole(scanner.position.y);
+              if (
+                (Matter.Query.ray(map, scanner.position,
+                  {
+                    x: scanner.position.x,
+                    y: scanner.position.y + scannerYrange
+                  }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, map).length === 0) ||
+                (Matter.Query.ray(body, scanner.position,
+                  {
+                    x: scanner.position.x,
+                    y: scanner.position.y + scannerYrange
+                  }, m.width * 1.5).length > 0 && Matter.Query.collides(scanner, body).length === 0)
+              ) {
+                scanResults.push(scanner.position.x)
+              }
+            }
+            Composite.remove(engine.world, scanner)
+            if (scanResults.length > 0) {
+              let idx = Math.floor(Math.random() * scanResults.length), h = scanResults[idx]
+              simulation.translatePlayerAndCamera({ x: h - 150, y: m.pos.y - 30 }) //too jerky 
+              //Matter.Body.setPosition(player, { x: m.pos.x, y: h - 90 });
+              requestAnimationFrame(() => {
+                Matter.Body.setVelocity(player, { x: 0, y: 0 });
+              });
+            } else {
+              simulation.translatePlayerAndCamera({ x: m.pos.x - 20, y: player.position.y }) //too jerky 
+              simulation.inGameConsole(`Failed to teleport.`)
+            }
+          } catch (err) {
+            simulation.inGameConsole(`<strong style='color:red'>ERROR:</strong> 
+              ${err.name || "Script Error"}. <u>${err.message || err}</u>`)
           }
         }
-        window.addEventListener("keydown", m.fieldEvent);
-
+      },
+      teleportCDcycle: 0,
+      effect: () => {
         m.fieldMeterColor = "#30f"
         m.eyeFillColor = m.fieldMeterColor
         m.hold = function () {
@@ -8189,7 +8119,7 @@ const m = {
             m.drawHold(m.holdingTarget);
             m.holding();
             m.throwBlock();
-          } else if (m.crouch && input.field && (m.energy > 0.25) && ((this.teleportCDcycle || 0) < m.cycle)) {
+          } else if (m.crouch && input.field && input.down && (m.energy > 0.25) && ((this.teleportCDcycle || 0) < m.cycle)) {
             m.energy -= 0.25
             m.resetHistory();
             Matter.Body.setPosition(player, simulation.mouseInGame);

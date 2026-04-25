@@ -1716,6 +1716,7 @@ document.getElementById("jump-to").addEventListener("mousedown", () => {
 
 //**************** KeyDown event listeners ****************//
 window.addEventListener("keydown", function (event) {
+  event.preventDefault() //disable spacebar scrolling
   if (simulation.isChatMenuOpen) { //if player is typing in chat, ignore keypresses
     if (cmdConsole.isHistoryInputFocused) {
 
@@ -1734,7 +1735,6 @@ window.addEventListener("keydown", function (event) {
       }
     }
   } else {
-    if (simulation.isChoosing) event.preventDefault() //disable spacebar scrolling
     // input.lastDown = event.code
     // console.log(event.code)
     switch (event.code) {
@@ -2102,6 +2102,8 @@ window.addEventListener("keydown", function (event) {
           break
       }
     }
+    
+    if (m.alive) m.fieldUpgrades[m.fieldMode].fieldEvent(event)
   }
 });
 

@@ -158,7 +158,6 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isCommandListJS: false,
   onLoadEnd: null,
 };
-const defaultGameVars = {}
 let startBtn = document.getElementById("start-button"), trainBtn = document.getElementById("training-button"),
   experimentBtn = document.getElementById("experiment-button"), splashStart = document.getElementById("splash"),
   infoDiv = document.getElementById("info"), communityMaps = document.getElementById("community-maps"),
@@ -227,30 +226,6 @@ try {
                 console.clear();
                 fileLoads.onLoadEnd();
                 level.populateLevelList();
-                setTimeout(() => {
-                  Object.assign(defaultGameVars, {
-                    audioPlayer: audioPlayer,
-                    b: b,
-                    build: build,
-                    cmdConsole: cmdConsole,
-                    cmdList: cmdList,
-                    level: level,
-                    lore: lore,
-                    m: m,
-                    mobs: mobs,
-                    powerUps: powerUps,
-                    simulation: simulation,
-                    spawn: spawn,
-                    tech: tech,
-                    resetGame() {
-                      let targetObjs = [audioPlayer, b, build, cmdConsole, cmdList, level, lore, m, mobs, powerUps, simulation, spawn, tech];
-                      targetObjs.forEach((obj, i) => {
-                        Object.assign(obj, Object.values(defaultGameVars)[i]);
-                      });
-                    }
-                  });
-                  Object.freeze(defaultGameVars);
-                }, 100);
               }
             }
           }, 100 * Object.values(fileLoads).length + 100); //ensure .js files are loaded BEFORE attempting error check
