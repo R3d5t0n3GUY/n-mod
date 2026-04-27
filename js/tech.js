@@ -16,6 +16,7 @@ const tech = {
       tech.removeTech("swap meet") //remove it so it becomes an option again
       //tech.removeCount-- //decrement remove counter
     }
+    if (tech.isPowerUpRecolor) tech.removeTech("true colors") //reset power-up colors if they have been changed
     for (let i = 0, len = tech.tech.length; i < len; i++) {
       let what = tech.tech[i]
       what.isBanished = false
@@ -1566,7 +1567,7 @@ const tech = {
 
         let options = []
         for (let i = 0; i < b.inventory.length; i++) options.push(b.inventory[i])
-        options.sort(() => Math.random() - 0.5);
+        options.shuffle();
         for (let i = 0; i < options.length; i++) {
           const index = options[i]
           const scale = (i < options.length / 2) ? 4 : 0.25
@@ -6661,7 +6662,7 @@ const tech = {
         for (let i = 0, len = tech.tech.length; i < len; i++) { // spawn new tech power ups
           if (tech.tech[i].count && !tech.tech[i].isInstant) pool.push(i)
         }
-        pool.sort(() => Math.random() - 0.5);
+        pool.shuffle();
         let removeCount = 0
         for (let i = 0, len = pool.length * 0.5; i < len; i++) removeCount += tech.removeTech(pool[i])
         this.damage = this.damagePerRemoved * removeCount
@@ -13958,39 +13959,70 @@ const tech = {
       isInstant: true,
       allowed: () => true,
       requires: "",
-      effect() {
-        const colors = [powerUps.research.color, powerUps.heal.color, powerUps.ammo.color, powerUps.ammo.color, powerUps.field.color, powerUps.gun.color]
-        colors.sort(() => Math.random() - 0.5);
-        powerUps.research.color = colors[0]
-        powerUps.heal.color = colors[1]
-        powerUps.ammo.color = colors[2]
-        powerUps.field.color = colors[3]
-        powerUps.tech.color = colors[4]
-        powerUps.gun.color = colors[5]
-        for (let i = 0; i < powerUp.length; i++) {
-          switch (powerUp[i].name) {
-            case "research":
-              powerUp[i].color = colors[0]
-              break;
-            case "heal":
-              powerUp[i].color = colors[1]
-              break;
-            case "ammo":
-              powerUp[i].color = colors[2]
-              break;
-            case "field":
-              powerUp[i].color = colors[3]
-              break;
-            case "tech":
-              powerUp[i].color = colors[4]
-              break;
-            case "gun":
-              powerUp[i].color = colors[5]
-              break;
+      get defaultColors(){
+        return {
+          normal: {
+            Casimir: "#ff0",
+            coupling: "#0ae",
+            boost: "#f55",
+            research: "#f7b",
+            heal: (powerUps.healGiveMaxEnergy ? "#ff0" : "#0eb"),
+            ammo: (tech.isEnergyNoAmmo ? "#c1c6c9" : "#467"),
+            gun: "#26a",
+            field: "#0cf",
+            tech: "#968aff", //"hsl(246,100%,77%)"
+          },
+          lore: {
+            instructions: "#647d8c59", //"rgba(100, 125, 140, 0.35)"
+            settings: "#f51895", //"rgb(245, 24, 149)"
+            levelList: "#e82",
+            difficulty: "#000",
+            warp: "#6e9ba0", //"rgb(110,155,160)"
+            entanglement: "#fff"
           }
         }
       },
-      remove() { }
+      effect() {
+        tech.isPowerUpRecolor = true
+        let defaults = this.defaultColors, newColors = { normal: {}, lore: {} }
+        let [names, colors] = [Object.keys(defaults.normal), Object.values(defaults.normal)]
+        colors.shuffle();
+        newColors.normal = Object.fromEntries(Array.toEntries(names, colors))
+        for (let i = 0, len = names.length; i < len; i++ ) {
+          powerUps[names[i]].color = colors[i]
+        }
+        names = Object.keys(defaults.lore)
+        colors = Object.values(defaults.lore)
+        colors.shuffle();
+        for (let i = 0, len = names.length; i < len; i++ ) {
+          powerUps[names[i]].color = colors[i]
+        }
+        newColors.lore = Object.fromEntries(Array.toEntries(names, colors))
+        console.log(newColors)
+        for (let i = 0; i < powerUp.length; i++) {
+          const who = powerUp[i], mode = (who.isLorePowerUp ? "lore" : "normal")
+          let fallBack = hsvo(Math.random() * 360, 0.5 * Math.random() + 0.5, 0.5 * Math.random() + 0.5)
+          who.color = (who.name in newColors[mode] ? newColors[mode][who.name] : fallBack)
+        }
+      },
+      remove() {
+        tech.isPowerUpRecolor = false
+        let defaults = this.defaultColors
+        let [names, colors] = [Object.keys(defaults.normal), Object.values(defaults.normal)]
+        for (let i = 0, len = colors.length; i < len; i++ ) {
+          powerUps[names[i]].color = colors[i]
+        }
+        names = Object.keys(defaults.lore)
+        colors = Object.values(defaults.lore)
+        for (let i = 0, len = colors.length; i < len; i++ ) {
+          powerUps[names[i]].color = colors[i]
+        }
+        for (let i = 0; i < powerUp.length; i++) {
+          const who = powerUp[i], mode = (who.isLorePowerUp ? "lore" : "normal")
+          let fallBack = hsvo(Math.random() * 360, 0.5 * Math.random() + 0.5, 0.5 * Math.random() + 0.5)
+          who.color = (who.name in defaults[mode] ? defaults[mode][who.name] : fallBack)
+        }
+      }
     },
     {
       name: "emergency broadcasting",

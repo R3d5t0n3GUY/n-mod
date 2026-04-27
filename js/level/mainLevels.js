@@ -462,7 +462,7 @@ const mainLevels = {
 
     const stationList = [] //use to randomize station order
     for (let i = 1, totalNumberOfStations = 10; i < totalNumberOfStations; ++i) stationList.push(i) //!!!! update station number when you add a new station
-    stationList.sort(() => Math.random() - 0.5);
+    stationList.shuffle();
     stationList.splice(0, simulation.difficultyMode > 4 ? 4 : 5); //remove some stations to keep it to 4 stations
     stationList.unshift(0) //add index zero to the front of the array
 
@@ -3843,14 +3843,14 @@ const mainLevels = {
     //3x2:  4 short rooms (3000x1500),  1 double tall room (3000x3000)
     //rooms
     let rooms = ["exit", "loot", "enter", "empty"]
-    rooms.sort(() => Math.random() - 0.5);
+    rooms.shuffle();
     //look... you and I both know there is a better way to do this, but it works so I'm gonna focus on other things
     while ( //makes sure that the exit and entrance aren't both on the same floor
       (rooms[0] === "enter" && rooms[2] === "exit") ||
       (rooms[2] === "enter" && rooms[0] === "exit") ||
       (rooms[1] === "enter" && rooms[3] === "exit") ||
       (rooms[3] === "enter" && rooms[1] === "exit")
-    ) rooms.sort(() => Math.random() - 0.5);
+    ) rooms.shuffle();
     for (let i = 0; i < rooms.length; i++) {
       if (rooms[i] === "enter") rooms[i] = enter
       if (rooms[i] === "exit") rooms[i] = exit
@@ -3917,7 +3917,7 @@ const mainLevels = {
         rooms[3]()
       },
     ]
-    columns.sort(() => Math.random() - 0.5);
+    columns.shuffle();
     for (let i = 0; i < 3; i++) {
       if (i === 0) {
         isDoorLeft = false
@@ -4242,7 +4242,7 @@ const mainLevels = {
       x: 1325,
       y: -150
     }];
-    powerUpPos.sort(() => Math.random() - 0.5);
+    powerUpPos.shuffle();
     powerUps.chooseRandomPowerUp(powerUpPos[0].x, powerUpPos[0].y);
     powerUps.chooseRandomPowerUp(powerUpPos[1].x, powerUpPos[1].y);
     //outer wall
@@ -6251,7 +6251,7 @@ const mainLevels = {
     spawn.bodyRect(1450, -300, 150, 50);
 
     const xPos = [600, 1250, 2000];
-    xPos.sort(() => Math.random() - 0.5);
+    xPos.shuffle();
     spawn.mapRect(xPos[0], -200, 300, 100);
     spawn.mapRect(xPos[1], -250, 300, 300);
     spawn.mapRect(xPos[2], -150, 300, 200);

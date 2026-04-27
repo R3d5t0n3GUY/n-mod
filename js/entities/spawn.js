@@ -925,7 +925,7 @@ const spawn = {
       //     exit() { },
       // },
     ]
-    me.mode.sort(() => Math.random() - 0.5);
+    me.mode.shuffle();
     me.healthBarFinal = function () {
       const HEX_DIRS = [{ x: 0, y: -1 }, { x: 0.8660254, y: -0.5 }, { x: 0.8660254, y: 0.5 }, { x: 0, y: 1 }, { x: -0.8660254, y: 0.5 }, { x: -0.8660254, y: -0.5 }];
 
