@@ -443,4 +443,4 @@ setTimeout(() => {
   Events.on(engine, "collisionEnd", function (event) {
     playerOffGroundCheck(event);
   });
-}, 100);
+}, 10);
