@@ -4753,13 +4753,13 @@ const m = {
       case 10: //grappling hook
         return `<span style="opacity: 1;">${powerUps.orb.ammo(1)}</span> give ${(4 * couple).toFixed(1)}% more ammo`
       case 11: //tachyonic field
-        return `<strong>${(1 + Math.abs(Math.log(m.coupling + 1)) / 5).toFixed(3)}x</strong> <strong class='color-speed'>movement</strong> and <strong>jumping</strong>`
+        return `<strong>${(1 + Math.abs(Math.log(couple)) / 5).toFixed(3)}x</strong> <strong class='color-speed'>movement</strong> and <strong>jumping</strong>`
       case 12: //energy condenser
         return `<strong>${(1 + 0.05 * couple).toFixed(3)}x</strong> healing from <span style="opacity: 1">${powerUps.orb.heal(1)}</span>`
       case 13: //Einstein's shield
         return `<strong>deflecting</strong> <strong class='color-stun'>stuns</strong> mobs for ${Math.pow(1.25, couple / 16).toFixed(3)} seconds`
       case 14: //matter displacement
-        return `<strong>${(1 + Math.abs(Math.log(m.coupling + 1)) / 5).toFixed(3)}x longer</strong> <strong class="color-invulnerable">immunity</strong>`
+        return `<strong>${(1 + Math.abs(Math.log(couple)) / 5).toFixed(3)}x longer</strong> <strong class="color-invulnerable">immunity</strong>`
       default: //any new fields until a coupling effect is added to them
         return `no effect`
     }

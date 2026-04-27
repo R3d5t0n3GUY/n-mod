@@ -885,8 +885,8 @@ const lore = {
       () => {
         setTimeout(() => {
           lore.miriam.text("or we can make a bunch of them:")
-          simulation.inGameConsole(`for (let i = 0; i < 100; i++) powerUps.spawn(0, 500, "coupling")`, Infinity);
-          for (let i = 0; i < 100; i++) powerUps.spawn(5 - 10 * Math.random(), -500 * Math.random(), "coupling")
+          simulation.inGameConsole(`for (let i = 0; i < 100; i++) powerUps.spawn(0, 500, "boost")`, Infinity);
+          for (let i = 0; i < 100; i++) powerUps.spawn(5 - 10 * Math.random(), -500 * Math.random(), "boost")
         }, 2000);
       },
 
