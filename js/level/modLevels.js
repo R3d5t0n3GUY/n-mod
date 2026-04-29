@@ -341,7 +341,7 @@ const modLevels = {
             ctx.lineWidth = 0
           }
         }
-        if (!simulation.testing) {
+        if (!simulation.testing) { //dont fill during testing
           defineBounds(true)
           if (who.style) {
             ctx.fillStyle = who.style.fillStyle || color.block

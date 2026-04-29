@@ -11960,19 +11960,18 @@ const tech = {
       },
       requires: "molecular assembler, pilot wave, not acoustic levitation",
       effect() {
-        if (!tech.isCoyote) {
-          tech.isBlockJump = true
-          simulation.ephemera.push({
-            name: "blockJump",
-            blockJumpPhase: 0,
-            do() {
+        tech.isBlockJump = true
+        simulation.ephemera.push({
+          name: `blockJump #${tech.tech.find(i => i.name === 'working mass').count}`,
+          blockJumpPhase: 0,
+          do() {
+            if (tech.isBlockJump) {
               if (m.onGround && m.buttonCD_jump + 10 < m.cycle && !(m.lastOnGroundCycle + m.coyoteCycles > m.cycle)) this.blockJumpPhase = 0 //reset after touching ground or block
               if (this.blockJumpPhase === 0 && !m.onGround && !input.up && m.buttonCD_jump + 10 < m.cycle) { //not pressing jump
                 this.blockJumpPhase = 1
               } else if (this.blockJumpPhase === 1 && input.up && m.buttonCD_jump + 10 < m.cycle) { //2nd jump
                 this.blockJumpPhase = 2
                 let horizontalVelocity = 8 * (- input.left + input.right)  //ive player and block horizontal momentum
-
                 const radius = 25 + Math.floor(15 * Math.random())
                 body[body.length] = Matter.Bodies.polygon(m.pos.x, m.pos.y + 60 + radius, 4, radius, {
                   friction: 0.05,
@@ -12018,15 +12017,14 @@ const tech = {
                 player.force.y = -m.jumpForce; //player jump force
                 m.fieldUpgrades[4].endoThermic(0.6)
               }
-            },
-          })
-        }
+            } else {
+              simulation.removeEphemera(this.name)
+            }
+          },
+        })
       },
       remove() {
-        if (this.count) {
-          tech.isBlockJump = false
-          simulation.removeEphemera("blockJump")
-        }
+        tech.isBlockJump = false
       }
     },
     {
