@@ -551,8 +551,14 @@ const build = {
 \n<label for="${name || id}" title="${title}" style="font-size:1.15em">${text}</label>`
     }, floater = (text) => { return `<span style="float:right;">${text}</span><br>` }
     let text = `<div class="pause-grid-module" style="padding: 8px;">
-<span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span> 
+<span style="font-size:1.4em;font-weight: 600; float: left;">PAUSED</span>
 <em style="float: right;color:var(--tooltip-color);">press ${input.key.pause} to resume</em>
+<br><span title='Click to export your current build for future experimenting'><svg class="SVG-button" width="85" height="15" onclick="build.export()" style='cursor:pointer;' >
+  <g stroke="none" fill="var(--text-color)" stroke-width="2" font-size="10px" font-family="Chakra Petch, sans-serif">
+    <text x="5" y="12">Save Build JSON</text>
+  </g>
+ </svg>
+</span>
 ${inputLabelText("hideHUD", 'settings', "hide-hud", 0, "HideHUD", "hide: tech, damage taken, damage, in game console", "minimal HUD")}
 ${inputLabelText("setHealthBarMode", 'pause', "health-bar-mode", 0, "DynamicHealthBar", "proportionally-colored health bar", "dynamic health bar")}
 ${inputLabelText("setDarkMode", 'pause', "dark-mode", 0, "DarkMode", "Changes document coloring, allowing easier reading", "dark mode")}
