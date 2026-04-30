@@ -8451,7 +8451,7 @@ const b = {
         }
         if (tech.isPulseLaser) {
           this.fire = () => {
-            const drain = Math.min(0.9 * m.maxEnergy, 0.01 * (tech.isCapacitor ? 10 : 1) / b.fireCDscale)
+            const drain = Math.min(0.9 * m.maxEnergy, 0.01 * (tech.isCapacitor ? 10 * Math.max(1, m.maxEnergy) : 1) / b.fireCDscale)
             if (m.energy > drain && this.charge < 50 * m.maxEnergy) {
               m.energy -= drain
               this.charge += drain * 100

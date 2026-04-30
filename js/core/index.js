@@ -1716,7 +1716,7 @@ document.getElementById("jump-to").addEventListener("mousedown", () => {
 
 //**************** KeyDown event listeners ****************//
 window.addEventListener("keydown", function (event) {
-  event.preventDefault() //disable spacebar scrolling
+  if (simulation.isChoosing && event.key === 'Space') event.preventDefault() //disable spacebar scrolling
   if (simulation.isChatMenuOpen) { //if player is typing in chat, ignore keypresses
     if (cmdConsole.isHistoryInputFocused) {
 
@@ -1772,9 +1772,7 @@ window.addEventListener("keydown", function (event) {
           input.isPauseKeyReady = false
           setTimeout(function () { input.isPauseKeyReady = true }, 300);
           if (simulation.isChoosing) {
-
             build.pauseGrid()
-
           } else if (simulation.paused) {
             if (document.activeElement !== document.getElementById('sort-input')) {
               build.unPauseGrid()
