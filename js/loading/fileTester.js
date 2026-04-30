@@ -171,9 +171,9 @@ try {
       try {
         if (hasFileTesterFailed) {
           document.body.style.backgroundColor = "white";
-          document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
+          document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='./js/loading/fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
           <hr>Please properly define this file before running n-mod`
-          favIcon.href = 'img/Error.png'
+          favIcon.href = './img/Error.png'
           document.title = "n-mod: FAULTY FILES DETECTED"
         } else {
           text = "loading"
@@ -194,7 +194,8 @@ try {
         if (i < jsSrcs.length) { //load each .js file
           let tag = document.createElement('script'), obj = jsSrcs[i]
           tag.src = obj.src
-          tag.onerror = () => { //check for syntax errors
+          tag.onerror = (event) => { //check for syntax errors
+            console.warn(event)
             errors.push(obj)
           }
           if (!hasFileTesterFailed) document.body.append(tag);
@@ -213,7 +214,9 @@ try {
                 let text = `<h1 style="color:red"><u>ERROR LOADING THE FOLLOWING FILES:</u></h1><hr><ul>`
                 errors.forEach(function (item) { //compile list of error locations
                   setTimeout(() => {
-                    text += `<li><a href="${item.src}" target="_blank">${item.name}</a></li>`
+                    text += `<li><a href="${item.src}" target="_blank">${item.name}</a>`
+                    if (item.reason) text += `<br><em style='color:"#aaa";'>${item.reason || "Missing or faulty"}</em>`
+                    text += "</li>"
                   }, 10);
                 });
                 setTimeout(() => {

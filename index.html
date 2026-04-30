@@ -314,14 +314,16 @@ Press Escape to close"></textarea>
       setTimeout(() => {
         if (!fileLoads.isFileTesterJS) {
           hasFileTesterFailed = true
-        try {
-          if (loadText) clearInterval(loadText); //stop loading animation for buttons
-        } catch (e) {}
-          document.body.style.backgroundColor = "white";
-          document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
-            <hr>Please properly define this file before running n-mod`
-          favIcon.href = 'img/Error.png'
-          document.title = "n-mod: FAULTY FILES DETECTED"
+          try {
+            if (loadText) clearInterval(loadText); //stop loading animation for buttons
+          } catch (e) {}
+          setTimeout(() => {
+            document.body.style.backgroundColor = "white";
+            document.body.innerHTML = `<h1 style='color:red'>UNCAUGHT ERROR IN <a href='./js/loading/fileTester.js'><u style='color:red'>fileTester.js</u></a></h1>
+              <hr>Please properly define this file before running n-mod`
+            favIcon.href = 'img/Error.png'
+            document.title = "n-mod: FAULTY FILES DETECTED"
+          }, 250)
         }
       }, 1000);
       document.body.appendChild(fileLoader)
