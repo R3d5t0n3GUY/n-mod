@@ -15314,6 +15314,36 @@ const tech = {
       remove() { }
     },
     {
+      name: "morrowind powergaming",
+      description: "Your planet needs you!",
+      maxCount: 1,
+      count: 0,
+      frequency: 0,
+      isJunk: true,
+      allowed: () => true,
+      requires: "",
+      oldFx: 0.016,
+      oldFxAir: 0.016,
+      oldJumpForce: 0.42,
+      effect() {
+        if (!tech.isMorrowindPowerGaming) {
+          tech.isMorrowindPowerGaming = true
+          this.oldFx = m.Fx
+          this.oldFxAir = m.FxAir
+          this.oldJumpForce = m.jumpForce
+          m.Fx = 0.3
+          m.FxAir = 1.6
+          m.jumpForce = 1
+        }
+      },
+      remove() {
+        tech.isMorrowindPowerGaming = false
+        m.Fx = this.oldFx
+        m.FxAir = this.oldFxAir
+        m.jumpForce = this.oldJumpForce
+      }
+    },
+    {
       name: "ship",
       description: "fly around with no legs",
       maxCount: 1,
