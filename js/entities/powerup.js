@@ -2222,7 +2222,7 @@ const powerUps = {
           tech.tech[choose].count = 0;
           tech.tech[choose].isBadRandomOption = true;
           tech.tech[choose].frequency *= 0.5
-          what.isLost = true
+          tech.tech[choose].isLost = true
           simulation.updateTechHUD();
           m.fieldCDcycle = m.cycle + 30; //disable field so you can't pick up the ejected tech
           return true
@@ -2262,7 +2262,6 @@ const powerUps = {
           gunName = tech.marginalGunIndex;
         }
         b.guns[tech.marginalGunIndex].ammoPack *= Math.pow(2, tech.moreGunAmmo)
-        build.generatePauseLeft();
         build.generatePauseRight();
         simulation.updateTechHUD();
         simulation.updateGunHUD();
@@ -2272,7 +2271,7 @@ const powerUps = {
         // } else {
         // }
         //tech.tech[index].frequency = 0 //banish tech
-        tech.tech[index].isBadRandomOption = true
+        //tech.tech[index].isBadRandomOption = true
         powerUps.ejectTech(index)
         if (tech.isPauseEjectResearch) {
           if (tech.pauseEjectResearch < 0) tech.pauseEjectResearch = 0
@@ -2283,12 +2282,12 @@ const powerUps = {
           tech.pauseEjectTech *= 1.3
         }
         build.generatePauseLeft();
-        build.generatePauseRight();
         simulation.updateTechHUD();
         simulation.updateGunHUD();
         document.getElementById(`${index}-pause-tech`).style.textDecoration = "line-through"
         document.getElementById(`${index}-pause-tech`).style.animation = ""
         document.getElementById(`${index}-pause-tech`).onclick = null
+        build.generatePauseRight()
       }
     }
   },

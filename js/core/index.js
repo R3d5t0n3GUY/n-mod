@@ -704,7 +704,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
           text += build.techText(i) + "</div>"
         }
       } else if (tech.tech[i].isLost) {
-        text += `<div class="pause-grid-module" style="text-decoration: line-through; padding-left: 8px; opacity: 0.4;"><div class="grid-title">${tech.tech[i].link}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
+        text += `<div class="pause-grid-module" style="text-decoration: line-through; padding-left: 8px; opacity: 0.4;"><div class="grid-title">${tech.tech[i].name}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
       }
     }
     const el = document.getElementById("pause-grid-right")
