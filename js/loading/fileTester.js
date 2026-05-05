@@ -121,7 +121,6 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isOnLoadEndJS: false,
   isMatterMinJS: false,
   isDecompMinJS: false,
-  isHowlerMinJS: false,
   isErudaMinJS: false,
   isLocalSavesJS: false,
   isPrototypesJS: false,
