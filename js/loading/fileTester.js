@@ -16,10 +16,6 @@ const jsSrcs = [
     src: 'lib/decomp.min.js'
   },
   {
-    name: "Howler",
-    src: 'lib/howler.min.js'
-  },
-  {
     name: "Eruda",
     src: 'lib/eruda.min.js'
   },
@@ -51,10 +47,6 @@ const jsSrcs = [
     name: "Tech",
     src: "js/tech.js"
   },
-  /* {
-    name: "Wire",
-    src: "js/entities/wire.js"
-  }, */
   {
     name: "Bullet",
     src: "js/entities/bullet.js"
@@ -138,7 +130,6 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isPlayerJS: false,
   isPowerUpJS: false,
   isTechJS: false,
-  //isWireJS: false,
   isBulletJS: false,
   isMobJS: false,
   isSpawnJS: false,

@@ -6377,6 +6377,8 @@ const b = {
       descriptionFunction() {
         return `use compressed air to rapidly drive <strong>nails</strong><br><em>fire rate</em> <strong>increases</strong> the longer you fire<br><strong>${this.ammoPack.toFixed(0)}</strong> nails per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 27,
       defaultAmmoPack: 27,
@@ -6701,35 +6703,13 @@ const b = {
       descriptionFunction() {
         return `fire a wide <strong>burst</strong> of short range <strong>pellets</strong><br>has a slow <strong><em>fire rate</em></strong><br><strong>${this.ammoPack.toFixed(1)}</strong> shots per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 1.6,
       defaultAmmoPack: 1.6,
       have: false,
-      do() {
-        //fade cross hairs
-
-
-
-        // draw loop around player head
-        // const left = m.fireCDcycle !== Infinity ? 0.05 * Math.max(m.fireCDcycle - m.cycle, 0) : 0
-        // if (left > 0) {
-        //     ctx.beginPath();
-        //     // ctx.arc(simulation.mouseInGame.x, simulation.mouseInGame.y, 30, 0, left);
-        //     ctx.arc(m.pos.x, m.pos.y, 28, m.angle - left, m.angle);
-        //     // ctx.fillStyle = "rgba(0,0,0,0.3)" //"#333"
-        //     // ctx.fill();
-        //     ctx.strokeStyle = "#333";
-        //     ctx.lineWidth = 2;
-        //     ctx.stroke();
-        // }
-
-
-        //draw hip circle
-        // ctx.beginPath();
-        // ctx.arc(m.pos.x + m.hip.x, m.pos.y + m.hip.y, 11, 0, 2 * Math.PI);
-        // ctx.fillStyle = "rgba(0,0,0,0.3)" //"#333"
-        // ctx.fill();
-      },
+      do() {},
       fire() {
         let knock, spread
         const coolDown = function () {
@@ -7050,6 +7030,8 @@ const b = {
       descriptionFunction() {
         return `fire <strong>3</strong> balls that retain<br><strong>momentum</strong> and <strong>kinetic energy</strong> after <strong>collisions</strong><br><strong>${this.ammoPack.toFixed(0)}</strong> balls per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 4.05,
       defaultAmmoPack: 4.05,
@@ -7136,6 +7118,8 @@ const b = {
       descriptionFunction() {
         return `emit <strong>wave packets</strong> that propagate through <strong>solids</strong><br>waves <strong class='color-s'>slow</strong> mobs<br><strong>${this.ammoPack.toFixed(0)}</strong> wave packets per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 60,
       defaultAmmoPack: 60,
@@ -7499,6 +7483,8 @@ const b = {
       descriptionFunction() {
         return `launch <strong>homing</strong> missiles that target mobs<br>missiles <strong class='color-e'>explode</strong> on contact with mobs<br><strong>${this.ammoPack.toFixed(1)}</strong> missiles per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 2.3,
       defaultAmmoPack: 2.3,
@@ -7618,6 +7604,8 @@ const b = {
       descriptionFunction() {
         return `lob a single <strong>bouncy</strong> projectile<br><strong class='color-e'>explodes</strong> on <strong>contact</strong> or after <strong>1.5</strong> seconds<br><strong>${this.ammoPack.toFixed(0)}</strong> grenades per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 3.2,
       defaultAmmoPack: 3.2,
@@ -7646,6 +7634,8 @@ const b = {
       descriptionFunction() {
         return `toss a <strong class='color-p' style='letter-spacing: 2px;'>sporangium</strong> that discharges ${b.guns[6].nameString("s")}<br>${b.guns[6].nameString("s")} seek out nearby mobs<br><strong>${this.ammoPack.toFixed(1)}</strong> sporangium per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 1.22,
       defaultAmmoPack: 1.22,
@@ -7861,6 +7851,8 @@ const b = {
       descriptionFunction() {
         return `deploy <strong>autonomous</strong> <strong>drones</strong> that smash into mobs<br>drones <strong>collect</strong> nearby power ups<br><strong>${this.ammoPack.toFixed(0)}</strong> drones per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 7.8,
       defaultAmmoPack: 7.8,
@@ -7903,6 +7895,8 @@ const b = {
       descriptionFunction() {
         return `spray bubbly <strong>foam</strong> that <strong>sticks</strong> to mobs<br><strong class='color-s'>slows</strong> mobs and does <strong class='color-d'>damage</strong> over time<br><strong>${this.ammoPack.toFixed(0)}</strong> bubbles per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 12.6,
       defaultAmmoPack: 12.6,
@@ -8013,6 +8007,8 @@ const b = {
       descriptionFunction() {
         return `throw a <strong>harpoon</strong> that uses <strong class='color-f'>energy</strong> to <strong>retract</strong><br><strong>harpoons</strong> refund <strong class='color-ammo'>ammo</strong><br><strong>${this.ammoPack.toFixed(1)}</strong> harpoons per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       harpoonName() {
         return "<strong>" + (tech.isMaul ? "maul" : (tech.isRebar ? "rebar" : "harpoon")) + "</strong>"
       },
@@ -8323,6 +8319,8 @@ const b = {
       descriptionFunction() {
         return `toss a <strong>proximity</strong> mine that <strong>sticks</strong> to walls<br>refund <strong>undetonated</strong> mines on <strong>exiting</strong> a level<br><strong>${this.ammoPack.toFixed(1)}</strong> mines per ${powerUps.orb.ammo()}`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammo: 0,
       ammoPack: 0.77,
       defaultAmmoPack: 0.77,
@@ -8393,6 +8391,8 @@ const b = {
         <br>reflects off map, <strong class='color-block'>blocks</strong>, and mobs <strong>${(tech.isWideLaser || tech.isPulseLaser) ? 0 : tech.laserReflections}</strong> times
         <br>costs <strong>${(tech.laserDrain * 6000).toFixed(1)}</strong> <strong class='color-f'>energy</strong> per second and 0 <strong>ammo</strong>`
       },
+      frequency: 5,
+      frequencyDefault: 5,
       ammoType: "energy",
       get ammoType() { //laser will only ever use energy
         return "energy"
@@ -8724,6 +8724,8 @@ const b = {
       get ammoType() { //sword never uses durability or ammo
         return 'health'
       },
+      frequency: 2,
+      frequencyDefault: 2,
       ammoType: 'health',
       ammo: Infinity,
       ammoPack: Infinity,
@@ -10482,6 +10484,8 @@ const b = {
         <br>drains ${m.healthString} instead of ammunition
         <br>doesn't use <b>ammo</b>`
       },
+      frequency: 2,
+      frequencyDefault: 2,
       ammoType: "health",
       ammo: 17,
       ammoPack: 1,
@@ -10993,6 +10997,8 @@ const b = {
     {
       name: "spear",
       descriptionFunction() { return `control a <b>spear</b> that has <em style="color: gray;">durability</em><br>spear is <b>controlled</b> by <b>cursor</b><br><strong>${tech.isAmmoForGun ? 30 - (tech.tempering ? tech.tempering : 0) : 15 - (tech.tempering ? tech.tempering : 0)}</strong> </em style="color: gray;">durability</em> per ${powerUps.orb.ammo()}` },
+      frequency: 3,
+      frequencyDefault: 3,
       ammoType: "durability",
       ammo: Infinity,
       ammoPack: 15,
@@ -11606,6 +11612,8 @@ const b = {
       descriptionFunction() {
         return `fires a <strong>high caliber</strong> long-range shot <strong></strong><br>has a very slow <strong><em>fire rate</em></strong><br><strong>${this.ammoPack.toFixed(1)}</strong> shots per ${powerUps.orb.ammo()}`
       },
+      frequency: 4,
+      frequencyDefault: 4,
       ammo: 0,
       ammoPack: 1,
       defaultAmmoPack: 1,
@@ -11751,6 +11759,8 @@ const b = {
     {
       name: "MR ferrofluid",
       descriptionFunction() { return `spray <b>ferrofluid particles</b> that <b>attract</b> and <b>solidify</b><br>drains <b>2.2</b> <b class="color-f">energy</b> per second<br><strong>${this.ammoPack.toFixed(0)}</strong> shots per ${powerUps.orb.ammo()}` },
+      frequency: 1,
+      frequencyDefault: 1,
       ammo: 24000,
       ammoPack: 300,
       defaultAmmoPack: 300,

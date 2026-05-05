@@ -17,8 +17,7 @@ const tech = {
       //tech.removeCount-- //decrement remove counter
     }
     if (tech.isPowerUpRecolor) tech.removeTech("true colors") //reset power-up colors if they have been changed
-    for (let i = 0, len = tech.tech.length; i < len; i++) {
-      let what = tech.tech[i]
+    tech.tech.forEach(what => {
       what.isBanished = false
       what.remove();
       what.count = 0
@@ -45,15 +44,13 @@ const tech = {
       if (what.isCorrupted) {
         if (what.descriptionFunction) {
           what.descriptionFunction = () => {
-            return `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
-    <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
+            return `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong><br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
           }
         } else {
-          what.description = `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong>
-    <br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
+          what.description = `This ${powerUps.orb.tech()} is <strong class='color-censored'>corrupted</strong><br><strong style='color:red;'>DO NOT ACQUIRE THIS!</strong>`
         } 
       }
-    }
+    })
     m.resetSkin();
     tech.removeCount = 0;
     tech.pauseEjectTech = 1; //used in paradigm shift

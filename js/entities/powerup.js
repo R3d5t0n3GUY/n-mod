@@ -1549,9 +1549,12 @@ const powerUps = {
     },
     effect(cancelled = false) {
       if (m.alive) {
-        let options = [];
+        let options = [], gunWeights = [];
         for (let i = 0; i < b.guns.length; i++) {
-          if (!b.guns[i].have) options.push(i);
+          if (!b.guns[i].have) {
+            options.push(i);
+            gunWeights.push(b.guns[i].frequency || b.guns[i].frequencyDefault || 1)
+          }
         }
         // console.log(options.length)
         if (options.length > 0 || !tech.isSuperDeterminism) {
@@ -1570,6 +1573,7 @@ const powerUps = {
             for (let i = 0; i < options.length; i++) {
               if (options[i] === index) {
                 options.splice(i, 1) //remove a previous choice from option pool
+                gunWeights.splice(i, 1)
                 return
               }
             }
@@ -1583,8 +1587,14 @@ const powerUps = {
           // if (options.length > 0) {
           let text = powerUps.buildColumns(totalChoices, "gun")
           powerUps.choosingType = "gun"
+          let choose = -1
           for (let i = 0; i < totalChoices; i++) {
-            const choose = options[Math.floor(Math.seededRandom(0, options.length))] //pick an element from the array of options                        
+            try {
+              choose = options.randomItem(gunWeights) //pick an element from the array of options
+            } catch (e) {
+              console.warn(e)
+              choose = options[Math.floor(Math.seededRandom(0, options.length))]
+            }
             // text += `<div class="choose-grid-module" onclick="powerUps.choose('gun',${choose})"><div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${b.guns[choose].name}</div> ${b.guns[choose].description}</div>`
             text += powerUps.gunText(choose, `powerUps.choose('gun',${choose})`)
 
@@ -2497,7 +2507,7 @@ const powerUps = {
   randomLorePowerUp() {
     let choices = ["difficulty", "instructions", "levelList", "settings", "warp", "entanglement"],
     weights = [2,5,4,3,3,1];
-    powerUps.spawn(m.pos.x, m.pos.y, choices.randomItem(weights)) // Array.randomItem is declared in /lib/prototypes.js
+    powerUps.spawn(m.pos.x, m.pos.y, choices.randomItem(weights))
   },
   powerUpStorage: [], // used when power ups are sent to the next level (for the constraint, level.isNextLevelPowerUps)
 };
