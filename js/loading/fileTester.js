@@ -172,8 +172,8 @@ try {
           text = text.padEnd(10, "\u00A0")
           startBtn.innerHTML = `<text x="10" y="32" font-size="12px">${text}</text>`;
           trainBtn.innerHTML = `<text x="10" y="32">${text}</text`;
-          experimentBtn.innerHTML = `<text stroke='none' fill='#333' stroke-width="2" font-size="15px",
-                  sans-serif" x="10" y="32">${text}</text>`;
+          experimentBtn.innerHTML = `<text stroke='none' fill='#333' stroke-width="2" font-size="15px"
+            x="10" y="32">${text}</text>`;
           document.title = `n-mod (${text})`
           dotCount = (dotCount + 1) % 4
         }
@@ -230,7 +230,7 @@ try {
   Not as effective when reloading during bad internet connection or other sources of lag*/
 } catch (error) {
   document.body.style.backgroundColor = "white";
-  document.body.innerHTML = `<h1 style="color:red">UNCAUGHT ERROR:</h1><hr><u>${error}</u>`
+  document.body.innerHTML = `<h1 style="color:red">Uncaught ${error.name} in <a href='./js/loading/fileTester.js'><u style='color:red'>fileTester.js</u></a></h1><hr><u>${error}</u>`
   document.title = "n-mod: UNCAUGHT ERROR"
   favIcon.href = 'img/Error.png'
 }
