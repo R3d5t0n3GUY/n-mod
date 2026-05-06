@@ -6828,7 +6828,11 @@ const tech = {
             b.guns[i].ammo = Math.ceil(b.guns[i].ammo / this.ammoScale);
             b.guns[i].ammoPack = b.guns[i].defaultAmmoPack / this.ammoScale;
             b.guns[i].chooseFireMethod()
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             break
           }
         }
@@ -6842,7 +6846,11 @@ const tech = {
               b.guns[i].chooseFireMethod()
               b.guns[i].ammo = Math.ceil(b.guns[i].ammo * this.ammoScale);
               b.guns[i].ammoPack = b.guns[i].ammo * this.ammoScale;
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -6948,7 +6956,11 @@ const tech = {
         b.guns[0].ammoType = 'energy'
         b.guns[0].recordedAmmo = b.guns[0].ammo
         b.guns[0].ammo = Infinity
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         if (tech.isIceCrystals) {
@@ -6956,8 +6968,18 @@ const tech = {
           b.guns[0].ammoType = 'ammo'
           b.guns[0].ammoPack = b.guns[0].defaultAmmoPack;
           if (b.guns[0].recordedAmmo) b.guns[0].ammo = b.guns[0].recordedAmmo
-          simulation.updateGunHUD();
-          if (this.count) requestAnimationFrame(() => { simulation.updateGunHUD(); });
+          if (build.isExperimentSelection) {
+            build.populateGrid();
+          } else {
+            simulation.updateGunHUD();
+          }
+          if (this.count) requestAnimationFrame(() => {
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
+          });
         }
         tech.isIceCrystals = false;
         if (b.guns[0].ammo === Infinity) b.guns[0].ammo = 0
@@ -7112,7 +7134,11 @@ const tech = {
             break;
           }
         }
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         tech.isShotgunImmune = false;
@@ -7121,7 +7147,11 @@ const tech = {
             if (b.guns[i].name === "shotgun") {
               b.guns[i].ammoPack /= 0.7
               b.guns[i].ammo = Math.ceil(b.guns[i].ammo / 0.7);
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break;
             }
           }
@@ -7669,14 +7699,28 @@ const tech = {
         tech.isInfiniteWaveAmmo = true
         b.guns[3].savedAmmo = b.guns[3].ammo
         b.guns[3].ammo = Infinity
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         tech.isInfiniteWaveAmmo = false
         if (this.count > 0 && b.guns[3].savedAmmo !== undefined) {
           b.guns[3].ammo = b.guns[3].savedAmmo
-          simulation.updateGunHUD();
-          requestAnimationFrame(() => { simulation.updateGunHUD(); });
+          if (build.isExperimentSelection) {
+            build.populateGrid();
+          } else {
+            simulation.updateGunHUD();
+          }
+          requestAnimationFrame(() => {
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
+          });
         } else if (b.guns[3].ammo === Infinity) {
           b.guns[3].ammo = 0
         }
@@ -7704,7 +7748,11 @@ const tech = {
         } else {
           b.guns[3].ammo = Math.ceil(b.guns[3].ammo / this.ammoScale);
         }
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         tech.isLongitudinal = false;
@@ -7716,7 +7764,11 @@ const tech = {
           } else {
             b.guns[3].ammo = Math.ceil(b.guns[3].ammo * this.ammoScale);
           }
-          simulation.updateGunHUD();
+          if (build.isExperimentSelection) {
+            build.populateGrid();
+          } else {
+            simulation.updateGunHUD();
+          }
         }
       }
     },
@@ -7970,7 +8022,11 @@ const tech = {
           if (b.guns[i].name === "missiles") {
             b.guns[i].ammoPack *= this.ammoBonus;
             b.guns[i].ammo = Math.ceil(b.guns[i].ammo * this.ammoBonus);
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             break
           }
         }
@@ -7983,7 +8039,11 @@ const tech = {
             if (b.guns[i].name === "missiles") {
               b.guns[i].ammoPack /= this.ammoBonus;
               b.guns[i].ammo = Math.ceil(b.guns[i].ammo / this.ammoBonus);
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -8009,7 +8069,11 @@ const tech = {
           if (b.guns[i].name === "missiles") {
             b.guns[i].ammoPack *= this.ammoBonus;
             b.guns[i].ammo = Math.ceil(b.guns[i].ammo * this.ammoBonus);
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             break
           }
         }
@@ -8021,7 +8085,11 @@ const tech = {
             if (b.guns[i].name === "missiles") {
               b.guns[i].ammoPack /= this.ammoBonus;
               b.guns[i].ammo = Math.ceil(b.guns[i].ammo / this.ammoBonus);
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -9350,13 +9418,21 @@ const tech = {
         b.guns[8].ammoPack *= 6;
         // this.ammoLost = b.guns[8].ammo
         // b.guns[8].ammo = 0
-        simulation.updateGunHUD()
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         if (this.count) {
           b.guns[8].ammoPack /= 8
           // b.guns[8].ammo += this.ammoLost
-          simulation.updateGunHUD()
+          if (build.isExperimentSelection) {
+            build.populateGrid();
+          } else {
+            simulation.updateGunHUD();
+          }
         }
       }
     },
@@ -9450,7 +9526,11 @@ const tech = {
         b.guns[9].chooseFireMethod()
         b.guns[9].ammoPack *= 3;
         b.guns[9].ammo = b.guns[9].ammo * 6;
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() {
         tech.isRailGun = false;
@@ -9459,7 +9539,11 @@ const tech = {
           b.guns[9].chooseFireMethod()
           b.guns[9].ammoPack /= 3;
           b.guns[9].ammo = Math.ceil(b.guns[9].ammo / 6);
-          simulation.updateGunHUD();
+          if (build.isExperimentSelection) {
+            build.populateGrid();
+          } else {
+            simulation.updateGunHUD();
+          }
         }
       }
     },
@@ -9526,7 +9610,11 @@ const tech = {
           if (b.guns[i].name === "harpoon") {
             b.guns[i].ammo -= this.removeAmmo
             if (b.guns[i].ammo < 0) b.guns[i].ammo = 0
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             break
           }
         }
@@ -9537,7 +9625,11 @@ const tech = {
           for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
             if (b.guns[i].name === "harpoon") {
               b.guns[i].ammo += this.removeAmmo
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -9565,7 +9657,11 @@ const tech = {
           if (b.guns[i].name === "harpoon") {
             b.guns[i].ammo -= this.removeAmmo
             if (b.guns[i].ammo < 0) b.guns[i].ammo = 0
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             break
           }
         }
@@ -9576,7 +9672,11 @@ const tech = {
           for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
             if (b.guns[i].name === "harpoon") {
               b.guns[i].ammo += this.removeAmmo
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -9673,7 +9773,11 @@ const tech = {
             this.ammoRemoved += removeAmmo
             b.guns[i].ammo -= removeAmmo
             if (b.guns[i].ammo < 0) b.guns[i].ammo = 0
-            simulation.updateGunHUD();
+            if (build.isExperimentSelection) {
+              build.populateGrid();
+            } else {
+              simulation.updateGunHUD();
+            }
             tech.extraHarpoons++;
             break
           }
@@ -9684,7 +9788,11 @@ const tech = {
           for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
             if (b.guns[i].name === "harpoon") {
               b.guns[i].ammo += this.ammoRemoved
-              simulation.updateGunHUD();
+              if (build.isExperimentSelection) {
+                build.populateGrid();
+              } else {
+                simulation.updateGunHUD();
+              }
               break
             }
           }
@@ -13726,7 +13834,11 @@ const tech = {
         m.baseHealth = 0.01
         m.setMaxHealth();
         for (let i = 0; i < b.guns.length; i++) b.guns[i].ammo = b.guns[i].ammo * Math.pow(2, 10)
-        simulation.updateGunHUD();
+        if (build.isExperimentSelection) {
+          build.populateGrid();
+        } else {
+          simulation.updateGunHUD();
+        }
       },
       remove() { }
     },
