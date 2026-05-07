@@ -10919,13 +10919,14 @@ const tech = {
         simulation.ephemera.push({
           name: "healthSpear",
           do() {
-            if (tech.isEnergyHealth) {
-              m.energy -= 0.1;
-              b.guns[14].durability += 100;
+            if (tech.protoporphyrin) {
+              if (b.guns[14].durability <= 0) {
+                m[tech.isEnergyHealth ? "energy" : "health"]-=0.1
+                b.guns[14].durability += 100;
+                if (!tech.isEnergyHealth) m.displayHealth();
+              }
             } else {
-              m.health -= 0.1;
-              b.guns[14].durability += 100;
-              m.displayHealth();
+              simulation.removeEphemera(this.name);
             }
           }
         })
@@ -12869,7 +12870,6 @@ const tech = {
       effect() {
         tech.isPilotMapIgnore = true;
         let fieldRadius = m.fieldRadius;
-        m.setField(m.fieldMode); //update pilot wave function
         requestAnimFrames(2, () => { //keep field position and radius. Not sure if it actually works
           if (m.fieldMode === 8 && m.fieldOn) {
             Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);
@@ -12881,7 +12881,6 @@ const tech = {
       remove() {
         tech.isPilotMapIgnore = false;
         let fieldRadius = m.fieldRadius;
-        m.setField(m.fieldMode); //update pilot wave function
         requestAnimFrames(2, () => { //keep field position and radius. Not sure if it actually works
           if (m.fieldMode === 8 && m.fieldOn) {
             Matter.Body.setPosition(m.fieldUpgrades[8].collider, simulation.mouseInGame);

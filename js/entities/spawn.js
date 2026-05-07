@@ -262,10 +262,9 @@ const spawn = {
       if (simulation.difficultyMode > 1 || level.levelsCleared > 1) {
         if (options.length === 0) {
           const t = spawn.mobTierSpawnOrder[level.levelsCleared]
-          const name = spawn.bossTier[t][spawn.bossTierIndex[t]]
+          let name = spawn.bossTier[t][spawn.bossTierIndex[t]]
           if (!name) { //not sure if this is needed, but I'm trying to fix a rare bug
-            const pick = spawn.randomBossList[Math.floor(Math.random() * spawn.randomBossList.length)]
-            spawn[pick](x, y)
+            name = spawn.randomBossList[Math.floor(Math.random() * spawn.randomBossList.length)]
           }
           spawn[name](x, y)
           spawn.bossTierIndex[t]++

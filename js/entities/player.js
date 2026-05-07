@@ -977,7 +977,14 @@ const m = {
       if (isDefense) dmg *= m.defense()
       m.health -= dmg;
       if (m.health < 0 || isNaN(m.health)) {
-        if (tech.isDeathAvoid && powerUps.research.count > 0 &&
+        if (tech.isNoDeath) {
+          if (tech.isDeathTech && !tech.isDeathTechTriggered) {
+            tech.isDeathTechTriggered = true
+            powerUps.spawn(player.position.x, player.position.y, "tech");
+            // simulation.inGameConsole(`<span class='color-var'>tech</span>.damage *= ${1.05} //Zeno`);
+            tech.addJunkTechToPool(0.02)
+          }
+        } else if (tech.isDeathAvoid && powerUps.research.count > 0 &&
           ((tech.deathsAvoidedThisLevel || 0) < (tech.isAnthropicExtended + 1 || 1))) { //&& Math.random() < 0.5
           tech.deathsAvoidedThisLevel++
           m.health = 0.05
@@ -998,13 +1005,6 @@ const m = {
               ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
           }, 3000);
-        } else if (tech.isNoDeath) {
-          if (tech.isDeathTech && !tech.isDeathTechTriggered) {
-            tech.isDeathTechTriggered = true
-            powerUps.spawn(player.position.x, player.position.y, "tech");
-            // simulation.inGameConsole(`<span class='color-var'>tech</span>.damage *= ${1.05} //Zeno`);
-            tech.addJunkTechToPool(0.02)
-          }
         } else {
           m.health = 0;
           m.displayHealth();
@@ -4803,9 +4803,8 @@ const m = {
     // if ((m.fieldMode === 0 || m.fieldMode === 9) && !build.isExperimentSelection && !simulation.isTextLogOpen) simulation.circleFlare(0.4);
   },
   setField(index) {
-    let oldIndex = m.fieldMode
+    let oldIndex = m.fieldMode + 0
     // console.log("field mode: ", index)
-    window.removeEventListener("keydown", m.fieldEvent);
     if (m.fieldUpgrades[8].collider) {
       Matter.Composite.remove(engine.world, m.fieldUpgrades[8].collider);
       m.fieldUpgrades[8].collider = null
@@ -4886,7 +4885,6 @@ const m = {
       }
     }
   },
-  fieldEvent: null,
   fieldUpgrades: [
     {
       name: "field emitter",
@@ -7689,17 +7687,19 @@ const m = {
         const arraysEqual = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
         if (arraysEqual(m.fieldUpgrades[12].keyLog, patternA) ||
           arraysEqual(m.fieldUpgrades[12].keyLog, patternB)) {
-          if (m.energy > m.maxEnergy * 0.9) {
-            simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> 
-              <span class='color-var'>m</span>.maxHealth
-              &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
-            m.energy = 0.01
-            m.health = m.maxHealth
-            m.displayHealth();
-          } else {
-            simulation.inGameConsole(`<strong style='color:red'>Uncaught Error:</strong> <u>not enough <span class='color-f'>energy</span></u>`) /*
-              <br>m<span class='color-symbol'>.</span><span class='color-f'>energy</span> <span class='color-symbol'>&lt;</span> 
-              m<span class='color-symbol'>.</span><span class='color-f'>maxEnergy</span>`*/
+          if (m.health < m.maxHealth - 0.01) {
+            if (m.energy > m.maxEnergy * 0.9) {
+              simulation.inGameConsole(`<div class="circle-grid heal"></div> &nbsp; <span class='color-var'>m</span>.health <span class='color-symbol'>=</span> 
+                <span class='color-var'>m</span>.maxHealth
+                &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color:#055;">//→↓←↓↓</em>`)
+              m.energy = 0.01
+              m.health = m.maxHealth
+              m.displayHealth();
+            } else {
+              simulation.inGameConsole(`<strong style='color:red'>Uncaught Error:</strong> <u>not enough <span class='color-f'>energy</span></u>`) /*
+                <br>m<span class='color-symbol'>.</span><span class='color-f'>energy</span> <span class='color-symbol'>&lt;</span> 
+                m<span class='color-symbol'>.</span><span class='color-f'>maxEnergy</span>`*/
+            }
           }
         }
       },
