@@ -6621,7 +6621,7 @@ const m = {
         m.fieldUpgrades[8].collider = Matter.Bodies.polygon(m.pos.x, m.pos.y, 8, 35, {
           friction: 0,
           frictionAir: 0.12,
-          collisionFilter: { category: cat.player, mask: (tech.isPilotMapIgnore ? 0 : cat.map) }, //no collision because player is holding
+          collisionFilter: { category: cat.player, mask: cat.map }, //no collision because player is holding
           classType: "field",
           lastSpeed: 0,
         });
@@ -6638,6 +6638,7 @@ const m = {
         m.fieldRadius = 0;
         m.drop();
         m.hold = function () {
+          m.fieldUpgrades[8].collider.collisionFilter.mask = (tech.isPilotMapIgnore ? 0 : cat.map)
           let isOn = (tech.isNoPilotCost ? !input.field : input.field)
           if (tech.isPrinter) {
             //spawn blocks if field and crouch
