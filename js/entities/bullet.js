@@ -83,18 +83,20 @@ const b = {
     }
   },
   fireWithAmmo() { //triggers after firing when you have ammo
-    b.guns[b.activeGun].fire();
-    if (tech.crouchAmmoCount && m.crouch) {
-      if (tech.crouchAmmoCount % 2) {
+    if (b.guns[b.activeGun].name !== 'MR ferrofluid' || (m.energy > b.guns[b.activeGun].drain + 0.05)) {
+      b.guns[b.activeGun].fire();
+      if (tech.crouchAmmoCount && m.crouch) {
+        if (tech.crouchAmmoCount % 2) {
+          b.guns[b.activeGun].ammo--;
+          if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+          simulation.updateGunHUD();
+        }
+        tech.crouchAmmoCount++ //makes the no ammo toggle off and on
+      } else {
         b.guns[b.activeGun].ammo--;
         if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
         simulation.updateGunHUD();
       }
-      tech.crouchAmmoCount++ //makes the no ammo toggle off and on
-    } else {
-      b.guns[b.activeGun].ammo--;
-      if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
-      simulation.updateGunHUD();
     }
   },
   outOfAmmo() { //triggers after firing when you have NO ammo
@@ -521,7 +523,7 @@ const b = {
               bullet[i].hasExploded = true //prevent re-triggering
               bullet[i].endCycle = 0;
               setTimeout(() => {
-                if (onLevel === level.onLevel) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
+                if (onLevel === level.onLevel && !simulation.paused) b.explosion(bubblePos, size); //makes bullet do explosive damage at end
               }, 250 + 300 * Math.random());
             }
           } catch (e) {}
@@ -11854,65 +11856,67 @@ const b = {
       },
       do() {
         this.cycle++;
-        if (input.fire && m.cycle > m.fireCDcycle) {
+        if (input.fire && m.cycle > m.fireCDcycle && m.energy > this.drain + 0.05) {
           this.wasMROn = true;
         } else {
           this.wasMROn = false;
           this.canMRFire = true;
         }
 
-        ctx.beginPath();
-        for (let i = bullet.length - 1; i > 0; --i) {
-          if (bullet[i].isWave2) {
-            if (bullet[i].isBranch || bullet[i - 1].isBranch || bullet[Math.max(i - 2, 0)].isBranch || bullet[Math.min(i + 1, bullet.length - 1)].isBranch) {
-              ctx.moveTo(bullet[i].position.x, bullet[i].position.y);
-            } else {
-              ctx.lineTo(bullet[i].position.x, bullet[i].position.y);
-              ctx.lineWidth = bullet[i].drawRadius;
-              ctx.strokeStyle = "rgba(0, 0, 0, 0.05)"; // Black color for the fluid
-              ctx.stroke();
-            }
-          }
-        }
-        ctx.beginPath();
-        for (let i = bullet.length - 1; i > 0; --i) {
-          if (bullet[i].isWave2) {
-            if (bullet[i].isBranch || bullet[i - 1].isBranch || bullet[Math.max(i - 2, 0)].isBranch || bullet[Math.min(i + 1, bullet.length - 1)].isBranch) {
-              ctx.moveTo(bullet[i].position.x, bullet[i].position.y);
-            } else {
-              ctx.lineTo(bullet[i].position.x + (Math.random() * 50) - (Math.random() * 50), bullet[i].position.y + (Math.random() * 50) - (Math.random() * 50));
-              ctx.lineWidth = 2;
-              ctx.strokeStyle = "rgba(100, 20, 220, 0.1)";
-              ctx.stroke();
-            }
-          }
-        }
-        if (m.crouch) {
+        if (this.wasMROn) {
+          ctx.beginPath();
           for (let i = bullet.length - 1; i > 0; --i) {
             if (bullet[i].isWave2) {
-              bullet[i].force = Vector.mult(Vector.normalise(Vector.sub(bullet[i].position, simulation.mouseInGame)), -bullet[i].mass * 0.015);
-              if (this.speed > 6) {
-                Matter.Body.setVelocity(bullet[i], { x: bullet[i].velocity.x * 0.9, y: bullet[i].velocity.y * 0.9 });
+              if (bullet[i].isBranch || bullet[i - 1].isBranch || bullet[Math.max(i - 2, 0)].isBranch || bullet[Math.min(i + 1, bullet.length - 1)].isBranch) {
+                ctx.moveTo(bullet[i].position.x, bullet[i].position.y);
+              } else {
+                ctx.lineTo(bullet[i].position.x, bullet[i].position.y);
+                ctx.lineWidth = bullet[i].drawRadius;
+                ctx.strokeStyle = "rgba(0, 0, 0, 0.05)"; // Black color for the fluid
+                ctx.stroke();
               }
             }
           }
+          ctx.beginPath();
+          for (let i = bullet.length - 1; i > 0; --i) {
+            if (bullet[i].isWave2) {
+              if (bullet[i].isBranch || bullet[i - 1].isBranch || bullet[Math.max(i - 2, 0)].isBranch || bullet[Math.min(i + 1, bullet.length - 1)].isBranch) {
+                ctx.moveTo(bullet[i].position.x, bullet[i].position.y);
+              } else {
+                ctx.lineTo(bullet[i].position.x + (Math.random() * 50) - (Math.random() * 50), bullet[i].position.y + (Math.random() * 50) - (Math.random() * 50));
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(100, 20, 220, 0.1)";
+                ctx.stroke();
+              }
+            }
+          }
+          if (m.crouch) {
+            for (let i = bullet.length - 1; i > 0; --i) {
+              if (bullet[i].isWave2) {
+                bullet[i].force = Vector.mult(Vector.normalise(Vector.sub(bullet[i].position, simulation.mouseInGame)), -bullet[i].mass * 0.015);
+                if (this.speed > 6) {
+                  Matter.Body.setVelocity(bullet[i], { x: bullet[i].velocity.x * 0.9, y: bullet[i].velocity.y * 0.9 });
+                }
+              }
+            }
+          }
+          // ctx.save();
+          // ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : 0.5 //|| (m.cycle % 40 > 20)
+          // ctx.translate(m.pos.x, m.pos.y);
+          // ctx.rotate(m.angle);
+          // ctx.beginPath();
+          // ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+          // ctx.fillStyle = m.bodyGradient
+          // ctx.fill();
+          // ctx.arc(15, 0, 4, 0, 2 * Math.PI);
+          // ctx.strokeStyle = "#333";
+          // ctx.lineWidth = 2;
+          // ctx.stroke();
+          // ctx.restore();
         }
-        // ctx.save();
-        // ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : 0.5 //|| (m.cycle % 40 > 20)
-        // ctx.translate(m.pos.x, m.pos.y);
-        // ctx.rotate(m.angle);
-        // ctx.beginPath();
-        // ctx.arc(0, 0, 30, 0, 2 * Math.PI);
-        // ctx.fillStyle = m.bodyGradient
-        // ctx.fill();
-        // ctx.arc(15, 0, 4, 0, 2 * Math.PI);
-        // ctx.strokeStyle = "#333";
-        // ctx.lineWidth = 2;
-        // ctx.stroke();
-        // ctx.restore();
       },
       fire() {
-        if (m.energy > this.drain + 0.01) this.MR();
+        if (m.energy > this.drain + 0.05) this.MR();  
       }
     },
   ],
