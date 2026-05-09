@@ -48,7 +48,6 @@ const m = {
   width: 50,
   radius: 30,
   wasFootOnGround: false, //used to check if player was on ground last cycle
-  eyeFillColor: null,
   fillColor: null, //set by setFillColors
   fillColorDark: null, //set by setFillColors
   bodyGradient: null, //set by setFillColors
@@ -3537,42 +3536,6 @@ const m = {
         powerUps.boost.draw()
       }
     },
-    flipFlop() {
-      m.isAltSkin = true
-      m.draw = function () {
-        ctx.fillStyle = m.fillColor;
-        m.walk_cycle += m.flipLegs * m.Vx;
-
-        //draw body
-        ctx.save();
-        ctx.globalAlpha = (m.immuneCycle < m.cycle) ? 1 : m.cycle % 3 ? 0.1 : 0.65 + 0.1 * Math.random()
-        ctx.translate(m.pos.x, m.pos.y);
-
-        m.calcLeg(Math.PI, -3);
-        if (!m.isShipMode) m.drawLeg("#4a4a4a");
-        m.calcLeg(0, 0);
-        if (!m.isShipMode) m.drawLeg("#333");
-
-        ctx.rotate(m.angle);
-        ctx.beginPath();
-        ctx.arc(0, 0, 30, 0, 2 * Math.PI);
-        ctx.fillStyle = m.bodyGradient
-        ctx.fill();
-        ctx.arc(15, 0, 4, 0, 2 * Math.PI);
-        ctx.strokeStyle = "#333";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        //draw eye
-        ctx.beginPath();
-        ctx.arc(15, 0, 3.5, 0, 2 * Math.PI);
-        ctx.fillStyle = m.eyeFillColor;
-        ctx.fill()
-        ctx.restore();
-
-        m.yOff = m.yOff * 0.85 + m.yOffGoal * 0.15; //smoothly move leg height towards height goal
-        powerUps.boost.draw()
-      }
-    },
     hexagon() {
       m.isAltSkin = true
 
@@ -3724,7 +3687,6 @@ const m = {
     }
     if (m.energy < m.maxEnergy) m.energy = m.maxEnergy;
     m.fieldMeterColor = "#0cf"
-    m.eyeFillColor = m.fieldMeterColor
     m.fieldShieldingScale = 1;
     m.fieldBlockCD = 10;
     m.fieldDamage = 1
@@ -4966,6 +4928,7 @@ const m = {
       energyHealthRatio: 1,
       drainCD: 0,
       effect: () => {
+        m.fieldMeterColor = "#36f"
         m.fieldBlockCD = 0;
         m.blockingRecoil = 1 //4 is normal
         m.fieldRange = 185
@@ -5105,7 +5068,7 @@ const m = {
         }
       },
       effect: () => {
-        m.fieldMeterColor = "#48f" //"#0c5"
+        m.fieldMeterColor = "#48f"
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
         m.grabPowerUpRange2 = 10000000
@@ -5455,7 +5418,6 @@ const m = {
         m.fieldFire = true;
         m.holdingMassScale = 0.01; //can hold heavier blocks with lower cost to jumping
         m.fieldMeterColor = "#333"
-        m.eyeFillColor = m.fieldMeterColor
         m.fieldHarmReduction = 0.5;
         m.fieldDrawRadius = 0;
 
@@ -5651,7 +5613,6 @@ const m = {
       },
       effect: () => {
         m.fieldMeterColor = "#ff0"
-        m.eyeFillColor = m.fieldMeterColor
         m.hold = function () {
           if (m.energy > m.maxEnergy - 0.02 && m.fieldCDcycle < m.cycle && !input.field && bullet.length < 300 && (m.cycle % 2)) {
             if (simulation.molecularMode === 0) {
@@ -6259,7 +6220,6 @@ const m = {
       },
       effect() {
         m.fieldMeterColor = "#f0f"
-        m.eyeFillColor = m.fieldMeterColor
         this.set();
       }
     },
@@ -6292,10 +6252,7 @@ const m = {
       },
       isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
       set() {
-        // m.fieldMeterColor = "#0fc"
-        // m.fieldMeterColor = "#ff0"
         m.fieldMeterColor = "#3fe"
-        m.eyeFillColor = m.fieldMeterColor
         m.fieldFx = 1.25
         // m.fieldJump = 1.09
         m.setMovement();
@@ -6409,7 +6366,6 @@ const m = {
       effect: () => {
         m.fieldFire = true;
         m.fieldMeterColor = "#333";
-        m.eyeFillColor = m.fieldMeterColor
         m.fieldPhase = 0;
         m.isCloak = false
         m.fieldDrawRadius = 0
@@ -6627,7 +6583,7 @@ const m = {
         });
         Composite.add(engine.world, m.fieldUpgrades[8].collider); //add to world
 
-        m.fieldMeterColor = "#333"
+        m.fieldMeterColor = "#82f"
         m.eyeFillColor = m.fieldMeterColor
         m.fieldPhase = 0;
         m.fieldPosition = { x: simulation.mouseInGame.x, y: simulation.mouseInGame.y }
@@ -6948,9 +6904,8 @@ const m = {
       },
       drain: 0,
       effect: () => {
-        m.fieldMeterColor = "#bbf" //"#0c5"
-        m.eyeFillColor = m.fieldMeterColor
-
+        m.fieldMeterColor = "#bbf"
+        
         m.duplicateChance = 0.08
         m.fieldRange = 0
         powerUps.setPowerUpMode(); //needed after adjusting duplication chance
@@ -7420,8 +7375,7 @@ const m = {
       effect: () => {
         m.fieldFire = true;
         // m.holdingMassScale = 0.01; //can hold heavier blocks with lower cost to jumping
-        // m.fieldMeterColor = "#789"//"#456"
-        m.eyeFillColor = m.fieldMeterColor
+        m.fieldMeterColor = "#abc"
         m.fieldHarmReduction = 0.5; //40% reduction
         m.grabPowerUpRange2 = 300000 //m.grabPowerUpRange2 = 200000;
 
@@ -7791,8 +7745,7 @@ const m = {
         }
       },
       effect: () => {
-        m.fieldMeterColor = "#ff8a1f" //"#0c5"
-        m.eyeFillColor = m.fieldMeterColor
+        m.fieldMeterColor = "#ff8a1f"
         m.fieldShieldingScale = 0;
         m.fieldBlockCD = 3;
         m.grabPowerUpRange2 = 10000000
@@ -8114,7 +8067,6 @@ const m = {
       teleportCDcycle: 0,
       effect: () => {
         m.fieldMeterColor = "#30f"
-        m.eyeFillColor = m.fieldMeterColor
         m.hold = function () {
           if (m.isHolding) {
             m.drawHold(m.holdingTarget);

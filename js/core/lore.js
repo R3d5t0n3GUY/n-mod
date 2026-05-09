@@ -716,7 +716,7 @@ const lore = {
       },
       () => {
         setTimeout(() => {
-          lore.anand.text("We suspect these secret data packets are coming from the adversarial network.")
+          lore.miriam.text("We suspect these secret data packets are coming from the adversarial network.")
         }, 500);
       },
       () => {

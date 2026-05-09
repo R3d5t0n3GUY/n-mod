@@ -780,7 +780,9 @@ const tech = {
     {
       name: "Banach space", //Euclidean space
       //${powerUps.orb.heal(1)}
-      description: `when you enter an <strong class='alt'>alternate reality</strong> spawn<br> ${powerUps.orb.boost(1)} ${powerUps.orb.coupling(1)} ${powerUps.orb.ammo(1)} ${powerUps.orb.research(1)} ${powerUps.orb.Casimir(1)} and some random <strong>bullets</strong>`,
+      descriptionFunction() {
+        return `when you enter an <strong class='alt'>alternate reality</strong> spawn<br> ${powerUps.orb.boost(1)} ${powerUps.orb.coupling(1)} ${powerUps.orb.ammo(1)} ${powerUps.orb.research(1)} ${powerUps.orb.Casimir(1)} and some random <strong>bullets</strong>`
+      },
       maxCount: 1,
       count: 0,
       frequency: 3,
@@ -3194,15 +3196,9 @@ const tech = {
       	<br>unlock advanced ${powerUps.orb.tech()} that runs if <strong class="color-flop">ON</strong>`,
       nameInfo: "<span id = 'tech-flip-flop'></span>",
       addNameInfo() {
-        setTimeout(function () {
+        setTimeout(() => {
           if (document.getElementById("tech-flip-flop")) {
-            if (tech.isFlipFlopOn) {
-              document.getElementById("tech-flip-flop").innerHTML = ` = <strong>ON</strong>`
-              m.eyeFillColor = m.fieldMeterColor //'#5af'
-            } else {
-              document.getElementById("tech-flip-flop").innerHTML = ` = <strong>OFF</strong>`
-              m.eyeFillColor = "transparent"
-            }
+            document.getElementById("tech-flip-flop").innerHTML = ` = <strong>O${tech.isFlipFlopOn ? "N" : "FF"}</strong>`
           }
         }, 100);
       },
@@ -3220,17 +3216,12 @@ const tech = {
         if (!tech.isFlipFlopOn) {
           tech.isFlipFlopOn = true //what is the state of flip-Flop?
         }
-        // if (!m.isShipMode) {
-        //     m.skin.flipFlop()
-        // }
       },
       remove() {
         tech.isFlipFlop = false
         if (tech.isFlipFlopOn) {
           tech.isFlipFlopOn = false //what is the state of flip-Flop?
         }
-        m.eyeFillColor = 'transparent'
-        // m.resetSkin();
       }
     },
     {
@@ -3362,15 +3353,9 @@ const tech = {
       	<br>unlock advanced ${powerUps.orb.tech()} that runs if <strong class="color-flop">ON</strong>`,
       nameInfo: "<span id = 'tech-switch'></span>",
       addNameInfo() {
-        setTimeout(function () {
+        ssetTimeout(() => {
           if (document.getElementById("tech-switch")) {
-            if (tech.isFlipFlopOn) {
-              document.getElementById("tech-switch").innerHTML = ` = <strong>ON</strong>`
-              m.eyeFillColor = m.fieldMeterColor //'#5af'
-            } else {
-              document.getElementById("tech-switch").innerHTML = ` = <strong>OFF</strong>`
-              m.eyeFillColor = "transparent"
-            }
+            document.getElementById("tech-switch").innerHTML = ` = <strong>O${tech.isFlipFlopOn ? "N" : "FF"}</strong>`
           }
         }, 100);
       },
@@ -3389,17 +3374,12 @@ const tech = {
         if (!tech.isFlipFlopOn) {
           tech.isFlipFlopOn = true //what is the state of flip-Flop?
         }
-        // if (!m.isShipMode) {
-        //     m.skin.flipFlop()
-        // }
       },
       remove() {
         tech.isRelay = false
         if (tech.isFlipFlopOn) {
           tech.isFlipFlopOn = false //what is the state of flip-Flop?
         }
-        m.eyeFillColor = 'transparent'
-        // m.resetSkin();
       }
     },
     {
