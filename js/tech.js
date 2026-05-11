@@ -1352,7 +1352,7 @@ const tech = {
     },
     {
       name: "ad hoc",
-      description: `spawn a ${powerUps.orb.heal()}, ${powerUps.orb.research()}, ${powerUps.orb.ammo()}, ${powerUps.orb.tech()}, ${powerUps.orb.gun()}, or ${powerUps.orb.field()}
+      description: `randomly spawn one of [${powerUps.orb.heal()}${powerUps.orb.research()}${powerUps.orb.ammo()}${powerUps.orb.tech()}${powerUps.orb.gun()}${powerUps.orb.field()}]
             	<br>for each ${powerUps.orb.gun()} in your inventory`,
       maxCount: 1, //random power up
       count: 0,
@@ -2178,7 +2178,7 @@ const tech = {
       name: "bubble fusion",
       descriptionFunction() {
         return `after destroying a mob's <strong>shield</strong>
-            	<br>spawn <strong>1-2</strong> ${powerUps.orb.heal()}, ${powerUps.orb.ammo()}, or ${powerUps.orb.research(1)} <em style ="float: right;">(once per mob)</em>`
+            	<br>randomly spawn <strong>1-2</strong> of [${powerUps.orb.heal()}${powerUps.orb.ammo()}${powerUps.orb.research(1)}] <em style ="float: right;">(once per mob)</em>`
       },
       maxCount: 1,
       count: 0,
@@ -2786,7 +2786,7 @@ const tech = {
     },
     {
       name: "open-source",
-      description: `${powerUps.orb.tech()}, ${powerUps.orb.field()}, and ${powerUps.orb.gun()} have
+      description: `[${powerUps.orb.tech()}${powerUps.orb.field()}${powerUps.orb.gun()}] each have
         <strong>+1</strong> <strong class='color-bot'>bot</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong>
         <br><strong>3x</strong> <em class='flicker'>frequency</em> for ${powerUps.orb.tech()} with <strong class='color-bot'>bots</strong>`,
       maxCount: 1,
@@ -3172,7 +3172,7 @@ const tech = {
     {
       name: "buckling",
       descriptionFunction() {
-        return `if a <strong class='color-block'>block</strong> kills a mob there's a <strong>50%</strong> chance<br>to spawn either ${powerUps.orb.coupling(1)}, ${powerUps.orb.boost(1)}, ${powerUps.orb.heal()}, ${powerUps.orb.ammo()}, or ${powerUps.orb.research(1)}`
+        return `if a <strong class='color-block'>block</strong> kills a mob there's a <strong>50%</strong> chance<br>to randomly spawn one of [${powerUps.orb.coupling(1)}${powerUps.orb.boost(1)}${powerUps.orb.heal()}${powerUps.orb.ammo()}${powerUps.orb.research(1)}]`
       },
       maxCount: 1,
       count: 0,
@@ -3307,8 +3307,8 @@ const tech = {
     },
     {
       name: "integrated circuit",
-      description: `if <strong class='color-flop'>ON</strong> <strong>+7</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, and ${powerUps.orb.gun()}
-      	<br>if <strong class='color-flop'>OFF</strong> <strong>-1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, and ${powerUps.orb.gun()}`,
+      description: `if <strong class='color-flop'>ON</strong> <strong>+7</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]
+      	<br>if <strong class='color-flop'>OFF</strong> <strong>-1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]`,
       maxCount: 1,
       count: 0,
       frequency: 3,
@@ -4966,7 +4966,7 @@ const tech = {
     },
     {
       name: "ansatz",
-      description: `after <strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}
+      description: `after <strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> any of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]
       <br>if you have no ${powerUps.orb.research(1)} in your inventory spawn ${powerUps.orb.research(3)}`,
       isPacifist: true,
       maxCount: 1,
@@ -5014,7 +5014,7 @@ const tech = {
     },
     {
       name: "eternalism",
-      description: `<strong>1.3x</strong> <strong class='color-d'>damage</strong>, but <strong>time</strong> doesn't <strong>pause</strong><br>while <strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}`,
+      description: `<strong>1.3x</strong> <strong class='color-d'>damage</strong>, but <strong>time</strong> doesn't <strong>pause</strong><br>while <strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> any of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]`,
       maxCount: 1,
       count: 0,
       frequency: 1,
@@ -5113,7 +5113,7 @@ const tech = {
     },
     {
       name: "emergence",
-      description: `${powerUps.orb.field()}, ${powerUps.orb.tech()}, and ${powerUps.orb.gun()} have <strong>+1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong><br><strong>1.1x</strong> <strong class='color-d'>damage</strong>`,
+      description: `each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}] have <strong>+1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong><br><strong>1.1x</strong> <strong class='color-d'>damage</strong>`,
       maxCount: 15,
       count: 0,
       frequency: 1,
@@ -5163,7 +5163,7 @@ const tech = {
     },
     {
       name: "determinism",
-      description: `spawn ${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}<br>${powerUps.orb.field()}, ${powerUps.orb.tech()}, and ${powerUps.orb.gun()} have only <strong>1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong>`,
+      description: `spawn ${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}${powerUps.orb.tech()}<br> each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}] have only <strong>1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong>`,
       maxCount: 1,
       count: 0,
       frequency: 1,
@@ -5384,7 +5384,7 @@ const tech = {
     {
       name: "mass production",
       descriptionFunction() {
-        return `${powerUps.orb.tech()} have extra <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> to spawn ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)},&nbsp; ${powerUps.orb.heal(1)}, &nbsp;${powerUps.orb.Casimir(1)}, &nbsp;and&nbsp; ${powerUps.orb.research(1)}
+        return `${powerUps.orb.tech()} have extra <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> to spawn [${powerUps.orb.coupling(1)}${powerUps.orb.ammo(1)}${powerUps.orb.heal(1)}${powerUps.orb.Casimir(1)}${powerUps.orb.research(1)}]
           <br><strong>+3%</strong> chance to <strong class='color-dup'>duplicate</strong> spawned <strong>power ups</strong>`
       },
       maxCount: 1,
@@ -5612,9 +5612,9 @@ const tech = {
       name: "Lie group",
       descriptionFunction() {
         const resultsArray = tech.mergedList.map(item => powerUps.orb[item](1));
-        const resultString = resultsArray.join(", ");
-        return `randomly merge future ${powerUps.orb.coupling(1)},&nbsp; ${powerUps.orb.ammo(1)}, ${powerUps.orb.boost(1)}, &nbsp;or&nbsp; ${powerUps.orb.research(1)} into ${powerUps.orb.Casimir(1)}
-        <br>${powerUps.orb.Casimir(1)} gain their effect <em style ="float: right;">(merged: ${resultString})</em>`
+        const resultString = resultsArray.join("");
+        return `randomly merge future [${powerUps.orb.coupling(1)}${powerUps.orb.ammo(1)}${powerUps.orb.boost(1)}${powerUps.orb.research(1)}] into ${powerUps.orb.Casimir(1)}
+        <br>${powerUps.orb.Casimir(1)} gain their effect <em style ="float: right;">(merged: [${resultString}])</em>`
       },
       maxCount: 4,
       count: 0,
@@ -5718,7 +5718,7 @@ const tech = {
     {
       name: "commodities exchange",
       descriptionFunction() {
-        return `clicking <strong class='color-cancel'>cancel</strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}<br>spawns <strong>12-21</strong> ${powerUps.orb.heal()}, ${powerUps.orb.ammo()}, or ${powerUps.orb.research(1)}`
+        return `clicking <strong class='color-cancel'>cancel</strong> for any of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]<br>randomly spawns <strong>12-21</strong> of [${powerUps.orb.heal()}${powerUps.orb.ammo()}${powerUps.orb.research(1)}]`
       },
       maxCount: 1,
       count: 0,
@@ -5739,7 +5739,7 @@ const tech = {
       name: "options exchange",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Option_(finance)' class="link">options exchange</a>`,
       descriptionFunction(){
-        let result = `clicking <strong class='color-cancel'>cancel</strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}`,
+        let result = `clicking <strong class='color-cancel'>cancel</strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]`,
           maxTimes = "once"
         result += `<br>will <strong class='color-randomize'>randomize</strong> with <strong>3x</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong>,<br>`
         if (this.count > (simulation.isChoosing ? 0 : 1)) {
@@ -5779,7 +5779,7 @@ const tech = {
     },
     {
       name: "futures exchange",
-      description: `clicking <strong class='color-cancel'>cancel</strong> for ${powerUps.orb.field()}, ${powerUps.orb.tech()}, or ${powerUps.orb.gun()}<br>gives <strong>+7%</strong> power up <strong class='color-dup'>duplication</strong> chance`,
+      description: `clicking <strong class='color-cancel'>cancel</strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]<br>gives <strong>+7%</strong> power up <strong class='color-dup'>duplication</strong> chance`,
       maxCount: 1,
       count: 0,
       frequency: 1,

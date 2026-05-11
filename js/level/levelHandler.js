@@ -20,7 +20,7 @@ const level = {
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "dripp", "fortress", "commandeer", "clock", "superNgonBros",
-    "tlinat", "ruins", "ace", "LaunchSite", "vents"
+    "tlinat", "ruins", "ace", "LaunchSite", "vents", "intervals", "turbine",
   ],
   trainingLevels: ["walk", "crouch", "jump", "hold", "throw", "throwAt", "deflect", "heal", "fire",
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
@@ -52,6 +52,7 @@ const level = {
         if (level.fullLevelList[newLevelName]) {
           level.fullLevelList[newLevelName](); //picks the current map from the the levels array
         } else {
+          level.levels[level.onLevel] = 'testing'
           throw "Unknown level"
         }
       } catch (err) {
@@ -1886,7 +1887,7 @@ const level = {
                 //delete any overlapping blocks
                 const blocks = Matter.Query.collides(this, body)
                 for (let i = 0; i < blocks.length; i++) {
-                  if (blocks[i].bodyB !== this && blocks[i].bodyB !== m.holdingTarget) { //dont' delete yourself   <----- bug here maybe...
+                  if (blocks[i].bodyB !== this && blocks[i].bodyB !== m.holdingTarget && !body[i].isInvulnerable) { //dont' delete yourself   <----- bug here maybe...
                     Matter.Composite.remove(engine.world, blocks[i].bodyB);
                     blocks[i].bodyB.isRemoveMeNow = true
                     for (let i = 1; i < body.length; i++) { //find which index in body array it is and remove from array
@@ -2148,7 +2149,7 @@ const level = {
           if (Matter.Query.collides(this, [body[i]]).length === 0) {
             if (body[i].isInPortal === this) body[i].isInPortal = null
           } else if (body[i].isInPortal !== this) { //touching this portal, but for the first time
-            if (isRemoveBlocks) {
+            if (isRemoveBlocks && !body[i].isInvulnerable) {
               queueRemoval('body', i)
               break
             }
