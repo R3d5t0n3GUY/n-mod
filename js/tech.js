@@ -1152,8 +1152,10 @@ const tech = {
     {
       name: "integrated armament",
       link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Weapon' class="link">integrated armament</a>`,
-      description: `<span style='font-size:95%;'><strong>1.3x</strong> <strong class='color-d'>damage</strong>, but new ${powerUps.orb.gun()} replace
-        	<br>current ${powerUps.orb.gun()} and convert your ${powerUps.orb.gunTech()}</span>`,
+      descriptionFunction() {
+        return `<span style='font-size:95%;'><strong>1.3x</strong> <strong class='color-d'>damage</strong>, but new ${powerUps.orb.gun()} replace
+        	<br>current ${powerUps.orb.gun()} and convert your ${powerUps.orb.gunTech()}</span>`
+      },
       maxCount: 1,
       count: 0,
       frequency: 1,
