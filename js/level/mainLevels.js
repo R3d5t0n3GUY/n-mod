@@ -336,7 +336,8 @@ const mainLevels = {
         level.exit.x = 5500;
       }
       level.exit.y = -330;
-      queueRemoval('map', map.length - 1);
+      Matter.Composite.remove(engine.world, map[map.length - 1]);
+      map.splice(map.length - 1, 1);
       simulation.draw.setPaths(); //redraw map draw path
       level.levels.push("unknown")
     }

@@ -42,7 +42,7 @@ const spawn = {
     "sprayBoss", "mineBoss", "bounceBoss", "laserScanBoss", "timeBoss"
   ],
   isAllowedPacifist(name = null) {
-    return (typeof(name) === "string") && (localSettings.loreCount < 6 || !spawn.bannedMobs.includes(name))
+    return (typeof(name) === "string") && (localSettings.loreCount < 6 || !spawn.bannedMobs.includes(name) || simulation.isCheating)
   },
   forefitList: [ //joke lines powerUp-type bosses say when spawned on level.final
     `I quit, finalBoss. Tired of hanging around freaks like you.`,
@@ -1180,7 +1180,7 @@ const spawn = {
         }
 
         //add lore level as next level if player took lore tech earlier in the game
-        if (lore.techCount > (lore.techGoal - 1) && !simulation.isCheating) {
+        if (localSettings.loreCount > 5 || lore.techCount > (lore.techGoal - 1) && !simulation.isCheating) {
           simulation.inGameConsole(`<span class="lore-text">undefined</span> <span class='color-symbol'>=</span> ${lore.techCount}/${lore.techGoal}`, 360);
           setTimeout(function () {
             simulation.inGameConsole(`level.levels.push("<span class='lore-text'>unknown</span>")`, 720);
