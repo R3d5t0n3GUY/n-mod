@@ -11524,7 +11524,7 @@ const tech = {
         tech.magnitize = true;
       },
       remove() {
-        tech.magnitize = true;
+        tech.magnitize = false;
       }
     },
     //************************************************** 
@@ -15990,9 +15990,8 @@ const tech = {
         try {
           if (localSettings.difficultyCompleted) {
             gameCompleted = localSettings.difficultyCompleted.some(diff => diff === true)
-          } else { //if localSettings.difficultyCompleted is not defined, ignore it
+          } else {
             gameCompleted = true
-            //throw new TypeError("Cannot read properties of null (reading '.difficultyCompleted')")
           }
         } catch (e) { //if localSettings is not defined, ignore it
           console.warn(e)
@@ -16040,21 +16039,18 @@ const tech = {
         }
 
         setTimeout(() => { //a short delay, I can't remember why
+          if (lore.techCount < 0) lore.techCount = 0
           lore.techCount++
           if (lore.techCount >= lore.techGoal) {
-            // tech.removeLoreTechFromPool();
             this.frequency = 0;
-            //this.description = `<strong class="lore-text">null</strong> is open at level.final() <br> &nbsp;`
           } else {
             this.frequency += lore.techGoal * 2
-            //this.description = `<em>uncaught error:</em><br><strong>${Math.max(0, lore.techGoal - lore.techCount)}</strong> more required for access to <strong class="lore-text">null</strong>`
           }
         }, 1);
       },
       remove() {
         lore.techCount = 0;
         this.maxCount = lore.techGoal;
-        //this.description = `<strong class="lore-text">this</strong> <br> &nbsp;`
       }
     },
     {

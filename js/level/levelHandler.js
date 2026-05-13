@@ -2862,7 +2862,7 @@ const level = {
           powerUps.spawn(2095 + 20 * (Math.random() - 0.5), -2120, "research", false);
           powerUps.spawn(2095 + 20 * (Math.random() - 0.5), -2075, "research", false);
         } else if (simulation.difficultyMode > 4) {
-
+          powerUps.spawn(2095 + 20 * (Math.random() - 0.5), -2200, "heal", false);
         } else {
           powerUps.spawn(2095 + 20 * (Math.random() - 0.5), -2300, "heal", false);
           powerUps.spawn(2095 + 20 * (Math.random() - 0.5), -2100, "heal", false);

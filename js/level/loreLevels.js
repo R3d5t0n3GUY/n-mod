@@ -115,7 +115,7 @@ const loreLevels = {
     spawn.mapRect(5525, -4350, 1725, 2925);
     spawn.mapRect(7200, -5125, 300, 3900);
   },
-  unknown() {
+  undefined() {
     level.levels.pop(); //remove lore level from rotation
     // level.onLevel--
     // console.log(level.onLevel, level.levels)

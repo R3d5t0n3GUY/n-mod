@@ -339,7 +339,7 @@ const mainLevels = {
       Matter.Composite.remove(engine.world, map[map.length - 1]);
       map.splice(map.length - 1, 1);
       simulation.draw.setPaths(); //redraw map draw path
-      level.levels.push("unknown")
+      level.levels.push("undefined")
     }
   },
   gauntlet() {

@@ -1363,7 +1363,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         isTrainingNotAttempted: true,
         levelsClearedLastGame: 0,
         loreCount: 0,
-        isLoreDoesNotNeedReset: false,
+        isLoreDoesNotNeedReset: true,
         isHuman: false,
         key: undefined,
         isHideImages: true, //default to hide images
