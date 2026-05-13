@@ -3366,7 +3366,7 @@ const tech = {
       	<br>unlock advanced ${powerUps.orb.tech()} that runs if <strong class="color-flop">ON</strong>`,
       nameInfo: "<span id = 'tech-switch'></span>",
       addNameInfo() {
-        ssetTimeout(() => {
+        setTimeout(() => {
           if (document.getElementById("tech-switch")) {
             document.getElementById("tech-switch").innerHTML = ` = <strong>O${tech.isFlipFlopOn ? "N" : "FF"}</strong>`
           }

@@ -481,22 +481,21 @@ const m = {
   switchWorlds(giveTech = "") {
     let stunning = tech.isStunRealities;
     if (!m.isSwitchingWorlds) {
-      let totalTech = 0, addBack = [];
-      for (let i = tech.tech.length - 1; i > -1; i--) {
+      let totalTech = 0 // addBack = [];
+      for (let i = 0; i < tech.tech.length; i++) {
         if (tech.tech[i].count > 0 && !tech.tech[i].isLore && !tech.tech[i].isNonRefundable) {
-          if (tech.tech[i].isAltRealityTech) {
-            addBack.push(tech.tech[i].name)
+          if (tech.tech[i].isAltRealityTech || tech.tech[i].name === giveTech) {
+            //addBack.push(tech.tech[i].name)
           } else {
             totalTech += tech.tech[i].count
+            tech.removeTech(tech.tech[i].name)
           }
         }
       }
       powerUps.boost.endCycle = 0
       simulation.isTextLogOpen = false; //prevent console spam
       // if (giveTech) tech.giveTech(giveTech) //give many worlds back
-      for (let i = 0; i < addBack.length; i++) tech.giveTech(addBack[i])
-      if (stunning) tech.giveTech("quantum neurosis")
-      if (giveTech) tech.giveTech(giveTech) //give many worlds back
+      //for (let i = 0; i < addBack.length; i++) tech.giveTech(addBack[i])
 
       //remove all bullets
       for (let i = 0; i < bullet.length; ++i) queueRemoval('bullet', i);
@@ -504,10 +503,11 @@ const m = {
 
       //randomize
       powerUps.research.count = Math.floor(powerUps.research.count * (0.5 + 1.5 * Math.random()))
-      m.coupling = Math.floor(m.coupling * (0.5 + 1.5 * Math.random()))
+      if (m.coupling > 0 || Math.random() < 0.05) m.coupling = Math.floor(m.coupling * (0.5 + 1.5 * Math.random()))
       //randomize health
       m.health = m.health * (1 + 0.5 * (Math.random() - 0.5))
-      if (m.health > 1) m.health = 1;
+      if (m.maxHealth > 1.01 || m.maxHealth < 0.99) m.maxHealth = m.maxHealth * (1 + 0.5 * (Math.random() - 0.5))
+      if (m.health > m.maxHealth) m.health = m.maxHealth;
       //randomize field
       m.setField(Math.ceil(Math.random() * (m.fieldUpgrades.length - 1)))
       //removes guns and ammo  
@@ -516,9 +516,11 @@ const m = {
       b.inventoryGun = 0;
       for (let i = 0, len = b.guns.length; i < len; ++i) {
         b.guns[i].have = false;
-        if (b.guns[i].ammo !== Infinity) {
+        if (b.isAmmoFinite(i)) {
           b.guns[i].ammo = 0;
           b.guns[i].ammoPack = b.guns[i].defaultAmmoPack;
+        } else {
+          b.guns[i].ammo = Infinity
         }
       }
       //give random guns
@@ -528,7 +530,12 @@ const m = {
 
       //randomize ammo based on ammo/ammoPack count
       for (let i = 0, len = b.inventory.length; i < len; i++) {
-        if (b.guns[b.inventory[i]].ammo !== Infinity) b.guns[b.inventory[i]].ammo = Math.floor(b.guns[b.inventory[i]].ammo * (0.25 + Math.random() + Math.random() + Math.random()))
+        let ammoType = b.guns[b.inventory[i]].ammoType || 'ammo'
+        if (b.isAmmoFinite(b.inventory[i])) {
+          b.guns[b.inventory[i]][ammoType] = Math.floor(b.guns[b.inventory[i]].ammoPack * (0.25 + Math.random() + Math.random() + Math.random()))
+        } else {
+          b.guns[b.inventory[i]][ammoType == 'durability' ? 'durability' : 'ammo'] = Infinity
+        }
       }
 
       let loop = () => {

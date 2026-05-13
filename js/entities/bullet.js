@@ -143,22 +143,27 @@ const b = {
     if (tech.isOneGun) b.resetAllGuns();
     if (gun === "random") {
       //find what guns player doesn't have
-      options = []
+      let options = []
+      let weights = []
       for (let i = 0, len = b.guns.length; i < len; i++) {
-        if (!b.guns[i].have) options.push(i)
+        if (!b.guns[i].have) {
+          options.push(i)
+          weights.push(b.guns[i].frequency || b.guns[i].frequencyDefault || 1)
+        }
       }
       if (options.length === 0) return
       //randomly pick from list of possible guns
-      gun = options[Math.floor(Math.random() * options.length)]
+      gun = options.randomItem(weights)
     }
     if (gun === "all") {
       for (let i = 0; i < b.guns.length; i++) {
         b.inventory[i] = i;
         b.guns[i].have = true;
-        if (b.guns[i].ammo !== Infinity) b.guns[i].ammo = Math.ceil(b.guns[i].ammoPack * ammoPacks);
+        let ammoType = b.guns[gun].ammoType || 'ammo'
+        if (b.isAmmoFinite(gun)) b.guns[gun][ammoType] = Math.ceil(b.guns[gun].ammoPack * ammoPacks);
+        b.inventoryGun = 0;
+        b.activeGun = b.inventory[0];
       }
-      b.inventoryGun = 0;
-      b.activeGun = b.inventory[0];
     } else {
       if (isNaN(gun)) { //find gun by name
         let found = false;
@@ -173,7 +178,8 @@ const b = {
       }
       if (!b.guns[gun].have) b.inventory.push(gun);
       b.guns[gun].have = true;
-      if (b.guns[gun].ammo !== Infinity) b.guns[gun].ammo = Math.ceil(b.guns[gun].ammoPack * ammoPacks);
+      let ammoType = b.guns[gun].ammoType || 'ammo'
+      if (b.isAmmoFinite(gun)) b.guns[gun][ammoType] = Math.ceil(b.guns[gun].ammoPack * ammoPacks);
       if (b.activeGun === null) {
         b.inventoryGun = 0;
         b.activeGun = b.inventory[0] //if no active gun switch to new gun
@@ -337,6 +343,10 @@ const b = {
         onEnd() { }
       };
     }
+  },
+  isAmmoFinite(idx) {
+    let type = b.guns[idx].ammoType || 'ammo'
+    return (type != 'health' && type != 'energy' && !([Infinity, NaN, null, undefined].includes(type == 'durability' ? b.guns[idx].durability : b.guns[idx].ammo)))
   },
   muzzleFlash(radius = 30) {
     // ctx.fillStyle = "#fb0";
@@ -10489,7 +10499,7 @@ const b = {
       frequency: 4,
       frequencyDefault: 4,
       ammoType: "health",
-      ammo: 17,
+      ammo: Infinity,
       ammoPack: 1,
       defaultAmmoPack: Infinity,
       have: false,
