@@ -802,7 +802,7 @@ const tech = {
         tech.isAltRealitySpawn = true
       },
       remove() {
-        tech.isAltRealitySpawn = true
+        tech.isAltRealitySpawn = false
       }
     },
     {
