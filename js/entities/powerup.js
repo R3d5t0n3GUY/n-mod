@@ -1425,6 +1425,25 @@ const powerUps = {
         <div class="grid-title"><div class="circle-grid field"></div> &nbsp; ${m.fieldUpgrades[choose].name}</div>
         ${m.fieldUpgrades[choose].descriptionFunction ? m.fieldUpgrades[choose].descriptionFunction() : m.fieldUpgrades[choose].description}</div></div>`
   },
+  addTechText(choose) {
+    if (tech.tech[choose].isFieldTech) {
+      return powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
+    } else if (tech.tech[choose].isGunTech) {
+      return powerUps.gunTechText(choose, `powerUps.choose('tech',${choose})`)
+    } else if (tech.tech[choose].isLore) {
+      return `<div class="choose-grid-module" onclick="powerUps.choose('tech',${choose})"><div class="grid-title lore-text"><div class="circle-grid lore"></div> &nbsp; ${tech.tech[choose].name} ${isCount}</div>${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div>`
+    } else if (tech.tech[choose].isJunk) {
+      return powerUps.junkTechText(choose, `powerUps.choose('tech',${choose})`)
+    } else if (tech.tech[choose].isSkin) {
+      return powerUps.skinText(choose, `powerUps.choose('tech',${choose})`)
+    } else if (tech.tech[choose].isSkinTech) {
+      return powerUps.skinTechText(choose, `powerUps.choose('tech',${choose})`)
+    } else if (tech.tech[choose].isInstant) {
+      return powerUps.instantTechText(choose, `powerUps.choose('tech',${choose})`)
+    } else { //normal tech
+      return powerUps.techText(choose, `powerUps.choose('tech',${choose})`)
+    }
+  },
   gunText(choose, click) {
     if (choose > b.guns.length > 1) choose = Math.floor(Math.random() * b.guns.length) //reroll if invalid
     const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "gun")};'`
@@ -1460,7 +1479,7 @@ const powerUps = {
                 <div class="grid-title"> <div class="circle-grid-instant"></div> &nbsp; ${tech.tech[choose].name + techCountText}</div>
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
-  skinTechText(choose, click) {
+  skinText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
@@ -1502,31 +1521,50 @@ const powerUps = {
                 &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${tech.tech[choose].name + techCountText}</div>
                 ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
   },
+  skinTechText(choose, click) {
+    if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
+    const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
+    const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
+    return `<div class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
+                <div class="card-text">
+                <div class="grid-title">
+                <span style='position:relative;'>
+                  
+                  <div class="circle-grid-title" style="position:absolute; top:0; left:0;opacity:0.8;">
+                    <span style="position:relative;">
+                      <div class="circle-grid-skin"></div>
+                    <div class="circle-grid-skin-eye"></div>
+                  </span>
+                  </div>
+                </span>
+                &nbsp; &nbsp; &nbsp; &nbsp; ${tech.tech[choose].name + techCountText}</div>
+                ${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div></div>`
+  },
   junkTechText(choose, click) {
     if (choose > tech.tech.length - 1) choose = Math.floor(Math.random() * tech.tech.length) //reroll if invalid
     const techCountText = tech.tech[choose].count > 0 ? ` (${tech.tech[choose].count + 1}x)` : "";
     const style = localSettings.isHideImages ? powerUps.hideStyle : `style='background-image: ${build.getBackgroundImageURL(choose, "tech")};'`
-    if (!localSettings.isHideImages) {
-      // setTimeout(() => { //delay so that the html element exists
-      //     if (tech.tech[choose].url === undefined) { //if on url has been set yet
-      //         const url = `https://api.openverse.engineering/v1/images/?q=${tech.tech[choose].name}`;
-      //         fetch(url, { signal: AbortSignal.timeout(1000) }) //give up if it takes over 1 second
-      //             .then((response) => response.json())
-      //             .then((responseJson) => {
-      //                 if (responseJson.results.length > 0) {
-      //                     const index = Math.floor(Math.random() * responseJson.results.length) //randomly choose from the images
-      //                     tech.tech[choose].url = responseJson.results[index].url //store the url
-      //                     document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')` //make the url the background image
-      //                 }
-      //             });
-      //     } else {
-      //         document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')`
-      //     }
-      // }, 1);
-      // setTimeout(() => { //delay so that the html element exists
-      //     document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')`
-      // }, 1);
-    }
+    /* if (!localSettings.isHideImages) {
+      setTimeout(() => { //delay so that the html element exists
+        if (tech.tech[choose].url === undefined) { //if on url has been set yet
+          const url = `https://api.openverse.engineering/v1/images/?q=${tech.tech[choose].name}`;
+          fetch(url, { signal: AbortSignal.timeout(1000) }) //give up if it takes over 1 second
+          .then((response) => response.json())
+          .then((responseJson) => {
+            if (responseJson.results.length > 0) {
+              const index = Math.floor(Math.random() * responseJson.results.length) //randomly choose from the images
+              tech.tech[choose].url = responseJson.results[index].url //store the url
+              document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')` //make the url the background image
+            }
+          });
+        } else {
+          document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')`
+        }
+      }, 1);
+      setTimeout(() => { //delay so that the html element exists
+        document.getElementById(`junk-${choose}`).style.backgroundImage = `url('${tech.tech[choose].url}')`
+      }, 1);
+    } */
     return `<div id = "junk-${choose}" class="choose-grid-module card-background" onclick="${click}" onauxclick="${click}"${style}>
                 <div class="card-text">
                 <div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${tech.tech[choose].name} ${techCountText}</div>
@@ -1766,19 +1804,7 @@ const powerUps = {
           let text = powerUps.buildColumns(totalChoices, "tech")
           powerUps.choosingType = "tech"
           addTech = (choose) => {
-            if (tech.tech[choose].isFieldTech) {
-              text += powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
-            } else if (tech.tech[choose].isGunTech) {
-              text += powerUps.gunTechText(choose, `powerUps.choose('tech',${choose})`)
-            } else if (tech.tech[choose].isJunk) {
-              text += powerUps.junkTechText(choose, `powerUps.choose('tech',${choose})`)
-            } else if (tech.tech[choose].isSkin) {
-              text += powerUps.skinTechText(choose, `powerUps.choose('tech',${choose})`)
-            } else if (tech.tech[choose].isInstant) {
-              text += powerUps.instantTechText(choose, `powerUps.choose('tech',${choose})`)
-            } else { //normal tech
-              text += powerUps.techText(choose, `powerUps.choose('tech',${choose})`)
-            }
+            text += powerUps.addTechText(choose)
           }
           if (tech.isRetain) {
             for (let i = 0, len = powerUps.retainList.length; i < len; i++) {
@@ -1870,7 +1896,7 @@ const powerUps = {
           if (tech.isMicroTransactions && powerUps.research.count > 0) {
             const skins = [] //find skins
             for (let i = 0; i < tech.tech.length; i++) {
-              if (tech.tech[i].isSkin && tech.tech[i].allowed() && tech.tech[i].name !== "microtransactions" && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) skins.push(i)
+              if ((tech.tech[i].isSkin || tech.tech[i].isSkinTech) && tech.tech[i].allowed() && tech.tech[i].name !== "microtransactions" && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) skins.push(i)
               if (tech.tech[i].name === "microtransactions" && Math.random() < 0.37) skins.push(i)
             }
             for (let j = 0, len = (tech.isMicroTransactions || 1); j < len; j++) {
@@ -1991,21 +2017,7 @@ const powerUps = {
               if (choose === null || tech.tech[choose].count + 1 > tech.tech[choose].maxCount || !tech.tech[choose].allowed()) {
                 text += powerUps.incoherentTechText(choose)
               } else {
-                if (tech.tech[choose].isFieldTech) {
-                  text += powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
-                } else if (tech.tech[choose].isGunTech) {
-                  text += powerUps.gunTechText(choose, `powerUps.choose('tech',${choose})`)
-                } else if (tech.tech[choose].isLore) {
-                  text += `<div class="choose-grid-module" onclick="powerUps.choose('tech',${choose})"><div class="grid-title lore-text"><div class="circle-grid lore"></div> &nbsp; ${tech.tech[choose].name} ${isCount}</div>${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div>`
-                } else if (tech.tech[choose].isJunk) {
-                  text += powerUps.junkTechText(choose, `powerUps.choose('tech',${choose})`)
-                } else if (tech.tech[choose].isSkin) {
-                  text += powerUps.skinTechText(choose, `powerUps.choose('tech',${choose})`)
-                } else if (tech.tech[choose].isInstant) {
-                  text += powerUps.instantTechText(choose, `powerUps.choose('tech',${choose})`)
-                } else { //normal tech
-                  text += powerUps.techText(choose, `powerUps.choose('tech',${choose})`)
-                }
+                text += powerUps.addTechText(choose)
               }
             }
           }

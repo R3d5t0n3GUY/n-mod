@@ -687,21 +687,21 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         const techCountText = tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : "";
         if (tech.tech[i].isInstant) {
           // text += `<div class="pause-grid-module" id ="${i}-pause-tech"  style = "border: 0px; opacity:0.5; font-size: 60%; line-height: 130%; margin: 1px; padding: 6px;"><div class="grid-title">${tech.tech[i].link} ${techCountText}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
-        } else if (tech.tech[i].isFieldTech) {
-          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
-          text += build.fieldTechText(i) + "</div>"
-        } else if (tech.tech[i].isGunTech) {
-          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
-          text += build.gunTechText(i) + "</div>"
-        } else if (tech.tech[i].isJunk) {
-          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
-          text += build.junkTechText(i) + "</div>"
-        } else if (tech.tech[i].isSkin) {
-          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
-          text += build.skinTechText(i) + "</div>"
         } else {
           text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
-          text += build.techText(i) + "</div>"
+          if (tech.tech[i].isFieldTech) {
+            text += build.fieldTechText(i) + "</div>"
+          } else if (tech.tech[i].isGunTech) {
+            text += build.gunTechText(i) + "</div>"
+          } else if (tech.tech[i].isJunk) {
+            text += build.junkTechText(i) + "</div>"
+          } else if (tech.tech[i].isSkin) {
+            text += build.skinText(i) + "</div>"
+          } else if (tech.tech[i].isSkinTech) {
+            text += build.skinTechText(i) + "</div>"
+          } else {
+            text += build.techText(i) + "</div>"
+          }
         }
       } else if (tech.tech[i].isLost) {
         text += `<div class="pause-grid-module" style="text-decoration: line-through; padding-left: 8px; opacity: 0.4;"><div class="grid-title">${tech.tech[i].name}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
@@ -862,43 +862,56 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   isExperimentRun: false,
   techText(i) {
     return `<div class="card-text" >
-                                <div class="grid-title" ><div class="circle-grid tech"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <div class="grid-title" >
+        <div class="circle-grid tech"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+        ${build.getDescription('tech', i)}
+      </div>`
   },
   instantTechText(i) {
     // 
     return `<div class="card-text" >
-                                <div class="grid-title" > <div class="circle-grid-instant"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <div class="grid-title" > <div class="circle-grid-instant"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
+  },
+  skinText(i) {
+    return `<div class="card-text"> <div class="grid-title">
+      <span style="position:relative;">
+          <div class="circle-grid-skin"></div>
+          <div class="circle-grid-skin-eye"></div>
+      </span> &nbsp; &nbsp; &nbsp; &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
   },
   skinTechText(i) {
     return `<div class="card-text"> <div class="grid-title">
-                                <span style="position:relative;">
-                                    <div class="circle-grid-skin"></div>
-                                    <div class="circle-grid-skin-eye"></div>
-                                </span> &nbsp; &nbsp; &nbsp; &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <span style="position:relative;">
+        <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
+        <span style="position:relative;">
+            <div class="circle-grid-skin"></div>
+            <div class="circle-grid-skin-eye"></div>
+        </span>
+      </span>&nbsp; &nbsp; &nbsp; &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
   },
   gunTechText(i) {
     return `<div class="card-text"> <div class="grid-title">
-                                <span style="position:relative;">
-                                    <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
-                                    <div class="circle-grid gun" style="position:absolute; top:0; left:10px; opacity:0.65;"></div>
-                                </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <span style="position:relative;">
+          <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
+          <div class="circle-grid gun" style="position:absolute; top:0; left:10px; opacity:0.65;"></div>
+      </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
   },
   fieldTechText(i) {
     return `<div class="card-text"><div class="grid-title">
-                                <span style="position:relative;">
-                                    <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
-                                    <div class="circle-grid field" style="position:absolute; top:0; left:10px;opacity:0.65;"></div>
-                                </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <span style="position:relative;">
+          <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
+          <div class="circle-grid field" style="position:absolute; top:0; left:10px;opacity:0.65;"></div>
+      </span> &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
   },
   junkTechText(i) {
     return `<div class="card-text">
-                                <div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
-                                ${build.getDescription('tech', i)}</div>`
+      <div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
+      ${build.getDescription('tech', i)}</div>`
   },
   choosePowerUp(index, type, isAllowed = false) {
     if (type === "gun") {
@@ -1098,6 +1111,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         } else if (tech.tech[i].isJunk) {
           text += build.junkTechText(i)
         } else if (tech.tech[i].isSkin) {
+          text += build.skinText(i)
+        } else if (tech.tech[i].isSkinTech) {
           text += build.skinTechText(i)
         } else if (tech.tech[i].isInstant) {
           text += build.instantTechText(i)

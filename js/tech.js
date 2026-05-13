@@ -431,6 +431,7 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       allowed() {
         return tech.isFallingDamage
       },
@@ -474,8 +475,9 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       allowed() {
-          return tech.isNitinol
+        return tech.isNitinol
       },
       requires: "nitinol",
       effect() {
@@ -495,6 +497,7 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       allowed() {
         return tech.isNitinol
       },
@@ -520,11 +523,11 @@ const tech = {
       frequencyDefault: 1,
       isSkin: true,
       allowed() {
-          return !m.isAltSkin
+        return !m.isAltSkin
       },
       requires: "not skinned",
       effect() {
-          m.skin.scaleInvariance();
+        m.skin.scaleInvariance();
       },
       remove() {
         if (this.count) {
@@ -564,12 +567,13 @@ const tech = {
     {
       name: "bijection",
       descriptionFunction() {
-          return `extend the effect of <span style ="float: right;font-size:75%;"><strong>tiny</strong> (0.7x to <strong>0.5x</strong> <strong class='color-defense'>damage taken</strong>)</span><br>&nbsp;<strong>scale invariance</strong> <span style ="float: right;"><strong>huge</strong> (3x to <strong>6x</strong> <strong class='color-d'>damage</strong>)&nbsp; </span>`
+        return `extend the effect of <span style ="float: right;font-size:75%;"><strong>tiny</strong> (0.7x to <strong>0.5x</strong> <strong class='color-defense'>damage taken</strong>)</span><br>&nbsp;<strong>scale invariance</strong> <span style ="float: right;"><strong>huge</strong> (3x to <strong>6x</strong> <strong class='color-d'>damage</strong>)&nbsp; </span>`
       },
       maxCount: 1,
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       isInstant: true,
       allowed() {
           return player.scale !== 1
@@ -605,10 +609,11 @@ const tech = {
       count: 0,
       frequency: 2,
       frequencyDefault: 2,
+      isSkinTech: true,
       allowed() {
-        return tech.isNitinol && !tech.isBlockJump
+        return (tech.isNitinol || tech.isFireMoveLock) && !tech.isBlockJump
       },
-      requires: "nitinol, not working mass",
+      requires: "nitinol or Higgs, not working mass",
       effect() {
         //if (!tech.isBlockJump) {
           tech.isCoyote = true
@@ -687,7 +692,7 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
-      // isInstant: true,
+      isSkinTech: true,
       allowed() {
         return tech.isVerlet
       },
@@ -759,7 +764,7 @@ const tech = {
       count: 0,
       frequency: 2,
       frequencyDefault: 2,
-      // isSkin: true,
+      isSkinTech: true,
       allowed() {
         return tech.isDilate
       },
@@ -790,7 +795,7 @@ const tech = {
       isAltRealityTech: true,
       // isInstant: true,
       allowed() {
-        return tech.isCollisionRealitySwitch || tech.isSwitchReality
+        return tech.isCollisionRealitySwitch || tech.isSwitchReality || tech.isImmortal
       },
       requires: "Hilbert space, many-worlds",
       effect() {
@@ -867,6 +872,7 @@ const tech = {
       count: 0,
       frequency: 5,
       frequencyDefault: 5,
+      isSkinTech: true,
       allowed() {
         return tech.isEnergyHealth && !tech.isOverHeal
       },
@@ -921,6 +927,7 @@ const tech = {
       count: 0,
       frequency: 4,
       frequencyDefault: 4,
+      isSkinTech: true,
       allowed() {
         return tech.isDamageCooldown
       },
@@ -969,6 +976,7 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       allowed() {
         return tech.isEigenstate
       },
@@ -990,6 +998,7 @@ const tech = {
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
+      isSkinTech: true,
       allowed() {
         return tech.isNormalMode
       },
@@ -1036,6 +1045,7 @@ const tech = {
       frequency: 2,
       frequencyDefault: 2,
       isBotTech: true,
+      isSkinTech: true,
       allowed() {
         return tech.isRewindAvoidDeath || tech.isRewindField
       },
@@ -1056,6 +1066,7 @@ const tech = {
       count: 0,
       frequency: 2,
       frequencyDefault: 2,
+      isSkinTech: true,
       allowed() {
         return tech.isRewindAvoidDeath || tech.isRewindField
       },
@@ -3311,7 +3322,7 @@ const tech = {
       name: "integrated circuit",
       description: `if <strong class='color-flop'>ON</strong> <strong>+7</strong> <strong class='color-choice'><span>ch</span><span>oic</span><span>es</span></strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]
       	<br>if <strong class='color-flop'>OFF</strong> <strong>-1</strong> <strong class='color-choice'><span>ch</span><span>oi</span><span>ce</span></strong> for each of [${powerUps.orb.field()}${powerUps.orb.tech()}${powerUps.orb.gun()}]`,
-      maxCount: 1,
+      maxCount: 3,
       count: 0,
       frequency: 3,
       frequencyDefault: 3,
@@ -3371,7 +3382,6 @@ const tech = {
       },
       requires: "not flip-flop",
       effect() {
-        m.isAltSkin = true
         tech.isRelay = true //do you have this tech?
         if (!tech.isFlipFlopOn) {
           tech.isFlipFlopOn = true //what is the state of flip-Flop?
@@ -4691,8 +4701,7 @@ const tech = {
       }
     },
     {
-      name: "Breaking the 4th wall",
-      link: `<a target="_blank" href='https://en.wikipedia.org/wiki/Fourth-wall' class="link">breaking the 4th wall</a>`,
+      name: "quantum neurosis",
       description: `after entering an <strong class='alt'>alternate reality</strong>
       	<br><strong>stun</strong> all mobs for 5 seconds`,
       isPacifist: true,

@@ -495,7 +495,7 @@ const m = {
       simulation.isTextLogOpen = false; //prevent console spam
       // if (giveTech) tech.giveTech(giveTech) //give many worlds back
       for (let i = 0; i < addBack.length; i++) tech.giveTech(addBack[i])
-      if (stunning) tech.giveTech("Breaking the 4th wall")
+      if (stunning) tech.giveTech("quantum neurosis")
       if (giveTech) tech.giveTech(giveTech) //give many worlds back
 
       //remove all bullets
