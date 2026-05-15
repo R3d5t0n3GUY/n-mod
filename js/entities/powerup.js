@@ -1426,6 +1426,7 @@ const powerUps = {
         ${m.fieldUpgrades[choose].descriptionFunction ? m.fieldUpgrades[choose].descriptionFunction() : m.fieldUpgrades[choose].description}</div></div>`
   },
   addTechText(choose) {
+    const isCount = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count + 1}x)` : "";
     if (tech.tech[choose].isFieldTech) {
       return powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
     } else if (tech.tech[choose].isGunTech) {
@@ -2013,7 +2014,6 @@ const powerUps = {
               }
             }
             if (found && tech.tech[choose]) {
-              const isCount = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count + 1}x)` : "";
               if (choose === null || tech.tech[choose].count + 1 > tech.tech[choose].maxCount || !tech.tech[choose].allowed()) {
                 text += powerUps.incoherentTechText(choose)
               } else {
