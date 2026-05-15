@@ -27,7 +27,7 @@ const b = {
   fireNormal() {
     if (b.inventory.length && (b.activeGun !== null && b.activeGun !== undefined)) {
       if (input.fire && m.fireCDcycle < m.cycle && (!input.field || m.fieldFire)) {
-        if (b.guns[b.activeGun].ammo > 0) {
+        if (b.guns[b.activeGun].ammo > 0 || (b.guns[b.activeGun].ammoType || 'ammo') != 'ammo') {
           b.fireWithAmmo()
         } else {
           b.outOfAmmo()
@@ -40,7 +40,7 @@ const b = {
   fireNotMove() { //added  && player.speed < 0.5 && m.onGround  
     if (b.inventory.length && (b.activeGun !== null && b.activeGun !== undefined)) {
       if (input.fire && m.fireCDcycle < m.cycle && (!input.field || m.fieldFire) && player.speed < 2.5 && m.onGround && Math.abs(m.yOff - m.yOffGoal) < 1) {
-        if (b.guns[b.activeGun].ammo > 0) {
+        if (b.guns[b.activeGun].ammo > 0 || (b.guns[b.activeGun].ammoType || 'ammo') != 'ammo') {
           b.fireWithAmmo()
         } else {
           b.outOfAmmo()
@@ -53,7 +53,7 @@ const b = {
   fireAlwaysFire() { //added  && player.speed < 0.5 && m.onGround  //removed input.fire && (!input.field || m.fieldFire)
     if (b.inventory.length && (b.activeGun !== null && b.activeGun !== undefined)) {
       if (m.fireCDcycle < m.cycle && player.speed < 0.5 && m.onGround && Math.abs(m.yOff - m.yOffGoal) < 1) {
-        if (b.guns[b.activeGun].ammo > 0) {
+        if (b.guns[b.activeGun].ammo > 0 || (b.guns[b.activeGun].ammoType || 'ammo') != 'ammo') {
           b.fireWithAmmo()
         }
         if (m.holdingTarget) m.drop();
