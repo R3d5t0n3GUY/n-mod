@@ -1170,6 +1170,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         importedBuild = importedBuild.parseAsJSON();
         build.reset(true);
         m.fieldMode = importedBuild.fieldIndex || 0
+        m.setField(m.fieldMode)
         simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
         if (importedBuild.marginalGunIndex) {
           build.importedGunIndex = true
