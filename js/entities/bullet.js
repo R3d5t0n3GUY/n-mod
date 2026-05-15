@@ -159,8 +159,8 @@ const b = {
       for (let i = 0; i < b.guns.length; i++) {
         b.inventory[i] = i;
         b.guns[i].have = true;
-        let ammoType = b.guns[gun].ammoType || 'ammo'
-        if (b.isAmmoFinite(gun)) b.guns[gun][ammoType] = Math.ceil(b.guns[gun].ammoPack * ammoPacks);
+        let ammoType = b.guns[i].ammoType || 'ammo'
+        if (b.isAmmoFinite(i)) b.guns[i][ammoType] = Math.ceil(b.guns[i].ammoPack * ammoPacks);
         b.inventoryGun = 0;
         b.activeGun = b.inventory[0];
       }

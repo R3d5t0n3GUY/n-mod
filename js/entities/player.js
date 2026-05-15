@@ -7534,7 +7534,11 @@ const m = {
                   Matter.Body.setVelocity(player, { x: player.velocity.x * 1.08, y: player.velocity.y * 1.08 });
                   m.energy -= this.drain;
                   // this.lightning((m.pos.x + this.oldPosition.x) / 2, (m.pos.y + this.oldPosition.y) / 2, m.pos.x + Math.random() * 20 - Math.random() * 20, m.pos.y + Math.random() * 20 - Math.random() * 20, "rgb(220, 20, 60)", 3);
+                  if (!this.trail) this.trail = [];
+                  this.trail.push({ x: m.pos.x + Math.cos(m.angle) * 15, y: m.pos.y + Math.sin(m.angle) * 15 });
+                  if (this.trail.length > 14) this.trail.shift();
                   this.drawLightningArc(m.pos, 50);
+                  this.drawLightningTrail(this.trail, Math.max(0, Math.min(m.energy / m.maxEnergy),1))
                   simulation.drawList.push({
                     x: player.position.x + Math.random() * 20 - Math.random() * 20,
                     y: player.position.y + Math.random() * 20 - Math.random() * 20,
@@ -7554,31 +7558,6 @@ const m = {
                   simulation.removeEphemera(this.name);
                 }
               },
-              // lightning(x1, y1, x2, y2, strokeColor = 'rgba(220, 20, 60, 0.5)', lineWidth = 5) {
-              // ctx.strokeStyle = strokeColor;
-              // ctx.lineWidth = lineWidth;
-              // const dx = x2 - x1;
-              // const dy = y2 - y1;
-              // const distance = Math.sqrt(dx * dx + dy * dy);
-              // const angle = Math.atan2(dy, dx);
-              // const boltCount = Math.floor(Math.random() * 3) + 1;
-              // let currentX = x1;
-              // let currentY = y1;
-              // ctx.beginPath();
-              // ctx.moveTo(currentX, currentY);
-              // while (Math.hypot(currentX - x1, currentY - y1) < distance) {
-              // const segmentLength = Math.random() * 10 + 10;
-              // const offsetAngle = angle + (Math.random() - 0.5) * 0.4;
-              // const nextX = currentX + Math.cos(offsetAngle) * segmentLength;
-              // const nextY = currentY + Math.sin(offsetAngle) * segmentLength;
-              // if (Math.hypot(nextX - x1, nextY - y1) >= distance) break;
-              // ctx.lineTo(nextX, nextY);
-              // currentX = nextX;
-              // currentY = nextY;
-              // }
-              // ctx.lineTo(x2, y2);
-              // ctx.stroke();
-              // },
               drawLightningArc(where, radius, lineWidth = 10, isCoolColors = true, strokeColor = null, shadowColor = null, shadowBlur = null) {
                 const numPoints = 16;
                 const slice = (2 * Math.PI) / numPoints;
@@ -7610,6 +7589,40 @@ const m = {
                 ctx.stroke();
                 //ctx.setLineDash([]);
                 ctx.restore()
+              },
+              drawLightningTrail(trail, alphaMultiplier = 1) {
+                if (!trail || trail.length < 2) return;
+                ctx.save();
+                ctx.lineJoin = "miter";
+                ctx.miterLimit = 100;
+                for (let i = 1; i < trail.length; i++) {
+                  const t = i / (trail.length - 1);
+                  const alpha = t * 0.9 * alphaMultiplier;
+                  const lineWidth = 1 + t * 7;
+                  const x1 = trail[i - 1].x, y1 = trail[i - 1].y;
+                  const x2 = trail[i].x,     y2 = trail[i].y;
+                  const dx = x2 - x1,        dy = y2 - y1;
+                  const dist = Math.hypot(dx, dy);
+                  if (dist < 1) continue;
+                  const segments = Math.max(2, Math.ceil(dist / 12));
+                  const jitter = Math.min(dist * 0.35, 18);
+                  ctx.lineWidth = lineWidth;
+                  ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+                  ctx.shadowColor = "rgba(220,20,60,0.9)";
+                  ctx.shadowBlur = 8 * t * alphaMultiplier;
+                  ctx.beginPath();
+                  ctx.moveTo(x1, y1);
+                  for (let s = 1; s < segments; s++) {
+                    const frac = s / segments;
+                    ctx.lineTo(
+                      x1 + dx * frac + (Math.random() - 0.5) * jitter,
+                      y1 + dy * frac + (Math.random() - 0.5) * jitter
+                    );
+                  }
+                  ctx.lineTo(x2, y2);
+                  ctx.stroke();
+                }
+                ctx.restore();
               }
             })
           }
