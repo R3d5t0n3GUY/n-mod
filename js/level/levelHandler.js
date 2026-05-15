@@ -80,9 +80,7 @@ const level = {
     tech.isDeathTechTriggered = false
 
     if (m.health < 0 && tech.isNoDeath) { //needed for quantum Zeno effect
-      if (tech.isDeathAvoid && powerUps.research.count > 0 &&
-        ((tech.deathsAvoidedThisLevel || 0) < (tech.isAnthropicExtended + 1 || 1))) {
-        tech.deathsAvoidedThisLevel++
+      if (tech.isDeathAvoid && powerUps.research.count > 0) {
         m.health = 0.05
         powerUps.research.changeRerolls(-1)
         simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-r'>research</span><span class='color-symbol'>--</span><br>${powerUps.research.count}`)
