@@ -71,7 +71,7 @@ const tech = {
     simulation.updateTechHUD();
     simulation.updateGunHUD();
   },
-  removeTech(index = 'random') {
+  removeTech(index = 'random', isLost = true) {
     if (index === 'random') {
       const have = [] //find which tech you have
       for (let i = 0; i < tech.tech.length; i++) {
@@ -100,7 +100,7 @@ const tech = {
     tech.removeCount += totalRemoved
     tech.tech[index].count = 0;
     tech.totalCount -= totalRemoved
-    // simulation.updateTechHUD();
+    if (isLost) tech.tech[index].isLost = true
     simulation.updateTechHUD();
     return totalRemoved //return the total number of tech removed
   },
@@ -11740,7 +11740,7 @@ const tech = {
     },
     {
      name: "paramagnetism",
-      description: `activate <strong>perfect diamagnetism</strong> ${powerUps.orb.field()}
+      description: `activate <strong>perfect diamagnetism</strong>
       <br>and hold <strong>down</strong> to attract distant <strong class='color-block'>blocks</strong>`, // and <strong>release</strong> to launch
       isFieldTech: true,
       maxCount: 1,
@@ -11756,6 +11756,25 @@ const tech = {
       },
       remove() {
         tech.isThrowBlocks = false;
+      }
+    },
+    {
+      name: "Hall effect",
+      description: "<strong>12x</strong> passive <strong class='color-f'>energy</strong> generation while<br><strong>falling</strong> and <strong>perfect diamagnetism</strong> is active",
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return m.fieldMode === 2
+      },
+      requires: "perfect diamagnetism",
+      effect() {
+        tech.isFloatEnergy = true;
+      },
+      remove() {
+        tech.isFloatEnergy = false;
       }
     },
     {
@@ -12043,9 +12062,7 @@ const tech = {
       name: "working mass",
       // description: "molecular assembler <strong class='color-print'>prints</strong> one <strong class='color-block'>block</strong><br>to <strong>jump</strong> off while midair",
       descriptionFunction() {
-        const fieldName = m.fieldMode === 8 ? "pilot wave" : "molecular assembler"
         return `pressing <strong>jump</strong> in <strong>midair</strong><br>will <strong class='color-print'>print</strong> a <strong class='color-block'>block</strong> to <strong>jump</strong> off`
-        // return `${fieldName} <strong class='color-print'>prints</strong> a <strong class='color-block'>block</strong><br>to <strong>jump</strong> off while midair`
       },
       isFieldTech: true,
       maxCount: 3,

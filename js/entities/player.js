@@ -5237,6 +5237,12 @@ const m = {
                 player.force.x -= pushX
               }
               Matter.Body.setVelocity(player, { x: player.velocity.x, y: 0.98 * player.velocity.y });
+              if (tech.isFloatEnergy) {
+                if (m.immuneCycle < m.cycle) {
+                  m.energy += 12 * m.fieldRegen * level.isReducedRegen;
+                  if (!(simulation.cycle % 6)) simulation.energyGenGraphic()
+                }
+              }
             }
 
             if (m.energy > m.fieldRegen) m.energy -= m.fieldRegen
