@@ -879,18 +879,17 @@ const tech = {
       requires: "mass-energy equivalence, not quenching",
       effect() {
         powerUps.healGiveMaxEnergy = true; //tech.healMaxEnergyBonus given from heal power up
-        powerUps.heal.color = "#ff0" //"#0ae"
-        for (let i = 0; i < powerUp.length; i++) { //find active heal power ups and adjust color live
-          if (powerUp[i].name === "heal") powerUp[i].color = powerUps.heal.color
+        const healPositions = [];
+        for (let i = 0; i < powerUp.length; i++) {
+          if (powerUp[i].name === "heal") healPositions.push({ x: powerUp[i].position.x, y: powerUp[i].position.y });
         }
+        for (let i = powerUp.length - 1; i >= 0; i--) {
+          if (powerUp[i].name === "heal") powerUp.splice(i, 1);
+        }
+        for (const pos of healPositions) powerUps.spawn(pos.x, pos.y, "Casimir");
       },
       remove() {
         powerUps.healGiveMaxEnergy = false;
-        // tech.healMaxEnergyBonus = 0
-        powerUps.heal.color = "#0eb"
-        for (let i = 0; i < powerUp.length; i++) { //find active heal power ups and adjust color live
-          if (powerUp[i].name === "heal") powerUp[i].color = powerUps.heal.color
-        }
       }
     },
     {
@@ -1210,6 +1209,26 @@ const tech = {
       }
     },
     {
+      name: "cargo",
+      description: `use ${powerUps.orb.research(3)}<br>spawn ${powerUps.orb.gun()}${powerUps.orb.gun()}`,
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isInstant: true,
+      isBadRandomOption: true,
+      allowed() {
+          return powerUps.research.count > 2 || build.isExperimentSelection
+      },
+      requires: "",
+      effect() {
+          powerUps.spawn(m.pos.x - 20, m.pos.y, "gun");
+          powerUps.spawn(m.pos.x + 20, m.pos.y, "gun");
+          powerUps.research.changeRerolls(-3)
+      },
+      remove() { }
+    },
+    {
       name: "arsenal",
       descriptionFunction() {
         return `for each unused ${powerUps.orb.gun()} in your inventory
@@ -1226,6 +1245,28 @@ const tech = {
       },
       remove() {
         tech.isDamageForGuns = false;
+      }
+    },
+    {
+      name: "salvo",
+      descriptionFunction() {
+          return `use ${powerUps.orb.research(2)} to<br><strong>fire</strong> all available ${powerUps.orb.gun()} in your <strong>inventory</strong> at once<br><em>(only longest <strong>cooldown</strong> applies)</em>`
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed: () => b.inventory.length > 1 && !tech.isGunChoice && !tech.isGunCycle && (powerUps.research.count > 2 || build.isExperimentSelection) && !localSettings.isHideHUD,
+      requires: "at least 2 guns, not pigeonhole principle, generalist",
+      effect() {
+        tech.isSecondShot = true;
+        powerUps.research.changeRerolls(-2)
+      },
+      remove() {
+        tech.isSecondShot = false;
+        if (this.count && m.alive) {
+          powerUps.research.changeRerolls(2)
+        }
       }
     },
     {
@@ -1268,9 +1309,9 @@ const tech = {
       frequency: 1,
       frequencyDefault: 1,
       allowed() {
-        return b.inventory.length > 1
-      },
-      requires: "at least 2 guns",
+        return b.inventory.length > 1 && !tech.isSecondShot
+        },
+        requires: "at least 2 guns, not salvo",
       effect() {
         tech.isGunChoice = true
         //switches gun on new level
@@ -1291,9 +1332,9 @@ const tech = {
       isInstant: true,
       isBadRandomOption: true,
       allowed() {
-        return (b.inventory.length < b.guns.length - 5) && b.inventory.length > 1
+        return (b.inventory.length < b.guns.length - 5) && b.inventory.length > 1 && !tech.isSecondShot
       },
-      requires: "you have at least 2 guns and 5 unclaimed guns",
+      requires: "at least 2 guns and 5 unclaimed guns, not salvo",
       effect() {
         tech.isGunCycle = true;
         for (let i = 0; i < 7; i++) powerUps.spawn(m.pos.x + 10 * Math.random(), m.pos.y + 10 * Math.random(), "gun");
@@ -16113,4 +16154,5 @@ const tech = {
   slowFire: 1,
   researchHaste: 1,
   slowFireDamage: 1,
+  rifling: 1,
 }

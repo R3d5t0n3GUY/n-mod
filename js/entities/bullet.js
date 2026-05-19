@@ -98,6 +98,37 @@ const b = {
         simulation.updateGunHUD();
       }
     }
+    if (tech.isSecondShot && b.inventory.length > 1) {
+      const returnIndex = b.inventoryGun
+      let CD = m.fireCDcycle
+      for (let i = 0; i < b.inventory.length; i++) {
+        if (i !== returnIndex) {
+          b.inventoryGun++;
+          if (b.inventoryGun > b.inventory.length - 1) b.inventoryGun = 0;
+          simulation.switchGun();
+
+          if (b.guns[b.activeGun].ammo > 0) {
+            b.guns[b.activeGun].fire();
+            if (tech.crouchAmmoCount && m.crouch) {
+              if (tech.crouchAmmoCount % 2) {
+                b.guns[b.activeGun].ammo--;
+                if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+              }
+              tech.crouchAmmoCount++ //makes the no ammo toggle off and on
+            } else {
+              b.guns[b.activeGun].ammo--;
+              if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+            }
+            if (m.fireCDcycle > CD) CD = m.fireCDcycle
+          }
+        }
+      }
+      //return to the original place in inventory
+      b.inventoryGun = returnIndex
+      simulation.switchGun();
+
+      m.fireCDcycle = CD
+    }
   },
   outOfAmmo() { //triggers after firing when you have NO ammo
     if (b.inventory.length > 0) {
@@ -6756,27 +6787,59 @@ const b = {
             player.force.y -= knock * Math.sin(m.angle) * 0.5 //reduce knock back in vertical direction to stop super jumps
           }
         }
-        const spray = (num) => {
-          const side = 22
-          for (let i = 0; i < num; i++) {
-            const me = bullet.length;
-            const dir = m.angle + (Math.random() - 0.5) * spread
-            bullet[me] = Bodies.rectangle(m.pos.x, m.pos.y, side, side, b.fireAttributes(dir));
-            Composite.add(engine.world, bullet[me]); //add bullet to world
-            const SPEED = 52 + Math.random() * 8
-            Matter.Body.setVelocity(bullet[me], {
-              x: SPEED * Math.cos(dir),
-              y: SPEED * Math.sin(dir)
-            });
-            bullet[me].endCycle = simulation.cycle + 40 * tech.bulletsLastLonger
-            bullet[me].minDmgSpeed = 15
-            if (tech.isShotgunReversed) Matter.Body.setDensity(bullet[me], 0.0015)
-            // bullet[me].restitution = 0.4
-            bullet[me].frictionAir = 0.034;
-            bullet[me].do = function () {
-              const scale = 1 - 0.034 / tech.bulletsLastLonger
-              Matter.Body.scale(this, scale, scale);
-            };
+        const spray = (num = 16) => {
+          if (tech.isIncendiary) {
+            spread *= 0.15 * tech.riflingSpread
+            const END = Math.floor(m.crouch ? 8 : 5) / tech.rifling
+            const totalBullets = (1 + num / 2) * tech.rifling
+            const angleStep = (m.crouch ? 0.3 : 0.8) / totalBullets * tech.riflingSpread
+            let dir = m.angle - angleStep * totalBullets / 2;
+            for (let i = 0; i < totalBullets; i++) { //5 -> 7
+              dir += angleStep
+              const me = bullet.length;
+              bullet[me] = Bodies.rectangle(m.pos.x + 50 * Math.cos(m.angle), m.pos.y + 50 * Math.sin(m.angle), 17, 4, b.fireAttributes(dir));
+              const end = END + Math.random() * 4
+              bullet[me].endCycle = 2 * end * tech.bulletsLastLonger + simulation.cycle
+              const speed = 15 * end / END + 10 / tech.rifling
+              const dirOff = dir + (Math.random() - 0.5) * spread
+              Matter.Body.setVelocity(bullet[me], {
+                x: speed * Math.cos(dirOff),
+                y: speed * Math.sin(dirOff)
+              });
+              bullet[me].onEnd = function () {
+                  b.explosion(this.position, 180 * (tech.isShotgunReversed ? 1.4 : 1) + (Math.random() - 0.5) * 30); //makes bullet do explosive damage at end
+              }
+              bullet[me].beforeDmg = function () {
+                  this.endCycle = 0; //bullet ends cycle after hitting a mob and triggers explosion
+              };
+              bullet[me].do = function () {
+                  if (Matter.Query.collides(this, map).length) this.endCycle = 0; //bullet ends cycle after hitting a mob and triggers explosion
+              }
+              Composite.add(engine.world, bullet[me]); //add bullet to world
+            }
+          } else {
+            num *= tech.rifling
+            const side = 22
+            for (let i = 0; i < num; i++) {
+              const me = bullet.length;
+              const dir = m.angle + (Math.random() - 0.5) * spread
+              bullet[me] = Bodies.rectangle(m.pos.x, m.pos.y, side, side, b.fireAttributes(dir));
+              Composite.add(engine.world, bullet[me]); //add bullet to world
+              const SPEED = 32 + Math.random() * 8 + 20 / tech.rifling
+              Matter.Body.setVelocity(bullet[me], {
+                x: SPEED * Math.cos(dir),
+                y: SPEED * Math.sin(dir)
+              });
+              bullet[me].endCycle = simulation.cycle + 40 * tech.bulletsLastLonger
+              bullet[me].minDmgSpeed = 15
+              if (tech.isShotgunReversed) Matter.Body.setDensity(bullet[me], 0.0015)
+              // bullet[me].restitution = 0.4
+              bullet[me].frictionAir = 0.034;
+              bullet[me].do = function () {
+                const scale = 1 - 0.034 / tech.bulletsLastLonger
+                Matter.Body.scale(this, scale, scale);
+              };
+            }
           }
         }
         const chooseBulletType = function () {
@@ -6832,6 +6895,7 @@ const b = {
                 // ctx.fill();
               },
             })
+            if (tech.isIncendiary) spray(7)
           } else if (tech.isRivets) {
             const me = bullet.length;
             // const dir = m.angle + 0.02 * (Math.random() - 0.5)
@@ -6887,40 +6951,12 @@ const b = {
               }
             }
             spray(12); //fires normal shotgun bullets
-          } else if (tech.isIncendiary) {
-            spread *= 0.15
-            const END = Math.floor(m.crouch ? 8 : 5);
-            const totalBullets = 9
-            const angleStep = (m.crouch ? 0.3 : 0.8) / totalBullets
-            let dir = m.angle - angleStep * totalBullets / 2;
-            for (let i = 0; i < totalBullets; i++) { //5 -> 7
-              dir += angleStep
-              const me = bullet.length;
-              bullet[me] = Bodies.rectangle(m.pos.x + 50 * Math.cos(m.angle), m.pos.y + 50 * Math.sin(m.angle), 17, 4, b.fireAttributes(dir));
-              const end = END + Math.random() * 4
-              bullet[me].endCycle = 2 * end * tech.bulletsLastLonger + simulation.cycle
-              const speed = 25 * end / END
-              const dirOff = dir + (Math.random() - 0.5) * spread
-              Matter.Body.setVelocity(bullet[me], {
-                x: speed * Math.cos(dirOff),
-                y: speed * Math.sin(dirOff)
-              });
-              bullet[me].onEnd = function () {
-                b.explosion(this.position, 180 * (tech.isShotgunReversed ? 1.4 : 1) + (Math.random() - 0.5) * 30); //makes bullet do explosive damage at end
-              }
-              bullet[me].beforeDmg = function () {
-                this.endCycle = 0; //bullet ends cycle after hitting a mob and triggers explosion
-              };
-              bullet[me].do = function () {
-                if (Matter.Query.collides(this, map).length) this.endCycle = 0; //bullet ends cycle after hitting a mob and triggers explosion
-              }
-              Composite.add(engine.world, bullet[me]); //add bullet to world
-            }
           } else if (tech.isNailShot) {
             spread *= 0.65
             const dmg = 2 * (tech.isShotgunReversed ? 1.5 : 1)
+            let num = 17 * tech.rifling
             if (m.crouch) {
-              for (let i = 0; i < 17; i++) {
+              for (let i = 0; i < num; i++) {
                 speed = 38 + 15 * Math.random()
                 const dir = m.angle + (Math.random() - 0.5) * spread
                 const pos = {
@@ -6946,6 +6982,7 @@ const b = {
                 }, dmg)
               }
             }
+            if (tech.isIncendiary) spray(7)
           } else if (tech.isSporeFlea) {
             const where = {
               x: m.pos.x + 35 * Math.cos(m.angle),
@@ -7009,6 +7046,7 @@ const b = {
               b.needle(angle)
               angle += spread
             }
+            if (tech.isIncendiary) spray(7)
           } else {
             spray(16); //fires normal shotgun bullets
           }
@@ -7776,7 +7814,13 @@ const b = {
             } else if (tech.isSporeWorm) {
               if (!(simulation.cycle % 80)) b.worm(this.position)
             } else {
-              b.spore(this.position)
+              if (this.stuckTo) {
+                const unit = Vector.rotate({ x: 1, y: 0 }, 6.28 * Math.random())
+                const v = Vector.add(this.stuckTo.velocity, Vector.mult(unit, 3 + 10 * Math.random()))
+                b.spore(this.position, v)
+              } else {
+                b.spore(this.position)
+              }
             }
             scale = 0.96
             if (this.stuckTo && this.stuckTo.alive) scale = 0.9
@@ -8048,7 +8092,7 @@ const b = {
           const DRAIN = (tech.isRailEnergy ? 0 : 0.002)
           //exit railgun charging without firing
           if (m.energy < DRAIN) {
-            m.fireCDcycle = m.cycle + 120; // cool down if out of energy
+            //m.fireCDcycle = m.cycle + 120; // cool down if out of energy
             this.endCycle = 0;
             this.charge = 0
             b.refundAmmo()
@@ -8547,7 +8591,7 @@ const b = {
       fireLaser() {
         const drain = tech.laserDrain / b.fireCDscale
         if (m.energy < drain) {
-          m.fireCDcycle = m.cycle + 100; // cool down if out of energy
+          //m.fireCDcycle = m.cycle + 100; // cool down if out of energy
         } else {
           m.fireCDcycle = m.cycle
           m.energy -= drain
@@ -8564,7 +8608,7 @@ const b = {
       fireSplit() {
         const drain = tech.laserDrain / b.fireCDscale
         if (m.energy < drain) {
-          m.fireCDcycle = m.cycle + 100; // cool down if out of energy
+          //m.fireCDcycle = m.cycle + 100; // cool down if out of energy
         } else {
           m.fireCDcycle = m.cycle
           m.energy -= drain
@@ -8587,7 +8631,7 @@ const b = {
       fireSplitCollimator() {
         const drain = tech.laserDrain / b.fireCDscale
         if (m.energy < drain) {
-          m.fireCDcycle = m.cycle + 100; // cool down if out of energy
+          //m.fireCDcycle = m.cycle + 100; // cool down if out of energy
         } else {
           m.fireCDcycle = m.cycle
           m.energy -= drain
@@ -8611,7 +8655,7 @@ const b = {
       fireWideBeam() {
         const drain = tech.laserDrain / b.fireCDscale
         if (m.energy < drain) {
-          m.fireCDcycle = m.cycle + 100; // cool down if out of energy
+          //m.fireCDcycle = m.cycle + 100; // cool down if out of energy
         } else {
           m.fireCDcycle = m.cycle
           m.energy -= drain
@@ -8685,7 +8729,7 @@ const b = {
       fireHistory() {
         drain = tech.laserDrain / b.fireCDscale
         if (m.energy < drain) {
-          m.fireCDcycle = m.cycle + 100; // cool down if out of energy
+          //m.fireCDcycle = m.cycle + 100; // cool down if out of energy
         } else {
           m.fireCDcycle = m.cycle
           m.energy -= drain
@@ -10819,7 +10863,7 @@ const b = {
       createAndSwingScythe(x = player.position.x, y = player.position.y, angle = m.angle) {
         if (this.cycle < m.cycle) {
           this.cycle = m.cycle + 60 + (tech.scytheRange * 6);
-          m.fireCDcycle = Infinity;
+          m.fireCDcycle = m.cycle + 120;
           const handleWidth = 20;
           const handleHeight = 200 + (tech.isLongBlade ? 30 : 0) + (tech.isMeleeScythe ? 140 : 0);
           const handle = Bodies.rectangle(x, y, handleWidth, handleHeight, spawn.propsIsNotHoldable);
