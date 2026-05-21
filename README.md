@@ -12,6 +12,7 @@ It includes portions of the following games and mods:
 The following libraries are used:
 <ul>
   <li><a href='https://github.com/liabru/matter-js'>Matter</a> by <a href="https://github.com/liabru">Liabru</a></li>
+  <li><a href='https://github.com/schteppe/poly-decomp.js'>PolyDecomp</a> by <a href="https://github.com/schteppe">Stefan Harr</a></li>
   <li> <a href='https://cdn.jsdelivr.net/npm/eruda'>Eruda</a> by <a href='https://github.com/liriliri'>Liriliri</a></li>
 </ul>
 Feel free to <a href="https://github.com/R3d5t0n3GUY/n-mod/issues/new">report bugs</a> or <a href="https://github.com/R3d5t0n3GUY/n-mod/discussions/new?category=ideas">share ideas!</a>
