@@ -688,7 +688,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
         if (tech.tech[i].isInstant) {
           // text += `<div class="pause-grid-module" id ="${i}-pause-tech"  style = "border: 0px; opacity:0.5; font-size: 60%; line-height: 130%; margin: 1px; padding: 6px;"><div class="grid-title">${tech.tech[i].link} ${techCountText}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div></div>`
         } else {
-          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" onclick="powerUps.pauseEjectTech(${i})" ${style}>`
+          text += `<div id="${i}-pause-tech" class="pause-grid-module card-background ${ejectClass}" ${style}>`
           if (tech.tech[i].isFieldTech) {
             text += build.fieldTechText(i) + "</div>"
           } else if (tech.tech[i].isGunTech) {
@@ -860,21 +860,23 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   },
   isExperimentSelection: false,
   isExperimentRun: false,
+  pauseEjectButton(i) {
+    return `<div style='width:20px;height;24px;float:right;cursor:pointer;font-size:24px;border:1px dashed var(--border-color);color:red;text-align:center' onclick="powerUps.pauseEjectTech(${i})">×</div>`
+  },
   techText(i) {
-    return `<div class="card-text" >
+    return `<div class="card-text">${build.pauseEjectButton(i)}
       <div class="grid-title" >
         <div class="circle-grid tech"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
         ${build.getDescription('tech', i)}
       </div>`
   },
   instantTechText(i) {
-    // 
     return `<div class="card-text" >
       <div class="grid-title" > <div class="circle-grid-instant"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
       ${build.getDescription('tech', i)}</div>`
   },
   skinText(i) {
-    return `<div class="card-text"> <div class="grid-title">
+    return `<div class="card-text">${build.pauseEjectButton(i)}<div class="grid-title">
       <span style="position:relative;">
           <div class="circle-grid-skin"></div>
           <div class="circle-grid-skin-eye"></div>
@@ -882,7 +884,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       ${build.getDescription('tech', i)}</div>`
   },
   skinTechText(i) {
-    return `<div class="card-text"> <div class="grid-title">
+    return `<div class="card-text">${build.pauseEjectButton(i)}<div class="grid-title">
       <span style="position:relative;">
         <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
         <span style="position:relative;">
@@ -893,7 +895,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       ${build.getDescription('tech', i)}</div>`
   },
   gunTechText(i) {
-    return `<div class="card-text"> <div class="grid-title">
+    return `<div class="card-text">${build.pauseEjectButton(i)}<div class="grid-title">
       <span style="position:relative;">
           <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
           <div class="circle-grid gun" style="position:absolute; top:0; left:10px; opacity:0.65;"></div>
@@ -901,7 +903,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       ${build.getDescription('tech', i)}</div>`
   },
   fieldTechText(i) {
-    return `<div class="card-text"><div class="grid-title">
+    return `<div class="card-text">${build.pauseEjectButton(i)}<div class="grid-title">
       <span style="position:relative;">
           <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
           <div class="circle-grid field" style="position:absolute; top:0; left:10px;opacity:0.65;"></div>
@@ -909,7 +911,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       ${build.getDescription('tech', i)}</div>`
   },
   junkTechText(i) {
-    return `<div class="card-text">
+    return `<div class="card-text">${build.pauseEjectButton(i)}
       <div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${build.nameLink(tech.tech[i].name)} ${tech.tech[i].count > 1 ? `(${tech.tech[i].count}x)` : ""}</div>
       ${build.getDescription('tech', i)}</div>`
   },
