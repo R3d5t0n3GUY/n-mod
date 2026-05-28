@@ -6694,6 +6694,7 @@ const m = {
                   dist2 < graphicRange * graphicRange &&
                   !simulation.isChoosing &&
                   (tech.isOverHeal || powerUp[i].name !== "heal" || m.maxHealth - m.health > 0.01)
+                  && !simulation.paused
                   // (powerUp[i].name !== "heal" || m.health < 0.94 * m.maxHealth)
                   // (powerUp[i].name !== "ammo" || b.guns[b.activeGun].ammo !== Infinity)
                 ) { //use power up if it is close enough
@@ -6786,7 +6787,24 @@ const m = {
                     }
                   }
                 }
-
+                
+                for (let i = 0, len = bullet.length; i < len; ++i) {
+                  // console.log(bullet[i].speed)
+                  if (!bullet[i].botType && bullet[i].speed < 30 && Vector.magnitude(Vector.sub(bullet[i].position, m.fieldPosition)) < m.fieldRadius && !bullet[i].isNotHoldable && bullet[i].collisionFilter.mask !== 0) {
+                    const drainBlock = m.fieldUpgrades[8].drain * speedChange * bullet[i].mass * 0.000095
+                    if (m.energy > drainBlock) {
+                      Matter.Body.setVelocity(bullet[i], m.fieldUpgrades[8].collider.velocity); //give block mouse velocity
+                      Matter.Body.setAngularVelocity(bullet[i], bullet[i].angularVelocity * 0.99)
+                      // m.fieldUpgrades[8].fieldMass += bullet[i].mass
+                      //blocks drift towards center of pilot wave
+                      const sub = Vector.sub(m.fieldPosition, bullet[i].position)
+                      const push = Vector.mult(Vector.normalise(sub), 0.0001 * bullet[i].mass * Vector.magnitude(sub))
+                      bullet[i].force.x += push.x
+                      bullet[i].force.y += push.y - bullet[i].mass * simulation.g //remove gravity effects
+                    }
+                  }
+                }
+                
                 // if (tech.isFreezeMobs) {
                 //     for (let i = 0, len = mob.length; i < len; ++i) {
                 //         if (!mob[i].isMobBullet && !mob[i].shield && !mob[i].isShielded && Vector.magnitude(Vector.sub(mob[i].position, m.fieldPosition)) < m.fieldRadius + mob[i].radius) {
