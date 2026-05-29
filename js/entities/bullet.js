@@ -87,14 +87,14 @@ const b = {
       b.guns[b.activeGun].fire();
       if (tech.crouchAmmoCount && m.crouch) {
         if (tech.crouchAmmoCount % 2) {
-          b.guns[b.activeGun].ammo--;
-          if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+          b.changeAmmo(b.activeGun)
+          if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.changeAmmo(b.activeGun)
           simulation.updateGunHUD();
         }
         tech.crouchAmmoCount++ //makes the no ammo toggle off and on
       } else {
-        b.guns[b.activeGun].ammo--;
-        if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+        b.changeAmmo(b.activeGun)
+        if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.changeAmmo(b.activeGun)
         simulation.updateGunHUD();
       }
     }
@@ -111,13 +111,13 @@ const b = {
             b.guns[b.activeGun].fire();
             if (tech.crouchAmmoCount && m.crouch) {
               if (tech.crouchAmmoCount % 2) {
-                b.guns[b.activeGun].ammo--;
-                if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+                b.changeAmmo(b.activeGun)
+                if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.changeAmmo(b.activeGun);
               }
               tech.crouchAmmoCount++ //makes the no ammo toggle off and on
             } else {
-              b.guns[b.activeGun].ammo--;
-              if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.guns[b.activeGun].ammo--;
+              b.changeAmmo(b.activeGun)
+              if (level.is2xAmmo && b.guns[b.activeGun].ammo > 0 && (b.guns[b.activeGun].name !== "harpoon" || tech.isRailGun)) b.changeAmmo(b.activeGun);
             }
             if (m.fireCDcycle > CD) CD = m.fireCDcycle
           }
@@ -156,19 +156,27 @@ const b = {
     if (tech.crouchAmmoCount && m.crouch && (b.activeGun !== null && b.activeGun !== undefined)) {
       tech.crouchAmmoCount--
       if ((tech.crouchAmmoCount) % 2) {
-        b.guns[b.activeGun].ammo++;
-        simulation.updateGunHUD();
+        b.changeAmmo(b.activeGun, 1, true)
       }
     } else {
-      b.guns[b.activeGun].ammo++;
-      simulation.updateGunHUD();
+      b.changeAmmo(b.activeGun, 1, true)
     }
   },
-  // returnGunAmmo(name) {
-  //     for (i = 0, len = b.guns.length; i < len; i++) { //find which gun 
-  //         if (b.guns[i].name === name) return b.guns[i].ammo
-  //     }
-  // },
+  changeAmmo(i, n = -1, updateHUD = false) {
+    let type = b.guns[i].ammoType || 'ammo'
+    if (type.toLowerCase() == 'ammo' && b.isAmmoFinite(i)) {
+      b.guns[i].ammo += n
+      if (updateHUD) {
+        if (build.isExperimentSelection) {
+          build.populateGrid()
+        } else if (simulation.paused) {
+          build.generatePauseLeft()
+        } else {
+          simulation.updateGunHUD()
+        }
+      }
+    }
+  },
   giveGuns(gun = "random", ammoPacks = 22) {
     if (tech.ammoCap) ammoPacks = tech.ammoCap
     if (tech.isOneGun) b.resetAllGuns();
@@ -376,7 +384,7 @@ const b = {
     }
   },
   isAmmoFinite(idx) {
-    let type = b.guns[idx].ammoType || 'ammo'
+    let type = (b.guns[idx].ammoType || 'ammo').toLowerCase()
     return (type != 'health' && type != 'energy' && !([Infinity, NaN, null, undefined].includes(type == 'durability' ? b.guns[idx].durability : b.guns[idx].ammo)))
   },
   muzzleFlash(radius = 30) {
@@ -2049,8 +2057,8 @@ const b = {
         }
         //refund ammo
         if (isReturnAmmo) {
-            b.guns[9].ammo++;
-            simulation.updateGunHUD();
+          b.guns[9].ammo++;
+          simulation.updateGunHUD();
         }
       },
       drawDamageAura() {
@@ -10622,7 +10630,7 @@ const b = {
               ({ scythe: this.scythe, bladeSegments: this.bladeSegments } = this.createAndSwingScythe());
             }
 
-            if (!tech.isAmmoScythe && !b.guns[b.activeGun].ammo == 0 && !tech.durabilityScythe) {
+            if ((!tech.isAmmoScythe || !b.guns[13].ammo == 0) && !tech.durabilityScythe) {
               if (tech.isEnergyHealth) {
                 m.energy -= drain;
                 if (tech.isPhaseScythe) {
