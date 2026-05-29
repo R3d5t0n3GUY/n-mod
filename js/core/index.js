@@ -1170,64 +1170,73 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
       reader.onload = function (e) {
         let importedBuild = e.target.result
         importedBuild = importedBuild.parseAsJSON();
-        build.reset(true);
-        m.fieldMode = importedBuild.fieldIndex || 0
-        m.setField(m.fieldMode)
-        simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
-        if (importedBuild.marginalGunIndex) {
-          build.importedGunIndex = true
-          tech.marginalGunIndex = importedBuild.marginalGunIndex
-        } else {
-          try {
-            tech.marginalGunIndex = tech.tech.find(i => i.name === 'marginal utility').gunSelect()
-          } catch (e) {
-            tech.marginalGunIndex = Math.floor(Math.random() * b.guns.length)
-          }
-        }
-        b.inventory = importedBuild.gunIndexes || []
-        let newTech = importedBuild.techIndexes || []
-        for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
-        let oldTexlLogStatus = simulation.isTextLogOpen
-        simulation.isTextLogOpen = false
-        newTech.forEach(i => {
-          for (let j = 0, len = tech.tech.length; j < len; j++) {
-            if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
-              switch (typeof (i)) {
-                case 'string':
-                  if (i === tech.tech[j].name) {
-                    tech.tech[j].effect()
-                    tech.tech[j].count = 1
-                    if (!tech.tech[j].isInstant) tech.totalCount++
-                  }
-                  break;
-                case 'object':
-                  if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++) {
-                    tech.tech[j].effect()
-                    tech.tech[j].count++
-                    if (!tech.tech[j].isInstant) tech.totalCount++
-                  }
-                  break;
-                default:
-                  tech.tech[j].remove()
-                  tech.tech[j].count = 0
-                  break;
-              }
+        if ("fileType" in importedBuild ? importedBuild.fileType === "experimentBuild" : false) {
+          importedBuild = importedBuild.data
+          build.reset(true);
+          m.fieldMode = importedBuild.fieldIndex || 0
+          m.setField(m.fieldMode)
+          simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
+          if (importedBuild.marginalGunIndex) {
+            build.importedGunIndex = true
+            tech.marginalGunIndex = importedBuild.marginalGunIndex
+          } else {
+            try {
+              tech.marginalGunIndex = tech.tech.find(i => i.name === 'marginal utility').gunSelect()
+            } catch (e) {
+              tech.marginalGunIndex = Math.floor(Math.random() * b.guns.length)
             }
           }
-        })
-        for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
-        build.populateGrid();
-        simulation.isTextLogOpen = oldTexlLogStatus
-        console.clear()
-        console.log('build imported!')
+          b.inventory = importedBuild.gunIndexes || []
+          let newTech = importedBuild.techIndexes || []
+          for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
+          let oldTexlLogStatus = simulation.isTextLogOpen
+          simulation.isTextLogOpen = false
+          newTech.forEach(i => {
+            for (let j = 0, len = tech.tech.length; j < len; j++) {
+              if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
+                switch (typeof (i)) {
+                  case 'string':
+                    if (i === tech.tech[j].name) {
+                      tech.tech[j].effect()
+                      tech.tech[j].count = 1
+                      if (!tech.tech[j].isInstant) tech.totalCount++
+                    }
+                    break;
+                  case 'object':
+                    if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++) {
+                      tech.tech[j].effect()
+                      tech.tech[j].count++
+                      if (!tech.tech[j].isInstant) tech.totalCount++
+                    }
+                    break;
+                  default:
+                    tech.tech[j].remove()
+                    tech.tech[j].count = 0
+                    break;
+                }
+              }
+            }
+          })
+          for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
+          build.populateGrid();
+          simulation.isTextLogOpen = oldTexlLogStatus
+          console.clear()
+          console.log('build imported!')
+        } else {
+          let error = "Failed to import build: Expecting fileType of 'experimentBuild'"
+          console.error(error)
+          window.alert(error)
+        }
       }
       reader.readAsText(file)
     }
   },
   importedGunIndex: false,
   export() {
-    let experimentBuild = build.getExperimentBuild()
-    let jsonString = JSON.stringify(experimentBuild, null, 2);
+    let jsonString = JSON.stringify({
+      fileType: "experimentBuild",
+      data: build.getExperimentBuild()
+    }, null, 2);
     let blob = new Blob([jsonString], { type: 'application/json' });
     let a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

@@ -16,7 +16,10 @@ const localSaves = {
     localSaveDiv.innerHTML = text
   },
   exportSettings() {
-    let jsonString = JSON.stringify(localSettings, null, 2);
+    let jsonString = JSON.stringify({
+      fileType: "localSettings",
+      data: localSettings
+    }, null, 2);
     let blob = new Blob([jsonString], { type: 'application/json' });
     let a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -37,22 +40,26 @@ const localSaves = {
         try {
           let importedSettings = e.target.result
           importedSettings = importedSettings.parseAsJSON();
-          localSettings = {}
-          build.resetStorage();
-          Object.assign(localSettings, importedSettings);
-          if (localSettings.isAllowed) {
-            localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
+          if ("fileType" in importedSettings ? importedSettings.fileType === "localSettings" : false) {
+            localSettings = {}
+            build.resetStorage();
+            Object.assign(localSettings, importedSettings);
+            if (localSettings.isAllowed) {
+              localStorage.setItem("localSettings", JSON.stringify(localSettings)); //update local storage
+            } else {
+              console.warn("localSettings is not allowed");
+              //throw new Error("localSettings is not allowed");
+            }
+            e.target.value = ""; // Clear the file input
+            localSaves.updateUI()
+            console.log("Settings imported successfully!");
+            fileStatusDiv.innerHTML = "<strong style='color:#00bf00;'>File imported successfully!</strong>"
+            requestAnimFrames(4, () => {
+              build.setDarkMode('splash-start')
+            })
           } else {
-            console.warn("localSettings is not allowed");
-            //throw new Error("localSettings is not allowed");
+            throw new TypeError("Expecting fileType of 'localSettings'")
           }
-          e.target.value = ""; // Clear the file input
-          localSaves.updateUI()
-          console.log("Settings imported successfully!");
-          fileStatusDiv.innerHTML = "<strong style='color:#00bf00;'>File imported successfully!</strong>"
-          requestAnimFrames(4, () => {
-            build.setDarkMode('splash-start')
-          }) 
         } catch (error) {
           let errorMsg = "Failed to import settings: " + error.message
           fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR IMPORTING FILE</strong>"
