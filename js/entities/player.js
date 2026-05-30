@@ -300,7 +300,7 @@ const m = {
       ctx.strokeStyle = m.fieldMeterColor || "#09f";
       ctx.lineWidth = 5; //make it clear enough to see
       ctx.stroke();
-      let oldCompositeOperation = ctx.globalCompositeOperation
+      let oldCompositeOperation = ctx.globalCompositeOperation.valueOf()
       ctx.globalCompositeOperation = "exclusion"
       ctx.beginPath()
       ctx.moveTo(30, 0)
@@ -325,7 +325,7 @@ const m = {
       ctx.lineTo(50, -20)
       ctx.lineTo(50, 20)
       ctx.stroke()
-      ctx.globalCompositeOperation = oldCompositeOperation
+      ctx.globalCompositeOperation = oldCompositeOperation.valueOf()
       
       ctx.restore();
     }
@@ -350,11 +350,8 @@ const m = {
       m.transSmoothY = 0
       Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
     } else {
-      //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
-      //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
-      //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
-      m.freeCamera.pos.x = m.pos.x //works! :)
-      m.freeCamera.pos.y = m.pos.y //works! :)
+      m.freeCamera.pos.x = m.pos.x
+      m.freeCamera.pos.y = m.pos.y
     }
     if (m.freeCamera.isActive() && input.down && !input.up) {
       //translate freecam downward
@@ -412,11 +409,8 @@ const m = {
       m.transSmoothY = 0
       Matter.Body.setVelocity(player, { x: 0, y: player.velocity.y }) //cancel horizontal velocity but not gravity
     } else {
-      //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
-      //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
-      //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
-      m.freeCamera.pos.x = m.pos.x //works! :)
-      m.freeCamera.pos.y = m.pos.y //works! :)
+      m.freeCamera.pos.x = m.pos.x
+      m.freeCamera.pos.y = m.pos.y
     }
     
     if (input.down && m.freeCamera.isActive() && !input.up) {
@@ -4652,11 +4646,8 @@ const m = {
   wakeCheck() {
     if (m.isTimeDilated) {
       if (m.freeCamera.isActive) {
-        //m.freeCamera.pos = m.pos //doesn't work; locks freecam skin in place for some reason
-        //Object.assign(m.freeCamera.pos, m.pos) //doesn't work; locks freecam skin in place
-        //Object.assign(m.freeCamera.pos, {x: m.pos.x, y: m.pos.y}) //locks freecam skin in place
-        m.freeCamera.pos.x = m.pos.x //works! :)
-        m.freeCamera.pos.y = m.pos.y //works! :)
+        m.freeCamera.pos.x = m.pos.x
+        m.freeCamera.pos.y = m.pos.y
         simulation.setZoom(m.freeCamera.zoom)
       }
       m.isTimeDilated = false;
@@ -6263,7 +6254,7 @@ const m = {
           &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//←↓→↑←↓→↑</em>`);
         }
       },
-      isFreeCameraMode: false, //m.fieldUpgrades[6].isFreeCameraMode
+      isFreeCameraMode: false,
       set() {
         m.fieldMeterColor = "#3fe"
         m.fieldFx = 1.25
@@ -6271,7 +6262,6 @@ const m = {
         m.setMovement();
         b.setFireCD()
         const timeStop = () => {
-          //if (m.fieldUpgrades[6].isFreeCameraMode && !m.freeCamera.isActive()) console.log("initializing freeCamera...")
           m.immuneCycle = m.cycle + 10; //invulnerable to harm while time is stopped,  this also disables regen
           //draw field everywhere
           ctx.globalCompositeOperation = "saturation"
