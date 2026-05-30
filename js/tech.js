@@ -5441,7 +5441,7 @@ const tech = {
     {
       name: "meta-analysis",
       descriptionFunction() {
-        return `<strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> a <strong class='color-junk'>JUNK</strong> ${powerUp.orb.tech()} gives you <br>a random <strong>normal</strong> ${powerUps.orb.tech()} and ${powerUps.orb.research(2)} instead`
+        return `<strong class='color-choice'><span>ch</span><span>oos</span><span>ing</span></strong> a <strong class='color-junk'>JUNK</strong> ${powerUps.orb.tech()} gives you <br>a random <strong>normal</strong> ${powerUps.orb.tech()} and ${powerUps.orb.research(2)} instead`
       },
       maxCount: 1,
       count: 0,
@@ -10646,7 +10646,7 @@ const tech = {
     },
     {
       name: "greatsword",
-      descriptionFunction: `<strong>2x</strong> sword <strong class="color-d">damage</strong><br><strong>0.75x</strong> sword <strong class="color-speed">speed</strong>`,
+      description: `<strong>2x</strong> sword <strong class="color-d">damage</strong><br><strong>0.75x</strong> sword <strong class="color-speed">speed</strong>`,
       isGunTech: true,
       isNScytheTech: true,
       maxCount: 1,
@@ -11083,7 +11083,7 @@ const tech = {
     },
     {
       name: "arc discharge",
-      descriptionFunction: `spear <strong style="color: rgb(220, 20, 220);">lightning</strong> may strike nearby mobs
+      description: `spear <strong style="color: rgb(220, 20, 220);">lightning</strong> may strike nearby mobs
         <br>increases <strong>probability</strong> and <strong class="color-f">energy</strong> cost`,
       isGunTech: true,
       maxCount: 9,
