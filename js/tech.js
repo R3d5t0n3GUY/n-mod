@@ -3415,7 +3415,7 @@ const tech = {
       name: "relay switch",
       descriptionFunction() {
         return `toggle advanced ${powerUps.orb.tech()} <strong>ON</strong> and <strong>OFF</strong>
-          <br>after picking up a <strong>power up</strong>`
+          <br>after collecting a <strong>power up</strong>`
       },
       nameInfo: "<span id = 'tech-switch'></span>",
       addNameInfo() {
