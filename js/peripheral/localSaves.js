@@ -41,6 +41,7 @@ const localSaves = {
           let importedSettings = e.target.result
           importedSettings = importedSettings.parseAsJSON();
           if ("fileType" in importedSettings ? importedSettings.fileType === "localSettings" : false) {
+            importedSettings = importedSettings.data
             localSettings = {}
             build.resetStorage();
             Object.assign(localSettings, importedSettings);
