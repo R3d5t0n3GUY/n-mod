@@ -33,7 +33,7 @@ const jsSrcs = [
   },
   {
     name: "Spider",
-    src: "js/entities/spider.js"
+    src: "js/peripheral/userscripts/spider.js"
   },
   {
     name: "Player",
