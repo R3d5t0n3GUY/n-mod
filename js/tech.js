@@ -6499,8 +6499,8 @@ const tech = {
       name: "strange matter",
       descriptionFunction() {
         return `<strong>1.1x</strong> <strong class='color-d'>damage</strong>.
-      	  span class='color-remove'>removing</span> this spawns a
-          br><strong>random power up</strong> for each ${powerUps.orb.gun()} in your inventory`
+      	  <span class='color-remove'>removing</span> this spawns a
+          <br><strong>random power up</strong> for each ${powerUps.orb.gun()} in your inventory`
       },
       maxCount: 1,
       count: 0,
