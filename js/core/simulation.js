@@ -1058,7 +1058,7 @@ const simulation = {
     m.energy = 0.1
     m.immuneCycle = 0;
     m.coupling = 0
-    m.setField(m.fieldMode || 0) //this calls m.couplingChange(), which sets max health and max energy
+    m.setField(isBuildRun ? m.fieldMode || 0 : 0) //this calls m.couplingChange(), which sets max health and max energy
     //exit testing
     simulation.loop = simulation.testingLoop
     if (simulation.testing) {
