@@ -157,6 +157,7 @@ const simulation = {
       try {
         simulation.ephemera[i].do();
       } catch (err) {
+        console.warn(err)
         let msg = err.message || err || "Unknown Error. (Error details were not captured)"
         simulation.inGameConsole(`<strong style='color:red'>Error:</strong> ${err.name || "Error"}. <u>EphemeraError: ${msg}</u>`, 480)
         console.error(`Uncaught ${err.name || "Error"} running simulation.ephemera[${i}]:${msg}\nat:`, simulation.ephemera[i])
@@ -470,7 +471,7 @@ const simulation = {
       window.addEventListener("keyup", focusChatBox);
       Matter.Body.setVelocity(player, {x: 0, y: 0})
     } catch (err) {
-      window.alert(err)
+      console.warn(err)
     }
   },
   closeChatWindow() {
@@ -501,7 +502,7 @@ const simulation = {
         y: (cmdConsole.oldPlayer.vel.y || 0)
       })
     } catch (e) {
-      window.alert(e)
+      console.warn(e)
     }
   },
   focusChatMenu() {
