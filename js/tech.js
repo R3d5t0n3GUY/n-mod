@@ -6299,8 +6299,8 @@ const tech = {
         })
       },
       remove() {
-          tech.wire = null
-          if (this.count) simulation.removeEphemera("filament", true)
+        tech.wire = null
+        if (this.count) simulation.removeEphemera("filament")
       }
     },
     {
