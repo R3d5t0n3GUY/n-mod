@@ -1607,7 +1607,7 @@ const powerUps = {
           }
           if (tech.isFlipFlopChoices && !tech.isFlipFlopOn) totalChoices -= 1 * (tech.flipFlopChoices ? tech.flipFlopChoices : 1)
           if (tech.isDeterminism) totalChoices = 1
-          totalChoices = Math.min(totalChoices, options.length)
+          totalChoices = Math.max(1, Math.min(totalChoices, options.length))
           function removeOption(index) {
             for (let i = 0; i < options.length; i++) {
               if (options[i] === index) {
