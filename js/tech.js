@@ -13485,20 +13485,27 @@ const tech = {
       frequency: 0,
       isJunk: true,
       isInstant: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          for (let i = body.length - 1; i > -1; i--) {
-            if (!body[i].isNotHoldable) {
-              spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0);
-              if (!body[i].isAboutToBeRemoved) mob[mob.length - 1].isDropPowerUp = true
-              queueRemoval('body', i)
+        if (!tech.isBlockAwakening) {
+          tech.isBlockAwakening = true
+          tech.blockAwaken = setInterval(() => {
+            for (let i = body.length - 1; i > -1; i--) {
+              if (!body[i].isNotHoldable) {
+                spawn.blockMob(body[i].position.x, body[i].position.y, body[i], 0);
+                if (!body[i].isAboutToBeRemoved) mob[mob.length - 1].isDropPowerUp = true
+                queueRemoval('body', i)
+              }
             }
-          }
-        }, 6000);
+          }, 6000);
+        }
       },
-      remove() { }
+      remove() {
+        clearInterval(tech.blockAwaken)
+        tech.isBlockAwakening = false
+      }
     },
     {
       name: "meteor shower",
@@ -13508,35 +13515,40 @@ const tech = {
       frequency: 0,
       isJunk: true,
       isInstant: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-
-          fireBlock = function (xPos, yPos) {
-            const index = body.length
-            spawn.bodyRect(xPos, yPos, 20 + 50 * Math.random(), 20 + 50 * Math.random());
-            const bodyBullet = body[index]
-            Matter.Body.setVelocity(bodyBullet, {
-              x: 5 * (Math.random() - 0.5),
-              y: 10 * (Math.random() - 0.5)
-            });
-            bodyBullet.isAboutToBeRemoved = true
-            setTimeout(() => { //remove block
-              for (let i = 0; i < body.length; i++) {
-                if (body[i] === bodyBullet) {
-                  queueRemoval('body', i)
+        if (!tech.isMeteorSpawn) {
+          tech.isMeteorSpawn = true
+          tech.spawnMeteor = setInterval(() => {
+            fireBlock = function (xPos, yPos) {
+              const index = body.length
+              spawn.bodyRect(xPos, yPos, 20 + 50 * Math.random(), 20 + 50 * Math.random());
+              const bodyBullet = body[index]
+              Matter.Body.setVelocity(bodyBullet, {
+                x: 5 * (Math.random() - 0.5),
+                y: 10 * (Math.random() - 0.5)
+              });
+              bodyBullet.isAboutToBeRemoved = true
+              setTimeout(() => { //remove block
+                for (let i = 0; i < body.length; i++) {
+                  if (body[i] === bodyBullet) {
+                    queueRemoval('body', i)
+                  }
                 }
-              }
-            }, 4000 + Math.floor(9000 * Math.random()));
-          }
-          fireBlock(player.position.x + 600 * (Math.random() - 0.5), player.position.y - 500 - 500 * Math.random());
-          // for (let i = 0, len =  Math.random(); i < len; i++) {
-          // }
+              }, 4000 + Math.floor(9000 * Math.random()));
+            }
+            fireBlock(player.position.x + 600 * (Math.random() - 0.5), player.position.y - 500 - 500 * Math.random());
+            
 
-        }, 1000);
+          }, 1000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isMeteorSpawn = false
+        clearInterval(tech.spawnMeteor)
+      }
     },
     {
       name: "reinforcement learning",
@@ -13574,22 +13586,29 @@ const tech = {
       frequency: 0,
       isJunk: true,
       isInstant: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          if (powerUps.boost.endCycle < simulation.cycle && !simulation.paused && m.alive) {
-            for (let i = 0; i < mob.length; i++) {
-              if (mob[i].distanceToPlayer2() < 400000) { //650
-                canvas.requestPointerLock();
-                powerUps.boost.effect();
-                break
+        if (!tech.isBoostResponse){
+          tech.isBoostResponse = true
+          tech.threatResponse = setInterval(() => {
+            if (powerUps.boost.endCycle < simulation.cycle && !simulation.paused && m.alive) {
+              for (let i = 0; i < mob.length; i++) {
+                if (mob[i].distanceToPlayer2() < 400000) { //650
+                  canvas.requestPointerLock();
+                  powerUps.boost.effect();
+                  break
+                }
               }
             }
-          }
-        }, 2000);
+          }, 2000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isBoostResponse = false
+        clearInterval(tech.threatResponse)
+      }
     },
     {
       name: "closed timelike curve",
@@ -13601,6 +13620,7 @@ const tech = {
       frequency: 0,
       isJunk: true,
       isInstant: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
@@ -13620,11 +13640,16 @@ const tech = {
               }); //wrapping in animation frame prevents errors, probably
             }
           }
+          if (tech.isAdvanceRewind) requestAnimationFrame(loop);
+        }
+        if (!tech.isAdvanceRewind) {
+          tech.isAdvanceRewind = true 
           requestAnimationFrame(loop);
         }
-        requestAnimationFrame(loop);
       },
-      remove() { }
+      remove() {
+        tech.isAdvanceRewind = false
+      }
     },
     {
       name: "translate",
@@ -14072,7 +14097,7 @@ const tech = {
       },
       effect() {
         tech.isPowerUpRecolor = true
-        let defaults = this.defaultColors, newColors = { normal: {}, lore: {} }
+        let defaults = this.defaultColors.valueOf(), newColors = { normal: {}, lore: {} }
         let [names, colors] = [Object.keys(defaults.normal), Object.values(defaults.normal)]
         colors.shuffle();
         newColors.normal = Object.fromEntries(Array.toEntries(names, colors))
@@ -14095,7 +14120,7 @@ const tech = {
       },
       remove() {
         tech.isPowerUpRecolor = false
-        let defaults = this.defaultColors
+        let defaults = this.defaultColors.valueOf()
         let [names, colors] = [Object.keys(defaults.normal), Object.values(defaults.normal)]
         for (let i = 0, len = colors.length; i < len; i++ ) {
           powerUps[names[i]].color = colors[i]
@@ -14363,39 +14388,22 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          mobs.alertAllMobs()
-        }, 1000); //every 1 seconds
+        if (!tech.isMobAlert) {
+          tech.isMobAlert = true
+          tech.mobAlerting = setInterval(() => {
+            mobs.alertAllMobs()
+          }, 1000); //every 1 seconds
+        }
       },
-      remove() { }
+      remove() {
+        tech.isMobAlert = false
+        clearInterval(tech.mobAlerting)
+      }
     },
-    // {
-    //     name: "inverted mouse",
-    //     description: "your mouse is scrambled<br>it's fine, just rotate it 90 degrees",
-    //     maxCount: 1,
-    //     count: 0,
-    //     frequency: 0,
-    //     isExperimentHide: true,
-    //     isInstant: true,
-    //     isJunk: true,
-    //     allowed() {
-    //         return !m.isShipMode
-    //     },
-    //     requires: "not ship",
-    //     effect() {
-    //         document.body.addEventListener("mousemove", (e) => {
-    //             const ratio = window.innerWidth / window.innerHeight
-    //             simulation.mouse.x = e.clientY * ratio
-    //             simulation.mouse.y = e.clientX / ratio;
-    //         });
-    //     },
-    //     remove() {
-    //         // m.look = m.lookDefault
-    //     }
-    // },
     {
       name: "Fourier analysis",
       description: "your aiming is now controlled by this equation:<br><span style = 'font-size:80%;'>2sin(0.0133t) + sin(0.013t) + 0.5sin(0.031t)+ 0.33sin(0.03t)</span>",
@@ -14488,9 +14496,14 @@ const tech = {
         if (Math.random < 0.5){
           document.body.style.fontFamily = "Mojangles, Times New Roman, serif";
           for (let i = 0, len = tech.tech.length; i < len; i++) {
-            let techName = tech.tech[i].name;
+            let techName = tech.tech[i].name.valueOf();
+            if (!tech.isTechNameShuffle) {
+              tech.tech[i].nameDefault = techName
+            }
             tech.tech[i].name = techName.shuffle()
           }
+          tech.isTechNameShuffle = true
+          if (build.isExperimentSelection) build.populateGrid();
         } else if (Math.random() < 0.5) {
           document.body.style.fontFamily = "Standard Galactic, Mojangles, Times New Roman, serif";
           document.body.style.fontSize = "18px"
@@ -14501,6 +14514,15 @@ const tech = {
       },
       remove() {
         document.body.style.fontFamily = "Chakra Petch, Arial"
+        if (tech.isTechNameShuffle) {
+         for (let i = 0, len = tech.tech.length; i < len; i++) {
+            if ("nameDefault" in tech.tech[i]) {
+              tech.tech[i].name = tech.tech[i].nameDefault
+            }
+          }
+          tech.isTechNameShuffle = false
+          if (build.isExperimentSelection) build.populateGrid();
+        }
       }
     },
     {
@@ -14518,7 +14540,7 @@ const tech = {
         this.isBadRandomOption = true;
       },
       remove() {
-        //tech.isSounds = false
+        tech.isSounds = false
         //this.isBadRandomOption = false
       }
     },
@@ -14530,29 +14552,35 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        tech.isPeriodicRealitySwitch = true;
-        const realitySwitchClock = setInterval(() => {
-          const unit = {
-            x: 1,
-            y: 0
-          }
-          for (let i = 0; i < 5; i++) {
-            const where = Vector.add(m.pos, Vector.mult(Vector.rotate(unit, Math.random() * 2 * Math.PI), 2000 + 2000 * Math.random()))
-            spawn.sucker(where.x, where.y, 140)
-            const who = mob[mob.length - 1]
-            who.locatePlayer()
-            // who.damageReduction = 0.2
-          }
+        if (!tech.isPeriodicRealitySwitch) {
+          tech.isPeriodicRealitySwitch = true;
+          tech.realitySwitchClock = setInterval(() => {
+            const unit = {
+              x: 1,
+              y: 0
+            }
+            for (let i = 0; i < 5; i++) {
+              const where = Vector.add(m.pos, Vector.mult(Vector.rotate(unit, Math.random() * 2 * Math.PI), 2000 + 2000 * Math.random()))
+              spawn.sucker(where.x, where.y, 140)
+              const who = mob[mob.length - 1]
+              who.locatePlayer()
+              // who.damageReduction = 0.2
+            }
 
-          m.switchWorlds()
-          simulation.trails()
+            m.switchWorlds()
+            simulation.trails()
 
-        }, 20000); //every 20 seconds
+          }, 20000); //every 20 seconds
+        }
       },
-      remove() { }
+      remove() {
+        tech.isPeriodicRealitySwitch = false
+        clearInterval(tech.realitySwitchClock)
+      }
     },
     {
       name: "score",
@@ -14562,15 +14590,22 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          let score = Math.ceil(1000 * Math.random() * Math.random() * Math.random() * Math.random() * Math.random())
-          simulation.inGameConsole(`simulation.score <span class='color-symbol'>=</span> ${score.toFixed(0)}`);
-        }, 10000); //every 10 seconds
+        if (!tech.isScore) {
+          tech.isScore = true
+          tech.scoreDisplay = setInterval(() => {
+            let score = Math.ceil(1000 * Math.random() * Math.random() * Math.random() * Math.random() * Math.random())
+            simulation.inGameConsole(`simulation.score <span class='color-symbol'>=</span> ${score.toFixed(0)}`);
+          }, 10000); //every 10 seconds
+        }
       },
-      remove() { }
+      remove() {
+        tech.isScore = false
+        clearInterval(tech.scoreDisplay)
+      }
     },
     {
       name: "aerodynamics",
@@ -14613,14 +14648,21 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          alert(`The best combo is ${tech.tech[Math.floor(Math.random() * tech.tech.length)].name} with ${tech.tech[Math.floor(Math.random() * tech.tech.length)].name}!`);
-        }, 30000); //every 30 seconds
+        if (!tech.isPopUps) {
+          tech.isPopUps = true
+          tech.showPopUp = setInterval(() => {
+            alert(`The best combo is ${tech.tech[Math.floor(Math.random() * tech.tech.length)].name} with ${tech.tech[Math.floor(Math.random() * tech.tech.length)].name}!`);
+          }, 30000); //every 30 seconds
+        }
       },
-      remove() { }
+      remove() {
+        tech.isPopUps = false
+        clearInterval(tech.showPopUp)
+      }
     },
     {
       name: "music",
@@ -14659,7 +14701,7 @@ const tech = {
               requestAnimationFrame(loop)
             });
           };
-          script.src = 'https://unpkg.com/stats.js@0.17.0/build/stats.min.js';
+          script.src = 'lib/stats.min.js';
           document.head.appendChild(script);
         })()
         //move health to the right
@@ -14733,14 +14775,21 @@ const tech = {
       isInstant: true,
       isComposite: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          if (!simulation.paused) ctx.rotate(0.001 * Math.sin(simulation.cycle * 0.01))
-        }, 16);
+        if (!tech.isOscillateTilt) {
+          tech.isOscillateTilt = true
+          tech.tiltScreen = setInterval(() => {
+            if (!simulation.paused) ctx.rotate(0.001 * Math.sin(simulation.cycle * 0.01))
+          }, 16);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isOscillateTilt = false
+        clearInterval(tech.tiltScreen)
+      }
     },
     {
       name: "flatland",
@@ -14981,18 +15030,22 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          m.rewind(120)
-          m.energy += 0.4 * level.isReducedRegen
-        }, 10000);
-        // for (let i = 0; i < 24; i++) {
-        //     setTimeout(() => { m.rewind(120) }, i * 5000);
-        // }
+        if (!tech.isRewindJunk) {
+          tech.isRewindJunk = true
+          tech.rewindInterval = setInterval(() => {
+            m.rewind(120)
+            m.energy += 0.4 * level.isReducedRegen
+          }, 10000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isRewindJunk = false
+        clearInterval(tech.rewindInterval)
+      }
     },
     {
       name: "undo",
@@ -15002,15 +15055,22 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          m.rewind(30)
-          m.energy += 0.2 * level.isReducedRegen
-        }, 4000);
+        if (!tech.isUndoJunk) {
+          tech.isUndoJunk = true
+          tech.undoInterval = setInterval(() => {
+            m.rewind(30)
+            m.energy += 0.2 * level.isReducedRegen
+          }, 4000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isUndoJunk = false
+        clearInterval(tech.undoInterval)
+      }
     },
     {
       name: "energy to mass conversion",
@@ -15100,21 +15160,28 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          if (!simulation.paused) {
-            const energy = m.energy
-            m.energy = 0
-            setTimeout(() => { //return energy
-              m.energy += 2 * energy
-              for (let i = 0; i < 6; i++) simulation.energyGenGraphic()
-            }, 5000);
-          }
-        }, 10000);
+        if (!tech.isEnergyInvestment) {
+          tech.isEnergyInvestment = true
+          tech.investEnergy = setInterval(() => {
+            if (!simulation.paused) {
+              const energy = m.energy
+              m.energy = 0
+              setTimeout(() => { //return energy
+                m.energy += 2 * energy
+                for (let i = 0; i < 6; i++) simulation.energyGenGraphic()
+              }, 5000);
+            }
+          }, 10000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isEnergyInvestment = false
+        clearInterval(tech.investEnergy)
+      }
     },
     {
       name: "missile launching system",
@@ -15148,25 +15215,32 @@ const tech = {
       frequency: 0,
       isInstant: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        setInterval(() => {
-          if (!simulation.paused && document.visibilityState !== "hidden") {
-            b.grenade(Vector.add(m.pos, {
-              x: 10 * (Math.random() - 0.5),
-              y: 10 * (Math.random() - 0.5)
-            }), -Math.PI / 2) //fire different angles for each grenade
-            const who = bullet[bullet.length - 1]
-            Matter.Body.setVelocity(who, {
-              x: who.velocity.x * 0.1,
-              y: who.velocity.y * 0.1
-            });
-            m.fieldUpgrades[4].endoThermic(0.6)
-          }
-        }, 2000);
+        if (!tech.isPeriodicGrenades) {
+          tech.isPeriodicGrenades = true
+          tech.grenadeProduction = setInterval(() => {
+            if (!simulation.paused && document.visibilityState !== "hidden") {
+              b.grenade(Vector.add(m.pos, {
+                x: 10 * (Math.random() - 0.5),
+                y: 10 * (Math.random() - 0.5)
+              }), -Math.PI / 2) //fire different angles for each grenade
+              const who = bullet[bullet.length - 1]
+              Matter.Body.setVelocity(who, {
+                x: who.velocity.x * 0.1,
+                y: who.velocity.y * 0.1
+              });
+              m.fieldUpgrades[4].endoThermic(0.6)
+            }
+          }, 2000);
+        }
       },
-      remove() { }
+      remove() {
+        tech.isPeriodicGrenades = false
+        clearInterval(tech.grenadeProduction)
+      }
     },
     {
       name: "wall jump",
@@ -15183,8 +15257,8 @@ const tech = {
       requires: "",
       effect() {
         m.skin.stubs()
-        jumpSensor.vertices[0].x += -22
-        jumpSensor.vertices[3].x += -22
+        jumpSensor.vertices[0].x -= 22
+        jumpSensor.vertices[3].x -= 22
         jumpSensor.vertices[1].x += 22
         jumpSensor.vertices[2].x += 22
       },
@@ -15332,18 +15406,26 @@ const tech = {
       isInstant: true,
       isSkin: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed() {
         return !m.isShipMode
       },
       requires: "",
       effect() {
         m.skin.egg();
-        setInterval(() => {
-          m.yOffWhen.stand = 53 + 28 * Math.sin(simulation.cycle * 0.2)
-          if (m.onGround && !m.crouch) m.yOffGoal = m.yOffWhen.stand
-        }, 100);
+        if (!tech.isRhytmCrouch) {
+          tech.isRhytmCrouch = true
+          tech.crouchPattern = setInterval(() => {
+            m.yOffWhen.stand = 53 + 28 * Math.sin(simulation.cycle * 0.2)
+            if (m.onGround && !m.crouch) m.yOffGoal = m.yOffWhen.stand
+          }, 100);
+        }
       },
-      remove() { }
+      remove() {
+        m.resetSkin();
+        tech.isRhytmCrouch = false
+        clearInterval(tech.crouchPattern)
+      }
     },
     {
       name: "prism",
@@ -15354,20 +15436,29 @@ const tech = {
       isInstant: true,
       isSkin: true,
       isJunk: true,
+      isIntervalTech: true,
       allowed: () => true,
       requires: "",
       effect() {
-        m.color = {
-          hue: 0,
-          sat: 100,
-          light: 50
+        if (!tech.isHueShift) {
+          tech.isHueShift = true
+          m.color = {
+            hue: 0,
+            sat: 100,
+            light: 50
+          }
+          tech.colorCycle = setInterval(function () {
+            m.color.hue++
+            m.setFillColors()
+          }, 10);
         }
-        setInterval(function () {
-          m.color.hue++
-          m.setFillColors()
-        }, 10);
       },
-      remove() { }
+      remove() {
+        m.color.sat = 0
+        m.setFillColors()
+        tech.isHueShift = false
+        clearInterval(tech.colorCycle)
+      }
     },
     {
       name: "slink",
@@ -15561,32 +15652,41 @@ const tech = {
       },
       requires: "",
       effect() {
-        simulation.ephemera.push({
-          name: "pet",
-          count: 0,
-          do() {
-            this.count++
-            if (!(this.count % 420)) {
-              for (let i = 0; i < bullet.length; i++) {
-                if (bullet[i].botType && Math.random() < 0.3) {
-                  simulation.inGameConsole(`${bullet[i].botType}<span class='color-symbol'>-</span>bot.pet<span class='color-symbol'>()</span>`)
-                  if (m.onGround && !m.crouch) {
-                    m.yOffGoal = m.yOffWhen.crouch;
-                    setTimeout(() => {
-                      if (!m.crouch) m.yOffGoal = m.yOffWhen.stand;
-                    }, 1000);
-                    if (m.immuneCycle < m.cycle + 90 * ((m.fieldMode === 0 || m.fieldMode === 14) ? m.immuneBoostCouple : 1))
-                      m.immuneCycle = m.cycle + 90 * ((m.fieldMode === 0 || m.fieldMode === 14) ? m.immuneBoostCouple : 1)
+        if (!tech.petBots) {
+          tech.petBots = true
+          simulation.ephemera.push({
+            name: "pet",
+            count: 0,
+            do() {
+              this.count++
+              if (tech.petBots){
+                if (!(this.count % 420)) {
+                  for (let i = 0; i < bullet.length; i++) {
+                    if (bullet[i].botType && Math.random() < 0.3) {
+                      simulation.inGameConsole(`${bullet[i].botType}<span class='color-symbol'>-</span>bot.pet<span class='color-symbol'>()</span>`)
+                      if (m.onGround && !m.crouch) {
+                        m.yOffGoal = m.yOffWhen.crouch;
+                        setTimeout(() => {
+                          if (!m.crouch) m.yOffGoal = m.yOffWhen.stand;
+                        }, 1000);
+                        if (m.immuneCycle < m.cycle + 90 * ((m.fieldMode === 0 || m.fieldMode === 14) ? m.immuneBoostCouple : 1))
+                          m.immuneCycle = m.cycle + 90 * ((m.fieldMode === 0 || m.fieldMode === 14) ? m.immuneBoostCouple : 1)
+                      }
+                      if (Math.random() < 0.3) break
+                    }
                   }
-                  if (Math.random() < 0.3) break
-                }
-              }
 
+                }
+              } else {
+                simulation.removeEphemera(this.name)
+              }
             }
-          }
-        })
+          })
+        }
       },
       remove() {
+        tech.petBots = false
+        simulation.removeEphemera("pet")
       }
     },
     {
