@@ -4,7 +4,7 @@
 I, <a href='https://r3d5t0n3guy.github.io' target='blank'>R3d5t0n3_GUY</a>, work on this project a lot in my spare time.
 It includes portions of the following games and mods:
 <ul>
-  <li><a href="https://github.com/landgreen/n-gon" target="_blank">n-gon (primary directory) by Landgreen</a></li>
+  <li><a href="https://github.com/landgreen/n-gon" target="_blank">n-gon by Landgreen</a></li>
   <li><a href="https://github.com/Whyisthisnotavalable/n-scythe" target="_blank">n-scythe by WhyIsThisNotAvailable</a></li>
   <li><a href="https://github.com/tbxyd/n-gon-enhanced" target="_blank">n-hanced by tbxyd</a></li>
   <li><a href="https://github.com/3xionDev/n-gon-upgraded" target="_blank">n-upgraded by 3xionDev</a></li>
