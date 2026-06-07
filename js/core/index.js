@@ -861,7 +861,11 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   isExperimentSelection: false,
   isExperimentRun: false,
   pauseEjectButton(i) {
-    return `<div style='width:20px;height;24px;float:right;cursor:pointer;font-size:24px;border:1px dashed var(--border-color);color:red;text-align:center' onclick="powerUps.pauseEjectTech(${i})">×</div>`
+    if (simulation.testing || (tech.isPauseEjectTech && (!tech.isPauseEjectResearch || powerUps.research.count >= (tech.pauseEjectResearch || 1)))) {
+      `<div style='width:20px;height;24px;float:right;cursor:pointer;font-size:24px;border:1px dashed var(--border-color);color:red;text-align:center' onclick="powerUps.pauseEjectTech(${i})">×</div>`
+    } else {
+      return ""
+    }
   },
   techText(i) {
     return `<div class="card-text">${build.pauseEjectButton(i)}
