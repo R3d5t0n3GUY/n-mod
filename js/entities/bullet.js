@@ -4712,7 +4712,6 @@ const b = {
   // **************************************************************************************************
   // **************************************************************************************************
 
-  /* //discontinued as NOT-PLANNED
   swingSword(where, angle = m.angle) {
     const me = bullet.length;
   },
@@ -4728,7 +4727,9 @@ const b = {
   meleeScythe(where, angle = m.angle) {
     const me = bullet.length;
   },
-  spear(where, angle = m.angle) { },
+  spear(where, angle = m.angle) {
+    const me = bullet.length
+  },
   spearDmgAura(where, size = 1000) {
     const me = bullet.length;
   },
@@ -4749,7 +4750,7 @@ const b = {
   },
   explodeSniperShell(where, angle = m.angle) {
     const me = bullet.length;
-  }, */
+  },
 
   // **************************************************************************************************
   // **************************************************************************************************

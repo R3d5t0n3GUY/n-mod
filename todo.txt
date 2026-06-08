@@ -3,6 +3,7 @@
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon
+•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 
 ************************************************* POSTPONED ********************************************
 •More images in warp menu (Input needed from community)
@@ -11,6 +12,5 @@
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
 •TimeSkip for Pair Production. I've implemented immunity duration shortening instead
-•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 •Bringing back c-gon levels. If you want to play them, try c-gon instead
 •Bringing back Temple. Caused too many issues to just be moved to removedLevels

@@ -17,7 +17,7 @@
         <path transform="translate(11.9,0) scale(1.25)" d="M0 0  h1  l 0.7 0.7  v1  l -0.7 0.7  h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width='0.07' /><!--O (outline)-->
         <path transform="translate(15.9,0) scale(1.25)" d="M0 0  h1  l 0.3 0.3  v-2 h0.8 v4.1 h-.8 v -0.3 l -.3 .3 h-1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z" stroke-width='0.07' /><!--D (outline)-->
       </g>
-      <g fill='rgba(0,0,0,0)' stroke='rgba(0,0,0,0)' stroke-width=".05px" stroke-linejoin="round" stroke-linecap="round">
+      <g fill='transparent' stroke='transparent' stroke-linejoin="round" stroke-linecap="round">
         <path d="M0 0 h1  l1.7 .15 2.3 1.1 0 0.5 -2 1.35 -3 0 z"/><!--N-Hyphen (hull)-->
         <path transform="translate(4,1.25)" d="M0 0, 2 -1.25 h1 v3.1 h-1 0 l-2 -1.3 z"/><!--Hyphen-M (hull)-->
         <path transform="translate(7,0)" d="M0 0 l6.2 -.05 0.85 0.85 0 1.4 -0.85 0.85 -3 0.05 h-4.2 v-3.1 z"/><!--M-O (hull)-->
