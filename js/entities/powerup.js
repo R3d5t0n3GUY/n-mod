@@ -2323,7 +2323,7 @@ const powerUps = {
         Matter.Body.setVelocity(powerUp[i], Vector.mult(unit, 20));
       }
     }
-    let isExcessiveHeals = (tech.isHealAttract || m.health > m.maxHealth - 0.01 || (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) //if player has accretion, or mass-energy without 1st ionization
+    let isExcessiveHeals = ((tech.isHealAttract && !tech.isOverHeal) || m.health > m.maxHealth - 0.1 || (tech.isEnergyHealth && !powerUps.healGiveMaxEnergy)) //if player has accretion without quenching, or mass-energy without 1st ionization
     //count big power ups and small power ups
     let options = [] //["heal", "research", tech.isBoostReplaceAmmo ? "boost" : "ammo"]
     if ((!isExcessiveHeals || Math.random() < 0.2) && !powerUps.healGiveMaxEnergy) options.push("heal") //if there's too much heals, 13% chance to consider spawning more
