@@ -1906,6 +1906,18 @@ summary {
   direction: ltr;
 }
 
+.tech-slider {
+  /* height: 0.5em; */
+  vertical-align: middle;
+  /* width: 13em; */
+  width: 70%;
+  padding-right: 0px;
+  padding-left: 0px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .left-column {
   grid-row: 1 / span 7
 }

@@ -781,6 +781,7 @@ const m = {
   damageReduction: 1,
   defense() {
     let dmg = m.damageReduction * powerUps.difficulty.damageReduction
+    if (tech.proportionality !== null) dmg *= Math.pow(tech.proportionality, 1.631)
     if (tech.energyDefense && m.energy > 1.99) dmg *= 0.1
     if (powerUps.boost.isDefense && powerUps.boost.endCycle > simulation.cycle) dmg *= 0.3
     if (tech.isMaxHealthDefense && (m.health === m.maxHealth || (tech.isEnergyHealth && m.energy > m.maxEnergy - 0.01))) dmg *= 0.1

@@ -321,6 +321,7 @@ const tech = {
   },
   damageAdjustments() {
     let dmg = m.damageDone * m.fieldDamage * powerUps.difficulty.damageDone
+    if (tech.proportionality !== null) dmg *= tech.proportionality
     if (tech.isEigenstate && m.eigen.cycle < m.eigen.cycleLimit) dmg *= 3
     if (tech.isLaserWire && tech.wire && tech.wire.segments.length) dmg *= 1 + 0.01 * tech.wire.segments.length
     if (level.isNoDamage && (m.cycle - 180 < level.noDamageCycle)) dmg *= 0.3
@@ -6778,6 +6779,58 @@ const tech = {
       }
     },
     {
+      name: "inverse",
+      descriptionFunction() {
+        let text = `when <span class="color-paused">PAUSED</span> get a slider that balances<br>`
+        if (!this.isLost && !build.isExperimentSelection) {
+          text += `<input class="tech-slider" type="range" min="0.5" max="3" step="0.1" value="${tech.inverseFireRate}" oninput="tech.inputHTML.inverse(this)" onchange="build.generatePauseLeft()">`
+        }
+        text += `<em>(<span class="ammo-label">${(1 / tech.inverseFireRate).toFixed(2)}</span>x maximum <strong class='color-f'>energy</strong>)</em>
+        <em style ="float: right;">(<span class="fire-label">${tech.inverseFireRate.toFixed(1)}</span>x fire rate)</em>`
+        return text
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isInput: true,
+      allowed() { return true },
+      requires: "",
+      effect() {
+        tech.inverseFireRate = 3
+        b.setFireCD();
+        m.setMaxEnergy(false)
+      },
+      remove() {
+        tech.inverseFireRate = 1
+        if (this.count) {
+          b.setFireCD();
+          m.setMaxEnergy(false)
+        }
+      }
+    },
+    {
+      name: "proportional",
+      descriptionFunction() {
+        let text = `when <span class="color-paused">PAUSED</span> get a slider that balances<br>`
+        if (!this.isLost && !build.isExperimentSelection) {
+            text += `<input class="tech-slider" type="range" name="proportionality" min="0.5" max="3" step="0.1" value="${tech.proportionality}" oninput="tech.inputHTML.proportionality(this)" onchange="build.generatePauseLeft()">`
+        }
+        text += `<em>(<span class="prop-damage">${tech.proportionality.toFixed(1)}</span>x <strong class='color-d'>damage</strong>)</em>
+        <em style ="float: right;">(<span class="prop-reduction">${Math.pow(tech.proportionality, 1.631).toFixed(2)}</span>x <strong class='color-defense'>damage taken</strong>)</em>`
+        return text
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      isInput: true,
+      allowed() { return true },
+      requires: "",
+      effect() { tech.proportionality = 3 },
+      remove() { tech.proportionality = 1 }
+    },
+    {
       name: "paradigm shift",
       descriptionFunction() {
         return `when <span class='color-paused'>PAUSED</span> clicking your ${powerUps.orb.tech()} <span class='color-remove'>ejects</span> them
@@ -7436,6 +7489,39 @@ const tech = {
       },
       remove() {
         tech.shotgunExtraShots = 0
+      }
+    },
+    {
+      name: "rifling",
+      descriptionFunction() {
+        let text = `when <span class="color-paused">PAUSED</span> get a slider that balances <strong>shotgun</strong><br>`
+        if (!this.isLost && !build.isExperimentSelection) {
+            text += `<input class="tech-slider" type="range" min="0.5" max="1.5" step="0.1" value="${tech.rifling.toFixed(1)}" oninput="tech.inputHTML.rifling(this)" onchange="build.generatePauseLeft()">`
+        }
+        text += `<em style ="float: left;">(<span class="rifling-label-1">${tech.rifling.toFixed(1)}</span>x bullets)</em>
+        <em style ="float: right;">(<span class="rifling-label-2">${tech.riflingSpread.toFixed(2)}</span>x spread)</em>`
+        return text
+      },
+      isGunTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      isInput: true,
+      allowed() {
+        return tech.haveGunCheck("shotgun")
+      },
+      requires: "shotgun",
+      effect() {
+        tech.rifling = 0.5
+        tech.riflingSpread = tech.rifling > 1 ? Math.pow(tech.rifling, 1.4) : Math.pow(tech.rifling, 3.5)
+      },
+      remove() {
+        tech.rifling = 1
+        tech.riflingSpread = 1
+        if (this.count) {
+
+        }
       }
     },
     {
@@ -16338,4 +16424,5 @@ const tech = {
   researchHaste: 1,
   slowFireDamage: 1,
   rifling: 1,
+  riflingSpread: 1,
 }
