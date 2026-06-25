@@ -205,6 +205,13 @@ const level = {
       b.removeGun(b.guns[b.inventory[b.inventory.length - 1]].name)
       for (let i = 0; i < 3; i++) b.randomBot()
     }
+    if (tech.zeitgeistRemoveName) {
+      for (let i = 0; i < tech.tech.length; i++) {
+        if (tech.tech[i].name === tech.zeitgeistRemoveName) {
+          powerUps.ejectTech(i, true)
+        }
+      }
+    }
     if (simulation.isTraining) {
       simulation.difficultyMode = 1
     } else {

@@ -740,7 +740,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     //         if (a.cycle !== b.cycle) return a.cycle - b.cycle;
     //     });
     // } else
-    if (find === 'guntech') {
+    if (find === 'index') {
+      tech.sortByIndex()
+    } else if (find === 'guntech') {
       tech.tech.sort((a, b) => {
         if (a.isGunTech && b.isGunTech) {
           return (a.allowed() === b.allowed()) ? 0 : a.allowed() ? -1 : 1;
@@ -1251,12 +1253,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     URL.revokeObjectURL(a.href);
   },
   reset(isOnImport = false) {
-    build.isExperimentSelection = true;
-    build.isExperimentRun = true;
     if (!isOnImport) {
       simulation.startGame(true); //starts game, but pauses it
-      build.isExperimentSelection = true;
-      build.isExperimentRun = true;
     }
     simulation.paused = true;
     b.inventory = []; //removes guns and ammo
@@ -1269,6 +1267,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     b.inventoryGun = 0;
     simulation.makeGunHUD();
     tech.resetAllTech();
+    build.isExperimentSelection = true;
+    build.isExperimentRun = true;
     if (!isOnImport) {
       build.populateGrid();
       document.getElementById("field-0").classList.add("build-field-selected");

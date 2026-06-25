@@ -1076,6 +1076,30 @@ const mobs = {
             }
             dmg *= this.damageReduction //damage reduction specific to this mob (not based on tier)
 
+            if (tech.isNegAura && m.fieldMode === 3 && input.field && this.health < 0.66 && Vector.magnitude(Vector.sub(m.pos, this.position)) < (m.fieldDrawRadius + 2 * this.radius + 20)) {
+              dmg *= 8
+              simulation.ephemera.push({
+                name: `criticalMass ${simulation.newEphemeraID()}`,
+                count: 6, //cycles before it self removes
+                vertices: this.vertices,
+                do() {
+                  this.count--
+                  if (this.count < 0) simulation.removeEphemera(this.name)
+
+                  ctx.beginPath();
+                  ctx.moveTo(this.vertices[0].x, this.vertices[0].y);
+                  for (let j = 1, len = this.vertices.length; j < len; j += 1) ctx.lineTo(this.vertices[j].x, this.vertices[j].y);
+                  ctx.lineTo(this.vertices[0].x, this.vertices[0].y);
+                  ctx.lineWidth = 10;
+                  ctx.strokeStyle = `#f07`;
+                  ctx.stroke();
+                  ctx.lineJoin = "round"
+                  ctx.miterLimit = 5
+                  ctx.fillStyle = "#000"
+                  ctx.fill();
+                },
+              })
+            }
             if (tech.isFarAwayDmg) dmg *= 1 + Math.sqrt(Math.max(500, Math.min(3000, this.distanceToPlayer())) - 500) * 0.0067 //up to 33% dmg at max range of 3000
             //energy and heal drain should be calculated after damage boosts and before mass reduction
             if (tech.energySiphon && this.isDropPowerUp && m.immuneCycle < m.cycle) {

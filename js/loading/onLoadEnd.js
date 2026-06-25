@@ -121,6 +121,7 @@ fileLoads.onLoadEnd = function () {
     document.body.appendChild(container); //append script loader (created in scriptLoader.js)
     //Matter.Common.setDecomp(decomp) //initialize decomposition of concave vertices
     build.setDarkMode('splash-start')
+    tech.sortByIndex()
     Array.from(document.getElementsByClassName("details-collapse")).forEach(node => {
       node.type = "button" 
       node.style.cursor = "pointer"

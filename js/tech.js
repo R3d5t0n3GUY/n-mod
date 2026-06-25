@@ -17,7 +17,8 @@ const tech = {
       //tech.removeCount-- //decrement remove counter
     }
     if (tech.isPowerUpRecolor) tech.removeTech("true colors") //reset power-up colors if they have been changed
-    tech.tech.forEach(what => {
+    if (!build.isExperimentSelection) tech.sortByIndex()
+    tech.tech.forEach((what) => {
       what.isBanished = false
       what.remove();
       what.count = 0
@@ -70,6 +71,18 @@ const tech = {
     tech.totalCount = 0;
     simulation.updateTechHUD();
     simulation.updateGunHUD();
+  },
+  sortByIndex() {
+    for (let i = 0, len = tech.tech.length; i < len; i++) {
+      if ("index" in tech.tech[i] ? tech.tech[i].index === undefined : true) tech.tech[i].index = i
+    }
+    tech.tech.sort((a, b) => {
+      let invalid = [Infinity, -Infinity, NaN, null, undefined]
+      if (invalid.includes(a.index) || invalid.includes(b.index) || a.index === b.index) return 0;
+      if (a.index < b.index) return -1; //sort to the top
+      if (a.index > b.index) return 1; //sort to the bottom
+      return 0;
+    })
   },
   removeTech(index = 'random', isLost = true) {
     if (index === 'random') {
@@ -394,6 +407,57 @@ const tech = {
         }
       }
     }
+  },
+  inputHTML: {
+    rifling(el) {
+      const val = Number(el.value);
+      tech.rifling = val;
+      tech.riflingSpread = val > 1 ? Math.pow(val, 1.4) : Math.pow(val, 3.5)
+
+      const parent = el.parentElement;
+      const label1 = parent.querySelector(".rifling-label-1");
+      const label2 = parent.querySelector(".rifling-label-2");
+      if (label1) label1.innerHTML = val.toFixed(1);
+      if (label2) label2.innerHTML = tech.riflingSpread.toFixed(2); //Math.sqrt(val)
+    },
+    inverse(el) {
+      const val = Number(el.value);
+      tech.inverseFireRate = val;
+
+      // Run your logic
+      try {
+        if (typeof b !== 'undefined') b.setFireCD();
+        if (typeof m !== 'undefined') m.setMaxEnergy(false);
+      } catch (e) {
+        console.error("Logic error in setFireCD or setMaxEnergy:", e);
+      }
+
+      // Find the labels relative to the slider's parent container
+      const parent = el.parentElement;
+      const fireLabel = parent.querySelector(".fire-label");
+      const ammoLabel = parent.querySelector(".ammo-label");
+      if (fireLabel) fireLabel.innerHTML = val.toFixed(1);
+      if (ammoLabel) ammoLabel.innerHTML = (1 / val).toFixed(2);
+    },
+    proportionality(el) {
+      const val = Number(el.value);
+      tech.proportionality = val;
+
+      // Scope the search to the container this slider lives in
+      const parent = el.parentElement;
+      const damageLabel = parent.querySelector(".prop-damage");
+      const reductionLabel = parent.querySelector(".prop-reduction");
+
+      if (damageLabel) {
+        damageLabel.innerHTML = val.toFixed(1);
+      }
+      if (reductionLabel) {
+        reductionLabel.innerHTML = Math.pow(val, 1.631).toFixed(2);
+      }
+    },
+    zeitgeist(value) {
+      tech.zeitgeistRemoveName = value
+    },
   },
   tech: [
     {
@@ -5084,7 +5148,7 @@ const tech = {
     {
       name: "unified field theory",
       descriptionFunction() {
-        return `when <strong>paused</strong> you can click to <strong>change</strong> your ${powerUps.orb.field()}
+        return `when <span class='color-paused'>PAUSED</span> you can click to <strong>change</strong> your ${powerUps.orb.field()}
           <br><strong>2x</strong> <em class='flicker'>frequency</em> for ${powerUps.orb.fieldTech()}`
       },
       isPacifist: true,
@@ -6677,9 +6741,46 @@ const tech = {
       }
     },
     {
+      name: "zeitgeist",
+      descriptionFunction() {
+        let menu = ''
+        // if (this.count > 0 && !build.isExperimentSelection) {
+        if (!this.isLost) {
+          menu = `<select name="zeitgeist" id="zeitgeist" onchange="tech.inputHTML.zeitgeist(this.value)" style="float: right;"><option value="null">none</option>`
+          for (let i = 0; i < tech.tech.length; i++) {
+            if (tech.tech[i].count && !tech.tech[i].isInstant) {
+              // console.log(tech.tech[i].name, tech.zeitgeistRemoveName)
+              if (tech.tech[i].name === tech.zeitgeistRemoveName) {
+                menu += `<option value="${tech.tech[i].name}" selected>${tech.tech[i].name}</option>`
+              } else {
+                menu += `<option value="${tech.tech[i].name}">${tech.tech[i].name}</option>`
+              }
+            }
+          }
+          menu += `</select>`
+        }
+        return `when <span class="color-paused">PAUSED</span> select a ${powerUps.orb.tech()} that will be <span class='color-remove'>ejected</span> at
+          <br>the start of next <strong>level</strong> ${menu}`;
+      },
+      maxCount: 1,
+      count: 0,
+      frequency: 1,
+      frequencyDefault: 1,
+      allowed() {
+        return !tech.isSuperDeterminism
+      },
+      requires: "not superdeterminism",
+      effect() {
+        tech.zeitgeistRemoveName = null
+      },
+      remove() {
+        tech.zeitgeistRemoveName = null
+      }
+    },
+    {
       name: "paradigm shift",
       descriptionFunction() {
-        return `when <strong>paused</strong> clicking your ${powerUps.orb.tech()} <span class='color-remove'>ejects</span> them
+        return `when <span class='color-paused'>PAUSED</span> clicking your ${powerUps.orb.tech()} <span class='color-remove'>ejects</span> them
           <br>costs <strong>${tech.pauseEjectTech.toFixed(1)}</strong> ${m.healthString} <em style ="float: right;">(1.3x cost each use)</em>`
       },
       maxCount: 1,
@@ -11905,6 +12006,25 @@ const tech = {
       },
       remove() {
         tech.offGroundDamage = 1
+      }
+    },
+    {
+      name: "negative pressure",
+      description: "mobs with <strong>durability</strong> < <strong>66%</strong> take <strong>10x</strong> <strong class='color-d'>damage</strong><br>while inside <strong>negative mass</strong>",
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return m.fieldMode === 3
+      },
+      requires: "negative mass",
+      effect() {
+        tech.isNegAura = true
+      },
+      remove() {
+        tech.isNegAura = false;
       }
     },
     {

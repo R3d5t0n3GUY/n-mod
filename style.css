@@ -956,6 +956,14 @@ summary {
   color: hsl(218, 100%, 58%);
 }
 
+.color-paused {
+  color: #fff;
+  background-color: #678;
+  /* font-weight: 200; */
+  padding: 0px 2px;
+  border: 1px solid var(--text-color);
+}
+
 .highlight {
   border-radius: 6px;
   background-color: #ff0;
