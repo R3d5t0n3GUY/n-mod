@@ -339,7 +339,7 @@ const b = {
   },
   fireCDscale: 1,
   setFireCD() {
-    b.fireCDscale = tech.fireRate * tech.slowFire * tech.researchHaste * tech.slowFireDamage
+    b.fireCDscale = tech.fireRate * tech.slowFire * tech.researchHaste * tech.slowFireDamage / tech.inverseFireRate
     if (level.isSlowFireRate) b.fireCDscale *= 2
     if (m.fieldMode === 6) b.fireCDscale *= 0.8
     if (tech.isGrabFireRate && m.ledgeCoyote !== 0) b.fireCDscale *= 0.33

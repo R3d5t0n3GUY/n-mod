@@ -3726,7 +3726,7 @@ const m = {
   setMaxEnergy(isMessage = true) {
     m.maxEnergy = (tech.isMaxEnergyTech ? 0.5 : 1) + tech.bonusEnergy + tech.healMaxEnergyBonus + tech.harmonicEnergy + 3 * tech.isGroundState + 1.5 * (m.fieldMode === 1) + (m.fieldMode === 0 || m.fieldMode === 1) * 0.05 * m.coupling + 0.77 * tech.isStandingWaveExpand
     if (tech.isRelay && tech.isFlipFlopOn && tech.isRelayEnergy) m.maxEnergy += 3
-    m.maxEnergy *= m.fieldUpgrades[1].energyHealthRatio
+    m.maxEnergy *= m.fieldUpgrades[1].energyHealthRatio / tech.inverseFireRate
     if (level.isReducedEnergy) m.maxEnergy *= 0.5
     if (isMessage) simulation.inGameConsole(`<span class='color-var'>m</span>.<span class='color-f'>maxEnergy</span> <span class='color-symbol'>=</span> ${(m.maxEnergy.toFixed(2))}`)
   },

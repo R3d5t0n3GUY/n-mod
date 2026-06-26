@@ -16425,4 +16425,5 @@ const tech = {
   slowFireDamage: 1,
   rifling: 1,
   riflingSpread: 1,
+  inverseFireRate: 1,
 }
