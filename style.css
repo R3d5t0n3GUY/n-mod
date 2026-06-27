@@ -823,7 +823,7 @@ summary {
 #right-HUD {
   position: absolute;
   top: 15px;
-  right: 15px;
+  right: 10px;
   z-index: 2;
   font-size: 20px;
   text-align: right;
@@ -853,7 +853,7 @@ summary {
 #right-HUD-constraint {
   position: absolute;
   top: 12px;
-  right: 15px;
+  right: 10px;
   z-index: 2;
   font-size: 20px;
   text-align: right;

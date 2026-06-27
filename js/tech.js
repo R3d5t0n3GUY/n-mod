@@ -482,8 +482,10 @@ const tech = {
       },
       remove() {
         tech.isFallingDamage = false;
-        m.setMaxHealth();
-        if (this.count) m.resetSkin();
+        if (this.count) {
+          m.setMaxHealth()
+          m.resetSkin();
+        }
       }
     },
     {
@@ -3297,7 +3299,9 @@ const tech = {
     {
       name: "buckling",
       descriptionFunction() {
-        return `if a <strong class='color-block'>block</strong> kills a mob there's a <strong>50%</strong> chance<br>to randomly spawn one of [${powerUps.orb.coupling(1)}${powerUps.orb.boost(1)}${powerUps.orb.heal()}${powerUps.orb.ammo()}${powerUps.orb.research(1)}]`
+        let powerUpString = `${powerUps.orb.boost(1)}${powerUps.orb.heal()}${powerUps.orb.ammo()}${powerUps.orb.research(1)}`
+        if (tech.isCouplingPowerUps || m.coupling > 0) powerUpString = `${powerUps.orb.coupling(1)}${powerUpString}`
+        return `if a <strong class='color-block'>block</strong> kills a mob there's a <strong>50%</strong> chance<br>to randomly spawn one of [${powerUpString}]`
       },
       maxCount: 1,
       count: 0,
@@ -10414,7 +10418,9 @@ const tech = {
     },
     {
       name: "lens",
-      description: "<strong>2.5x</strong> <strong class='color-laser'>laser</strong> <strong class='color-d'>damage</strong> if it passes<br>through a revolving <strong>90°</strong> arc circular lens", //<span style='font-size: 125%;'>π</span> / 2</strong>
+      descriptionFunction() {
+        return `<strong>${(b.guns[11].lensDamageOn).toFixed(1)}x</strong> <strong class='color-laser'>laser</strong> <strong class='color-d'>damage</strong> if it passes<br>through a revolving <strong>${(b.guns[11].arcRange / Math.PI * 360).toFixed(1)}°</strong> arc circular lens`
+      },
       isGunTech: true,
       maxCount: 1,
       count: 0,
@@ -10439,9 +10445,11 @@ const tech = {
     },
     {
       name: "compound lens",
-      description: "<strong>1.4x</strong> <strong class='color-laser'>laser</strong> lens <strong class='color-d'>damage</strong><br><strong>+30°</strong> lens arc",
+      descriptionFunction() {
+        return `<strong>1.25x</strong> <strong class='color-laser'>laser</strong> lens <strong class='color-d'>damage</strong><br><strong>+45°</strong> lens arc <em style ="float: right;">(${(b.guns[11].lensDamageOn).toFixed(1)}x damage, ${(b.guns[11].arcRange / Math.PI * 360).toFixed(1)}° arc)</em>`
+      },
       isGunTech: true,
-      maxCount: 9,
+      maxCount: 6,
       count: 0,
       frequency: 2,
       frequencyDefault: 2,
@@ -10450,8 +10458,8 @@ const tech = {
       },
       requires: "lens",
       effect() {
-        b.guns[11].arcRange += 30 * Math.PI / 180 / 2
-        b.guns[11].lensDamageOn += 0.4
+        b.guns[11].arcRange += 45 * Math.PI / 180 / 2
+        b.guns[11].lensDamageOn *= 1.25
       },
       remove() {
         b.guns[11].arcRange = 90 * Math.PI / 180 / 2 //0.78 divded by 2 because of how it's drawn
@@ -11733,8 +11741,10 @@ const tech = {
     },
     {
       name: "surface plasmons",
-      description: `after <strong>deflecting</strong> a mob drains all your <strong class='color-f'>energy</strong>
-        	<br>emit <strong class='color-laser'>laser</strong> beams that scale with max <strong class='color-f'>energy</strong>`,
+      descriptionFunction() {
+        return `<span style = 'font-size:95%;'>after <strong>deflecting</strong> a mob drains all your <strong class='color-f'>energy</strong> emit <strong class='color-laser'>lasers</strong>
+          <br>duration proportional to max <strong class='color-f'>energy</strong><em style ="float: right;">(${((20 + Math.floor(m.maxEnergy * 30 * 0.0018 / tech.laserDrain)) / 60).toFixed(1)} seconds)</em></span>`
+      },
       isFieldTech: true,
       maxCount: 1,
       count: 0,

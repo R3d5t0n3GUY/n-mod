@@ -344,7 +344,7 @@ function collisionChecks(event) {
             // }
           } else {
             //mob + bullet collisions
-            if (obj.classType === "bullet" && obj.speed > obj.minDmgSpeed) {
+            if (obj.classType === "bullet" && obj.speed > obj.minDmgSpeed && mob[k].damageReduction) {
               obj.beforeDmg(mob[k]); //some bullets do actions when they hits things, like despawn //forces don't seem to work here
               let dmg = (obj.dmg + 0.15 * obj.mass * Vector.magnitude(Vector.sub(mob[k].velocity, obj.velocity)))
               if (tech.isCrit && mob[k].isStunned) dmg *= 4
@@ -387,7 +387,8 @@ function collisionChecks(event) {
 
                 mob[k].damage(dmg, true);
                 if (tech.isBlockPowerUps && !mob[k].alive && mob[k].isDropPowerUp && Math.random() < 0.5) {
-                  options = ["coupling", "boost", "heal", "research", "ammo"]
+                  options = ["boost", "heal", "research", "ammo"]
+                  if (tech.isCouplingPowerUps || m.coupling > 0) options.push('coupling')
                   powerUps.spawn(mob[k].position.x, mob[k].position.y, options[Math.floor(Math.random() * options.length)]);
                 }
 

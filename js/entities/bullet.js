@@ -4606,7 +4606,7 @@ const b = {
                   dmg *= 0.25
                 }
                 if (tech.isCrit && who.isStunned) dmg *= 4
-                who.damage(dmg, tech.isShieldPierce);
+                who.damage(dmg, tech.isShieldPierce, this.position);
                 if (who.alive) who.foundPlayer();
                 if (who.damageReduction) {
                   simulation.drawList.push({ //add dmg to draw queue
@@ -4664,7 +4664,7 @@ const b = {
                   dmg *= 0.25
                 }
                 if (tech.isCrit && who.isStunned) dmg *= 4
-                who.damage(dmg, tech.isShieldPierce);
+                who.damage(dmg, tech.isShieldPierce, this.position);
                 if (who.alive) who.foundPlayer();
                 if (who.damageReduction) {
                   simulation.drawList.push({ //add dmg to draw queue
@@ -9121,7 +9121,7 @@ const b = {
               this.constraint = undefined;
             }
             this.bladeTrails = [];
-            this.bladeSegments = undefined;
+            this.bladeSegments = [];
             m.fireCDcycle = m.cycle + 10;
           }
           return;
@@ -9212,7 +9212,7 @@ const b = {
             this.constraint = undefined;
           }
           this.bladeTrails = [];
-          this.bladeSegments = undefined;
+          this.bladeSegments = [];
           m.fireCDcycle = m.cycle + 10;
         } else {
           if (!this.isBroken && this.sword && (tech.isEnergyHealth ? m.energy : m.health) >= 0.11) {
@@ -9285,7 +9285,7 @@ const b = {
               this.constraint = undefined;
             }
             this.bladeTrails = [];
-            this.bladeSegments = undefined;
+            this.bladeSegments = [];
             m.fireCDcycle = 0;
           }
         }
@@ -9602,7 +9602,7 @@ const b = {
           }
 
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
 
             const alphaStep = 1 / trail.length;
             let alpha = 0;
@@ -9653,82 +9653,86 @@ const b = {
         }
       },
       renderLongsword() {
-        if (this.sword) {
-          for (let i = 0; i < this.bladeSegments.length; i++) {
-            const blade = this.bladeSegments[i];
-            const trail = this.bladeTrails[i] || [];
-            const tip = blade.vertices[1];
-            const base = blade.vertices[blade.vertices.length - 2];
+        if (this.sword) {  
+          try {
+            for (let i = 0; i < this.bladeSegments.length; i++) {
+              const blade = this.bladeSegments[i];
+              const trail = this.bladeTrails[i] || [];
+              const tip = blade.vertices[1];
+              const base = blade.vertices[blade.vertices.length - 2];
 
-            trail.push({ tip: { x: tip.x, y: tip.y }, base: { x: base.x, y: base.y } });
+              trail.push({ tip: { x: tip.x, y: tip.y }, base: { x: base.x, y: base.y } });
 
-            if (trail.length > 15) {
-              trail.shift();
-            }
+              if (trail.length > 15) {
+                trail.shift();
+              }
 
-            this.bladeTrails[i] = trail;
-          }
-          for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
-            if (this.bladeTrails[2] != trail) continue;
-            ctx.save();
-            ctx.beginPath();
-            const gradient = ctx.createLinearGradient(
-              trail[0].tip.x, trail[0].tip.y,
-              trail[trail.length - 1].tip.x, trail[trail.length - 1].tip.y
-            );
-            gradient.addColorStop(0, "rgba(180, 0, 220, 0)");
-            gradient.addColorStop(1, "rgba(220, 220, 220, 1)");
-            ctx.fillStyle = gradient;
-            ctx.moveTo(trail[0].tip.x, trail[0].tip.y);
-            for (let j = 1; j < trail.length; j++) {
-              ctx.lineTo(trail[j].tip.x, trail[j].tip.y);
+              this.bladeTrails[i] = trail.valueOf();
             }
-            for (let j = trail.length - 1; j >= 0; j--) {
-              ctx.lineTo(trail[j].base.x, trail[j].base.y);
+            for (let i = 0; i < (this.bladeTrails?.length ?? 0); i++) {
+              const trail = this.bladeTrails[i] || [];
+              if (this.bladeTrails[2] != trail) continue;
+              ctx.save();
+              ctx.beginPath();
+              const gradient = ctx.createLinearGradient(
+                trail[0]?.tip?.x ?? 0, trail[0]?.tip?.y ?? 0,
+                trail[trail.length - 1]?.tip?.x ?? 0, trail[trail.length - 1]?.tip?.y ?? 0
+              );
+              gradient.addColorStop(0, "rgba(180, 0, 220, 0)");
+              gradient.addColorStop(1, "rgba(220, 220, 220, 1)");
+              ctx.fillStyle = gradient;
+              ctx.moveTo(trail[0]?.tip?.x ?? 0, trail[0]?.tip?.y ?? 0);
+              for (let j = 1; j < trail?.length ?? 0; j++) {
+                ctx.lineTo(trail?.[j]?.tip?.x ?? 0, trail?.[j]?.tip?.y ?? 0);
+              }
+              for (let j = (trail?.length ?? 0) - 1; j >= 0; j--) {
+                ctx.lineTo(trail?.[j]?.base?.x ?? 0, trail?.[j]?.base?.y ?? 0);
+              }
+              ctx.closePath();
+              ctx.fill();
+              ctx.restore();
             }
-            ctx.closePath();
-            ctx.fill();
-            ctx.restore();
-          }
-          for (let i = 0; i < this.bladeSegments.length; i++) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.lineJoin = "miter";
-            ctx.miterLimit = 100;
-            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.2)";
-            ctx.lineWidth = 15;
-            ctx.moveTo(this.bladeSegments[i].vertices[0].x, this.bladeSegments[i].vertices[0].y);
-            for (let j = 0; j < this.bladeSegments[i].vertices.length; j++) {
-              ctx.lineTo(this.bladeSegments[i].vertices[j].x, this.bladeSegments[i].vertices[j].y)
-            };
-            ctx.closePath();
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.lineJoin = "miter";
-            ctx.miterLimit = 100;
-            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.8)";
-            ctx.lineWidth = 10;
-            ctx.moveTo(this.bladeSegments[i].vertices[0].x, this.bladeSegments[i].vertices[0].y);
-            for (let j = 0; j < this.bladeSegments[i].vertices.length; j++) {
-              ctx.lineTo(this.bladeSegments[i].vertices[j].x, this.bladeSegments[i].vertices[j].y)
-            };
-            ctx.closePath();
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.lineJoin = "miter";
-            ctx.miterLimit = 100;
-            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 127, 237, 1)";
-            ctx.lineWidth = 5;
-            ctx.fillStyle = "black";
-            ctx.moveTo(this.bladeSegments[i].vertices[0].x, this.bladeSegments[i].vertices[0].y);
-            for (let j = 0; j < this.bladeSegments[i].vertices.length; j++) {
-              ctx.lineTo(this.bladeSegments[i].vertices[j].x, this.bladeSegments[i].vertices[j].y)
-            };
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            ctx.restore();
+            for (let i = 0; i < this.bladeSegments?.length ?? 0; i++) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.lineJoin = "miter";
+              ctx.miterLimit = 100;
+              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.2)";
+              ctx.lineWidth = 15;
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              for (let j = 0; j < this.bladeSegments[i]?.vertices?.length ?? 0; j++) {
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+              };
+              ctx.closePath();
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.lineJoin = "miter";
+              ctx.miterLimit = 100;
+              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.8)";
+              ctx.lineWidth = 10;
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              for (let j = 0; j < this.bladeSegments[i]?.vertices?.length ?? 0; j++) {
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+              };
+              ctx.closePath();
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.lineJoin = "miter";
+              ctx.miterLimit = 100;
+              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 127, 237, 1)";
+              ctx.lineWidth = 5;
+              ctx.fillStyle = "black";
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              for (let j = 0; j < this.bladeSegments[i].vertices.length; j++) {
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+              };
+              ctx.closePath();
+              ctx.fill();
+              ctx.stroke();
+              ctx.restore();
+            }
+          } catch (e) {
+            console.error(e, 'given that b.guns[12] is:', b.guns[12])
           }
         }
       },
@@ -9770,7 +9774,7 @@ const b = {
           }
 
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
 
             const alphaStep = 0.01 / trail.length;
             let alpha = 0;
@@ -9975,85 +9979,90 @@ const b = {
           } else {
             this.reformSword();
           }
-          for (let i = 0; i < this.brokenParts.length; i++) {
-            const blade = this.brokenParts[i];
-            const trail = this.bladeTrails[i] || [];
-            const vertices = blade.vertices.map(vertex => ({ x: vertex.x, y: vertex.y }));
-            trail.push(vertices);
-            if (trail.length > 10) {
-              trail.shift();
-            }
-            this.bladeTrails[i] = trail;
-          }
-    
-          for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
-    
-            const alphaStep = 1 / trail.length;
-            let alpha = 0;
-    
-            for (let j = 0; j < trail.length; j++) {
-              const vertices = trail[j];
-              ctx.beginPath();
-              ctx.moveTo(vertices[0].x, vertices[0].y);
-    
-              for (let k = 1; k < vertices.length; k++) {
-                ctx.lineTo(vertices[k].x, vertices[k].y);
-              };
-    
-              alpha += alphaStep;
-              ctx.closePath();
-              if(tech.isEnergyHealth) {
-                const eyeColor = m.fieldMeterColor;    
-                const r = eyeColor[1];
-                const g = eyeColor[2];
-                const b = eyeColor[3];
-                const color = `#${r}${r}${g}${g}${b}${b}${Math.round(alpha * 255).toString(16).padStart(2, '0')}`;
-                ctx.fillStyle = color;
-              } else {
-                ctx.fillStyle = `rgba(220, 20, 60, ${alpha})`;
+          
+          try {
+            for (let i = 0; i < this.brokenParts.length; i++) {
+              const blade = this.brokenParts[i];
+              const trail = this.bladeTrails[i] || [];
+              const vertices = blade.vertices.map(vertex => ({ x: vertex.x, y: vertex.y }));
+              trail.push(vertices);
+              if (trail.length > 10) {
+                trail.shift();
               }
+              this.bladeTrails[i] = trail;
+            }
+            for (let i = 0; i < this.bladeTrails.length; i++) {
+              const trail = this.bladeTrails[i] || [];
+      
+              const alphaStep = 1 / trail.length;
+              let alpha = 0;
+      
+              for (let j = 0; j < (trail?.length ?? 0); j++) {
+                const vertices = trail?.[j] ?? [{ x: 0, y: 0 }];
+                ctx.beginPath();
+
+                ctx.moveTo(vertices?.[0]?.x ?? 0, vertices?.[0]?.y ?? 0);
+      
+                for (let k = 1; k < vertices?.length ?? 0; k++) {
+                  ctx.lineTo(vertices?.[k]?.x ?? 0, vertices?.[k]?.y ?? 0);
+                };
+      
+                alpha += alphaStep;
+                ctx.closePath();
+                if(tech.isEnergyHealth) {
+                  const eyeColor = m.fieldMeterColor;    
+                  const r = eyeColor[1];
+                  const g = eyeColor[2];
+                  const b = eyeColor[3];
+                  const color = `#${r}${r}${g}${g}${b}${b}${Math.round(alpha * 255).toString(16).padStart(2, '0')}`;
+                  ctx.fillStyle = color;
+                } else {
+                  ctx.fillStyle = `rgba(220, 20, 60, ${alpha})`;
+                }
+                ctx.fill();
+              }
+            }
+            if (this.brokenParts?.length ?? 0) for (let part of this.brokenParts) {
+              part.orbit ??= {
+                a: 300 + Math.random() * 250,
+                b: 100 + Math.random() * 100,
+                angle: Math.random() * Math.PI * 2,
+                speed: 0.03 + Math.random() * 0.03,
+                zOffset: Math.random()
+              };
+              const o = part.orbit;
+              o.angle += o.speed / 2 + o.speed * (m.energy / m.maxEnergy);
+              const targetX = px + o.a * Math.cos(o.angle);
+              const targetY = py + o.b * Math.sin(o.angle);
+              const scale = 1 - o.zOffset * 0.2;
+              const dx = targetX - part.position.x;
+              const dy = targetY - part.position.y;
+              const strength = 0.0001;
+              Matter.Body.applyForce(part, part.position, { x: dx * strength, y: dy * strength });
+              Matter.Body.setVelocity(part, { x: part.velocity.x * 0.98, y: part.velocity.y * 0.98 });
+              ctx.save();
+              ctx.translate(part.position.x, part.position.y);
+              ctx.scale(scale, scale);
+              ctx.beginPath();
+              ctx.lineJoin = "miter";
+              ctx.miterLimit = 100;
+              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "crimson";
+              ctx.lineWidth = 5;
+                  ctx.moveTo(part.vertices[0].x - part.position.x, part.vertices[0].y - part.position.y);
+              for (let j = 1; j < part.vertices.length; j++) {
+                ctx.lineTo(part.vertices[j].x - part.position.x, part.vertices[j].y - part.position.y);
+              }
+              ctx.closePath();
+              ctx.stroke();
+              ctx.fillStyle = "black";
               ctx.fill();
+              ctx.lineJoin = "round";
+              ctx.miterLimit = 10;
+              ctx.stroke();
+              ctx.restore();
             }
-          }
-          for (let part of this.brokenParts) {
-            part.orbit ??= {
-              a: 300 + Math.random() * 250,
-              b: 100 + Math.random() * 100,
-              angle: Math.random() * Math.PI * 2,
-              speed: 0.03 + Math.random() * 0.03,
-              zOffset: Math.random()
-            };
-            const o = part.orbit;
-            o.angle += o.speed / 2 + o.speed * (m.energy / m.maxEnergy);
-            const targetX = px + o.a * Math.cos(o.angle);
-            const targetY = py + o.b * Math.sin(o.angle);
-            const scale = 1 - o.zOffset * 0.2;
-            const dx = targetX - part.position.x;
-            const dy = targetY - part.position.y;
-            const strength = 0.0001;
-            Matter.Body.applyForce(part, part.position, { x: dx * strength, y: dy * strength });
-            Matter.Body.setVelocity(part, { x: part.velocity.x * 0.98, y: part.velocity.y * 0.98 });
-            ctx.save();
-            ctx.translate(part.position.x, part.position.y);
-            ctx.scale(scale, scale);
-            ctx.beginPath();
-            ctx.lineJoin = "miter";
-            ctx.miterLimit = 100;
-            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "crimson";
-            ctx.lineWidth = 5;
-                ctx.moveTo(part.vertices[0].x - part.position.x, part.vertices[0].y - part.position.y);
-            for (let j = 1; j < part.vertices.length; j++) {
-              ctx.lineTo(part.vertices[j].x - part.position.x, part.vertices[j].y - part.position.y);
-            }
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fillStyle = "black";
-            ctx.fill();
-            ctx.lineJoin = "round";
-            ctx.miterLimit = 10;
-            ctx.stroke();
-            ctx.restore();
+          } catch (e) {
+            console.error(e, 'given that b.guns[12] is:', b.guns[12])
           }
         }
       },
@@ -10776,7 +10785,7 @@ const b = {
           }
 
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
 
             const alphaStep = 1 / trail.length;
             let alpha = 0;
@@ -11427,7 +11436,7 @@ const b = {
             this.bladeTrails[i] = trail;
           }
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
 
             const alphaStep = 1 / trail.length;
             let alpha = 0;
@@ -11489,7 +11498,7 @@ const b = {
             this.bladeTrails[i] = trail;
           }
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
             const alphaStep = 1 / trail.length;
             let alpha = 0;
             for (let j = 0; j < trail.length; j++) {
@@ -11544,7 +11553,7 @@ const b = {
           }
 
           for (let i = 0; i < this.bladeTrails.length; i++) {
-            const trail = this.bladeTrails[i];
+            const trail = this.bladeTrails[i] || [];
             const alphaStep = 1 / trail.length;
             let alpha = 0;
 
