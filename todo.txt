@@ -3,11 +3,11 @@
 
 *********************************************** WORK-IN-PROGRESS ***************************************
 •Stay up-to-date with original game of n-gon
-•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 
 ************************************************* POSTPONED ********************************************
 •More images in warp menu (Input needed from community)
 •My first custom level
+•Modded bullets integration (i.e. declared as part of b instead of pushed to ephemera)
 
 *********************************************** NOT PLANNED ********************************************
 •Fixing Genisis (arena boss) immunity
