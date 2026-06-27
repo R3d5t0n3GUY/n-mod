@@ -9675,18 +9675,18 @@ const b = {
               ctx.save();
               ctx.beginPath();
               const gradient = ctx.createLinearGradient(
-                trail[0]?.tip?.x ?? 0, trail[0]?.tip?.y ?? 0,
-                trail[trail.length - 1]?.tip?.x ?? 0, trail[trail.length - 1]?.tip?.y ?? 0
+                trail[0]?.tip?.x ?? m?.pos?.x ?? 0, trail[0]?.tip?.y ?? 0,
+                trail[trail.length - 1]?.tip?.x ?? 0, trail[trail.length - 1]?.tip?.y ?? m?.pos?.y ?? 0
               );
               gradient.addColorStop(0, "rgba(180, 0, 220, 0)");
               gradient.addColorStop(1, "rgba(220, 220, 220, 1)");
               ctx.fillStyle = gradient;
-              ctx.moveTo(trail[0]?.tip?.x ?? 0, trail[0]?.tip?.y ?? 0);
+              ctx.moveTo(trail[0]?.tip?.x ?? m?.pos?.x ?? 0, trail[0]?.tip?.y ?? m?.pos?.y ?? 0);
               for (let j = 1; j < trail?.length ?? 0; j++) {
-                ctx.lineTo(trail?.[j]?.tip?.x ?? 0, trail?.[j]?.tip?.y ?? 0);
+                ctx.lineTo(trail?.[j]?.tip?.x ?? m?.pos?.x ?? 0, trail?.[j]?.tip?.y ?? m?.pos?.y ?? 0);
               }
               for (let j = (trail?.length ?? 0) - 1; j >= 0; j--) {
-                ctx.lineTo(trail?.[j]?.base?.x ?? 0, trail?.[j]?.base?.y ?? 0);
+                ctx.lineTo(trail?.[j]?.base?.x ?? m?.pos?.x ?? 0, trail?.[j]?.base?.y ?? m?.pos?.y ?? 0);
               }
               ctx.closePath();
               ctx.fill();
@@ -9699,9 +9699,9 @@ const b = {
               ctx.miterLimit = 100;
               ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.2)";
               ctx.lineWidth = 15;
-              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? m?.pos?.y ?? 0);
               for (let j = 0; j < this.bladeSegments[i]?.vertices?.length ?? 0; j++) {
-                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? m?.pos?.y ?? 0)
               };
               ctx.closePath();
               ctx.stroke();
@@ -9710,9 +9710,9 @@ const b = {
               ctx.miterLimit = 100;
               ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 0, 220, 0.8)";
               ctx.lineWidth = 10;
-              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? m?.pos?.y ?? 0);
               for (let j = 0; j < this.bladeSegments[i]?.vertices?.length ?? 0; j++) {
-                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? m?.pos?.y ?? 0)
               };
               ctx.closePath();
               ctx.stroke();
@@ -9722,9 +9722,9 @@ const b = {
               ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "rgba(180, 127, 237, 1)";
               ctx.lineWidth = 5;
               ctx.fillStyle = "black";
-              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? 0);
+              ctx.moveTo(this.bladeSegments[i]?.vertices?.[0]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[0]?.y ?? m?.pos?.y ?? 0);
               for (let j = 0; j < this.bladeSegments[i].vertices.length; j++) {
-                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? 0)
+                ctx.lineTo(this.bladeSegments[i]?.vertices?.[j]?.x ?? m?.pos?.x ?? 0, this.bladeSegments[i]?.vertices?.[j]?.y ?? m?.pos?.y ?? 0)
               };
               ctx.closePath();
               ctx.fill();
@@ -10001,10 +10001,10 @@ const b = {
                 const vertices = trail?.[j] ?? [{ x: 0, y: 0 }];
                 ctx.beginPath();
 
-                ctx.moveTo(vertices?.[0]?.x ?? 0, vertices?.[0]?.y ?? 0);
+                ctx.moveTo(vertices?.[0]?.x ?? m?.pos?.x ?? 0, vertices?.[0]?.y ?? m?.pos?.y ?? 0);
       
                 for (let k = 1; k < vertices?.length ?? 0; k++) {
-                  ctx.lineTo(vertices?.[k]?.x ?? 0, vertices?.[k]?.y ?? 0);
+                  ctx.lineTo(vertices?.[k]?.x ?? m?.pos?.x ?? 0, vertices?.[k]?.y ?? m?.pos?.y ?? 0);
                 };
       
                 alpha += alphaStep;
@@ -10048,7 +10048,7 @@ const b = {
               ctx.miterLimit = 100;
               ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : tech.longSword ? "rgba(180, 0, 220, 0.8)": "crimson";
               ctx.lineWidth = 5;
-                  ctx.moveTo(part.vertices[0].x - part.position.x, part.vertices[0].y - part.position.y);
+              ctx.moveTo(part.vertices[0].x - part.position.x, part.vertices[0].y - part.position.y);
               for (let j = 1; j < part.vertices.length; j++) {
                 ctx.lineTo(part.vertices[j].x - part.position.x, part.vertices[j].y - part.position.y);
               }
