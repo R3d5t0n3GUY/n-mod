@@ -9917,8 +9917,8 @@ const b = {
             ctx.beginPath();
             ctx.lineJoin = "miter";
             ctx.miterLimit = 100;
-            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "crimson";
-            ctx.lineWidth = 5;
+            ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : tech.longSword ? "rgba(180, 0, 220, 0.2)" : "crimson";
+            ctx.lineWidth = tech.longSword ? 15 : 5;
             ctx.fillStyle = "black";
             ctx.moveTo(this.brokenParts[i].vertices[0].x, this.brokenParts[i].vertices[0].y);
             for(let j = 0; j < this.brokenParts[i].vertices.length; j++) {
@@ -10017,7 +10017,7 @@ const b = {
                   const color = `#${r}${r}${g}${g}${b}${b}${Math.round(alpha * 255).toString(16).padStart(2, '0')}`;
                   ctx.fillStyle = color;
                 } else {
-                  ctx.fillStyle = `rgba(220, 20, 60, ${alpha})`;
+                  ctx.fillStyle = tech.longSword ? `rgba(180, 127, 237, ${alpha})` : `rgba(220, 20, 60, ${alpha})`;
                 }
                 ctx.fill();
               }
@@ -10046,7 +10046,7 @@ const b = {
               ctx.beginPath();
               ctx.lineJoin = "miter";
               ctx.miterLimit = 100;
-              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : "crimson";
+              ctx.strokeStyle = tech.isEnergyHealth ? m.fieldMeterColor : tech.longSword ? "rgba(180, 0, 220, 0.8)": "crimson";
               ctx.lineWidth = 5;
                   ctx.moveTo(part.vertices[0].x - part.position.x, part.vertices[0].y - part.position.y);
               for (let j = 1; j < part.vertices.length; j++) {
