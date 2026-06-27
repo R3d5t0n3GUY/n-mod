@@ -649,7 +649,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     //     text += `<div class="pause-grid-module"><div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div> ${b.guns[b.inventory[i]].description}</div>`
     // }
     for (let i = 0, len = b.inventory.length; i < len; i++) {
-      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(i, "gun")};'`
+      const style = localSettings.isHideImages ? `style="height:auto;"` : `style='background-image: ${build.getBackgroundImageURL(b.inventory[i], "gun")};'`
       text += `<div class="pause-grid-module card-background" ${style} >
                                                     <div class="card-text">
                                                         <div class="grid-title"><div class="circle-grid gun"></div> &nbsp; ${build.nameLink(b.guns[b.inventory[i]].name)} - <span style="font-size:100%;font-weight: 100;">${b.guns[b.inventory[i]].ammo}</span></div>
