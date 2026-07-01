@@ -488,7 +488,7 @@ const build = {
     simulation.lastLogTime = m.cycle //hide in game console
   },
   getBackgroundImageURL(index, type = 'tech') {
-    let urlRoot = "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/img/", fallback = 'url("img/junk.webp")'
+    let urlRoot = "https://r3d5t0n3guy.github.io/n-mod_assets/img/", fallback = 'url("img/junk.webp")'
     switch (type) {
       case 'level':
         return `url("${urlRoot}level/${index}.webp"), ${fallback}`

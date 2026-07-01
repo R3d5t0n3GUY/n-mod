@@ -5,7 +5,7 @@ setTimeout(() =>{
 const files = [
   {
     name: 'Death Prevented',
-    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/DeathAvoid.ogg',
+    src: 'DeathAvoid.ogg',
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -41,7 +41,7 @@ const files = [
   },
   {
     name: 'Fire in the hole',
-    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Joke/fire.mp3',
+    src: 'Joke/fire.mp3',
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -53,13 +53,13 @@ const files = [
   },
   {
     name: 'finalBossDeath',
-    src: "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/finalBossDeath.mp3",
+    src: "finalBossDeath.mp3",
     playCDcycle: 0,
     loadAttempt: 0
   },
   {
     name: "SpearUse",
-    src: "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Spear/SpearUse.ogg",
+    src: "Spear/SpearUse.ogg",
     playCDcycle: 0,
     loadAttempt: 0
   },
@@ -110,7 +110,7 @@ const audioPlayer = {
             }
           }
           if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01) {
-            let rootURL = "https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/"
+            let rootURL = "https://r3d5t0n3guy.github.io/n-mod_assets/SFX/"
             if (currentMonth === 3 && currentDay === 1 &&
               ["Explosion", "Teleport"].includes(name)) { //Every April 1st
               if (name === "Explosion") {
@@ -138,7 +138,7 @@ const audioPlayer = {
             }
             try {
               //simulation.inGameConsole(listItem.src);
-              let source = listItem.src
+              let source = `${rootURL}${listItem.src}`
               if (Array.isArray(source)) source = source.flat()[Math.floor(Math.random() * source.length)] 
               let soundFile = new Audio(source);
               soundFile.load();
