@@ -2272,11 +2272,12 @@ setTimeout(build.resetStorage, 100, false);
 setTimeout(() => {
   if (localSettings.isHideImages) {
     addEventListener("load", () => {
+
       let urls = new Array()
-      for (let i = 0, len = b.guns.length; i < len; i++) urls.push("img/gun/" + b.guns[i].name + ".webp")
-      for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push("img/field/" + m.fieldUpgrades[i].name + ".webp")
+      for (let i = 0, len = b.guns.length; i < len; i++) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/gun/${b.guns[i].name}.webp`)
+      for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/field/${m.fieldUpgrades[i].name}.webp`)
       for (let i = 0, len = tech.tech.length; i < len; i++) {
-        if (!tech.tech[i].isLore) urls.push("img/tech/" + tech.tech[i].name + ".webp")
+        if (!tech.tech[i].isLore) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/tech/${tech.tech[i].name}.webp`)
       }
       let images = new Array()
       for (let i = 0; i < urls.length; i++) {
