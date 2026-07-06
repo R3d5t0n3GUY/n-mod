@@ -488,7 +488,7 @@ const build = {
     simulation.lastLogTime = m.cycle //hide in game console
   },
   getBackgroundImageURL(index, type = 'tech') {
-    let urlRoot = "https://r3d5t0n3guy.github.io/n-mod_assets/img/", fallback = 'url("img/junk.webp")'
+    let urlRoot = "https://raw.githubusercontent.com/R3d5t0n3GUY/n-mod_assets/refs/heads/main/img/", fallback = 'url("img/junk.webp")'
     switch (type) {
       case 'level':
         return `url("${urlRoot}level/${index}.webp"), ${fallback}`
@@ -2274,10 +2274,10 @@ setTimeout(() => {
     addEventListener("load", () => {
 
       let urls = new Array()
-      for (let i = 0, len = b.guns.length; i < len; i++) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/gun/${b.guns[i].name}.webp`)
-      for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/field/${m.fieldUpgrades[i].name}.webp`)
+      for (let i = 0, len = b.guns.length; i < len; i++) urls.push(`https://raw.githubusercontent.com/R3d5t0n3GUY/n-mod_assets/refs/heads/main/img/gun/${b.guns[i].name}.webp`)
+      for (let i = 1, len = m.fieldUpgrades.length; i < len; i++) urls.push(`https://raw.githubusercontent.com/R3d5t0n3GUY/n-mod_assets/refs/heads/main/img/field/${m.fieldUpgrades[i].name}.webp`)
       for (let i = 0, len = tech.tech.length; i < len; i++) {
-        if (!tech.tech[i].isLore) urls.push(`https://r3d5t0n3guy.github.io/n-mod_assets/img/tech/${tech.tech[i].name}.webp`)
+        if (!tech.tech[i].isLore) urls.push(`https://raw.githubusercontent.com/R3d5t0n3GUY/n-mod_assets/refs/heads/main/img/tech/${tech.tech[i].name}.webp`)
       }
       let images = new Array()
       for (let i = 0; i < urls.length; i++) {
