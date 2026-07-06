@@ -110,7 +110,7 @@ const audioPlayer = {
             }
           }
           if (activeSoundCount < maxSoundCount && listItem.playCDcycle < m.cycle && volume >= 0.01) {
-            let rootURL = "https://r3d5t0n3guy.github.io/n-mod_assets/SFX/"
+            let rootURL = "https://raw.githubusercontent.com/R3d5t0n3GUY/n-mod_assets/refs/heads/main/SFX/"
             if (currentMonth === 3 && currentDay === 1 &&
               ["Explosion", "Teleport"].includes(name)) { //Every April 1st
               if (name === "Explosion") {
