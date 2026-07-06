@@ -35,7 +35,7 @@ const files = [
   },
   {
     name: 'FallDamage',
-    src: 'https://r3d5t0n3guy.github.io/projects/n-mod%20assets/SFX/Joke/FallDamage.mp3',
+    src: 'Joke/FallDamage.mp3',
     playCDcycle: 0,
     loadAttempt: 0
   },
