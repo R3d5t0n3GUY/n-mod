@@ -2487,7 +2487,9 @@ const level = {
           const offset = 5 * Math.sin(simulation.cycle * 0.015)
           ctx.fillRect(this.min.x, this.min.y + offset, this.width, this.height - offset)
 
-          if (this.height > 0 && Matter.Query.region([player], this).length) {
+          if (simulation.testing && simulation.isChatMenuOpen) {
+            Matter.Body.setVelocity(player, { x: 0, y: 0 })
+          } else if (this.height > 0 && Matter.Query.region([player], this).length) {
             if (m.immuneCycle < m.cycle) {
               const DRAIN = 0.004 * (tech.isRadioactiveResistance ? 0.2 ** (tech.radioactiveDefense || 1) : 1)
               if (m.energy > DRAIN) {
