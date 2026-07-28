@@ -15,8 +15,8 @@ const level = {
   isFlipped: false,
   uniqueLevels: ["initial", "flocculation", "factory", "gravitron", "reactor", "subway", "final"], //see level.populateLevels:   (initial, ... , (flocculation, factory, or gravitron), reactor, ... , subway, final)    added later
   playableLevels: ["labs", "rooftops", "skyscrapers", "warehouse", "superstructure", "highrise", "office",
-    "aerie", "satellite", "sewers", "testChamber", "pavilion", "towers", "substructure",
-    "corridor"
+    "aerie", "satellite", "sewers", "testChamber", "pavilion", "towers", "substructure", "corridor",
+    "chute", "HVAC",
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "dripp", "fortress", "commandeer", "clock", "superNgonBros",
@@ -454,6 +454,83 @@ const level = {
     } else {
       document.getElementById("right-HUD").style.top = "15px";
     }
+  },
+  announceText(x, y, isCentered = false) { //max width around 900-1000
+    let xAdjusted = x
+    // simulation.draw.font.drawString('abcdefghijklmnopqrstuvwxyzdnasijfnibdiasbfuyabndkjbsdufdbaisfbkadsbfkusbfdkuhbsdfubdsaifbadosifbiousadbfiuasdbfiuasdbifubasi', x, y)
+    if (!localSettings.isHideHUD) {
+      if (level.constraintDescription1) {
+        simulation.draw.font.word = new Path2D()
+        if (isCentered) xAdjusted -= level.constraintDescription1.length * 29 / 2
+        simulation.draw.font.drawString(level.constraintDescription1, xAdjusted, y) //level.constraintDescription2
+        simulation.ephemera.push({
+          count: 300, //cycles before it self removes
+          do() {
+            ctx.beginPath()
+            const a = this.count > 280 ? Math.min((300 - this.count) * 0.05, 1) : Math.min(this.count / 20, 1)
+            // ctx.strokeStyle = "#444"
+            // ctx.lineWidth = 6 
+            // ctx.stroke(simulation.draw.font.word)
+            ctx.strokeStyle = `rgba(255, 83, 177,${a})`
+            ctx.lineWidth = 3 //Math.min(3, (360 - this.count) * 0.01)  //Math.floor(4 + 2 * Math.sin(simulation.cycle * 0.13));
+            ctx.stroke(simulation.draw.font.word)
+            this.count--
+            if (this.count < 0) {
+              simulation.removeEphemera(this)
+              if (level.constraintDescription2) {
+                simulation.draw.font.word = new Path2D()
+                if (isCentered) xAdjusted = x - level.constraintDescription2.length * 29 / 2
+                simulation.draw.font.drawString(level.constraintDescription2, xAdjusted, y) //level.constraintDescription2
+                simulation.ephemera.push({
+                  count: 300, //cycles before it self removes
+                  do() {
+                    const a = this.count > 280 ? Math.min((300 - this.count) * 0.05, 1) : Math.min(this.count / 20, 1)
+                    ctx.strokeStyle = `rgba(255, 83, 177,${a})`
+                    ctx.lineWidth = 3
+                    ctx.beginPath()
+                    ctx.stroke(simulation.draw.font.word)
+                    this.count--
+                    if (this.count < 0) simulation.removeEphemera(this)
+                  },
+                })
+              }
+
+            }
+          },
+        })
+      } else {
+        simulation.draw.font.word = new Path2D()
+        if (isCentered) xAdjusted -= level.levels[level.onLevel].length * 29 / 2
+        simulation.draw.font.drawString(level.levels[level.onLevel], xAdjusted, y)
+        simulation.ephemera.push({
+          count: 240, //cycles before it self removes
+          do() {
+            ctx.strokeStyle = `rgba(255, 255, 255,${Math.min(this.count / 20, 1)})`
+            ctx.lineWidth = 3
+            ctx.beginPath()
+            ctx.stroke(simulation.draw.font.word)
+            this.count--
+            if (this.count < 0) simulation.removeEphemera(this)
+          },
+        })
+      }
+    }
+  },
+  announceTextTraining(x, y, text, color = `rgb(200, 200, 200)`) { //max width around 900-1000
+    let xAdjusted = x - text.length * 29 / 2
+    // simulation.draw.font.drawString('abcdefghijklmnopqrstuvwxyzdnasijfnibdiasbfuyabndkjbsdufdbaisfbkadsbfkusbfdkuhbsdfubdsaifbadosifbiousadbfiuasdbfiuasdbifubasi', x, y)
+    simulation.draw.font.word = new Path2D()
+    simulation.draw.font.drawString(text, xAdjusted, y)
+    simulation.ephemera.push({
+      onLevel: level.levels[level.onLevel],
+      do() {
+        if (!m.alive || this.onLevel !== level.levels[level.onLevel]) simulation.removeEphemera(this)
+        ctx.strokeStyle = color
+        ctx.lineWidth = 3 // + Math.random()
+        ctx.beginPath()
+        ctx.stroke(simulation.draw.font.word)
+      },
+    })
   },
   inGameText(x, y, text, count = 240, color = `rgb(200, 200, 200)`) { //max width around 900-1000
     let xAdjusted = x - text.length * 29 / 2
@@ -2285,6 +2362,110 @@ const level = {
           ctx.fill();
         }
       }
+    }
+  },
+  wind(x, y, width, height, velocity = {
+    x: 10,
+    y: 0
+  }, isFloat = false) {
+    return {
+      x: x,
+      y: y,
+      height: height,
+      width: width,
+      velocity: velocity,
+      isFloat: isFloat,
+      a: {
+        x: x,
+        y: y + height / 2
+      },
+      b: {
+        x: x + width,
+        y: y + height / 2
+      },
+      do() {
+        //draw wind lines
+        //generate # of lines that scales with width*height
+
+
+
+        // ctx.beginPath();
+        // ctx.moveTo(this.a.x, this.a.y)
+        // ctx.lineTo(this.b.x, this.b.y)
+        // ctx.lineWidth = height
+        // ctx.strokeStyle = "#0f04"
+        // ctx.stroke();
+
+        //push player
+
+        //push blocks, bullets, power ups, mobs
+        let hit = Matter.Query.ray([player], this.a, this.b, height)
+        if (hit.length) {
+          //5 is normal player mass, so if player has more mass they are gonna go slower
+          player.force.x += this.velocity.x * 5 * (m.crouch ? 0.3 : 1) * (m.onGround ? 0.5 : 1)
+          player.force.y += this.velocity.y * 5 * (m.crouch ? 0.4 : 1)
+          if (this.isFloat) player.force.y -= 1.05 * player.mass * simulation.g
+          if (player.speed > 30) Matter.Body.setVelocity(player, Vector.mult(player.velocity, 0.97));
+        }
+        hit = Matter.Query.ray(body, this.a, this.b, height)
+        for (let i = 0; i < hit.length; i++) {
+          hit[i].body.force.x += this.velocity.x * hit[i].body.mass
+          hit[i].body.force.y += this.velocity.y * hit[i].body.mass
+          if (this.isFloat) hit[i].body.force.y -= 1.05 * hit[i].body.mass * simulation.g
+          if (hit[i].body.speed > 30) Matter.Body.setVelocity(hit[i].body, Vector.mult(hit[i].body.velocity, 0.97));
+
+        }
+        // hit = Matter.Query.ray(bullet, this.a, this.b, height)
+        // for (let i = 0; i < hit.length; i++) {
+        //     hit[i].body.force.x += this.velocity.x * hit[i].body.mass * 0.5
+        //     hit[i].body.force.y += this.velocity.y * hit[i].body.mass * 0.5
+        // }
+        hit = Matter.Query.ray(mob, this.a, this.b, height)
+        for (let i = 0; i < hit.length; i++) {
+          hit[i].body.force.x += this.velocity.x * hit[i].body.mass * 0.5
+          hit[i].body.force.y += this.velocity.y * hit[i].body.mass * 0.5
+        }
+        hit = Matter.Query.ray(powerUp, this.a, this.b, height)
+        for (let i = 0; i < hit.length; i++) {
+          hit[i].body.force.x += this.velocity.x * hit[i].body.mass * 1
+          hit[i].body.force.y += this.velocity.y * hit[i].body.mass * 1
+          if (this.isFloat) {
+            hit[i].body.force.y -= 1.08 * hit[i].body.mass * simulation.g
+            hit[i].body.force.x += 0.001 * (Math.random() - 0.5) * hit[i].body.mass
+          }
+        }
+      },
+      draw() {
+        //draw background of zone
+        ctx.fillStyle = "rgba(0,0,155,0.05)"
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+
+        //particles
+        //issues: draws over map, looks bad in overlapping regions
+        // simulation.ephemera.push({
+        //     where: { x: this.x + this.width * Math.random(), y: this.y + this.height * Math.random() },
+        //     velocity: Vector.mult(this.velocity, 1000),
+        //     r: 1.5 + 3 * Math.random(),
+        //     bounds: { min: { x: this.x, y: this.y }, max: { x: this.x + this.width, y: this.y + this.height } },
+        //     do() {
+        //         this.where.x += this.velocity.x
+        //         this.where.y += this.velocity.y
+        //         ctx.beginPath();
+        //         ctx.arc(this.where.x, this.where.y, this.r, 0, 2 * Math.PI);
+        //         ctx.fillStyle = "rgb(0,0,0)"
+        //         ctx.fill();
+
+        //         //remove
+        //         if (
+        //             this.where.x < this.bounds.min.x || this.where.x > this.bounds.max.x ||
+        //             this.where.y < this.bounds.min.y || this.where.y > this.bounds.max.y
+        //         ) {
+        //             simulation.removeEphemera(this)
+        //         }
+        //     },
+        // })
+      },
+      particles: [],
     }
   },
   laser(p1, p2, damage = 0.14, color = "#f00") {
