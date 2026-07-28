@@ -2482,6 +2482,277 @@ const b = {
       b.canExtruderFire = false;
     }
   },
+  lightning(where, velocity) {
+    const speed = Vector.magnitude(velocity)
+    const driftAmount = 0.5
+    const makePath = function(from, to) {
+      const dx = to.x - from.x
+      const dy = to.y - from.y
+      const distance = Math.hypot(dx, dy)
+      const unit = distance ? {
+        x: dx / distance,
+        y: dy / distance
+      } : {
+        x: 1,
+        y: 0
+      }
+      const perpendicular = {
+        x: -unit.y,
+        y: unit.x
+      }
+      const intermediateCount = 5 + Math.floor(4 * Math.random())
+      const offsetScale = Math.min(30, 0.3 * distance)
+      const points = [{
+        x: from.x,
+        y: from.y
+      }]
+      for (let i = 1; i <= intermediateCount; i++) {
+        const percent = i / (intermediateCount + 1)
+        const offset = (2 * Math.random() - 1) * offsetScale * Math.sin(Math.PI * percent)
+        points.push({
+          x: from.x + dx * percent + perpendicular.x * offset,
+          y: from.y + dy * percent + perpendicular.y * offset
+        })
+      }
+      points.push({
+        x: to.x,
+        y: to.y
+      })
+
+      const branches = []
+      if (distance && Math.random() < 0.35) {
+        const branchCount = 1 + (Math.random() < 0.25 ? 1 : 0)
+        for (let i = 0; i < branchCount; i++) {
+          const startIndex = 1 + Math.floor(Math.random() * intermediateCount)
+          const start = points[startIndex]
+          const side = Math.random() < 0.5 ? -1 : 1
+          const branchLength = 6 + Math.min(24, 0.7 * distance) * (0.5 + 0.5 * Math.random())
+          const angle = Math.atan2(dy, dx) + side * (0.5 + 0.7 * Math.random())
+          const branchUnit = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+          }
+          const branchPerpendicular = {
+            x: -branchUnit.y,
+            y: branchUnit.x
+          }
+          const middleOffset = (2 * Math.random() - 1) * 0.2 * branchLength
+          branches.push([{
+              x: start.x,
+              y: start.y
+            },
+            {
+              x: start.x + 0.5 * branchLength * branchUnit.x + middleOffset * branchPerpendicular.x,
+              y: start.y + 0.5 * branchLength * branchUnit.y + middleOffset * branchPerpendicular.y
+            },
+            {
+              x: start.x + branchLength * branchUnit.x,
+              y: start.y + branchLength * branchUnit.y
+            }
+          ])
+        }
+      }
+      return {
+        points,
+        branches,
+        alpha: 1
+      }
+    }
+    const tracePath = function(path) {
+      ctx.beginPath()
+      ctx.moveTo(path.points[0].x, path.points[0].y)
+      for (let i = 1; i < path.points.length; i++) ctx.lineTo(path.points[i].x, path.points[i].y)
+      for (let i = 0; i < path.branches.length; i++) {
+        const branch = path.branches[i]
+        ctx.moveTo(branch[0].x, branch[0].y)
+        for (let j = 1; j < branch.length; j++) ctx.lineTo(branch[j].x, branch[j].y)
+      }
+    }
+    simulation.ephemera.push({
+      count: 0,
+      end: Math.floor(100 + 50 * Math.random()),
+      position: {
+        x: where.x,
+        y: where.y
+      },
+      look: {
+        x: where.x,
+        y: where.y
+      },
+      steeringVelocity: {
+        x: velocity.x,
+        y: velocity.y
+      },
+      driftRate: driftAmount * Math.random(),
+      paths: [],
+      pathLimit: 3,
+      isInsideMap: false,
+      speed,
+      do() {
+        let didDamage = false
+        const impactPositions = []
+        if (this.count >= this.end) {
+          simulation.removeEphemera(this)
+          return
+        }
+        if (!(this.count % 3)) {
+          this.position = this.look
+          const rayStart = {
+            x: this.position.x,
+            y: this.position.y
+          }
+
+          let closestMob = null
+          const targetRange = 300
+          let closestDistance = targetRange
+          for (let i = 0, len = mob.length; i < len; i++) {
+            if (mob[i].alive && !mob[i].isBadTarget && !mob[i].isInvulnerable) {
+              const distance = Vector.magnitude(Vector.sub(mob[i].position, this.position))
+              if (distance < closestDistance) {
+                closestDistance = distance
+                closestMob = mob[i]
+              }
+            }
+          }
+          if (closestMob) {
+            this.steeringVelocity = Vector.mult(Vector.normalise(Vector.sub(closestMob.position, this.position)), this.speed)
+          }
+
+          this.steeringVelocity = Vector.rotate(this.steeringVelocity, this.driftRate * (2 * Math.random() - 1))
+
+          // This part only affects the current jump.
+          const unit = Vector.rotate({
+            x: 1,
+            y: 0
+          }, 2 * Math.PI * Math.random())
+          let entryPath = null
+          if (closestMob && closestDistance < 2 * closestMob.radius) {
+            this.look = {
+              x: closestMob.position.x,
+              y: closestMob.position.y
+            }
+          } else {
+            let randomness = 1
+            if (closestMob) {
+              const snapDistance = 2 * closestMob.radius
+              const distanceScale = Math.max(0, Math.min(1, (closestDistance - snapDistance) / (targetRange - snapDistance)))
+              randomness = 0.05 + 0.95 * distanceScale
+            }
+            const randomVelocity = Vector.mult(unit, 0.8 * this.speed * randomness)
+            const stepScale = 0.7 + 0.6 * Math.random()
+            let move = Vector.mult(Vector.add(this.steeringVelocity, randomVelocity), stepScale)
+            const isInsideMap = Matter.Query.point(map, this.position).length > 0
+            if (isInsideMap && !this.isInsideMap) this.paths.length = 0
+            this.isInsideMap = isInsideMap
+            if (isInsideMap) move = Vector.mult(move, 6)
+            this.look = Vector.add(this.position, move)
+            if (!isInsideMap && Matter.Query.point(map, this.look).length) {
+              entryPath = makePath(rayStart, this.look)
+              this.position = this.look
+              this.paths.length = 0
+              this.isInsideMap = true
+              this.look = Vector.add(this.position, Vector.mult(move, 6))
+            }
+          }
+          const path = makePath(this.position, this.look)
+          if (entryPath) {
+            path.points = entryPath.points.concat(path.points.slice(1))
+            path.branches = entryPath.branches.concat(path.branches)
+          }
+          this.paths.unshift(path)
+          if (this.paths.length > this.pathLimit) this.paths.length = this.pathLimit
+
+          const hits = Matter.Query.ray(mob, rayStart, this.look, 25)
+          for (let i = 0; i < hits.length; i++) {
+            const who = hits[i].body
+            if (who.alive && !who.isInvulnerable) {
+              who.damage(0.5)
+              who.locatePlayer()
+              didDamage = true
+              impactPositions.push({
+                x: who.position.x,
+                y: who.position.y,
+                radius: who.radius
+              })
+            }
+          }
+        }
+
+        ctx.save()
+        for (let i = this.paths.length - 1; i > 0; i--) {
+          const path = this.paths[i]
+          const opacity = path.alpha * (0.75 + 0.25 * Math.random())
+          tracePath(path)
+          ctx.strokeStyle = `rgba(35,110,220,${0.18 * opacity})`
+          ctx.lineWidth = 2
+          ctx.stroke()
+          path.alpha *= 0.8
+        }
+
+        if (this.paths.length) {
+          const path = this.paths[0]
+          const opacity = path.alpha * (0.75 + 0.25 * Math.random())
+          tracePath(path)
+          ctx.strokeStyle = `rgba(85,45,210,${0.12 * opacity})`
+          ctx.lineWidth = 16
+          ctx.stroke()
+
+          tracePath(path)
+          ctx.strokeStyle = `rgba(0,135,255,${0.65 * opacity})`
+          ctx.lineWidth = 5
+          ctx.stroke()
+
+          tracePath(path)
+          ctx.strokeStyle = `rgba(235,255,255,${0.95 * opacity})`
+          ctx.lineWidth = 1.25
+          ctx.stroke()
+          path.alpha *= 0.8
+        }
+
+        for (let i = 0; i < impactPositions.length; i++) {
+          const impact = impactPositions[i]
+          const radius = Math.max(18, 0.75 * impact.radius)
+          ctx.beginPath()
+          ctx.arc(impact.x, impact.y, radius, 0, 2 * Math.PI)
+          ctx.fillStyle = "rgba(65,155,255,0.2)"
+          ctx.fill()
+
+          ctx.beginPath()
+          const branchCount = 3 + Math.floor(3 * Math.random())
+          for (let j = 0; j < branchCount; j++) {
+            const angle = 2 * Math.PI * Math.random()
+            const length = radius * (0.8 + 0.7 * Math.random())
+            const unit = {
+              x: Math.cos(angle),
+              y: Math.sin(angle)
+            }
+            const perpendicular = {
+              x: -unit.y,
+              y: unit.x
+            }
+            const offset = (2 * Math.random() - 1) * 0.25 * length
+            ctx.moveTo(impact.x, impact.y)
+            ctx.lineTo(
+              impact.x + 0.5 * length * unit.x + offset * perpendicular.x,
+              impact.y + 0.5 * length * unit.y + offset * perpendicular.y
+            )
+            ctx.lineTo(impact.x + length * unit.x, impact.y + length * unit.y)
+          }
+          ctx.strokeStyle = "rgba(20,120,255,0.8)"
+          ctx.lineWidth = 1.5
+          ctx.stroke()
+        }
+        while (this.paths.length && this.paths[this.paths.length - 1].alpha < 0.01) this.paths.pop()
+        ctx.restore()
+
+        if (didDamage) {
+          simulation.removeEphemera(this)
+        } else {
+          this.count++
+        }
+      }
+    })
+  },
   plasma() {
     const DRAIN = 0.00075
     if (m.energy > DRAIN) {

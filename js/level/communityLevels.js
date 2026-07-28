@@ -11287,5 +11287,506 @@ const communityLevels = {
     level.customTopLayer = () => {
       exitDoor.draw();
     };
-  }
+  },
+  terminal() {
+    simulation.inGameConsole(`terminal by Destiny`)
+    level.setPosToSpawn(0, -50); //normal spawn
+    level.exit.x = 1500;
+    level.exit.y = -1875;
+    spawn.mapRect(level.enter.x, level.enter.y + 20, 100, 20); //bump for level entrance
+    spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
+    level.defaultZoom = 1800
+    simulation.zoomTransition(level.defaultZoom)
+    document.body.style.backgroundColor = "#d8dadf";
+    const boost1 = level.boost(-1000, -50, 1000, Math.PI / 4);
+    const boost2 = level.boost(-600, -700, 900, Math.PI);
+    const boost3 = level.boost(-2250, 0);
+    const boost4 = level.boost(4275, -25, 1800);
+    const button1 = level.button(-1225, -1000);
+    const button2 = level.button(3588, -1700);
+    button1.isUp = true;
+    const maxBlocks = 15;
+    let blocks = 0;
+    let balance1 = level.rotor(100, -1875, 300, 25, 0.001, 0, 0.001, 0, -0.0001 * Math.random());
+    let balance2 = level.rotor(-475, -1875, 325, 25, 0.001, 0, 0.001, 0, -0.0001 * Math.random());
+    let balance3 = level.rotor(100, -1275, 300, 25, 0.001, 0, 0.001, 0, 0.0001 * Math.random());
+    let balance4 = level.rotor(-475, -1275, 325, 25, 0.001, 0, 0.001, 0, 0.0001 * Math.random());
+    let balance5 = level.rotor(-475, -725, 325, 25, 0.001, 0, 0.001, 0, -0.0001 * Math.random());
+    let balance6 = level.rotor(100, -725, 300, 25, 0.001, 0, 0.001, 0, -0.0001 * Math.random());
+    const termSourceUrl = "https://raw.githubusercontent.com/Whyisthisnotavalable/n-scythe/aa91647ee6068775b5a9ef50444e30dd0751bc1c/multiplayer.js";
+    const termBox = {
+      x: 1000,
+      y: -1375,
+      w: 2000,
+      h: 1175
+    };
+    const termPad = 28;
+    const termFontSize = 30;
+    const termLineH = 36;
+    let termSpeed = 40;
+    let termPaused = false;
+    let termLines = [];
+    let termTypedChars = 0;
+    let termTotalChars = 0;
+    let termFlatOnDone = null;
+
+    function setFlatLines(lines, onDone) {
+      termLines = lines;
+      termTypedChars = 0;
+      termTotalChars = lines.reduce((sum, l) => sum + l.length + 1, 0);
+      termFlatOnDone = onDone || null;
+    }
+    let termScript = null;
+    let termScriptIndex = 0;
+    let termScriptCharsTyped = 0;
+    let termScriptHoldRemaining = 0;
+    let termScriptCommitted = [];
+    let termScriptOnDone = null;
+
+    function playTermScript(entries, onDone) {
+      termScript = entries;
+      termScriptIndex = 0;
+      termScriptCharsTyped = 0;
+      termScriptHoldRemaining = 0;
+      termScriptCommitted = [];
+      termScriptOnDone = onDone || null;
+    }
+
+    function updateTermScript(deltaMs) {
+      for (let guard = 0; guard < 1000; guard++) {
+        if (termScriptIndex >= termScript.length) {
+          const cb = termScriptOnDone;
+          termScript = null;
+          termScriptOnDone = null;
+          if (cb) cb();
+          return;
+        }
+        if (termScriptHoldRemaining > 0) {
+          if (!termPaused) termScriptHoldRemaining -= deltaMs;
+          if (termScriptHoldRemaining > 0) return;
+          termScriptHoldRemaining = 0;
+        }
+        const entry = termScript[termScriptIndex];
+        if (entry.action) {
+          try {
+            entry.action();
+          } catch (e) {
+            console.error("term script action failed:", e);
+          }
+          termScriptIndex++;
+          continue;
+        }
+        const text = typeof entry === "string" ? entry : entry.text;
+        const speed = (typeof entry === "object" && entry.speed) || termSpeed;
+        const holdAfter = (typeof entry === "object" && entry.holdAfter) || 0;
+        if (!termPaused) {
+          termScriptCharsTyped = Math.min(text.length, termScriptCharsTyped + (deltaMs / 1000) * speed);
+          deltaMs = 0;
+        }
+        termLines = [...termScriptCommitted, text];
+        termTypedChars = termScriptCommitted.reduce((s, l) => s + l.length + 1, 0) + Math.floor(termScriptCharsTyped);
+        termTotalChars = termLines.reduce((s, l) => s + l.length + 1, 0);
+        if (Math.floor(termScriptCharsTyped) < text.length) return;
+        termScriptCommitted.push(text);
+        termScriptIndex++;
+        termScriptCharsTyped = 0;
+        if (holdAfter) {
+          termScriptHoldRemaining = holdAfter;
+          return;
+        }
+      }
+    }
+    let fetchedLines = null;
+    let termWaitingForFetch = false;
+    let error = false;
+    fetch(termSourceUrl)
+      .then(res => res.text())
+      .then(text => {
+        fetchedLines = text.replace(/\r\n/g, "\n").split("\n");
+      })
+      .catch(() => {
+        fetchedLines = ["// couldn't reach remote source"];
+        error = true;
+      });
+
+    function showFetchedContentWhenReady() {
+      if (fetchedLines) {
+        setFlatLines(fetchedLines, playEndingSequence);
+      } else {
+        termWaitingForFetch = true;
+      }
+    }
+    let endingStarted = false;
+
+    function playEndingSequence() {
+      if (endingStarted) return;
+      endingStarted = true;
+      if (!error) {
+        glitchEnabled = true;
+        playTermScript([{
+            text: "destiny: initiating handshake...",
+            speed: 45,
+            holdAfter: 400
+          },
+          {
+            text: "landgreen: that's far enough.",
+            speed: 45,
+            holdAfter: 700
+          },
+          {
+            text: "destiny: landgreen? you can't stop me",
+            speed: 45,
+            holdAfter: 900
+          },
+          {
+            text: "landgreen: ...",
+            speed: 20,
+            holdAfter: 1300
+          },
+          "",
+          {
+            text: "WebSocket connection to 'wss://0.peerjs.com/peerjs' failed:",
+            speed: 70
+          },
+          {
+            text: "Error during WebSocket handshake: Unexpected response code: 401",
+            speed: 70,
+            holdAfter: 500
+          },
+          "",
+          {
+            text: "connection closed (code 1008: policy violation)",
+            speed: 70,
+            holdAfter: 1200
+          },
+          "",
+          {
+            text: "> spawn.mapRectNow(1975, -1750, 1175, 150)",
+            speed: 60
+          },
+          {
+            action: () => {
+              spawn.mapRectNow(1975, -1750, 1175, 150);
+            }
+          },
+          "",
+          {
+            text: "check out my multiplayer mod on github!",
+            speed: 60
+          },
+          {
+            text: "https://github.com/Whyisthisnotavalable/n-scythe",
+            speed: 60
+          },
+          {
+            text: "if you don't know how to install the mod, go to",
+            speed: 60
+          },
+          {
+            text: "https://whyisthisnotavalable.github.io/n-gon-multiplayer/",
+            speed: 60
+          },
+        ]);
+      } else {
+        playTermScript([{
+            text: "VM2536:1",
+            speed: 70
+          },
+          {
+            text: "GET https://raw.githubusercontent.com/Whyisthisnotavalable/n-scythe/main/multiplayer.js",
+            speed: 70
+          },
+          {
+            text: "net::ERR_INTERNET_DISCONNECTED",
+            speed: 70
+          },
+          "",
+          {
+            text: "> spawn.mapRectNow(1975, -1750, 1175, 150)",
+            speed: 60
+          },
+          {
+            action: () => {
+              spawn.mapRectNow(1975, -1750, 1175, 150);
+            }
+          },
+        ]);
+      }
+    }
+    playTermScript([{
+      text: "destiny@term:~$ run multiplayer.js",
+      speed: 45,
+      holdAfter: 400
+    }, {
+      text: "fetching source...",
+      speed: 45,
+      holdAfter: 1400
+    }], showFetchedContentWhenReady);
+    let termLastFrameTime = performance.now();
+    level.custom = () => {
+      level.exit.drawAndCheck();
+      level.enter.draw();
+      ctx.fillStyle = "rgba(0,0,0,0.08)";
+      ctx.beginPath();
+      ctx.moveTo(-2300, -2775);
+      ctx.lineTo(425, -2775);
+      ctx.lineTo(525, -525);
+      ctx.lineTo(350, -325);
+      ctx.lineTo(750, -225);
+      ctx.lineTo(750, 25);
+      ctx.lineTo(-1125, 250);
+      ctx.lineTo(-1675, 250);
+      ctx.lineTo(-2300, 25);
+      ctx.fill();
+
+      boost1.query();
+      boost2.query();
+      boost3.query();
+      boost4.query();
+      button1.query();
+      button1.draw();
+      button2.query();
+      button2.draw();
+      if (!button1.isUp) {
+        if (button1.isReady && blocks < maxBlocks) {
+          button1.isReady = false
+          spawn.bodyRect(-725, -2000, 125, 125);
+          blocks++;
+        }
+      } else {
+        button1.isReady = true
+      }
+      ctx.fillStyle = "#233";
+      ctx.beginPath();
+      ctx.arc(balance1.center.x, balance1.center.y, 9, 0, 2 * Math.PI);
+      ctx.moveTo(balance2.center.x, balance2.center.y)
+      ctx.arc(balance2.center.x, balance2.center.y, 9, 0, 2 * Math.PI);
+      ctx.moveTo(balance3.center.x, balance3.center.y)
+      ctx.arc(balance3.center.x, balance3.center.y, 9, 0, 2 * Math.PI);
+      ctx.moveTo(balance4.center.x, balance4.center.y)
+      ctx.arc(balance4.center.x, balance4.center.y, 9, 0, 2 * Math.PI);
+      ctx.moveTo(balance5.center.x, balance5.center.y)
+      ctx.arc(balance5.center.x, balance5.center.y, 9, 0, 2 * Math.PI);
+      ctx.moveTo(balance6.center.x, balance6.center.y)
+      ctx.arc(balance6.center.x, balance6.center.y, 9, 0, 2 * Math.PI);
+      ctx.fill();
+
+      balance1.rotate();
+      balance2.rotate();
+      balance3.rotate();
+      balance4.rotate();
+      balance5.rotate();
+      balance6.rotate();
+
+      ctx.fillStyle = "#444";
+      ctx.fillRect(termBox.x, -1475, 2000, 1275);
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(termBox.x, -1375);
+      ctx.lineTo(termBox.x + termBox.w, -1375);
+      ctx.stroke();
+      ctx.save();
+      ["#ff5f56", "#ffbd2e", "#27c93f"].forEach((c, i) => {
+        ctx.fillStyle = c;
+        ctx.beginPath();
+        ctx.arc(1050 + i * 40, -1425, 12, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+      ctx.fillStyle = "#ddd";
+      ctx.font = "26px monospace";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText("multiplayer.js", 1200, -1425);
+      ctx.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(termBox.x, termBox.y, termBox.w, termBox.h);
+      ctx.clip();
+      ctx.fillStyle = "#0c0f0a";
+      ctx.fillRect(termBox.x, termBox.y, termBox.w, termBox.h);
+      const termNow = performance.now();
+      const termDelta = termNow - termLastFrameTime;
+      termLastFrameTime = termNow;
+      if (!button2.isUp) {
+        playEndingSequence();
+      }
+      if (termScript) {
+        updateTermScript(termDelta);
+      } else {
+        if (!termPaused) {
+          termTypedChars = Math.min(termTotalChars, termTypedChars + (termDelta / 1000) * termSpeed);
+        }
+        const doneNow = termTypedChars >= termTotalChars;
+        if (doneNow && termFlatOnDone) {
+          const cb = termFlatOnDone;
+          termFlatOnDone = null;
+          cb();
+        } else if (termWaitingForFetch && fetchedLines) {
+          termWaitingForFetch = false;
+          setFlatLines(fetchedLines, playEndingSequence);
+        }
+      }
+      const typedChars = Math.floor(termTypedChars);
+      let used = 0;
+      const revealed = [];
+      for (const line of termLines) {
+        const lineLen = line.length + 1;
+        if (used + lineLen <= typedChars) {
+          revealed.push(line);
+          used += lineLen;
+        } else {
+          revealed.push(line.slice(0, Math.max(0, typedChars - used)));
+          break;
+        }
+      }
+      const maxLines = Math.floor((termBox.h - termPad * 2) / termLineH);
+      const shownLines = revealed.slice(-maxLines);
+      ctx.font = `${termFontSize}px monospace`;
+      ctx.fillStyle = "#6fdc6f";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      shownLines.forEach((line, i) => {
+        ctx.fillText(line, termBox.x + termPad, termBox.y + termPad + i * termLineH);
+      });
+      if (typedChars < termTotalChars && Math.floor(performance.now() / 500) % 2 === 0) {
+        const lastLine = shownLines[shownLines.length - 1] || "";
+        const cursorX = termBox.x + termPad + ctx.measureText(lastLine).width + 3;
+        const cursorY = termBox.y + termPad + (shownLines.length - 1) * termLineH;
+        ctx.fillRect(cursorX, cursorY, termFontSize * 0.55, termLineH * 0.8);
+      }
+      ctx.restore();
+    };
+    let glitchEnabled = false;
+    let glitchSeed = 0;
+    const glitchBackdropColor = document.body.style.backgroundColor;
+    const glitchCanvas = document.createElement("canvas");
+    const glitchCtx = glitchCanvas.getContext("2d");
+    const chCanvas = document.createElement("canvas");
+    const chCtx = chCanvas.getContext("2d");
+
+    function isolateChannel(source, w, h, color) {
+      chCtx.clearRect(0, 0, w, h);
+      chCtx.globalCompositeOperation = "source-over";
+      chCtx.drawImage(source, 0, 0, w, h);
+      chCtx.globalCompositeOperation = "multiply";
+      chCtx.fillStyle = color;
+      chCtx.fillRect(0, 0, w, h);
+      chCtx.globalCompositeOperation = "source-over";
+    }
+
+    function applyGlitchEffect(canvas, ctx) {
+      if (!glitchEnabled) return;
+      const w = canvas.width;
+      const h = canvas.height;
+      if (glitchCanvas.width !== w || glitchCanvas.height !== h) {
+        glitchCanvas.width = w;
+        glitchCanvas.height = h;
+        chCanvas.width = w;
+        chCanvas.height = h;
+      }
+      glitchCtx.clearRect(0, 0, w, h);
+      glitchCtx.fillStyle = glitchBackdropColor;
+      glitchCtx.fillRect(0, 0, w, h);
+      glitchCtx.drawImage(canvas, 0, 0);
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const rShift = Math.floor((Math.random() - 0.5) * 16);
+      const bShift = Math.floor((Math.random() - 0.5) * 16);
+      isolateChannel(glitchCanvas, w, h, "#00ff00");
+      ctx.globalCompositeOperation = "source-over";
+      ctx.drawImage(chCanvas, 0, 0);
+      isolateChannel(glitchCanvas, w, h, "#ff0000");
+      ctx.globalCompositeOperation = "lighter";
+      ctx.drawImage(chCanvas, rShift, 0);
+      isolateChannel(glitchCanvas, w, h, "#0000ff");
+      ctx.drawImage(chCanvas, bShift, 0);
+      ctx.globalCompositeOperation = "source-over";
+      const sliceCount = 8 + Math.floor(Math.random() * 6);
+      for (let i = 0; i < sliceCount; i++) {
+        const sliceY = Math.floor(Math.random() * h);
+        const sliceH = 2 + Math.floor(Math.random() * 18);
+        const shift = Math.floor((Math.random() - 0.5) * 60);
+        if (shift === 0) continue;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, sliceY, w, sliceH);
+        ctx.clip();
+        ctx.clearRect(0, sliceY, w, sliceH);
+        ctx.drawImage(
+          glitchCanvas,
+          0, sliceY, w, sliceH,
+          shift, sliceY, w, sliceH
+        );
+        ctx.restore();
+      }
+      if (Math.random() < 0.4) {
+        const blockCount = 3 + Math.floor(Math.random() * 5);
+        for (let i = 0; i < blockCount; i++) {
+          const bw = 20 + Math.random() * 120;
+          const bh = 4 + Math.random() * 20;
+          const bx = Math.random() * w;
+          const by = Math.random() * h;
+          ctx.fillStyle = Math.random() < 0.5 ? "#0ff" : "#f0f";
+          ctx.globalAlpha = 0.15 + Math.random() * 0.2;
+          ctx.fillRect(bx, by, bw, bh);
+        }
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+    }
+    level.customTopLayer = () => {};
+    const oldLast = level.onLevel;
+    simulation.ephemera.push({
+      name: "glitch",
+      do() {
+        if (level.onLevel != oldLast) simulation.removeEphemera("glitch", true)
+        applyGlitchEffect(canvas, ctx);
+      }
+    })
+    spawn.mapRect(-1125, 0, 5100, 250);
+    spawn.mapRect(-600, -325, 1450, 125);
+    spawn.mapRect(-2400, 0, 725, 250);
+    spawn.mapRect(3325, -1700, 650, 1550);
+    spawn.mapRect(725, -325, 125, 400);
+    spawn.mapRect(-600, -2200, 125, 1975);
+    spawn.mapRect(-600, -2200, 575, 125);
+    spawn.mapRect(-1125, -350, 150, 600);
+    spawn.mapRect(-1900, -1000, 1425, 125);
+    spawn.mapRect(-2400, -2000, 125, 2250);
+    spawn.mapRect(-2400, -2000, 1675, 125);
+    spawn.mapRect(400, -2875, 125, 2350);
+    spawn.mapRect(-2400, -2875, 4825, 125);
+    spawn.mapRect(-2400, -2875, 125, 1000);
+    spawn.mapRect(-150, -1875, 250, 1350);
+    spawn.mapRect(3875, 0, 675, 250);
+    spawn.mapRect(1300, -1850, 500, 125);
+
+    spawn.randomMob(-850, -675, Infinity);
+    spawn.randomMob(-1775, -450, Infinity);
+    spawn.randomMob(-2125, -850, Infinity);
+    spawn.randomMob(-1450, -225, Infinity);
+    spawn.randomMob(-1375, -700, Infinity);
+    spawn.randomMob(-1650, -1425, Infinity);
+    spawn.randomMob(-850, -1200, Infinity);
+    spawn.randomMob(-1025, -1675, Infinity);
+    spawn.randomMob(-1950, -2600, Infinity);
+    spawn.randomMob(-1850, -2225, Infinity);
+    spawn.randomMob(-1275, -2400, Infinity);
+    spawn.randomMob(-75, -2450, Infinity);
+    spawn.randomMob(-50, -2000, Infinity);
+    spawn.randomMob(-25, -425, Infinity);
+    spawn.randomMob(450, -450, Infinity);
+    spawn.randomMob(1450, -1000, Infinity);
+    spawn.randomMob(1775, -350, Infinity);
+    spawn.randomMob(2675, -700, Infinity);
+    spawn.randomMob(2575, -325, Infinity);
+    spawn.randomMob(1375, -100, Infinity);
+    spawn.randomMob(1975, -2400, Infinity);
+    spawn.randomMob(1025, -2275, Infinity);
+    spawn.randomMob(4150, -450, Infinity);
+    spawn.secondaryBossChance(-1375, -1450);
+    spawn.randomLevelBoss(2050, -825);
+    powerUps.addResearchToLevel() //needs to run after mobs are spawned
+  },
 }

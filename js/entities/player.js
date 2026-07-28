@@ -4692,7 +4692,7 @@ const m = {
         return `<strong>all</strong> applicable effects`
       case 1: //standing wave
         // return `<span style = 'font-size:95%;'><strong>deflecting</strong> condenses +${couple.toFixed(1)} <strong class='color-s'>ice IX</strong></span>`
-        return `+${(couple * 5).toFixed(0)} maximum <strong class='color-f'>energy</strong>`
+        return `+${(couple * 5).toFixed(0)} max <strong class='color-f'>energy</strong>`
       case 2: //perfect diamagnetism
         return `<span style = 'font-size:95%;'><strong>deflecting</strong> condenses ${(0.1 * couple).toFixed(2)} <strong class='color-s'>ice IX</strong></span>`
       // return `<span style = 'font-size:89%;'><strong>invulnerable</strong> <strong>+${2*couple}</strong> seconds post collision</span>`
