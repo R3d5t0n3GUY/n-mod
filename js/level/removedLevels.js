@@ -10379,7 +10379,6 @@ const removedLevels = {
     powerUps.addResearchToLevel(); //needs to run after mobs are spawneds
   },
   soft() {
-    simulation.inGameConsole(`<img src="https://raw.githubusercontent.com/Whyisthisnotavalable/image-yy/main/Hotpot-removed.png" width="100" height="100" style="background-image: radial-gradient(circle, gray, black, transparent)">`);
     simulation.inGameConsole(`<strong>soft</strong> by <span class='color-var'>Richard0820</span>`);
     simulation.inGameConsole("<em>The lasers deal less damage the higher level you are</em>")
     const portals = [];
@@ -10399,23 +10398,24 @@ const removedLevels = {
         const bodyHeight = radius;
         const numRows = Math.ceil(height / bodyHeight);
         const numCols = Math.ceil(width / bodyWidth);
-
+        const group = Matter.Body.nextGroup(true);
         for (let i = 0; i < numRows; i++) {
           for (let j = 0; j < numCols; j++) {
             const posX = x + j * bodyWidth + bodyWidth / 2;
             const posY = y + i * bodyHeight + bodyHeight / 2;
-
-            const rect = Matter.Bodies.circle(posX, posY, (bodyWidth + bodyHeight) / 4, options);
+            const particleRadius = bodyWidth * 0.75;
+            const rect = Matter.Bodies.circle(posX, posY, particleRadius, options);
             rect.collisionFilter.category = cat.body;
             rect.collisionFilter.mask = (touchPlayer ? cat.player | cat.body | cat.bullet | cat.mob | cat.mobBullet : cat.body | cat.bullet | cat.mob | cat.mobBullet);
+            rect.collisionFilter.group = group;
             rect.classType = "body";
+            Matter.Body.setInertia(rect, Infinity);
 
             Composite.add(engine.world, rect);
 
             bodies.push(rect);
           }
         }
-
         for (let i = 0; i < numRows; i++) {
           for (let j = 0; j < numCols; j++) {
             const bodyIndexA = i * numCols + j;
@@ -10425,7 +10425,7 @@ const removedLevels = {
                 bodyA: bodies[bodyIndexA],
                 bodyB: bodies[bodyIndexB],
                 stiffness: 0.06,
-                damping: 0.001
+                damping: 0.05
               });
               Composite.add(engine.world, constraint);
               constraints.push(constraint);
@@ -10436,14 +10436,13 @@ const removedLevels = {
                 bodyA: bodies[bodyIndexA],
                 bodyB: bodies[bodyIndexB],
                 stiffness: 0.06,
-                damping: 0.001
+                damping: 0.05
               });
               Composite.add(engine.world, constraint);
               constraints.push(constraint);
             }
           }
         }
-
         for (let i = 0; i < numRows - 1; i++) {
           for (let j = 0; j < numCols - 1; j++) {
             const bodyA = bodies[i * numCols + j];
@@ -10451,8 +10450,10 @@ const removedLevels = {
             const constraint = Constraint.create({
               bodyA: bodyA,
               bodyB: bodyB,
-              stiffness: 0.02
+              stiffness: 0.02,
+              damping: 0.05
             });
+            Composite.add(engine.world, constraint);
             constraints.push(constraint);
           }
         }
@@ -10464,8 +10465,10 @@ const removedLevels = {
             const constraint = Constraint.create({
               bodyA: bodyA,
               bodyB: bodyB,
-              stiffness: 0.02
+              stiffness: 0.02,
+              damping: 0.05
             });
+            Composite.add(engine.world, constraint);
             constraints.push(constraint);
           }
         }
@@ -10476,14 +10479,10 @@ const removedLevels = {
             const spawnY = by.position.y + bodyHeight / 2;
             const isLastColumn = (i + 1) % numCols === 0;
             const isFirstColumn = i % numCols === 0;
-            const stiffness = constrictionStrength * (isLastColumn || isFirstColumn ? 100 : 1); // Apply extra stiffness to first and last columns
-
+            const stiffness = constrictionStrength * (isLastColumn || isFirstColumn ? 100 : 1);
             const cost = Constraint.create({
               bodyA: by,
-              pointB: {
-                x: spawnX,
-                y: spawnY
-              },
+              pointB: { x: spawnX, y: spawnY },
               stiffness: stiffness,
               length: 0
             });
@@ -10504,32 +10503,91 @@ const removedLevels = {
           }
         }
 
-        return {
-          bodies,
-          constraints,
-          otherCons
+        return { bodies, constraints, otherCons, numRows, numCols };
+      },
+      computeOutlinePoints(bodies, numRows, numCols) {
+        const loop = [];
+        for (let j = 0; j < numCols; j++) loop.push(bodies[j]);
+        for (let i = 1; i < numRows; i++) loop.push(bodies[i * numCols + (numCols - 1)]);
+        for (let j = numCols - 2; j >= 0; j--) loop.push(bodies[(numRows - 1) * numCols + j]);
+        for (let i = numRows - 2; i >= 1; i--) loop.push(bodies[i * numCols]);
+        
+        const n = loop.length;
+        if (n < 3) return loop.map(b => ({ x: b.position.x, y: b.position.y }));
+        let cx = 0, cy = 0;
+        for (let i = 0; i < n; i++) { cx += loop[i].position.x; cy += loop[i].position.y; }
+        cx /= n; cy /= n;
+        
+        const p0 = loop[0].position;
+        const pPrev0 = loop[n - 1].position;
+        const pNext0 = loop[1].position;
+        const tx0 = pNext0.x - pPrev0.x, ty0 = pNext0.y - pPrev0.y;
+        let nx0 = -ty0, ny0 = tx0;
+        const nl0 = Math.hypot(nx0, ny0) || 1;
+        nx0 /= nl0; ny0 /= nl0;
+        const towardCentroidX = cx - p0.x, towardCentroidY = cy - p0.y;
+        const sign = (nx0 * towardCentroidX + ny0 * towardCentroidY) > 0 ? -1 : 1;
+        
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+          const body = loop[i];
+          const prev = loop[(i - 1 + n) % n].position;
+          const next = loop[(i + 1) % n].position;
+          let tx = next.x - prev.x, ty = next.y - prev.y;
+          let nx = -ty * sign, ny = tx * sign;
+          const l = Math.hypot(nx, ny) || 1;
+          nx /= l; ny /= l;
+          const r = body.circleRadius;
+          pts.push({ x: body.position.x + nx * r, y: body.position.y + ny * r });
+        }
+        return pts;
+      },
+      traceSmoothPath(pts) {
+        ctx.beginPath();
+        if (pts.length < 3) {
+          for (let i = 0; i < pts.length; i++) {
+            if (i === 0) ctx.moveTo(pts[i].x, pts[i].y);
+            else ctx.lineTo(pts[i].x, pts[i].y);
+          }
+          return;
+        }
+        const start = {
+          x: (pts[0].x + pts[pts.length - 1].x) / 2,
+          y: (pts[0].y + pts[pts.length - 1].y) / 2
         };
+        ctx.moveTo(start.x, start.y);
+        for (let i = 0; i < pts.length; i++) {
+          const cur = pts[i];
+          const next = pts[(i + 1) % pts.length];
+          const mid = { x: (cur.x + next.x) / 2, y: (cur.y + next.y) / 2 };
+          ctx.quadraticCurveTo(cur.x, cur.y, mid.x, mid.y);
+        }
+        ctx.closePath();
+      },
+      draw(cloth) {
+        const pts = this.computeOutlinePoints(cloth.bodies, cloth.numRows, cloth.numCols);
+        this.traceSmoothPath(pts);
+        ctx.fillStyle = "rgba(80,80,80,0.85)";
+        ctx.fill();
+        // ctx.beginPath();
+        // ctx.lineWidth = 1;
+        // ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        // for (let i = 0, len = cloth.constraints.length; i < len; ++i) {
+        //     const c = cloth.constraints[i];
+        //     ctx.moveTo(c.bodyA.position.x, c.bodyA.position.y);
+        //     ctx.lineTo(c.bodyB.position.x, c.bodyB.position.y);
+        // }
+        // ctx.stroke();
       },
       clothOptions: {
         frictionAir: 0.005,
       },
-      isOuter(body, bodies) { //unused
-        const neighbors = [{
-            x: body.position.x + 1,
-            y: body.position.y
-          },
-          {
-            x: body.position.x - 1,
-            y: body.position.y
-          },
-          {
-            x: body.position.x,
-            y: body.position.y + 1
-          },
-          {
-            x: body.position.x,
-            y: body.position.y - 1
-          }
+      isOuterBoundary(body, bodies) { //unused
+        const neighbors = [
+          { x: body.position.x + 1, y: body.position.y },
+          { x: body.position.x - 1, y: body.position.y },
+          { x: body.position.x, y: body.position.y + 1 },
+          { x: body.position.x, y: body.position.y - 1 }
         ];
 
         for (let i = 0; i < neighbors.length; i++) {
@@ -10540,20 +10598,6 @@ const removedLevels = {
           }
         }
         return false;
-      },
-      draw(cloth) {
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "rgba(0,0,0,0.3)";
-        ctx.fillStyle = "black";
-        for (let i = 0, len = cloth.constraints.length; i < len; ++i) {
-          const constraint = cloth.constraints[i];
-          ctx.moveTo(constraint.bodyA.position.x, constraint.bodyA.position.y);
-          ctx.lineTo(constraint.bodyB.position.x, constraint.bodyB.position.y);
-        }
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
       },
       addGravity(bodies, magnitude) {
         for (var i = 0; i < bodies.length; i++) {
@@ -10591,8 +10635,67 @@ const removedLevels = {
           const removeBody = cloth.bodies[i];
           Composite.remove(engine.world, removeBody);
         }
-        cloth.bodies.length = 0; // Clear the bodies array after removal
-      }
+        cloth.bodies.length = 0; 
+      },
+      softRect(x, y, w, h) {
+        clothArray.push(soft.createCloth(x, y, 50, w, h, false, true, soft.clothOptions, true));
+      },
+      exit: {
+        x: 0,
+        y: 0,
+        drawAndCheck() {
+          if ( //check
+            player.position.x > level.exit.x &&
+            player.position.x < level.exit.x + 100 &&
+            player.position.y > level.exit.y - 250 &&
+            player.position.y < level.exit.y + 35 &&
+            player.velocity.y < 0.15
+          ) {
+            // level.exitCount += input.down ? 8 : 2
+            level.exitCount += m.health < 0 ? 0.5 : 3
+          } else if (level.exitCount > 0) {
+            level.exitCount -= 3
+          }
+          
+          ctx.beginPath();
+          ctx.moveTo(level.exit.x, level.exit.y + 30);
+          ctx.lineTo(level.exit.x, level.exit.y - 80);
+          ctx.bezierCurveTo(level.exit.x, level.exit.y - 170, level.exit.x + 100, level.exit.y - 170, level.exit.x + 100, level.exit.y - 80);
+          ctx.lineTo(level.exit.x + 100, level.exit.y + 30);
+          ctx.lineTo(level.exit.x, level.exit.y + 30);
+          ctx.fillStyle = "#0ff";
+          ctx.fill();
+          
+          if (level.exitCount > 0) {
+            ctx.beginPath();
+            ctx.moveTo(level.exit.x, level.exit.y + 40);
+            ctx.lineTo(level.exit.x, level.exit.y - 80);
+            ctx.bezierCurveTo(level.exit.x, level.exit.y - 148, level.exit.x + 50, level.exit.y - 148, level.exit.x + 50, level.exit.y - 148);
+            ctx.moveTo(level.exit.x + 100, level.exit.y + 40);
+            ctx.lineTo(level.exit.x + 100, level.exit.y - 80);
+            ctx.bezierCurveTo(level.exit.x + 100, level.exit.y - 148, level.exit.x + 50, level.exit.y - 148, level.exit.x + 50, level.exit.y - 148);
+            ctx.setLineDash([200, 200]);
+            ctx.lineDashOffset = Math.max(-15, 185 - 2.1 * level.exitCount)
+            if (m.health < 0) {
+              ctx.strokeStyle = "#f00"
+              ctx.lineWidth = 6 + 0.1 * (level.exitCount)
+            } else {
+              ctx.strokeStyle = "#444"
+              ctx.lineWidth = 2
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            if (level.exitCount > 100) {
+              level.exitCount = 0
+              for(let i = 0; i < clothArray.length; i++) {
+                soft.annihilate(clothArray[i])
+              }
+              level.nextLevel()
+            }
+          }
+        },
+      },
     }
     const clothArray = [];
     clothArray.push(soft.createCloth(-100, 0, 50, 1000, 300, false, true, soft.clothOptions, true))
@@ -10734,8 +10837,8 @@ const removedLevels = {
             ctx.stroke(); // Draw it
           }
         };
-        me.lasers = function(where, angle) {
-          const vertexCollision = function(v1, v1End, domain) {
+        me.lasers = function (where, angle) {
+          const vertexCollision = function (v1, v1End, domain) {
             for (let i = 0; i < domain.length; ++i) {
               let vertices = domain[i].vertices;
               const len = vertices.length - 1;
@@ -10811,6 +10914,8 @@ const removedLevels = {
     level.setPosToSpawn(-350, 0);
     level.exit.x = 1075;
     level.exit.y = 20;
+    soft.exit.x = 1075;
+    soft.exit.y = 20;
     spawn.mapRect(level.enter.x, level.enter.y + 20, 100, 20); //bump for level entrance
     spawn.mapRect(level.exit.x, level.exit.y + 20, 100, 20); //bump for level exit
     level.defaultZoom = 1800
@@ -10857,11 +10962,12 @@ const removedLevels = {
     bouncyBody.restitution = 0.9;
     spawn.mapVertex(-2175 + 1300 / 2, -1050 + 1225 / 2, "0 -400 -100 -300 -100 0 100 0 100 -300");
 
-    spawn.mapVertex(-4150 + 1975 / 2, -200 + 2575 / 2, "0 -800 -200 -600 -200 0 0 200 200 0 200 -600");
+    spawn.mapVertex(-4150 + 1975 / 2, -200 + 2575 / 2, "0 -800 -200 -600 -200 0 0 200 200 0 200 -600 0 200");
     const mapWithVertex = map[map.length - 1];
     let index1 = 0;
     level.custom = () => {
-      level.exit.drawAndCheck();
+      // level.exit.drawAndCheck();
+      soft.exit.drawAndCheck();
 
       level.enter.draw();
 
