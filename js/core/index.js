@@ -1174,62 +1174,66 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     if (file) {
       let reader = new FileReader()
       reader.onload = function (e) {
-        let importedBuild = e.target.result
+        let importedBuild = e.target.result, fileName = e?.target?.value?.slice(12) ?? file?.name;
         importedBuild = importedBuild.parseAsJSON();
-        if ("fileType" in importedBuild ? importedBuild.fileType === "experimentBuild" : false) {
-          importedBuild = importedBuild.data
-          build.reset(true);
-          m.fieldMode = importedBuild.fieldIndex || 0
-          m.setField(m.fieldMode)
-          simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
-          if (importedBuild.marginalGunIndex) {
-            build.importedGunIndex = true
-            tech.marginalGunIndex = importedBuild.marginalGunIndex
-          } else {
-            try {
-              tech.marginalGunIndex = tech.tech.find(i => i.name === 'marginal utility').gunSelect()
-            } catch (e) {
-              tech.marginalGunIndex = Math.floor(Math.random() * b.guns.length)
-            }
-          }
-          b.inventory = importedBuild.gunIndexes || []
-          let newTech = importedBuild.techIndexes || []
-          for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
-          let oldTexlLogStatus = simulation.isTextLogOpen
-          simulation.isTextLogOpen = false
-          newTech.forEach(i => {
-            for (let j = 0, len = tech.tech.length; j < len; j++) {
-              if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
-                switch (typeof (i)) {
-                  case 'string':
-                    if (i === tech.tech[j].name) {
-                      tech.tech[j].effect()
-                      tech.tech[j].count = 1
-                      if (!tech.tech[j].isInstant) tech.totalCount++
-                    }
-                    break;
-                  case 'object':
-                    if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++) {
-                      tech.tech[j].effect()
-                      tech.tech[j].count++
-                      if (!tech.tech[j].isInstant) tech.totalCount++
-                    }
-                    break;
-                  default:
-                    tech.tech[j].remove()
-                    tech.tech[j].count = 0
-                    break;
-                }
+        try {
+          if ("fileType" in importedBuild ? importedBuild.fileType === "experimentBuild" : false) {
+            importedBuild = importedBuild.data
+            build.reset(true);
+            m.fieldMode = importedBuild.fieldIndex || 0
+            m.setField(m.fieldMode)
+            simulation.molecularMode = importedBuild.molecularMode || Math.floor(Math.random() * 4)
+            if (importedBuild.marginalGunIndex) {
+              build.importedGunIndex = true
+              tech.marginalGunIndex = importedBuild.marginalGunIndex
+            } else {
+              try {
+                tech.marginalGunIndex = tech.tech.find(i => i.name === 'marginal utility').gunSelect()
+              } catch (e) {
+                tech.marginalGunIndex = Math.floor(Math.random() * b.guns.length)
               }
             }
-          })
-          for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
-          build.populateGrid();
-          simulation.isTextLogOpen = oldTexlLogStatus
-          console.clear()
-          console.log('build imported!')
-        } else {
-          let error = "Failed to import build: Expecting fileType of 'experimentBuild'"
+            b.inventory = importedBuild.gunIndexes || []
+            let newTech = importedBuild.techIndexes || []
+            for (let j = 0, len = tech.tech.length; j < len; j++) tech.tech[j].count = 0
+            let oldTexlLogStatus = simulation.isTextLogOpen
+            simulation.isTextLogOpen = false
+            newTech.forEach(i => {
+              for (let j = 0, len = tech.tech.length; j < len; j++) {
+                if (!tech.tech[j].isLore) { //&& !tech.tech[j].isExperimentHide
+                  switch (typeof (i)) {
+                    case 'string':
+                      if (i === tech.tech[j].name) {
+                        tech.tech[j].effect()
+                        tech.tech[j].count = 1
+                        if (!tech.tech[j].isInstant) tech.totalCount++
+                      }
+                      break;
+                    case 'object':
+                      if (i.name === tech.tech[j].name) for (let k = 0, len = i.count || 0; k < len; k++) {
+                        tech.tech[j].effect()
+                        tech.tech[j].count++
+                        if (!tech.tech[j].isInstant) tech.totalCount++
+                      }
+                      break;
+                    default:
+                      tech.tech[j].remove()
+                      tech.tech[j].count = 0
+                      break;
+                  }
+                }
+              }
+            })
+            for (let i = 0, len = b.guns.length; i < len; i++) b.guns[i].have = b.inventory.includes(i)
+            build.populateGrid();
+            simulation.isTextLogOpen = oldTexlLogStatus
+            console.clear()
+            console.log('build imported!')
+          } else {
+            throw new TypeError("Expecting fileType of 'experimentBuild'")
+          }
+        } catch (err) {
+          let error = `${err?.name ? err.name + " while importing" : "Failed to import"} ${fileName ?? "build"}: ${err?.message ?? "Expecting fileType of 'experimentBuild'"}`
           console.error(error)
           window.alert(error)
         }

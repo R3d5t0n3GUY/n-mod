@@ -37,8 +37,8 @@ const localSaves = {
     if (file) {
       let reader = new FileReader(), oldSettings = localSettings; //in case something goes wrong during import, keep current settings
       reader.onload = function (e) {
+        let importedSettings = e.target.result, fileName = e?.target?.value?.slice(12) ?? file?.name;
         try {
-          let importedSettings = e.target.result
           importedSettings = importedSettings.parseAsJSON();
           if ("fileType" in importedSettings ? importedSettings.fileType === "localSettings" : false) {
             importedSettings = importedSettings.data
@@ -61,8 +61,8 @@ const localSaves = {
           } else {
             throw new TypeError("Expecting fileType of 'localSettings'")
           }
-        } catch (error) {
-          let errorMsg = "Failed to import settings: " + error.message
+        } catch (err) {
+          let errorMsg = `${err?.name ? err.name + " while importing" : "Failed to import"} ${fileName ?? "build"}: ${err?.message ?? "Expecting fileType of 'localSettings'"}`
           fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR IMPORTING FILE</strong>"
           console.error(errorMsg);
           e.target.value = "";

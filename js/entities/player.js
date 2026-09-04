@@ -541,6 +541,7 @@ const m = {
             totalTech--
             let options = [], weights = []
             for (let i = 0, len = tech.tech.length; i < len; i++) {
+              b.activeGun = b.inventory[Math.floor(Math.random() * b.inventory.length)];
               if ((tech.tech[i].count < tech.tech[i].maxCount) && tech.tech[i].allowed() && !tech.tech[i].isBadRandomOption && !tech.tech[i].isLore && !tech.tech[i].isJunk && !tech.tech[i].isAltRealityTech) {
                 options.push(i);
                 weights.push(Math.max(tech.tech[i].frequency, Math.pow(10, -16)))
@@ -594,6 +595,7 @@ const m = {
         ]
         for (let i = 0; i < 5; i++) things[Math.floor(Math.random() * things.length)]()
       }
+      b.activeGun = b.inventory[Math.floor(Math.random() * b.inventory.length)];
       b.respawnBots();
       // for (let i = 0; i < randomBotCount; i++) b.randomBot()
       simulation.makeGunHUD(); //update gun HUD
