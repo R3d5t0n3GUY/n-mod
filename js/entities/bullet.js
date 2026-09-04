@@ -3064,7 +3064,7 @@ const b = {
           if (this.angularSpeed < 0.05) this.torque += this.inertia * this.torqueMagnitude //spin
 
           //fire lasers
-          ctx.strokeStyle = laserColor;
+          ctx.strokeStyle = tech.laserColor;
           ctx.lineWidth = 1.5
           // ctx.globalAlpha = 1;
           ctx.beginPath();
@@ -9112,7 +9112,7 @@ const b = {
           simulation.ephemera.push({
             name: "sword",
             do() {
-              if (b.activeGun !== 12) {
+              if (b.activeGun !== 12 || m.isSwitchingWorlds) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
                   if (b.guns[b.inventory[i]].name === "sword" && b.guns[b.inventory[i]].sword) {
                     b.guns[b.inventory[i]].cycle = 0;
@@ -9136,6 +9136,7 @@ const b = {
                     b.guns[b.inventory[i]].bladeTrails = [];
                   }
                 }
+                // simulation.removeEphemera(this.name);
               }
               if (b.activeGun === 12 && tech.greatSword && b.guns[b.activeGun].sword) {
                 let bladeSegments = b.guns[b.activeGun].bladeSegments;
@@ -10858,7 +10859,7 @@ const b = {
           simulation.ephemera.push({
             name: "scythe",
             do() {
-              if (b.activeGun !== 13) {
+              if (b.activeGun !== 13 || m.isSwitchingWorlds) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
                   if (b.guns[b.inventory[i]].name === "scythe" && b.guns[b.inventory[i]].scythe) {
                     b.guns[b.inventory[i]].cycle = 0;
@@ -10878,6 +10879,7 @@ const b = {
                     b.guns[b.inventory[i]].bladeTrails = [];
                   }
                 }
+                // simulation.removeEphemera(this.name);
               }
             },
           })
@@ -11370,7 +11372,7 @@ const b = {
           simulation.ephemera.push({
             name: "spear",
             do() {
-              if (b.activeGun !== 14) {
+              if (b.activeGun !== 14 || m.isSwitchingWorlds) {
                 for (let i = 0, len = b.inventory.length; i < len; ++i) {
                   if (b.guns[b.inventory[i]].name === "spear" && b.guns[b.inventory[i]].spear) {
                     b.guns[b.inventory[i]].cycle = 0;
@@ -11394,6 +11396,7 @@ const b = {
                     b.guns[b.inventory[i]].bladeTrails = [];
                   }
                 }
+                // simulation.removeEphemera(this.name);
               }
             },
           })
