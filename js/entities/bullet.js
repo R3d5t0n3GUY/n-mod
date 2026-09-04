@@ -872,16 +872,16 @@ const b = {
         y: bullet[me].mass * MAG * Math.sin(angle)
       }
       bullet[me].do = function () {
-        this.force.x += this.thrust.x;
-        this.force.y += this.thrust.y;
+        this.force.x += this?.thrust?.x ?? 0;
+        this.force.y += this?.thrust?.y ?? 0;
         if (Matter.Query.collides(this, map).length || Matter.Query.collides(this, body).length) {
           this.endCycle = 0; //explode if touching map or blocks
         }
       };
       if (tech.isPrecision) {
         bullet[me].do = function () {
-          this.force.x += this.thrust.x;
-          this.force.y += this.thrust.y;
+          this.force.x += this?.thrust?.x ?? 0;
+          this.force.y += this?.thrust?.y ?? 0;
           if (Matter.Query.collides(this, map).length || Matter.Query.collides(this, body).length) {
             this.endCycle = 0; //explode if touching map or blocks
           }
@@ -983,8 +983,8 @@ const b = {
           Matter.Body.setPosition(this, Vector.sub(this.position, this.velocity)) //undo last movement
           this.do = this.suck
         } else {
-          this.force.x += this.thrust.x;
-          this.force.y += this.thrust.y;
+          this.force.x += this?.thrust?.x ?? 0;
+          this.force.y += this?.thrust?.y ?? 0;
         }
       };
       if (tech.isPrecision) {
@@ -995,8 +995,8 @@ const b = {
             Matter.Body.setPosition(this, Vector.sub(this.position, this.velocity)) //undo last movement
             this.do = this.suck
           } else {
-            this.force.x += this.thrust.x;
-            this.force.y += this.thrust.y;
+            this.force.x += this?.thrust?.x ?? 0;
+            this.force.y += this?.thrust?.y ?? 0;
           }
           //check if above mob
           for (let i = 0; i < mob.length; i++) {
@@ -1301,8 +1301,8 @@ const b = {
             if (Matter.Query.collides(this, map).length) {
               onCollide()
             } else if (tech.isRPG) { //if colliding with nothing
-              this.force.x += this.thrust.x;
-              this.force.y += this.thrust.y;
+              this.force.x += this?.thrust?.x ?? 0;
+              this.force.y += this?.thrust?.y ?? 0;
             } else {
               this.force.y += this.mass * 0.001;
             }
