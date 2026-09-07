@@ -81,8 +81,14 @@ const lore = {
   rate: 1, //   //utterance.rate = 1; // 0.1 to 10
   nextSentence() {
     if (m.alive && !simulation.isCheating) {
-      lore.sentence++
-      lore.conversation[lore.chapter][lore.sentence]() //go to next sentence in the chapter and play it
+      if (lore.sentence < lore.conversation[lore.chapter].length){
+        lore.sentence++
+        lore.conversation[lore.chapter][lore.sentence]() //go to next sentence in the chapter and play it
+      } else {
+        setTimeout(() => {
+          simulation.inGameConsole(`input.audio(<span style="color:#888; font-size: 70%;">${(Date.now() / 1000).toFixed(0)} s</span>)<span class='color-symbol'>:</span> null &nbsp; &nbsp; <em style ="float: right; font-family: monospace;font-size:1rem;color: #055;">//lore chapter ended</em>`, 600)
+        }, 500);
+      }
     }
   },
   unlockTesting() {
