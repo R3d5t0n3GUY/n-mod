@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <title>n-mod</title>
     <link rel="stylesheet" href="style.css">
-    <link id='favIcon' rel='shortcut icon' href='img/favicon.ico' type='image/x-icon' />
+    <link id='favIcon' rel='shortcut icon' href='img/Error.png' type='image/x-icon' />
     <script>
       "use strict";
       console.clear();
@@ -23,7 +23,10 @@
   </head>
 
   <body>
-    <div id='guns'></div>
+    <span id='game-window'></span>
+    <script>
+      document.getElementById('favIcon').href = 'img/favicon.ico'
+      document.getElementById('game-window').innerHTML = `<div id='guns'></div>
     <div id='field'></div>
     <div id='right-HUD-constraint'></div>
     <div id='right-HUD'></div>
@@ -306,8 +309,7 @@ Press Escape to close"></textarea>
           d="M0 0  h1  l 0.7 0.7  v2.3  l-0.2 0.2 h-1.8 v-0.5 h1.4   L 1.1 2.4   h-1.1  l -0.7 -0.7  v-1  l 0.7 -0.7 Z"
         stroke-width="0.07" /> <!--G (outline)-->
       </g>
-    </svg>
-    <script>
+    </svg>`
       const fileLoader = document.createElement("script")
       let hasFileTesterFailed = false
       fileLoader.src = "./js/loading/fileTester.js"
@@ -402,6 +404,11 @@ Press Escape to close"></textarea>
       });
       scan();
       setInterval(scan, 50);
-    </script>
+    </script><noscript>
+      <h1 style="font-size:60px;">
+        n-mod requires JavaScript to run.<br>
+        Please enable JavaScript in your settings and try again.
+      </h1>
+    </noscript>
   </body>
 </html>

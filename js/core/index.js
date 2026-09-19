@@ -772,7 +772,6 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
     } else if (find === 'have') {
       tech.tech.sort((a, b) => {
         return (a.allowed() === b.allowed()) ? 0 : a.allowed() ? -1 : 1;
-        return 0;
       });
     } else if (find === 'heal') {
       tech.tech.sort((a, b) => {

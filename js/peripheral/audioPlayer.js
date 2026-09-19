@@ -120,20 +120,20 @@ const audioPlayer = {
               }
             } else {
               if (name === 'Explosion') {
-                listItem.src = `${rootURL}Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
+                listItem.src = `Explosions/Explosion${Math.ceil(Math.random() * 4)}.ogg`
               } else if (name === 'Step') {
-                listItem.src = `${rootURL}Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
+                listItem.src = `Footsteps/Footstep${Math.ceil(Math.random() * 6)}.mp3`
               } else if (name === 'Jump') {
-                listItem.src = `${rootURL}Jumps/Jump${Math.ceil(Math.random() * 4)}.mp3`
+                listItem.src = `Jumps/Jump${Math.ceil(Math.random() * 4)}.mp3`
               } else if (name === "SpearHit") {
-                listItem.src = `${rootURL}Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `Spear/SpearHit${Math.ceil(Math.random() * 3)}.ogg`
               } else if (name === "nailGun") {
-                listItem.src = `${rootURL}Nail Gun/nailGun${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `Nail Gun/nailGun${Math.ceil(Math.random() * 3)}.ogg`
                 volume *= 0.5
               } else if (name === 'Freeze') {
-                listItem.src = `${rootURL}Freezes/Freeze${Math.ceil(Math.random() * 3)}.ogg`
+                listItem.src = `Freezes/Freeze${Math.ceil(Math.random() * 3)}.ogg`
               } else if (name === 'Teleport') {
-                listItem.src = `${rootURL}Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
+                listItem.src = `Teleports/Teleport${Math.ceil(Math.random() * 2)}.mp3`
               }
             }
             try {
