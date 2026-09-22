@@ -1,3 +1,9 @@
+*************************************************** NOTICE *********************************************
+This TODO-list is for when I'm actively working on n-mod, but further progress here is put on hold,
+since I have an even bigger project I'm currently working on. Until THAT project is finished, assume the
+items listed below (unless stated that they're not happening) will be postponed for months.
+Effective September 22nd 2026.
+
 **************************************************** TODO **********************************************
 •Add more commands to chat menu
 
