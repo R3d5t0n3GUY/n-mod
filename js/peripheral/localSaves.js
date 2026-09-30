@@ -35,7 +35,7 @@ const localSaves = {
   onImport(oevent) {
     let file = oevent.target.files[0];
     if (file) {
-      let reader = new FileReader(), oldSettings = localSettings; //in case something goes wrong during import, keep current settings
+      let reader = new FileReader(), oldSettings = localSettings.valueOf(); //in case something goes wrong during import, keep current settings
       reader.onload = function (e) {
         let importedSettings = e.target.result, fileName = e?.target?.value?.slice(12) ?? file?.name;
         try {
@@ -62,13 +62,13 @@ const localSaves = {
             throw new TypeError("Expecting fileType of 'localSettings'")
           }
         } catch (err) {
-          let errorMsg = `${err?.name ? err.name + " while importing" : "Failed to import"} ${fileName ?? "build"}: ${err?.message ?? "Expecting fileType of 'localSettings'"}`
+          let errorMsg = `${err?.name ? err.name + " while importing" : "Failed to import"} ${fileName ?? "save file"}: ${err?.message ?? "Expecting fileType of 'localSettings'"}`
           fileStatusDiv.innerHTML = "<strong style='color:red;'>ERROR IMPORTING FILE</strong>"
           console.error(errorMsg);
           e.target.value = "";
-          localSettings = oldSettings
+          localSettings = oldSettings.valueOf()
           localSaves.updateUI()
-          window.alert(errorMsg)
+          requestAnimationFrame(() => { window.alert(errorMsg) })
         }
       };
       reader.readAsText(file);
