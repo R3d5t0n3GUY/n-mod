@@ -325,11 +325,11 @@ const modLevels = {
     };
     level.customTopLayer = () => {
       decoDrawList.forEach(who => { //just stole my own code from simulation.draw.body() lol
-        let oldCtx = {
+        let oldCtx = ({
           globalCompositeOperation: ctx.globalCompositeOperation,
           lineJoin: ctx.lineJoin,
           miterLimit: ctx.miterLimit
-        }, vertices = who.vertices, defineBounds = (invisible = false) => {
+        }).valueOf(), vertices = who.vertices, defineBounds = (invisible = false) => {
           ctx.beginPath();
           ctx.moveTo(vertices[0].x, vertices[0].y);
           for (let j = 1; j < vertices.length; j++) {
