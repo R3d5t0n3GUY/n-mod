@@ -1,120 +1,34 @@
 const jsSrcs = [
-  {
-    name: "Initialization",
-    src: 'js/loading/init.js'
-  },
-  {
-    name: "On Load Ended",
-    src: 'js/loading/onLoadEnd.js'
-  },
-  {
-    name: "Matter",
-    src: 'lib/matter.min.js'
-  },
-  {
-    name: "PolyDecomp",
-    src: 'lib/decomp.min.js'
-  },
-  {
-    name: "Eruda",
-    src: 'lib/eruda.min.js'
-  },
-  {
-    name: "Local Saves",
-    src: 'js/peripheral/localSaves.js'
-  },
-  {
-    name: "Prototypes",
-    src: 'lib/prototypes.js'
-  },
-  {
-    name: "Simulation",
-    src: "js/core/simulation.js"
-  },
-  {
-    name: "Spider",
-    src: "js/peripheral/userscripts/spider.js"
-  },
-  {
-    name: "Player",
-    src: "js/entities/player.js"
-  },
-  {
-    name: "PowerUp",
-    src: "js/entities/powerup.js"
-  },
-  {
-    name: "Tech",
-    src: "js/tech.js"
-  },
-  {
-    name: "Bullet",
-    src: "js/entities/bullet.js"
-  },
-  {
-    name: "Mob",
-    src: "js/entities/mob.js"
-  },
-  {
-    name: "Spawn",
-    src: "js/entities/spawn.js"
-  },
-  {
-    name: "Level Handler",
-    src: "js/level/levelHandler.js"
-  },
-  {
-    name: "Main Levels",
-    src: "js/level/mainLevels.js"
-  },
-  {
-    name: "Training Levels",
-    src: "js/level/trainingLevels.js"
-  },
-  {
-    name: "Community Levels",
-    src: "js/level/communityLevels.js"
-  },
-  {
-    name: "Lore Levels",
-    src: "js/level/loreLevels.js"
-  },
-  {
-    name: "Removed Levels",
-    src: "js/level/removedLevels.js"
-  },
-  {
-    name: "Mod Levels",
-    src: "js/level/modLevels.js"
-  },
-  {
-    name: "Lore",
-    src: "js/core/lore.js"
-  },
-  {
-    name: "Engine",
-    src: "js/core/engine.js"
-  },
-  {
-    name: "Index",
-    src: "js/core/index.js"
-  },
-  {
-    name: "Script Loader",
-    src: "js/peripheral/scriptLoader.js"
-  },
-  {
-    name: "Audio Player",
-    src: "js/peripheral/audioPlayer.js"
-  },
-  {
-    name: "Command Console",
-    src: "js/peripheral/commandConsole.js"
-  },
-  {
-    name: "Command List",
-    src: "js/peripheral/commandList.js"
-  }
+  { name: "Initialization", src: 'js/loading/init.js' },
+  { name: "On Load Ended", src: 'js/loading/onLoadEnd.js' },
+  { name: "Matter", src: 'lib/matter.min.js' },
+  { name: "PolyDecomp", src: 'lib/decomp.min.js' },
+  { name: "Eruda", src: 'lib/eruda.min.js' },
+  { name: "Query Ray", src: 'lib/queryRayAny.js' },
+  { name: "Local Saves", src: 'js/peripheral/localSaves.js' },
+  { name: "Prototypes", src: 'lib/prototypes.js' },
+  { name: "Simulation", src: "js/core/simulation.js" },
+  { name: "Spider", src: "js/peripheral/userscripts/spider.js" },
+  { name: "Player", src: "js/entities/player.js" },
+  { name: "PowerUp", src: "js/entities/powerup.js" },
+  { name: "Tech", src: "js/tech.js" },
+  { name: "Bullet", src: "js/entities/bullet.js" },
+  { name: "Mob", src: "js/entities/mob.js" },
+  { name: "Spawn", src: "js/entities/spawn.js" },
+  { name: "Level Handler", src: "js/level/levelHandler.js" },
+  { name: "Main Levels", src: "js/level/mainLevels.js" },
+  { name: "Training Levels", src: "js/level/trainingLevels.js" },
+  { name: "Community Levels", src: "js/level/communityLevels.js" },
+  { name: "Lore Levels", src: "js/level/loreLevels.js" },
+  { name: "Removed Levels", src: "js/level/removedLevels.js" },
+  { name: "Mod Levels", src: "js/level/modLevels.js" },
+  { name: "Lore", src: "js/core/lore.js" },
+  { name: "Engine", src: "js/core/engine.js" },
+  { name: "Index", src: "js/core/index.js" },
+  { name: "Script Loader", src: "js/peripheral/scriptLoader.js" },
+  { name: "Audio Player", src: "js/peripheral/audioPlayer.js" },
+  { name: "Command Console", src: "js/peripheral/commandConsole.js" },
+  { name: "Command List", src: "js/peripheral/commandList.js" }
 ];
 const fileLoads = { //these values are each supposed to be set in its respective .js file
   isInitJS: false,
@@ -122,6 +36,7 @@ const fileLoads = { //these values are each supposed to be set in its respective
   isMatterMinJS: false,
   isDecompMinJS: false,
   isErudaMinJS: false,
+  isQueryRayAnyJS: false,
   isLocalSavesJS: false,
   isPrototypesJS: false,
   isSimulationJS: false,

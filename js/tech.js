@@ -12753,6 +12753,27 @@ const tech = {
       }
     },
     {
+      name: "dielectric barrier discharge",
+      description: "<strong class='color-plasma>plasma</strong> ball becomes <strong>squishy</strong><br>and pushes you back",
+      isFieldTech: true,
+      maxCount: 1,
+      count: 0,
+      frequency: 2,
+      frequencyDefault: 2,
+      allowed() {
+        return false //m.fieldMode === 5 && tech.isPlasmaBall
+      },
+      requires: "plasma ball",
+      effect() {
+        tech.isSquishyBalls = true
+        m.fieldUpgrades[m.fieldMode].set()
+      },
+      remove() {
+        tech.isSquishyBalls = false
+        if (this.count && m.fieldMode === 5) m.fieldUpgrades[m.fieldMode].set()
+      }
+    },
+    {
       name: "cyclotron",
       description: "<strong class='color-plasma'>plasma</strong> ball curves towards your mouse<br><strong>2x</strong> <strong class='color-plasma'>plasma</strong> ball <strong class='color-d'>damage</strong> after you <strong>release</strong> it.",
       isFieldTech: true,
