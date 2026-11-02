@@ -26,10 +26,10 @@ const level = {
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
     "harpoon"
   ],
-  removedCommunityLevels: ["lock", "reservoir", "interferometer", "diamagnetism", "run", "biohazard", "stereoMadness",
+  removedCommunityLevels: ["lock", "reservoir", "interferometer", "diamagnetism", "run", "biohazard",
     "crimsonTowers", "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
-  ],
+  ], //"stereoMadness"
   modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
   fullLevelList: {},
   populateLevelList() {

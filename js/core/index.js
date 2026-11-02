@@ -1155,7 +1155,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   getExperimentBuild() {
     let experimentBuild = {
       fieldIndex: m.fieldMode || 0,
-      marginalGunIndex: tech.marginalGunIndex,
+      marginalGunIndex: tech?.marginalGunIndex ?? tech.marginalGunSelect(),
       molecularMode: simulation.molecularMode || 0,
       gunIndexes: b.inventory,
       techIndexes: []

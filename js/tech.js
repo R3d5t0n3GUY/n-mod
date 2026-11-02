@@ -31,7 +31,7 @@ const tech = {
         what.frequency = 1
       }
       if (["heals", "ammo", "research"].includes(what.name)) what.value = what.defaultValue
-      if (what.name === 'marginal utility') what.gunSelect()
+      tech.marginalGunSelect()
       try {
         if (localSettings.isAllowed) {
           if (localSettings.loreCount > 5) { /*if it's a pacifist run, increase the frequency of finding tech
@@ -148,7 +148,7 @@ const tech = {
       for (let i = 0; i < tech.tech.length; i++) {
         if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() &&
           !tech.tech[i].isJunk && !tech.tech[i].isLore && !tech.tech[i].isBadRandomOption &&
-          !tech.tech[i].isWIP && !tech.tech[i].isCorrupted && !tech.tech[i].isWIP) {
+          !tech.tech[i].isWIP && !tech.tech[i].isCorrupted) {
           options.push(i);
         }
       }
@@ -171,7 +171,7 @@ const tech = {
         if (!found) return //if name not found don't give any tech
       }
       if (tech.tech[index].isCorrupted || tech.tech[index].isWIP) {
-        console.warn(`Invalid tech. "${tech.tech[index].name}" is currently corrupted and should not be acquired`)
+        console.warn(`Invalid tech. "${tech.tech[index].name}" is currently ${tech.tech[index].isCorrupted ? "corrupted" : "unfinished"} and should not be acquired`)
         return
       }
       if (tech.isMetaAnalysis && tech.tech[index].isJunk) {
@@ -459,6 +459,30 @@ const tech = {
     zeitgeist(value) {
       tech.zeitgeistRemoveName = value
     },
+  },
+  marginalGunSelect() {
+    let pickList = b.guns;
+    if (b.inventory.length > 0) { //prioritize guns in the player's inventory
+      for (let j = 0; j < 2; j++) {
+        pickList = pickList.concat(b.guns.getValues(...b.inventory));
+        if (tech.marginalGunIndex != b.activeGun) for (let i = 0; i < 4; i++) {
+          pickList.push(b.guns[b.activeGun]);
+        }
+      }
+    }
+    let idx = Math.floor(Math.random() * (pickList.length - 1));
+    let isGunInfinite = false;
+    let type = pickList[idx].ammoType || 'ammo'
+    if (pickList[idx].ammoType) {
+      isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
+    }
+    while (isGunInfinite) {//keep rerolling gun pick until selection has finite ammo/durability
+      idx = Math.floor(Math.random() * (pickList.length - 1));
+      type = pickList[idx].ammoType || 'ammo'
+      isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
+    }
+    tech.marginalGunIndex = b.guns.indexOf(pickList[idx])
+    return tech.marginalGunIndex;
   },
   tech: [
     {
@@ -1575,32 +1599,8 @@ const tech = {
     },
     {
       name: "marginal utility",
-      gunSelect() {
-        let pickList = b.guns;
-        if (b.inventory.length > 0) { //prioritize guns in the player's inventory
-          for (let j = 0; j < 2; j++) {
-            pickList = pickList.concat(b.guns.getValues(...b.inventory));
-            if (tech.marginalGunIndex != b.activeGun) for (let i = 0; i < 4; i++) {
-              pickList.push(b.guns[b.activeGun]);
-            }
-          }
-        }
-        let idx = Math.floor(Math.random() * (pickList.length - 1));
-        let isGunInfinite = false;
-        let type = pickList[idx].ammoType || 'ammo'
-        if (pickList[idx].ammoType) {
-          isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
-        }
-        while (isGunInfinite) {//keep rerolling gun pick until selection has finite ammo/durability
-          idx = Math.floor(Math.random() * (pickList.length - 1));
-          type = pickList[idx].ammoType || 'ammo'
-          isGunInfinite = (type == 'health' || type == 'energy' || [Infinity, NaN, null, undefined].includes(type == 'durability' ? pickList[idx].durability : pickList[idx].ammo))
-        }
-        tech.marginalGunIndex = b.guns.indexOf(pickList[idx])
-        return tech.marginalGunIndex;
-      },
       descriptionFunction() {
-        if (this.count < 1 && !build.importedGunIndex) this.gunSelect() //don't pick laser
+        if (this.count < 1 && !build.importedGunIndex) tech.marginalGunSelect() //don't pick laser
         let type = b.guns[tech.marginalGunIndex].ammoType || 'ammo'
         let tag = (type == 'durability' ? 'em' : 'strong'), name = (type == 'durability' ? 'durability' : 'ammo')
         return `<strong>2x</strong> <${tag} class='color-ammo'>${name}</${tag}> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`
@@ -1621,7 +1621,7 @@ const tech = {
         tech.isMoreGunAmmo = true;
         if (!tech.moreGunAmmo) tech.moreGunAmmo = 0
         tech.moreGunAmmo++
-        if (tech.marginalGunIndex === undefined) tech.marginalGunIndex = this.gunSelect() //don't pick laser
+        if (tech.marginalGunIndex === undefined) tech.marginalGunIndex = tech.marginalGunSelect() //don't pick laser
         simulation.inGameConsole(`${b.guns[tech.marginalGunIndex].ammoPack.toFixed(2)} → ${(2 * b.guns[tech.marginalGunIndex].ammoPack).toFixed(2)} average <strong class='color-ammo'>${b.guns[tech.marginalGunIndex].ammoType == 'durability' ? "durability" : "ammo"}</strong> per ${powerUps.orb.ammo(1)} for <strong class='color-g'>${b.guns[tech.marginalGunIndex].name}</strong>`)
         let i = b.guns[tech.marginalGunIndex], boostTarget = (i.ammoType == 'durability' ? 'durability' : 'ammo')
         if (i[boostTarget] !== Infinity && !(/health/i).test(i.ammoType) && !(/energy/i).test(i.ammoType)) b.guns[tech.marginalGunIndex].ammoPack *= 2
@@ -12754,8 +12754,10 @@ const tech = {
     },
     {
       name: "dielectric barrier discharge",
-      description: "<strong class='color-plasma>plasma</strong> ball becomes <strong>squishy</strong><br>and pushes you back",
+      description: "<strong class='color-plasma'>plasma</strong> ball becomes <strong>squishy</strong><br>and pushes you back",
       isFieldTech: true,
+      isWIP: true,
+      isCorrupted: true,
       maxCount: 1,
       count: 0,
       frequency: 2,
