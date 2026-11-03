@@ -1,22 +1,22 @@
 setTimeout(() => {
-    fileLoads.isCommandListJS = true; //for file handling in fileTester.js
+  fileLoads.isCommandListJS = true; //for file handling in fileTester.js
 }, 10);
 
 const cmdList = {
-    run: {
-      checkSyntax(input) {
-        let pos = [input.indexOf("{"), input.lastIndexOf("}")];
-        if (input.replace(/\s/g, "").startsWith("function(){")) {
-          let trailing = input.slice(pos[1] + 1), evalString = trailing.replace(/\s/g, "")
-          if (evalString === "" || evalString.startsWith("//") || trailing.trim().startsWith("/*")) {
-            let invalidPhrases = ["document", "EventListener", "innerHTML", "outerHTML", "getElementsBy", "getElementBy", "prototype", "createElement",
-              "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "eruda", "localSaves",
-            ], isInvalid = false, cleanInput = input.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
-            //this command should NOT access or alter HTML DOM, nor should it alter JS prototypes or request other commands, for security reasons
-            isInvalid = invalidPhrases.some(i => (new RegExp(`\\b${i}\\s\\+`, 'g')).test(cleanInput)) || 
-            (/cmdConsole(?!\.history)/).test(cleanInput)
-            if (isInvalid) {
-              return [false, `<strong class='color-var'>/run</strong> should NOT access any of the following:
+  run: {
+    checkSyntax(input) {
+      let pos = [input.indexOf("{"), input.lastIndexOf("}")];
+      if (input.replace(/\s/g, "").startsWith("function(){")) {
+        let trailing = input.slice(pos[1] + 1), evalString = trailing.replace(/\s/g, "")
+        if (evalString === "" || evalString.startsWith("//") || trailing.trim().startsWith("/*")) {
+          let invalidPhrases = ["document", "EventListener", "innerHTML", "outerHTML", "getElementsBy", "getElementBy", "prototype", "createElement",
+            "appendChild", "removeChild", "eval", "runTemp", "const ", "cmdList", "resetStorage", "eruda", "localSaves",
+          ], isInvalid = false, cleanInput = input.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
+          //this command should NOT access or alter HTML DOM, nor should it alter JS prototypes or request other commands, for security reasons
+          isInvalid = invalidPhrases.some(i => (new RegExp(`\\b${i}\\s\\+`, 'g')).test(cleanInput)) || 
+          (/cmdConsole(?!\.history)/).test(cleanInput)
+          if (isInvalid) {
+            return [false, `<strong class='color-var'>/run</strong> should NOT access any of the following:
               <ul>
               	<li>HTML DOM</li> <li>JS Prototypes</li> <li>Command Execution</li> <li>Event Listeners</li> <li>Declaring const</li>
               </ul>`]
@@ -87,7 +87,7 @@ const cmdList = {
       effect(input) {
         cmdConsole.params = input.split(/\s+/)
         let types = ["mob", "boss", "powerUp"], fullMobList = spawn.tier.flat(),
-          fullBossList = spawn.bossTier.flat().concat(spawn.reactorBossList), fullPowerUpList = powerUps.fullPowerUpList.flat(),
+        fullBossList = spawn.bossTier.flat().concat(spawn.reactorBossList), fullPowerUpList = powerUps.fullPowerUpList.flat(),
           what = cmdConsole.params[1], fullCatalog = [fullMobList, fullBossList, fullPowerUpList]
         if (types.includes(cmdConsole.params[0])) {
           if (cmdConsole.params[2].at(0) === "~") {
@@ -144,7 +144,7 @@ const cmdList = {
             let techName = cmdConsole.params[1].replaceAll("_", " ")
             if (tech.tech.findIndex(i => i.name === techName) > -1) {
               for (let i = 0; i < qnty; i++) tech.giveTech(techName)
-            } else {
+              } else {
               throw new ReferenceError(`<strong>${techName}</strong> is not a known <strong class='color-var'>tech</strong> name`)
             }
           } else {
@@ -155,19 +155,22 @@ const cmdList = {
           if (cmdConsole.params.length < 3) {
             switch (what) {
               case "ammo":
-                if (b.inventory.length > 0) { 
-                  let munitionType = b.guns[b.activeGun].ammoType
-                  if ((munitionType != "health" && munitionType != "energy") ? (b.guns[b.activeGun][munitionType] != Infinity) : false) b.guns[b.activeGun][munitionType] += qnty
+              if (b.inventory.length > 0) { 
+                let munitionType = b.guns[b.activeGun].ammoType
+                if ((munitionType != "health" && munitionType != "energy") ? (b.guns[b.activeGun][munitionType] != Infinity) : false) {
+                  b.guns[b.activeGun][munitionType] += qnty
+                  
                 }
-                break;
+              }
+              break;
               case "coupling":
-                m.couplingChange(qnty)
-                break;
+              m.couplingChange(qnty)
+              break;
               case "research":
-                powerUps.research.changeRerolls(qnty)
-                break;
+              powerUps.research.changeRerolls(qnty)
+              break;
               default:
-                break;
+              break;
             }
           } else {
             throw new ArgumentError(`<strong class='color-var'>give</strong> can have no more than two parameters for this case`)

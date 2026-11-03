@@ -4228,4 +4228,735 @@ const modLevels = {
     spawn.secondaryBossChance(1250, -11075)
     powerUps.addResearchToLevel()
   },
+  intervals() {
+    simulation.inGameConsole(`<strong>intervals</strong> by <b style='color: crimson;'>Destiny</b>`);
+    setTimeout(() => {
+      simulation.inGameConsole(`Beat my <b>challenge</b>.<br>I'll give you <b>three</b> <span class='color-var'>tech</span>, and I'll let you leave.`);
+      setTimeout(() => {
+        simulation.inGameConsole(`Use your <strong class="color-f">field</strong> to select your answer.`);
+      }, 1000);
+    }, 1000);
+    level.setPosToSpawn(-400, -30);
+    level.defaultZoom = 1400;
+    simulation.zoomTransition(level.defaultZoom, 1);
+    level.exit.x = 3960;
+    level.exit.y = -10;
+    spawn.mapRect(level.exit.x, level.exit.y + 25, 100, 25);
+    spawn.mapRect(level.enter.x, level.enter.y + 25, 100, 25);
+    const exitDoor = level.door(3800, 0, 25, 300, 250, 3);
+    spawn.mapRect(-925, 25, 5150, 625);
+    spawn.mapRect(3775, -275, 450, 50);
+    spawn.mapRect(4175, -275, 50, 375);
+    spawn.mapRect(3775, -250, 75, 50);
+    spawn.mapRect(-1400, 25, 675, 300);
+    spawn.mapRect(-1400, -625, 200, 950);
+    spawn.mapRect(-1400, -300, 400, 100);
+    spawn.mapRect(-2450, -625, 725, 150);
+    spawn.mapRect(-2450, -250, 725, 150);
+    spawn.mapRect(-2825, -625, 175, 525);
+    spawn.mapRect(-2825, 125, 550, 150);
+    spawn.mapRect(-4475, -500, 325, 300);
+    spawn.mapRect(-4275, -1075, 125, 775);
+    spawn.mapRect(-4275, -1075, 250, 100);
+    spawn.mapRect(-3650, -125, 275, 275);
+    spawn.mapRect(-3475, 0, 100, 525);
+    spawn.mapRect(-3475, 425, 200, 100);
+    spawn.mapRect(-4875, 775, 1600, 200);
+    spawn.mapRect(-5200, 250, 150, 150);
+    spawn.mapRect(-5100, 275, 50, 275);
+    spawn.mapRect(-5100, 500, 100, 50);
+    spawn.mapRect(-4925, -50, 225, 225);
+    spawn.mapRect(-4775, -350, 75, 525);
+    spawn.mapRect(-4775, -350, 150, 75);
+    spawn.mapRect(-5300, -450, 175, 175);
+    spawn.mapRect(-5300, -450, 75, 375);
+    spawn.mapRect(-5375, -150, 150, 75);
+    spawn.mapRect(-3825, -1150, 1400, 125);
+    spawn.mapRect(-4625, -850, 175, 25);
+    spawn.mapRect(-4575, -925, 25, 225);
+    spawn.mapRect(-4525, -925, 25, 225);
+    spawn.mapRect(-4625, -800, 175, 25);
+    spawn.mapRect(-2225, -1325, 225, 225);
+    spawn.mapRect(-2075, -1675, 75, 575);
+    spawn.mapRect(-2075, -1675, 150, 75);
+    spawn.mapRect(-1700, -1925, 250, 250);
+    spawn.mapRect(-1550, -2200, 100, 525);
+    spawn.mapRect(-1300, -1925, 250, 250);
+    spawn.mapRect(-1150, -2200, 100, 525);
+    spawn.mapRect(-925, -1925, 250, 250);
+    spawn.mapRect(-775, -2200, 100, 525);
+    spawn.mapRect(-550, -1925, 250, 250);
+    spawn.mapRect(-400, -2200, 100, 525);
+    spawn.mapRect(-1550, -2200, 1250, 75);
+    spawn.mapRect(-1550, -2100, 1250, 50);
+    spawn.mapRect(25, -1750, 1825, 150);
+    spawn.mapRect(2075, -1275, 175, 175);
+    spawn.mapRect(2200, -1500, 50, 400);
+    spawn.mapRect(2200, -1500, 100, 50);
+    spawn.mapRect(2400, -1275, 1375, 75);
+    spawn.mapRect(3750, -1000, 475, 75);
+    spawn.mapRect(3750, -700, 475, 75);
+    spawn.mapRect(975, -125, 350, 100);
+    spawn.mapRect(975, -725, 100, 700);
+    spawn.mapRect(800, -725, 275, 250);
+    spawn.mapRect(1400, -450, 300, 50);
+    spawn.mapRect(1400, -450, 75, 150);
+    spawn.mapRect(1400, -350, 300, 50);
+    spawn.mapRect(1625, -450, 75, 150);
+    spawn.randomMob(2700, -700);
+    spawn.randomMob(2175, -475);
+    spawn.randomMob(3150, -650);
+    spawn.randomMob(3125, -1425);
+    spawn.randomMob(1600, -2000);
+    spawn.randomMob(975, -2150);
+    spawn.randomMob(-800, -2325);
+    spawn.randomMob(-1650, -1975);
+    spawn.randomMob(-2200, -1400);
+    spawn.randomMob(-3125, -1675);
+    spawn.randomMob(-3100, -1300);
+    spawn.randomMob(-5275, -550);
+    spawn.randomMob(-4200, 400);
+    spawn.randomMob(-2550, -425);
+    spawn.randomMob(-3300, 150);
+    spawn.randomLevelBoss(-3430, -603);
+    const totalQ = 20;
+    const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const intervals_12 = [{
+        semitones: 0,
+        name: 'Unison',
+        abbr: 'P1'
+      },
+      {
+        semitones: 1,
+        name: 'Minor 2nd',
+        abbr: 'm2'
+      },
+      {
+        semitones: 2,
+        name: 'Major 2nd',
+        abbr: 'M2'
+      },
+      {
+        semitones: 3,
+        name: 'Minor 3rd',
+        abbr: 'm3'
+      },
+      {
+        semitones: 4,
+        name: 'Major 3rd',
+        abbr: 'M3'
+      },
+      {
+        semitones: 5,
+        name: 'Perfect 4th',
+        abbr: 'P4'
+      },
+      {
+        semitones: 6,
+        name: 'Tritone',
+        abbr: 'TT'
+      },
+      {
+        semitones: 7,
+        name: 'Perfect 5th',
+        abbr: 'P5'
+      },
+      {
+        semitones: 8,
+        name: 'Minor 6th',
+        abbr: 'm6'
+      },
+      {
+        semitones: 9,
+        name: 'Major 6th',
+        abbr: 'M6'
+      },
+      {
+        semitones: 10,
+        name: 'Minor 7th',
+        abbr: 'm7'
+      },
+      {
+        semitones: 11,
+        name: 'Major 7th',
+        abbr: 'M7'
+      },
+      {
+        semitones: 12,
+        name: 'Octave',
+        abbr: 'P8'
+      },
+    ];
+    const intervals_41 = [{
+        steps: 0,
+        name: 'Unison',
+        abbr: 'P1'
+      },
+      {
+        steps: 2,
+        name: 'Aug Unison',
+        abbr: 'A1'
+      },
+      {
+        steps: 3,
+        name: 'Minor 2nd',
+        abbr: 'm2'
+      },
+      {
+        steps: 4,
+        name: 'Neut 2nd (lo)',
+        abbr: 'n2-'
+      },
+      {
+        steps: 5,
+        name: 'Neut 2nd',
+        abbr: 'n2'
+      },
+      {
+        steps: 7,
+        name: 'Major 2nd',
+        abbr: 'M2'
+      },
+      {
+        steps: 9,
+        name: 'Aug 2nd',
+        abbr: 'A2'
+      },
+      {
+        steps: 10,
+        name: 'Minor 3rd',
+        abbr: 'm3'
+      },
+      {
+        steps: 12,
+        name: 'Neut 3rd (lo)',
+        abbr: 'n3-'
+      },
+      {
+        steps: 13,
+        name: 'Neut 3rd',
+        abbr: 'n3'
+      },
+      {
+        steps: 14,
+        name: 'Major 3rd',
+        abbr: 'M3'
+      },
+      {
+        steps: 17,
+        name: 'Perfect 4th',
+        abbr: 'P4'
+      },
+      {
+        steps: 19,
+        name: 'Aug 4th',
+        abbr: 'A4'
+      },
+      {
+        steps: 20,
+        name: 'Neut 4th',
+        abbr: 'n4'
+      },
+      {
+        steps: 21,
+        name: 'Tritone',
+        abbr: 'TT'
+      },
+      {
+        steps: 22,
+        name: 'Neut 5th (lo)',
+        abbr: 'n5-'
+      },
+      {
+        steps: 24,
+        name: 'Perfect 5th',
+        abbr: 'P5'
+      },
+      {
+        steps: 27,
+        name: 'Minor 6th',
+        abbr: 'm6'
+      },
+      {
+        steps: 28,
+        name: 'Neut 6th (lo)',
+        abbr: 'n6-'
+      },
+      {
+        steps: 29,
+        name: 'Neut 6th',
+        abbr: 'n6'
+      },
+      {
+        steps: 31,
+        name: 'Major 6th',
+        abbr: 'M6'
+      },
+      {
+        steps: 34,
+        name: 'Minor 7th',
+        abbr: 'm7'
+      },
+      {
+        steps: 35,
+        name: 'Neut 7th (lo)',
+        abbr: 'n7-'
+      },
+      {
+        steps: 36,
+        name: 'Neut 7th',
+        abbr: 'n7'
+      },
+      {
+        steps: 38,
+        name: 'Major 7th',
+        abbr: 'M7'
+      },
+      {
+        steps: 41,
+        name: 'Octave',
+        abbr: 'P8'
+      },
+    ];
+
+    function freqFromMidi(midi) {
+      return 440 * Math.pow(2, (midi - 69) / 12);
+    }
+
+    function freqFrom41(rootFreq, steps) {
+      return rootFreq * Math.pow(2, steps / 41);
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function playNote(freq, ms = 900, vol = 0.06, delay = 0) {
+      try {
+        const ctx2 = new(window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx2.createOscillator();
+        const gain = ctx2.createGain();
+        osc.connect(gain);
+        gain.connect(ctx2.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx2.currentTime + delay);
+        gain.gain.linearRampToValueAtTime(vol, ctx2.currentTime + delay + 0.02);
+        gain.gain.setValueAtTime(vol, ctx2.currentTime + delay + ms / 1000 - 0.07);
+        gain.gain.linearRampToValueAtTime(0, ctx2.currentTime + delay + ms / 1000);
+        osc.start(ctx2.currentTime + delay);
+        osc.stop(ctx2.currentTime + delay + ms / 1000 + 0.01);
+        setTimeout(() => {
+          try {
+            ctx2.close();
+          } catch (e) {}
+        }, delay * 1000 + ms + 200);
+      } catch (e) {}
+    }
+    const panelW = 950;
+    const panelH = 675;
+    const btnH = 110;
+    const btnG = 18;
+    const whiteMIDI = [60, 62, 64, 65, 67, 69, 71, 72];
+    const blackKeys = [{
+        midi: 61,
+        relX: 0.095
+      },
+      {
+        midi: 63,
+        relX: 0.220
+      },
+      {
+        midi: 66,
+        relX: 0.470
+      },
+      {
+        midi: 68,
+        relX: 0.595
+      },
+      {
+        midi: 70,
+        relX: 0.720
+      },
+    ];
+
+    function drawPiano(cx, cy, w, h, highlightMidi1, highlightMidi2) {
+      const nWhite = whiteMIDI.length;
+      const kw = w / nWhite;
+      const bh = h * 0.62;
+      for (let i = 0; i < nWhite; i++) {
+        const kx = cx - w / 2 + i * kw;
+        const midi = whiteMIDI[i];
+        const isHL = (midi === highlightMidi1 || midi === highlightMidi2);
+        ctx.fillStyle = isHL ? '#3df' : '#eee';
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 1;
+        ctx.fillRect(kx, cy, kw - 1, h);
+        ctx.strokeRect(kx, cy, kw - 1, h);
+      }
+      for (let i = 0; i < blackKeys.length; i++) {
+        const bk = blackKeys[i];
+        const bx = cx - w / 2 + bk.relX * w;
+        const isHL = (bk.midi === highlightMidi1 || bk.midi === highlightMidi2);
+        ctx.fillStyle = isHL ? '#f60' : '#222';
+        ctx.fillRect(bx, cy, kw * 0.6, bh);
+      }
+    }
+
+    function makeChamberdQuiz(chamberId, cx, intervalData, isAudio, y) {
+      const panelX = cx - panelW / 2;
+      const panelY = y - 760;
+      let qNum = 0;
+      let correct = 0;
+      let answered = false;
+      let feedback = '';
+      let feedbackText = '';
+      let question = null;
+      let options = [];
+      let playedThisCycle = -9999;
+      let hoverBtn = -1;
+
+      function genQuestion() {
+        if (chamberId === 0) {
+          const midi = randInt(60, 71);
+          return {
+            midi,
+            correct: noteNames[midi - 60]
+          };
+        } else if (chamberId === 1) {
+          const iv = intervalData[randInt(0, intervalData.length - 1)];
+          const root = randInt(60, 72);
+          return {
+            rootMidi: root,
+            topMidi: root + iv.semitones,
+            interval: iv,
+            correct: iv.abbr
+          };
+        } else {
+          const iv = intervalData[randInt(0, intervalData.length - 1)];
+          const root = freqFromMidi(randInt(60, 72));
+          return {
+            rootFreq: root,
+            steps: iv.steps,
+            interval: iv,
+            correct: iv.abbr
+          };
+        }
+      }
+
+      function buildOptions(q) {
+        let pool, correctLabel;
+        if (chamberId === 0) {
+          correctLabel = q.correct;
+          pool = shuffle(noteNames.filter(n => n !== correctLabel)).slice(0, 7);
+        } else {
+          correctLabel = q.correct;
+          pool = shuffle(intervalData.filter(i => i.abbr !== correctLabel)).slice(0, 7).map(i => i.abbr);
+        }
+        return shuffle([correctLabel, ...pool]);
+      }
+
+      function playQuestion(q) {
+        if (!isAudio) return;
+        if (chamberId === 0) {
+          playNote(freqFromMidi(q.midi), 1000);
+        } else if (chamberId === 1) {
+          playNote(freqFromMidi(q.rootMidi), 900);
+          playNote(freqFromMidi(q.topMidi), 900, 0.06, 1.0);
+        } else {
+          playNote(q.rootFreq, 900);
+          playNote(freqFrom41(q.rootFreq, q.steps), 900, 0.06, 1.0);
+        }
+      }
+      let started = false;
+
+      function next() {
+        answered = false;
+        feedback = '';
+        feedbackText = '';
+        question = genQuestion();
+        options = buildOptions(question);
+        playedThisCycle = simulation.cycle;
+        playQuestion(question);
+      }
+
+      function isPlayerInside() {
+        return (
+          player.position.x > cx - 230 &&
+          player.position.x < cx + 230 &&
+          player.position.y < y + 10 &&
+          player.position.y > y - 600
+        );
+      }
+
+      function draw() {
+        if (!started && isPlayerInside()) {
+          started = true;
+          next();
+        }
+        if (!isPlayerInside()) return;
+        if (isAudio && !answered && simulation.cycle - playedThisCycle > 180) {
+          playedThisCycle = simulation.cycle;
+          playQuestion(question);
+        }
+        ctx.fillStyle = 'rgba(240,245,248,0.97)';
+        ctx.fillRect(panelX, panelY, panelW, panelH);
+        ctx.strokeStyle = '#4a5a6a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(panelX, panelY, panelW, panelH);
+        const TITLES = ['PERFECT PITCH', '12-TET INTERVALS', '41-TET INTERVALS'];
+        ctx.font = 'bold 28px monospace';
+        ctx.fillStyle = '#4a5a6a';
+        ctx.textAlign = 'center';
+        ctx.fillText(TITLES[chamberId], cx, panelY + 40);
+        const barW = panelW - 20;
+        const barX = panelX + 10;
+        const barY = panelY + 50;
+        ctx.fillStyle = '#ccc';
+        ctx.fillRect(barX, barY, barW, 12);
+        ctx.fillStyle = '#3adf8f';
+        ctx.fillRect(barX, barY, barW * (correct / totalQ), 12);
+        ctx.font = '22px monospace';
+        ctx.fillStyle = '#444';
+        ctx.fillText(`${correct} / ${totalQ}`, cx, barY + 45);
+        const pianoY = panelY + 100;
+        if (!isAudio && chamberId < 2) {
+          const norm1 = question ? ((question.midi || question.rootMidi) - 60) % 12 + 60 : null;
+          const norm2 = question && question.topMidi ? ((question.topMidi - 60) % 12 + 60) : null;
+          drawPiano(cx, pianoY, panelW - 20, 44, norm1, norm2);
+        } else if (!isAudio && chamberId === 2) {
+          ctx.textAlign = 'center';
+          if (question) {
+            ctx.font = 'bold 32px monospace';
+            ctx.fillStyle = '#604';
+            ctx.fillText(`${question.steps} steps`, cx, pianoY + 28);
+            ctx.font = '22px monospace';
+            ctx.fillStyle = '#888';
+            ctx.fillText(`${(question.steps * 1200 / 41).toFixed(1)} cents`, cx, pianoY + 55);
+          }
+        } else if (isAudio) {
+          ctx.font = '20px monospace';
+          ctx.fillStyle = '#888';
+          ctx.textAlign = 'center';
+          ctx.fillText(answered ? '' : 'listening...', cx, pianoY + 28);
+          if (answered && question && chamberId === 2) {
+            ctx.font = '18px monospace';
+            ctx.fillStyle = '#aaa';
+            ctx.fillText(`(${(question.steps * 1200 / 41).toFixed(1)} ¢)`, cx, pianoY + 55);
+          }
+        }
+        const promptY = panelY + 250;
+        ctx.font = 'bold 28px monospace';
+        ctx.fillStyle = '#222';
+        ctx.textAlign = 'center';
+        const prompts = ['What note is this?', 'What interval?', 'What interval? (41-TET)'];
+        ctx.fillText(prompts[chamberId], cx, promptY);
+        const cols = 4;
+        const btnW = (panelW - 20 - (cols - 1) * btnG) / cols;
+        const gridX = panelX + 10;
+        const gridY = promptY + 10;
+        const mx = simulation.mouseInGame.x;
+        const my = simulation.mouseInGame.y;
+        hoverBtn = -1;
+        for (let i = 0; i < options.length; i++) {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const bx = gridX + col * (btnW + btnG);
+          const by = gridY + row * (btnH + btnG);
+          if (mx > bx && mx < bx + btnW && my > by && my < by + btnH) {
+            hoverBtn = i;
+          }
+        }
+        for (let i = 0; i < options.length; i++) {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const bx = gridX + col * (btnW + btnG);
+          const by = gridY + row * (btnH + btnG);
+          const opt = options[i];
+          const isC = (opt === question.correct);
+          let fill = '#f0f4f8';
+          let stroke = '#aaa';
+          let txtColor = '#333';
+          if (answered) {
+            if (isC) {
+              fill = '#c8ffe0';
+              stroke = '#2a9';
+              txtColor = '#155';
+            } else if (feedback === 'wrong' && i === hoverBtn) {
+              fill = '#fdd';
+              stroke = '#a33';
+            }
+          } else if (i === hoverBtn) {
+            fill = '#def5ff';
+            stroke = '#3af';
+          }
+
+          ctx.fillStyle = fill;
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 1.5;
+          ctx.fillRect(bx, by, btnW, btnH);
+          ctx.strokeRect(bx, by, btnW, btnH);
+          ctx.fillStyle = txtColor;
+          ctx.textAlign = 'center';
+          if (chamberId === 0) {
+            ctx.font = 'bold 28px monospace';
+            ctx.fillText(opt, bx + btnW / 2, by + btnH / 2 + 10);
+          } else {
+            const iv = intervalData.find(x => x.abbr === opt);
+            ctx.font = 'bold 28px monospace';
+            ctx.fillText(opt, bx + btnW / 2, by + btnH / 2 - 8);
+            ctx.font = '20px monospace';
+            ctx.fillText(iv ? iv.name : '', bx + btnW / 2, by + btnH / 2 + 22);
+          }
+        }
+        const fbY = gridY + Math.ceil(options.length / cols) * (btnH + btnG) + 14;
+        ctx.font = '22px monospace';
+        ctx.textAlign = 'center';
+        if (feedback === 'correct') {
+          ctx.fillStyle = '#2a9';
+          ctx.fillText('✓ correct', cx, fbY);
+        } else if (feedback === 'wrong') {
+          ctx.fillStyle = '#c33';
+          ctx.fillText('✗  answer: ' + question.correct, cx, fbY);
+        }
+      }
+
+      function onClick() {
+        if (!isPlayerInside() || answered) return false;
+        if (!question) return false;
+        const mx = simulation.mouseInGame.x;
+        const my = simulation.mouseInGame.y;
+        const cols = 4;
+        const btnW = (panelW - 20 - (cols - 1) * btnG) / cols;
+        const gridX = panelX + 10;
+        const gridY = panelY + 200 + 10;
+        for (let i = 0; i < options.length; i++) {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const bx = gridX + col * (btnW + btnG);
+          const by = gridY + row * (btnH + btnG);
+          if (mx > bx && mx < bx + btnW && my > by && my < by + btnH) {
+            answered = true;
+            if (options[i] === question.correct) {
+              correct++;
+              feedback = 'correct';
+            } else {
+              feedback = 'wrong';
+            }
+            const delay = feedback === 'correct' ? 700 : 1400;
+            setTimeout(() => {
+              qNum++;
+              if (qNum >= totalQ) {
+                if (correct >= totalQ) {
+                  quiz.passed = true;
+                } else {
+                  qNum = 0;
+                  correct = 0;
+                  simulation.inGameConsole(`${correct}/${totalQ} — need ${totalQ}/${totalQ}. retry.`);
+                }
+              }
+              next();
+            }, delay);
+            return true;
+          }
+        }
+        return false;
+      }
+      const quiz = {
+        passed: false,
+        draw,
+        onClick,
+        isPlayerInside,
+      };
+      return quiz;
+    }
+    let audioAvailable = false;
+    const audioCheck = () => {
+      audioAvailable = true;
+      window.removeEventListener('click', audioCheck);
+      window.removeEventListener('keydown', audioCheck);
+    };
+    window.addEventListener('click', audioCheck, {
+      once: true
+    });
+    window.addEventListener('keydown', audioCheck, {
+      once: true
+    });
+    try {
+      const testCtx = new(window.AudioContext || window.webkitAudioContext)();
+      if (testCtx.state === 'running') audioAvailable = true;
+      testCtx.close();
+    } catch (e) {}
+    const Q1 = makeChamberdQuiz(0, -4150, null, audioAvailable, 770);
+    const Q2 = makeChamberdQuiz(1, -3120, intervals_12, audioAvailable, -1147);
+    const Q3 = makeChamberdQuiz(2, 980, intervals_41, audioAvailable, -1747);
+    const CH_BG = [
+      'rgba(200,230,255,0.18)',
+      'rgba(210,255,210,0.18)',
+      'rgba(255,215,255,0.18)',
+    ];
+    const chcx = [-4150, -3120, 980];
+    const chcy = [770, -1147, -1747];
+    const CH_LABELS = ['PERFECT PITCH', '12-TET INTERVALS', '41-TET INTERVALS'];
+    const quizzes = [Q1, Q2, Q3];
+    let allPassed = false;
+    let isHolding = false;
+    level.custom = () => {
+      if (input.field) {
+        isHolding = true;
+      } else {
+        if (isHolding) {
+          Q1.onClick();
+          Q2.onClick();
+          Q3.onClick();
+        }
+        isHolding = false;
+      }
+      if (!allPassed && Q1.passed && Q2.passed && Q3.passed) {
+        allPassed = true;
+        exitDoor.isClosing = true;
+        powerUps.spawnDelay('tech', 1, 4);
+        powerUps.spawnDelay('tech', 1, 8);
+        powerUps.spawnDelay('tech', 1, 12);
+        simulation.inGameConsole("Good job.")
+      }
+      if (!allPassed) {
+        exitDoor.isClosing = false;
+      }
+      exitDoor.openClose();
+      for (let i = 0; i < 3; i++) {
+        const cx = chcx[i];
+        const cy = chcy[i];
+        ctx.fillStyle = quizzes[i].passed ?
+          'rgba(150,255,200,0.12)' :
+          CH_BG[i];
+        ctx.fillRect(cx - 560, cy - 770, 1120, 770);
+        ctx.font = '25px monospace';
+        ctx.fillStyle = quizzes[i].passed ? '#2a9' : '#888';
+        ctx.textAlign = 'center';
+        ctx.fillText(
+          quizzes[i].passed ? '✓ ' + CH_LABELS[i] : CH_LABELS[i],
+          cx,
+          cy - 724
+        );
+      }
+      Q1.draw();
+      Q2.draw();
+      Q3.draw();
+      level.enter.draw();
+      level.exit.drawAndCheck();
+    };
+    level.customTopLayer = () => {
+      exitDoor.draw();
+    };
+  },
 }

@@ -2,6 +2,27 @@ setTimeout(() => {
   fileLoads.isRemovedLevelsJS = true; //for file handling in fileTester.js
 }, 10);
 
+const removedLevelReasons = {
+  run: `gameplay balancing issues`,
+  biohazard: `behavioral issues with custom boss`,
+  crimsonTowers: `gameplay balancing issues, strange errors caused by custom boss`,
+  stereoMadness: `severe balancing issues`,
+  yingYang: `unusually awkward gimmick (flashlight scope visual)`,
+  staircase: `level balancing issues`,
+  buttonbutton: `gameplay balancing issues`,
+  movers: `gameplay balancing issues`,
+  downpour: `weird gameplay flow, gimmicks (audio+visual simulation of thunderclap) potentially causing sensory issues`,
+  underpass: `issues caused by custom boss (especially when n-scythe weapons are used)`,
+  cantilever: `gameplay balancing issues`,
+  shipwreck: `weird gameplay flow, layout visibility issues with simulation.testingLoop`,
+  unchartedCave: `weird issues with awkward gimmick (teleporting to start after falling into pit)`,
+  dojo: `gameplay balancing issues`,
+  flappyGon: `unusually awkward gimmick (flapping)`,
+  rings: `gameplay balancing issues`,
+  trial: `gameplay balancing issues`,
+  soft: `level objects causing issues with game physics engine`
+}
+
 const removedLevels = {
   run() {
     simulation.inGameConsole(`<strong>run</strong> by <span class='color-var'>iNoobBoi</span>`);

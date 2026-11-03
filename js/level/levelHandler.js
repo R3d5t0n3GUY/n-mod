@@ -20,7 +20,7 @@ const level = {
   ],
   communityLevels: ["gauntlet", "stronghold", "basement", "crossfire", "vats", "ngon", "house", "perplex",
     "coliseum", "tunnel", "islands", "dripp", "fortress", "commandeer", "clock", "superNgonBros",
-    "tlinat", "ruins", "ace", "LaunchSite", "vents", "intervals", "turbine", "conduit"
+    "tlinat", "ruins", "ace", "LaunchSite", "vents", "turbine", "conduit"
   ],
   trainingLevels: ["walk", "crouch", "jump", "hold", "throw", "throwAt", "deflect", "heal", "fire",
     "nailGun", "shotGun", "superBall", "matterWave", "missile", "stack", "mine", "grenades",
@@ -30,7 +30,7 @@ const level = {
     "crimsonTowers", "yingYang", "staircase", "buttonbutton", "downpour", "underpass", "cantilever", "shipwreck",
     "unchartedCave", "dojo", "flappyGon", "rings", "trial", "soft", "movers"
   ], //"stereoMadness"
-  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago"], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
+  modSpecificLevels: ["gettingOverIt", "movementTech", "arena", "zenith", "archipelago", "intervals", ], //"descent", "split", "boundary", "bifurcate"], //as a reminder, c-gon levels were removed by the request of coalDeficit
   fullLevelList: {},
   populateLevelList() {
     let levelLists = [mainLevels, trainingLevels, communityLevels, removedLevels, modLevels, loreLevels]
@@ -139,7 +139,7 @@ const level = {
     }
 
     if (m.plasmaBall) m.plasmaBall.fire()
-    if (localSettings.entanglement && localSettings.entanglement.levelName === level.levels[level.onLevel]) {
+    if (localSettings.entanglement && localSettings.entanglement.levelName === level.levels[level.onLevel] && !simulation.isCheating) {
       const flip = localSettings.entanglement.isHorizontalFlipped === simulation.isHorizontalFlipped ? 1 : -1
       powerUps.directSpawn(flip * localSettings.entanglement.position.x, localSettings.entanglement.position.y, "entanglement", false);
     }
