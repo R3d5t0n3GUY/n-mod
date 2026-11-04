@@ -891,7 +891,7 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
   skinTechText(i) {
     return `<div class="card-text">${build.pauseEjectButton(i)}<div class="grid-title">
       <span style="position:relative;">
-        <div class="circle-grid tech" style="position:absolute; top:0; left:0;opacity:0.8;"></div>
+        <div class="circle-grid tech" style="position:absolute; top:0; left:0.56em;opacity:0.8;"></div>
         <span style="position:relative;">
             <div class="circle-grid-skin"></div>
             <div class="circle-grid-skin-eye"></div>
@@ -991,6 +991,9 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
             // `<div class="grid-title"><div class="circle-grid junk"></div> &nbsp; ${tech.tech[i].link} ${techCountText}</div>${tech.tech[i].descriptionFunction ? tech.tech[i].descriptionFunction() : tech.tech[i].description}</div>`
           } else if (tech.tech[i].isSkin) {
             techID.classList.remove('experiment-grid-hide');
+            techID.innerHTML = build.skinText(i)
+          } else if (tech.tech[i].isSkinTech) {
+            techID.classList.remove('experiment-grid-hide');
             techID.innerHTML = build.skinTechText(i)
           } else if (tech.tech[i].isInstant) {
             techID.innerHTML = build.instantTechText(i)
@@ -1018,6 +1021,8 @@ ${simulation.difficultyMode > 4 ? `<details id="constraints-details" style="padd
           } else if (tech.tech[i].isJunk) {
             techID.innerHTML = build.junkTechText(i)
           } else if (tech.tech[i].isSkin) {
+            techID.innerHTML = build.skinText(i)
+          } else if (tech.tech[i].isSkinTech) {
             techID.innerHTML = build.skinTechText(i)
           } else if (tech.tech[i].isInstant) {
             techID.innerHTML = build.instantTechText(i)
