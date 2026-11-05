@@ -1530,7 +1530,6 @@ const powerUps = {
                 <div class="card-text">
                 <div class="grid-title">
                 <span style='position:relative;'>
-                WHYYY
                   <div class="circle-grid-title" style="position:absolute; top:0; left:0;opacity:0.8;">
                     <span style="position:relative;">
                       <div class="circle-grid-skin"></div>
